@@ -1,0 +1,8 @@
+get_message:
+  call: http.post
+  args:
+    url: http://resql:8082/testing
+  result: the_message
+
+return_value:
+  return: ${the_message.response.body}

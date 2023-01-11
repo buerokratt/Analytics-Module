@@ -1,7 +1,3 @@
-select
-    count(id)
-from
-    chat
-where
-    created between :start :: timestamp
-    and :end :: timestamp;
+SELECT COUNT(distinct base_id)
+FROM chat
+WHERE created BETWEEN :start :: timestamptz AND :end :: timestamptz;

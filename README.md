@@ -11,6 +11,16 @@
  * Navigate to current repo and run `docker compose up -d`
  
  * Go to https://localhost:3000
+    - In case of CORS errors
+    - open `Ruuter/src/main/resources/application.yml`
+    - Add "https://localhost:3000" to `allowedOrigins` array: 
+    ```yml
+    CORS:
+        allowedOrigins: ["http://localhost:3000"]
+    ```
+    - rebuild ruuter image
+    - rebuild & restart Analytics-Module's `docker-compose` file
+
  
  * For setting up the database initially, run 
  `docker run --platform linux/amd64 --network=bykstack riaee/byk-users-db:liquibase20220615 --url=jdbc:postgresql://users_db:5432/byk --username=byk --password=01234 --changelog-file=./master.yml update

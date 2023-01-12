@@ -39,10 +39,12 @@ services:
       - ./data:/var/lib/postgresql/data
     networks:
       - bykstack
-  gui_dev:
-    container_name: gui_dev # development environment, don't use this in production
+  gui_dev: # For development
+    container_name: gui_dev
     environment:
+      - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_BASE_URL=http://localhost:8080
     build:
       context: ./GUI
       dockerfile: Dockerfile.dev
@@ -53,7 +55,7 @@ services:
       - ./GUI:/app
     networks:
       - bykstack
-
+      
 networks:
   bykstack:
     name: bykstack

@@ -14,6 +14,12 @@ WITH chats AS (
             WHERE message.chat_base_id = chat.base_id
                 AND message.author_role = 'end-user'
         )
+        AND EXISTS (
+            SELECT 1
+            FROM message
+            WHERE message.chat_base_id = chat.base_id
+                AND message.author_role = 'chatbot'
+        )
 ),
 chat_lengths AS (
     SELECT age(MAX(created), MIN(created)) AS chat_length

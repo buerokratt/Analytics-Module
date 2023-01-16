@@ -3,6 +3,8 @@ services:
   ruuter:
     container_name: ruuter
     image: ruuter
+    environment:
+      - application.cors.allowedOrigins=http://localhost:3000
     volumes:
       - ./DSL/Ruuter:/DSL
     ports:

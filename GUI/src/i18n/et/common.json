@@ -1,5 +1,13 @@
 {
     "global": {
       "title": "Analyticsi moodul"
+    },
+    "menu": {
+      "overview": "Ülevaade",
+      "chats": "Vestlused",
+      "burokratt": "Bürokratt",
+      "feedbacks": "Tagasiside",
+      "advisors": "Nõustajad",
+      "reports": "Raportid"
     }
 }

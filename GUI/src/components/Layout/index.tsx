@@ -10,7 +10,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     return (
         <div className='main-container'>
             <SideMenu />
-            {children}
+            <div className='content-container'>
+                {children}
+            </div>
         </div>
     )
 }

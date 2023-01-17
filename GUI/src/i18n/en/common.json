@@ -1,0 +1,13 @@
+{
+    "global": {
+      "title": "Analytics Module"
+    },
+    "menu": {
+      "overview": "Overview",
+      "chats": "chats",
+      "burokratt": "Bürokratt",
+      "feedbacks": "Feedbacks",
+      "advisors": "Advisors",
+      "reports": "Reports"
+    }
+}

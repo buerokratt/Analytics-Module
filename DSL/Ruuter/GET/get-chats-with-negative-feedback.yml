@@ -1,8 +1,0 @@
-get_message:
-  call: http.post
-  args:
-    url: http://resql:8082/get-chats-with-negative-feedback
-  result: message
-
-return_value:
-  return: ${message.response.body[0]}

@@ -1,0 +1,11 @@
+post_step:
+  call: http.post
+  args:
+    url: http://resql:8082/get-csa-feedback-nps
+    body:
+      start: ${incoming.body.start_date}
+      end: ${incoming.body.end_date}
+  result: result
+
+return_value:
+  return: ${result.response.body}

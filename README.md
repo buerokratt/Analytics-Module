@@ -9,6 +9,9 @@
  * Navigate to Resql and build the image `docker build -t resql .`
   
  * Navigate to current repo and run `docker compose up -d`
+
+ * Go to https://localhost:3000
+ 
  * For setting up the database initially, run 
  `docker run --platform linux/amd64 --network=bykstack riaee/byk-users-db:liquibase20220615 --url=jdbc:postgresql://users_db:5432/byk --username=byk --password=01234 --changelog-file=./master.yml update
 `

@@ -8,5 +8,4 @@ post_step:
   result: result
 
 return_value:
-  return: ${result.response.body}  
-  
+  return: ${result.response.body}

@@ -12,7 +12,8 @@ mockValue:
       iat: 1674026157
       jti: "e0000000-3000-4000-8000-cceeccc43ccc"
       authorities: [
-          "ROLE_ANALYST"
+          "ROLE_ANALYST",
+          "ROLE_ANALYST2"
       ]
   result: reflectedRequest
 

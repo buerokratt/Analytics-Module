@@ -5,7 +5,7 @@ extractRequestData:
 extractTokenData:
   call: http.post
   args:
-    url: http://ruuter:8080/custom-jwt-userinfo # todo: replace with real TIM url
+    url: http://ruuter:8080/mocks/mock-custom-jwt-userinfo # todo: replace with real TIM url
     headers:
       cookie: ${cookie}
     body:
@@ -19,13 +19,14 @@ validateRole:
   next: returnUnauthorized
 
 get_negative_feedback:
-  call: http.get
+  call: http.post
   args:
     url: http://resql:8082/negative-feedback
   result: feedback
 
 return_value:
   return: ${feedback.response.body}
+  next: end
   
 returnUnauthorized:
   return: "error: unauthorized"

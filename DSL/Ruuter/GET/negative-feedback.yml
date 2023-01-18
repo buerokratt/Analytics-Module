@@ -1,3 +1,9 @@
+checkForCookie:
+  switch:
+    - condition: ${incoming.headers.cookie == null} 
+      next: returnUnauthorized
+  next: extractRequestData
+    
 extractRequestData:
   assign:
     cookie: ${incoming.headers.cookie}

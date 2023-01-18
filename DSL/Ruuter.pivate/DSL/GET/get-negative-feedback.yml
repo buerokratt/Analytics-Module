@@ -1,0 +1,32 @@
+extractRequestData:
+  assign:
+    cookie: ${incoming.headers.cookie}
+
+extractTokenData:
+  call: http.post
+  args:
+    url: http://ruuter:8080/get-jwt-userinfo # todo: change with real TIM url
+    headers:
+      cookie: ${cookie}
+    body:
+      cookieName: "customJwtCookie" # todo: change with real TIM cookieName
+  result: jwtResult
+
+validateRole:
+  switch:
+    - condition: ${jwtResult.response.body.response.authorities.includes("ROLE_ANALYST")}
+      next: get_negative_feedback
+  next: returnUnauthorized
+
+get_negative_feedback:
+  call: http.get
+  args:
+    url: http://resql:8082/negative-feedback
+  result: feedback
+
+return_value:
+  return: ${feedback.response.body}
+  
+returnUnauthorized:
+  return: "error: unauthorized"
+  next: end

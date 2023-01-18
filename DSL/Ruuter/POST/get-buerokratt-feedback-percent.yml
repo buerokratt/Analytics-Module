@@ -9,3 +9,4 @@ post_step:
 
 return_value:
   return: ${result.response.body[0].percent}
+  

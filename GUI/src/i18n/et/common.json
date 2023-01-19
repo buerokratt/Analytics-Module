@@ -1,13 +1,42 @@
 {
-    "global": {
-      "title": "Analyticsi moodul"
+  "global": {
+    "title": "Analyticsi moodul"
+  },
+  "menu": {
+    "overview": "Ülevaade",
+    "chats": "Vestlused",
+    "burokratt": "Bürokratt",
+    "feedbacks": "Tagasiside",
+    "advisors": "Nõustajad",
+    "reports": "Raportid"
+  },
+  "burokratt": {
+    "chooseMetric": "-- vali mõõdik --",
+    "additionalOptions": "-- lisavalikud --",
+    "choosePeriod": "-- vali periood --",
+    "metric": {
+      "intents": "Teemad",
+      "sessions": "Sessioonid",
+      "averageResponseSpeed": "Bürokrati keskmine vastamise kiirus",
+      "understoodQuestions": "Õigesti mõistetud küsimuste %"
     },
-    "menu": {
-      "overview": "Ülevaade",
-      "chats": "Vestlused",
-      "burokratt": "Bürokratt",
-      "feedbacks": "Tagasiside",
-      "advisors": "Nõustajad",
-      "reports": "Raportid"
+    "intents": {
+      "orderByUsability": "Teemad kasutatavuse järgi",
+      "newIntents": "Uued treenitud teemad",
+      "modifiedIntents": "Muudetud teemad",
+      "avgChatIntents": "Keskmine tuvastatud teemade arv ühes vestluses"
+    },
+    "sessions": {
+      "csa": "Keskmine aeg, Bürokratt + nõustaja",
+      "idle": "Keskmine aeg, ainult Bürokratt",
+      "closed": "Keskmine aeg Bürokratiga, kliendi lõpetatud"
+    },
+    "period": {
+      "today": "Täna",
+      "yesterday": "Eile",
+      "30Days": "Viimased 30 päeva",
+      "months": "Valitud kuud",
+      "period": "Valitud periood kalendrist"
     }
+  }
 }

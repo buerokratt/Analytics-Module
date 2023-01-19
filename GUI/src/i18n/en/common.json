@@ -1,13 +1,42 @@
 {
-    "global": {
-      "title": "Analytics Module"
+  "global": {
+    "title": "Analytics Module"
+  },
+  "menu": {
+    "overview": "Overview",
+    "chats": "Chats",
+    "burokratt": "Bürokratt",
+    "feedbacks": "Feedbacks",
+    "advisors": "Advisors",
+    "reports": "Reports"
+  },
+  "burokratt": {
+    "chooseMetric": "Choose Metric",
+    "additionalOptions": "Additional Options",
+    "choosePeriod": "Choose Period",
+    "metric": {
+      "intents": "Intents",
+      "sessions": "Sessions",
+      "averageResponseSpeed": "Average Response Speed",
+      "understoodQuestions": "Correctly Understood Questions Percentage"
     },
-    "menu": {
-      "overview": "Overview",
-      "chats": "chats",
-      "burokratt": "Bürokratt",
-      "feedbacks": "Feedbacks",
-      "advisors": "Advisors",
-      "reports": "Reports"
+    "intents": {
+      "orderByUsability": "Order of Intents by Usability",
+      "newIntents": "New Intents",
+      "modifiedIntents": "Modified Intents",
+      "avgChatIntents": "Average Number of Intents in a Chat"
+    },
+    "sessions": {
+      "csa": "average time of session when CSA involved",
+      "idle": "average time of session with only Bürokratt involved, incl closed by Bürokratt",
+      "closed": "average time of session, closed by customer"
+    },
+    "period": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "30Days": "Last 30 Days",
+      "months": "Selected Months",
+      "period": "Selected Period"
     }
+  }
 }

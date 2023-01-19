@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import BurokrattPage from './pages/BurokrattPage'
 import ChatsPage from './pages/ChatsPage'
 import NotFoundPage from './pages/NotFoundPage'
 import OverviewPage from './pages/OverviewPage'
@@ -12,6 +13,7 @@ const RootComponent: React.FC = () => {
             <Routes>
                 <Route path={ROUTES.OVERVIEW_ROUTE} element={<OverviewPage />} />
                 <Route path={ROUTES.CHATS_ROUTE} element={<ChatsPage />} />
+                <Route path={ROUTES.BUROKRATT_ROUTE} element={<BurokrattPage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Router>

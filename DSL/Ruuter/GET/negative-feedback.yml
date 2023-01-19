@@ -1,19 +1,19 @@
-check_for_token:
+check_for_cookie:
   switch:
-    - condition: ${incoming.headers.token == null || incoming.headers.token == ""}
+    - condition: ${incoming.headers.cookie == null || incoming.headers.cookie == ""}
       next: return_unauthorized
   next: extract_request_data
     
 extract_request_data:
   assign:
-    token: ${incoming.headers.token}
+    cookie: ${incoming.headers.cookie}
 
-extract_token_data:
+extract_cookie_data:
   call: http.post
   args:
     url: http://ruuter:8080/mocks/mock-custom-jwt-userinfo # todo: replace with real TIM url
     headers:
-      token: ${token}
+      cookie: ${cookie}
     body:
       cookieName: "customJwtCookie" # todo: replace with real TIM cookie's name
   result: jwtResult

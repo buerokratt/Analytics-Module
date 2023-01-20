@@ -16,14 +16,16 @@ WITH botname AS (
             ORDER BY updated
         ) AS prev_updated
     FROM chat
-    WHERE created BETWEEN :start::timestamptz AND:
-END::timestamptz
+    WHERE created BETWEEN :start::timestamptz AND :end::timestamptz
 )
-SELECT avg(
-        extract(
-            epoch
-            FROM (updated - prev_updated)
-        )
+SELECT COALESCE(
+        AVG(
+            extract(
+                epoch
+                FROM (updated - prev_updated)
+            )
+        ),
+        0
     ) AS avg_waiting_time_seconds
 FROM customer_support_changes
 WHERE prev_support_id = ''

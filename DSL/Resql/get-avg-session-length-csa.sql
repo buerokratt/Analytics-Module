@@ -25,5 +25,5 @@ chat_lengths AS (
         JOIN chats ON message.chat_base_id = chats.base_id
     GROUP BY message.chat_base_id
 )
-SELECT AVG(chat_length)
+SELECT COALESCE(AVG(chat_length), '0 seconds'::interval)
 FROM chat_lengths;

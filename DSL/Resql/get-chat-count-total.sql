@@ -1,4 +1,4 @@
-SELECT COUNT(distinct base_id)
+SELECT COUNT(DISTINCT base_id)
 FROM chat
 WHERE created BETWEEN :start::timestamptz AND :end::timestamptz
     AND exists (

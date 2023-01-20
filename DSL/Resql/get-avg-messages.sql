@@ -9,7 +9,7 @@ WITH chats AS (
                 AND message.author_role = 'end-user'
         )
 )
-SELECT AVG(num_messages)
+SELECT COALESCE(AVG(num_messages),0)
 FROM (
         SELECT COUNT(DISTINCT base_id) AS num_messages
         FROM "message"

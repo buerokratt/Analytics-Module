@@ -18,12 +18,12 @@ chat_responses AS (
     FROM message
         JOIN chats ON message.chat_base_id = chats.base_id
 )
-SELECT avg(
+SELECT COALESCE(AVG(
         extract(
             epoch
             FROM (created - prev_created)
         )
-    )
+    ), 0)
 FROM chat_responses
 WHERE author_role = 'chatbot'
     AND prev_author = 'end-user'

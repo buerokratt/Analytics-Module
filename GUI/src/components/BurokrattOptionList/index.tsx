@@ -15,7 +15,7 @@ const BurokrattOptionList: React.FC = () => {
     const [period, setPeriod] = useState(() => periodOptions[0].id);
 
     const selectedMetricIsIntents = metric == '1';
-    const selectedMetricIsSessions = metric == '1';
+    const selectedMetricIsSessions = metric == '2';
 
     return (
         <div className='container'>

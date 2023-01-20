@@ -1,0 +1,8 @@
+get_result:
+  call: http.post
+  args:
+    url: http://resql:8082/get-avg-session-length-no-csa
+  result: result
+
+return_value:
+  return: ${result.response.body}

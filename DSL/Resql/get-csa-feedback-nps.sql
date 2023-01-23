@@ -1,7 +1,7 @@
 SELECT CAST(((
   SUM(CASE WHEN feedback_rating::int BETWEEN 9 AND 10 THEN 1 END) * 1.0 -
   SUM(CASE WHEN feedback_rating::int BETWEEN 0 AND 6 THEN 1 END)
-  ) / COUNT(*) * 100) AS int) as nps
+  ) / COUNT(DISTINCT base_id) * 100) AS int) as nps
 FROM chat
 WHERE EXISTS
     (SELECT 1

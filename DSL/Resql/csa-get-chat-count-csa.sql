@@ -1,7 +1,7 @@
-SELECT COUNT(DISTINCT base_id)
+SELECT date_trunc(:metric, created) AS date_time,
+       COUNT(DISTINCT base_id)
 FROM chat
-WHERE created BETWEEN :start::timestamptz AND :end::timestamptz
-  AND EXISTS
+WHERE EXISTS
     (SELECT 1
      FROM message
      WHERE message.chat_base_id = chat.base_id
@@ -10,5 +10,7 @@ WHERE created BETWEEN :start::timestamptz AND :end::timestamptz
     (SELECT 1
      FROM message
      WHERE message.chat_base_id = chat.base_id
-       AND message.author_role = 'end-user' )
-       
+       AND message.author_role = 'end-user')
+  AND created::date BETWEEN :start::date AND :end::date
+GROUP BY 1
+

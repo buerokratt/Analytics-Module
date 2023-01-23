@@ -23,4 +23,3 @@ export const getAvgSessionLengthNoCsa = (): string => {
 export const getPercentCurrectlyUnderstood = (): string => {
     return baseUrl + '/pct-currectly-understood'
 }
-

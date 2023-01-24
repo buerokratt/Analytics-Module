@@ -1,0 +1,66 @@
+check_for_cookie:
+  switch:
+    - condition: ${incoming.headers.cookie == null || incoming.headers.cookie == ""}
+      next: return_unauthorized
+  next: check_for_required_parameters
+
+check_for_required_parameters:
+  switch:
+    - condition: ${incoming.body == null || incoming.body.active == null || incoming.body.metric == null || incoming.body.ordinality == null}
+      next: return_incorrect_request
+  next: extract_request_data
+
+extract_request_data:
+  assign:
+    cookie: ${incoming.headers.cookie}
+    active: ${incoming.body.active}
+    metric: ${incoming.body.metric}
+    ordinality: ${incoming.body.ordinality}
+
+extract_token_data:
+  call: http.post
+  args:
+    url: http://ruuter:8080/mocks/mock-custom-jwt-userinfo # todo: replace with real TIM url
+    headers:
+      cookie: ${cookie}
+    body:
+      cookieName: 'customJwtCookie' # todo: replace with real TIM cookie's name
+  result: jwtResult
+
+validate_role:
+  switch:
+    - condition: ${jwtResult.response.body.response.authorities.includes("ROLE_ANALYST")}
+      next: update_metrics_preferences
+  next: return_unauthorized
+
+update_metrics_preferences:
+  call: http.post
+  args:
+    url: http://resql:8082/update-overview-metric-preferences
+    body:
+      user_id_code: ${jwtResult.response.body.response.idCode}
+      active: ${active}
+      metric: ${metric}
+      ordinality: ${ordinality}
+  result: result
+
+get_metrics_preferences:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-metric-preferences
+    body:
+      user_id_code: ${jwtResult.response.body.response.idCode}
+  result: metrics
+
+return_value:
+  return: ${metrics.response.body}
+  next: end
+
+return_unauthorized:
+  status: 401
+  return: 'unauthorized'
+  next: end
+
+return_incorrect_request:
+  status: 400
+  return: 'missing parameters'

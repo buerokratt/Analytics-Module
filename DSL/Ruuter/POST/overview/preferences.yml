@@ -59,6 +59,7 @@ return_value:
 return_unauthorized:
   status: 401
   return: 'unauthorized'
+  next: end
 
 return_incorrect_request:
   status: 400

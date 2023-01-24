@@ -1,7 +1,7 @@
 extractRequestData:
   assign:
-    start: ${incoming.body.start}
-    end: ${incoming.body.end}
+    start: ${incoming.body.start_date}
+    end: ${incoming.body.end_date}
 
 get_result:
   call: http.post

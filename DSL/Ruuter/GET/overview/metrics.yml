@@ -1,0 +1,71 @@
+extract_request_data:
+  assign:
+    requestedMetric: ${incoming.params.metric}
+
+checkMetric:
+  switch:
+    - condition: ${requestedMetric === 'total_chats_day'}
+      next: getTotalChatsDayResults
+    - condition: ${requestedMetric === 'total_chats_month'}
+      next: getTotalChatsMonthResults
+    - condition: ${requestedMetric === 'total_chats_no_csa_day'}
+      next: getTotalChatsNoCSAResults
+    - condition: ${requestedMetric === 'avg_chats_by_month'}
+      next: getAvgChatsMonthResults
+    - condition: ${requestedMetric === 'avg_chats_by_week'}
+      next: getAvgChatsWeekResults
+  next: invalidMetric
+
+getTotalChatsDayResults:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-total-chats
+    body:
+      group_period: 'day'
+  result: results
+  next: respond
+
+getTotalChatsMonthResults:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-total-chats
+    body:
+      group_period: 'month'
+  result: results
+  next: respond
+
+getTotalChatsNoCSAResults:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-total-chats-no-csa
+    body:
+      group_period: 'day'
+  result: results
+  next: respond
+
+getAvgChatsMonthResults:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-avg-chats
+    body:
+      group_period: 'month'
+  result: results
+  next: respond
+
+getAvgChatsWeekResults:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-avg-chats
+    body:
+      group_period: 'week'
+  result: results
+  next: respond
+
+respond:
+  return: ${results.response.body}
+  next: end
+
+invalidMetric:
+  status: 400
+  return: 'invalid metric requested'
+

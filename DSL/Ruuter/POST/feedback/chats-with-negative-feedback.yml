@@ -1,13 +1,13 @@
 check_for_required_parameters:
   switch:
-    - condition: ${incoming.body.metric == null || incoming.body.start_date == null || incoming.body.end_date == null}
+    - condition: ${incoming.body == null || incoming.body.metric == null || incoming.body.start_date == null || incoming.body.end_date == null}
       next: return_incorrect_request
   next: post_step
 
 post_step:
   call: http.post
   args:
-    url: http://resql:8082/get-chats-with-negative-feedback
+    url: http://resql:8082/feedback-chats-with-negative-feedback
     body:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}

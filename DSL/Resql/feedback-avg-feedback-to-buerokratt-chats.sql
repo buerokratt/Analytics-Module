@@ -1,5 +1,5 @@
 SELECT date_trunc(:metric, created) AS date_time,
-       round(100.0 * sum(case when feedback_rating is not null then 1 end) / Count(distinct base_id), 1) as average
+       ROUND(100.0 * SUM(CASE WHEN feedback_rating IS NOT NULL THEN 1 ELSE 0 END) / COUNT(DISTINCT base_id), 1) AS average
 FROM chat
 WHERE EXISTS
     (SELECT 1

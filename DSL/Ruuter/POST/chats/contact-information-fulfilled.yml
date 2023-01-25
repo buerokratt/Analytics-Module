@@ -1,0 +1,72 @@
+check_for_body:
+  switch:
+    - condition: ${incoming.body == null}
+      next: missing_parameter
+
+extract_request_data:
+  assign:
+    start: ${incoming.body.start_date}
+    end: ${incoming.body.end_date}
+    option: ${incoming.body.option}
+    period: ${incoming.body.period}
+
+check_for_required_parameters:
+  switch:
+    - condition: ${start == null || end == null || option == null || period == null}
+      next: missing_parameter
+  next: choose_option
+
+missing_parameter:
+  status: 400
+  return: 'required parameters were not provided'
+  next: end
+
+choose_option:
+  switch:
+    - condition: ${option == 'outside-working-hours'}
+      next: outside_working_hours
+    - condition: ${option == 'long-waiting-time'}
+      next: long_waiting_time
+    - condition: ${option == 'all-csas-away'}
+      next: all_csas_away
+
+invalid_option:
+  status: 400
+  return: 'invalid option'
+  next: end
+
+outside_working_hours:
+  call: http.post
+  args:
+    url: http://resql:8082/get-cif-outside-working-hours
+    body:
+      start: ${start}
+      end: ${end}
+      period: ${period}
+  result: results
+  next: fetch_data
+
+long_waiting_time:
+  call: http.post
+  args:
+    url: http://resql:8082/get-cif-long-waiting-time
+    body:
+      start: ${start}
+      end: ${end}
+      period: ${period}
+  result: results
+  next: fetch_data
+
+all_csas_away:
+  call: http.post
+  args:
+    url: http://resql:8082/get-cif-all-csas-away
+    body:
+      start: ${start}
+      end: ${end}
+      period: ${period}
+  result: results
+  next: fetch_data
+
+respond:
+  return: ${results.response.body}

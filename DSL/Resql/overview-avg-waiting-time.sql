@@ -29,6 +29,15 @@ SELECT date_trunc(:group_period, timescale.created) AS created,
                 epoch
                 FROM (updated - prev_updated)
             )
+        ) filter (
+            WHERE prev_support_id = ''
+                AND customer_support_id NOT IN (
+                    (
+                        SELECT "value"
+                        FROM botname
+                    ),
+                    ''
+                )
         ),
         0
     ) AS avg_waiting_time_seconds
@@ -46,13 +55,5 @@ FROM (
             ) AS created
     ) AS timescale
     LEFT JOIN customer_support_changes ON customer_support_changes.created = timescale.created
-WHERE prev_support_id = ''
-    AND customer_support_id NOT IN (
-        (
-            SELECT "value"
-            FROM botname
-        ),
-        ''
-    )
 GROUP BY 1
 ORDER BY 1;

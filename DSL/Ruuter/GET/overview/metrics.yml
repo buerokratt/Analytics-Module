@@ -111,14 +111,12 @@ getTotalForwardedChatsResult:
   call: http.post
   args:
     url: http://resql:8082/overview-total-forwarded-chats
-    body:
-      group_period: 'day'
   result: results
   next: respond
 
 
 respond:
-  return: ${results.response.body}
+  return: ${results.response.body[0]}
   next: end
 
 invalidMetric:

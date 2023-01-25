@@ -10,4 +10,3 @@ SELECT DISTINCT chat.base_id,
   AND message.author_role = 'backoffice-user'
   AND chat.created::date BETWEEN :start::date AND :end::date
   ORDER BY date_time
-  

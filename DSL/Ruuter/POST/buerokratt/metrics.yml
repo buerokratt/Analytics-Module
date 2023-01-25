@@ -1,0 +1,97 @@
+check_for_body:
+  switch:
+    - condition: ${incoming.body == null}
+      next: missing_parameter
+
+extract_request_data:
+  assign:
+    start: ${incoming.body.start_date}
+    end: ${incoming.body.end_date}
+    metric: ${incoming.body.metric}
+
+check_for_required_parameters:
+  switch:
+    - condition: ${start == null || end == null || metric == null}
+      next: missing_parameter
+  next: choose_metric
+
+missing_parameter:
+  status: 400
+  return: 'required parameters were not provided'
+  next: end
+
+choose_metric:
+  switch:
+    - condition: ${metric == 'avg-response-time'}
+      next: avg_response_time
+    - condition: ${metric == 'avg-session-length-client-left'}
+      next: avg_session_length_client_left
+    - condition: ${metric == 'avg-session-length-csa'}
+      next: avg_session_length_csa
+    - condition: ${metric == 'avg-session-length-no-csa'}
+      next: avg_session_length_no_csa
+    - condition: ${metric == 'pct-correctly-understood'}
+      next: pct_correctly_understood
+
+invalid_metric:
+  status: 400
+  return: 'invalid metric'
+  next: end
+
+avg_response_time:
+  call: http.post
+  args:
+    url: http://resql:8082/get-avg-response-time
+    body:
+      metric: ${metric}
+      start: ${start}
+      end: ${end}
+  result: results
+  next: fetch_data
+
+avg_session_length_client_left:
+  call: http.post
+  args:
+    url: http://resql:8082/get-avg-session-length-client-left
+    body:
+      metric: ${metric}
+      start: ${start}
+      end: ${end}
+  result: results
+  next: fetch_data
+
+avg_session_length_csa:
+  call: http.post
+  args:
+    url: http://resql:8082/get-avg-session-length-csa
+    body:
+      metric: ${metric}
+      start: ${start}
+      end: ${end}
+  result: results
+  next: fetch_data
+
+avg_session_length_no_csa:
+  call: http.post
+  args:
+    url: http://resql:8082/get-avg-session-length-no-csa
+    body:
+      metric: ${metric}
+      start: ${start}
+      end: ${end}
+  result: results
+  next: fetch_data
+
+pct_correctly_understood:
+  call: http.post
+  args:
+    url: http://resql:8082/get-pct-correctly-understood
+    body:
+      metric: ${metric}
+      start: ${start}
+      end: ${end}
+  result: results
+  next: fetch_data
+
+respond:
+  return: ${results.response.body}

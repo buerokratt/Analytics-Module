@@ -116,7 +116,7 @@ getTotalForwardedChatsResult:
 
 
 respond:
-  return: ${results.response.body[0]}
+  return: ${results.response.body}
   next: end
 
 invalidMetric:

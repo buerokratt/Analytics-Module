@@ -26,7 +26,7 @@ WITH chats AS (
         )
 )
 SELECT timescale.created AS created,
-    COUNT(DISTINCT base_id)
+    COUNT(DISTINCT base_id) as metric_value
 FROM (
         SELECT date_trunc(
                 :group_period,

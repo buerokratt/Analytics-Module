@@ -11,9 +11,12 @@ SELECT COUNT(DISTINCT base_id) filter (
                 FROM botname
             )
             AND external_id IS NULL
-    ) AS "forwarded_internally",
-    COUNT(DISTINCT base_id) filter (
+    ) AS metric_value
+FROM chat
+WHERE date_trunc('day', chat.created) = date_trunc('day', current_date - '1 day'::INTERVAL)
+UNION ALL
+SELECT COUNT(DISTINCT base_id) filter (
         WHERE external_id IS NOT NULL
-    ) AS "forwarded_externally"
+    ) AS metric_value
 FROM chat
 WHERE date_trunc('day', chat.created) = date_trunc('day', current_date - '1 day'::INTERVAL)

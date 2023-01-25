@@ -40,7 +40,7 @@ SELECT date_trunc(:group_period, timescale.created) AS created,
                 )
         ),
         0
-    ) AS avg_waiting_time_seconds
+    ) AS metric_value
 FROM (
         SELECT date_trunc(
                 'day',

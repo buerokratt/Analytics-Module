@@ -1,30 +1,47 @@
-SELECT date_trunc(:metric, chat.created) AS date_time,chat.base_id, chat.created, csas.author_id, csas.author_first_name, csas.author_last_name,
-       coalesce(CAST(((
+WITH chat_csas AS (
+    SELECT DISTINCT base_id,
+        first_value(created) over (
+            PARTITION by base_id
+            ORDER BY updated
+) AS created,
+        last_value(customer_support_id) over (
+            PARTITION by base_id
+            ORDER BY updated
+) AS customer_support_id,
+        last_value(customer_support_display_name) over (
+            PARTITION by base_id
+            ORDER BY updated
+) AS customer_support_display_name,
+        last_value(feedback_rating) over (
+            PARTITION by base_id
+            ORDER BY updated
+) AS feedback_rating
+    FROM chat
+    WHERE customer_support_id <> ''
+        AND EXISTS (
+            SELECT 1
+            FROM message
+            WHERE message.chat_base_id = chat.base_id
+                AND message.author_role = 'backoffice-user'
+)
+        AND EXISTS (
+            SELECT 1
+            FROM message
+            WHERE message.chat_base_id = chat.base_id
+                AND message.author_role = 'end-user'
+)
+        AND STATUS = 'ENDED'
+        AND feedback_rating IS NOT NULL
+        AND created::date BETWEEN :start::date AND :end::date
+        AND customer_support_id NOT IN (:excluded_csas)
+)
+SELECT date_trunc(:metric, created) AS date_time,
+    customer_support_id,
+    customer_support_display_name,
+    coalesce(CAST(((
        SUM(CASE WHEN feedback_rating::int BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 -
        SUM(CASE WHEN feedback_rating::int BETWEEN 0 AND 6 THEN 1 ELSE 0 END)
-       ) / COUNT(DISTINCT csas.author_id) * 100) AS int), 0) AS nps
-FROM chat 
-LEFT OUTER JOIN message ON chat.base_id = message.chat_base_id
-LEFT OUTER JOIN (SELECT distinct author_id, author_first_name, author_last_name
-     FROM message
-     WHERE message.author_role = 'backoffice-user'
-     AND message.author_first_name IS NOT NULL
-     AND coalesce(TRIM(message.author_first_name), '') != ''
-     AND author_id NOT IN (:excluded_csas)) AS csas ON message.author_id = csas.author_id
-WHERE EXISTS
-    (SELECT 1
-     FROM message
-     WHERE message.chat_base_id = chat.base_id
-       AND message.author_role = 'backoffice-user')
-  AND EXISTS
-    (SELECT 1
-     FROM message
-     WHERE message.chat_base_id = chat.base_id
-       AND message.author_role = 'end-user')    
-  AND status = 'ENDED'
-  AND feedback_rating IS NOT NULL
-  and coalesce(TRIM(message.author_id), '') != ''
-  and coalesce(TRIM(message.author_id), '') != 'botname'
-  and csas.author_first_name IS NOT NULL
-  AND chat.created::date BETWEEN :start::date AND :end::date
-  GROUP BY chat.base_id, chat.created,csas.author_id,csas.author_first_name,csas.author_last_name
+) / COUNT(base_id) * 100) AS int), 0) AS nps
+FROM chat_csas
+GROUP BY 1, 2, 3
+ORDER BY 1

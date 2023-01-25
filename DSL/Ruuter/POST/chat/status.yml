@@ -1,0 +1,40 @@
+check_for_required_parameters:
+  switch:
+    - condition: ${incoming.body == null || incoming.body.type == null || incoming.body.events == null || incoming.body.start_date == null || incoming.body.end_date == null}
+      next: return_incorrect_request
+  next: check_is_csa
+
+check_is_csa:
+  switch:
+   - condition: ${incoming.body.type === 'csa'}
+     next: call_csa_chats
+  next: call_all_chats
+
+call_csa_chats:
+  call: http.post
+  args:
+    url: http://resql:8082/status-csa-chats
+    body:
+      events: ${incoming.body.events}
+      start: ${incoming.body.start_date}
+      end: ${incoming.body.end_date}
+  result: result     
+
+call_all_chats:
+  call: http.post
+  args:
+    url: http://resql:8082/status-all-chats
+    body:
+      events: ${incoming.body.events}
+      start: ${incoming.body.start_date}
+      end: ${incoming.body.end_date}
+  result: result
+
+return_value:
+  return: ${result.response.body}
+  next: end
+
+return_incorrect_request:
+  status: 400
+  return: 'missing parameters'
+  next: end

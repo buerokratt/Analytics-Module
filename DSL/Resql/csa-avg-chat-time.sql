@@ -25,4 +25,3 @@ chat_lengths AS (
 SELECT date_time, COALESCE(AVG(chat_length), '0 seconds'::interval) AS avg
 FROM chat_lengths JOIN chats ON chats.base_id = chat_lengths.chat_base_id
 GROUP BY date_time
-

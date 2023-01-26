@@ -7,6 +7,7 @@ WITH botname AS (
     SELECT base_id,
         customer_support_id,
         updated,
+        date_trunc(:metric, created) AS date_time,
         lag(customer_support_id) over (
             PARTITION by base_id
             ORDER BY updated
@@ -16,9 +17,9 @@ WITH botname AS (
             ORDER BY updated
         ) AS prev_updated
     FROM chat
-    WHERE created BETWEEN :start::timestamptz AND :end::timestamptz
+    WHERE created::date BETWEEN :start::date AND :end::date
 )
-SELECT COALESCE(
+SELECT date_time, COALESCE(
         AVG(
             extract(
                 epoch
@@ -35,5 +36,5 @@ WHERE prev_support_id = ''
             FROM botname
         ),
         ''
-    );
-    
+    )
+GROUP BY date_time

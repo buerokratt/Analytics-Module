@@ -2,9 +2,9 @@ import axios from 'axios'
 import React, { useCallback, useEffect, useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import DraggableListItem from '../components/DraggableListItem'
+import DraggableListItem from '../components/overview/DraggableListItem'
 import Layout from '../components/Layout'
-import OverviewSidebar from '../components/OverviewSidebar'
+import OverviewSidebar from '../components/overview/OverviewSidebar'
 import { overviewMetricPreferences, overviewMetrics } from '../resources/api-constants'
 import { OverviewMetricData, OverviewMetricPreference } from '../types/overview-metrics'
 
@@ -101,19 +101,17 @@ const OverviewPage: React.FC = () => {
   )
 
   return (
-    <Layout>
-      <DndProvider backend={HTML5Backend}>
-        <h1>Overview</h1>
-        <>
-          <h3>Main Metrics</h3>
-          <button onClick={() => setDrawerIsHidden(false)}>Muuda</button>
-          <OverviewSidebar isHidden={drawerIsHidden} closeDrawer={() => setDrawerIsHidden(true)}>
-            {metricPreferences.map((m, i) => renderList(m, i))}
-          </OverviewSidebar>
-          <div style={{ display: 'flex' }}>{metrics.map((m, i) => renderCards(m, i))}</div>
-        </>
-      </DndProvider>
-    </Layout>
+    <DndProvider backend={HTML5Backend}>
+      <h1>Overview</h1>
+      <>
+        <h3>Main Metrics</h3>
+        <button onClick={() => setDrawerIsHidden(false)}>Muuda</button>
+        <OverviewSidebar isHidden={drawerIsHidden} closeDrawer={() => setDrawerIsHidden(true)}>
+          {metricPreferences.map((m, i) => renderList(m, i))}
+        </OverviewSidebar>
+        <div style={{ display: 'flex' }}>{metrics.map((m, i) => renderCards(m, i))}</div>
+      </>
+    </DndProvider>
   )
 }
 

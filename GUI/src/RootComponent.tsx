@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import ChatsPage from './pages/ChatsPage'
 import NotFoundPage from './pages/NotFoundPage'
-import OverviewPage from './pages/overview/OverviewPage'
+import OverviewPage from './pages/OverviewPage'
 import { ROUTES } from './resources/routes-constants'
 import './styles/main.sass'
 

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { OverviewMetricPreference } from '../../types/overview-metrics'
+import { OverviewMetricPreference } from '../../../types/overview-metrics'
 import { useDrag, useDrop, XYCoord } from 'react-dnd'
 
 const DraggableListItem = ({

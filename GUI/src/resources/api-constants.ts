@@ -4,22 +4,14 @@ export const getTesting = (): string => {
     return baseUrl + '/testing'
 }
 
-export const getAvgResponseTime = (): string => {
-    return baseUrl + '/avg-response-time'
+export const geBykAvgResponseTime = (): string => {
+    return baseUrl + '/byk-avg-response-speed'
 }
 
-export const getAvgSessionLengthClientLeft = (): string => {
-    return baseUrl + '/avg-session-length-client-left'
+export const getBykAvgSessionTime = (): string => {
+    return baseUrl + '/byk-avg-sessions-time'
 }
 
-export const getAvgSessionLengthCsa = (): string => {
-    return baseUrl + '/avg-session-length-csa'
-}
-
-export const getAvgSessionLengthNoCsa = (): string => {
-    return baseUrl + '/avg-session-length-no-csa'
-}
-
-export const getPercentCurrectlyUnderstood = (): string => {
-    return baseUrl + '/pct-currectly-understood'
+export const getPercentCurrectlyUnderstoodByByk = (): string => {
+    return baseUrl + '/byk-pct-correctly-understood'
 }

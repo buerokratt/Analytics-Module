@@ -20,4 +20,4 @@ SELECT
     AVG(EXTRACT(EPOCH FROM end_time - start_time)) AS avg_sesssion_time
 FROM closed_chats
 GROUP BY time
-ORDER BY time;
+ORDER BY time

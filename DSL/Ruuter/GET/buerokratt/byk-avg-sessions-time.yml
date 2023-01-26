@@ -12,7 +12,7 @@ extract_request_data:
 
 check_for_required_parameters:
   switch:
-    - condition: ${start == null || end == null || options == null || options.length == 0 || period == null}
+    - condition: ${start == null || end == null || options == null || period == null}
       next: missing_parameter
   next: check_byk
 
@@ -39,7 +39,7 @@ byk:
 
 assign_byk:
   assign: 
-    byk: ${byk_results.response.body}
+    byk_response: ${byk_results.response.body}
   
 check_csa:
   switch:
@@ -59,12 +59,13 @@ csa:
 
 assign_csa:
   assign: 
-    csa: ${csa_results.response.body}
+    csa_response: ${csa_results.response.body}
 
-check_csa:
+check_customer:
   switch:
     - condition: ${options.includes('customer')}
       next: customer
+  next: build_final_result
 
 customer:
   call: http.post
@@ -78,10 +79,14 @@ customer:
 
 assign_customer:
   assign: 
-    customer: ${customer_results.response.body}
+    customer_response: ${customer_results.response.body}
+
+build_final_result:
+  assign:
+    response:
+      - ${byk_response}
+      - ${csa_response}
+      - ${customer_response}
 
 respond:
-  return: 
-    byk: ${byk}
-    csa: ${csa}
-    customer: ${csa}
+  return: ${response}

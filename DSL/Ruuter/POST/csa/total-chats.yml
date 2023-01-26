@@ -7,7 +7,7 @@ check_for_required_parameters:
 post_step:
   call: http.post
   args:
-    url: http://resql:8082/csa-get-chat-count-csa
+    url: http://resql:8082/csa-chats-count
     body:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}
@@ -22,4 +22,3 @@ return_incorrect_request:
   status: 400
   return: 'missing parameters'
   next: end
-  

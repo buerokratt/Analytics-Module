@@ -13,4 +13,3 @@ WHERE EXISTS
        AND message.author_role = 'end-user')
   AND created::date BETWEEN :start::date AND :end::date
 GROUP BY 1
-

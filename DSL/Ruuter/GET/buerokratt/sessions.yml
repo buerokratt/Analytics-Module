@@ -1,0 +1,87 @@
+check_for_params:
+  switch:
+    - condition: ${incoming.params == null}
+      next: missing_parameter
+
+extract_request_data:
+  assign:
+    options: ${incoming.params.options}
+    start: ${incoming.params.start_date}
+    end: ${incoming.params.end_date}
+    period: ${incoming.params.period}
+
+check_for_required_parameters:
+  switch:
+    - condition: ${start == null || end == null || options == null || options.length == 0 || period == null}
+      next: missing_parameter
+  next: check_byk
+
+missing_parameter:
+  status: 400
+  return: 'required parameters were not provided'
+  next: end
+
+check_byk:
+  switch:
+    - condition: ${options.includes('byk')}
+      next: byk
+  next: check_csa
+
+byk:
+  call: http.post
+  args:
+    url: http://resql:8082/byk-avg-sessions-time-chatbot
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: byk_results
+
+assign_byk:
+  assign: 
+    byk: ${byk_results.response.body}
+  
+check_csa:
+  switch:
+    - condition: ${options.includes('csa')}
+      next: csa
+  next: check_customer
+    
+csa:
+  call: http.post
+  args:
+    url: http://resql:8082/byk-avg-sessions-time-csa
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: csa_results
+
+assign_csa:
+  assign: 
+    csa: ${csa_results.response.body}
+
+check_csa:
+  switch:
+    - condition: ${options.includes('customer')}
+      next: customer
+
+customer:
+  call: http.post
+  args:
+    url: http://resql:8082/byk-avg-sessions-time-customer
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: customer_results
+
+assign_customer:
+  assign: 
+    customer: ${customer_results.response.body}
+
+respond:
+  return: 
+    byk: ${byk}
+    csa: ${csa}
+    customer: ${csa}

@@ -1,0 +1,34 @@
+check_for_params:
+  switch:
+    - condition: ${incoming.params == null}
+      next: missing_parameter
+
+extract_request_data:
+  assign:
+    start: ${incoming.params.start_date}
+    end: ${incoming.params.end_date}
+    period: ${incoming.params.period}
+
+check_for_required_parameters:
+  switch:
+    - condition: ${start == null || end == null || period == null}
+      next: missing_parameter
+  next: avg_response_time
+
+missing_parameter:
+  status: 400
+  return: 'required parameters were not provided'
+  next: end
+
+avg_response_time:
+  call: http.post
+  args:
+    url: http://resql:8082/byk-avg-response-speed
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: results
+  
+respond:
+  return: ${results.response.body}

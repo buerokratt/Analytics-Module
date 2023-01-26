@@ -1,7 +1,8 @@
 WITH chats AS (
-    SELECT DISTINCT base_id
+    SELECT DISTINCT base_id, 
+    date_trunc(:metric, created) AS date_time
     FROM chat
-    WHERE created BETWEEN :start::timestamptz AND :end::timestamptz
+    WHERE created::date BETWEEN :start::date AND :end::date
         AND EXISTS (
             SELECT 1
             FROM message
@@ -16,10 +17,12 @@ WITH chats AS (
         )
 ),
 chat_lengths AS (
-    SELECT age(MAX(created), MIN(created)) AS chat_length
+    select chat_base_id, age(MAX(created), MIN(created)) AS chat_length
     FROM message
         JOIN chats ON message.chat_base_id = chats.base_id
     GROUP BY message.chat_base_id
 )
-SELECT COALESCE(AVG(chat_length), '0 seconds'::interval) AS avg
-FROM chat_lengths;
+SELECT date_time, COALESCE(AVG(chat_length), '0 seconds'::interval) AS avg
+FROM chat_lengths JOIN chats ON chats.base_id = chat_lengths.chat_base_id
+GROUP BY date_time
+

@@ -1,8 +1,8 @@
 export const ROUTES = {
-    OVERVIEW_ROUTE: '/',
-    CHATS_ROUTE: '/chats',
-    BUROKRATT_ROUTE:'/burokratt',
-    FEEDBACKS_ROUTE:'/feedbacks',
-    ADVISORS_ROUTE:'/advisors',
-    REPORTS_ROUTE:'/reports',
+    OVERVIEW_ROUTE: '/analytics/overview',
+    CHATS_ROUTE: '/analytics/chats',
+    BUROKRATT_ROUTE:'/analytics/burokratt',
+    FEEDBACKS_ROUTE:'/analytics/feedbacks',
+    ADVISORS_ROUTE:'/analytics/advisors',
+    REPORTS_ROUTE:'/analytics/reports',
 }

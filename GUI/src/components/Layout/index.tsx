@@ -1,20 +1,21 @@
-import React, { ReactElement } from 'react'
-import SideMenu from '../SideMenu'
-import './styles.scss'
+import React, { FC } from 'react'
+import { Outlet } from 'react-router-dom'
 
-interface LayoutProps{
-    children: React.ReactNode,
-}
+import { MainNavigation, Header } from '../../components'
+import './Layout.scss'
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
-    return (
-        <div className='main-container'>
-            <SideMenu />
-            <div className='content-container'>
-                {children}
-            </div>
-        </div>
-    )
+const Layout: FC = () => {
+  return (
+    <div className="layout">
+      <MainNavigation />
+      <div className="layout__wrapper">
+        <Header />
+        <main className="layout__main">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  )
 }
 
 export default Layout

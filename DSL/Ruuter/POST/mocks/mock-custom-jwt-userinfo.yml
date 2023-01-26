@@ -1,0 +1,21 @@
+mockValue:
+  call: reflect.mock
+  args:
+    response:
+      sub: ""
+      firstName: "Jo Doe"
+      idCode: "EE90009999999"
+      displayName: "Jo Doe"
+      iss: "test.buerokratt.ee"
+      exp: 1674026157
+      login: "EE90009999999"
+      iat: 1674026157
+      jti: "e0000000-3000-4000-8000-cceeccc43ccc"
+      authorities: [
+          "ROLE_ANALYST",
+          "ROLE_ANALYST2"
+      ]
+  result: reflectedRequest
+
+returnMockValue:
+  return: ${reflectedRequest.response.body}

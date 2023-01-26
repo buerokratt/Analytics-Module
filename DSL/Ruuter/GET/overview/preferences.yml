@@ -1,0 +1,41 @@
+check_for_cookie:
+  switch:
+    - condition: ${incoming.headers.cookie == null || incoming.headers.cookie == ""}
+      next: return_unauthorized
+  next: extract_request_data
+
+extract_request_data:
+  assign:
+    cookie: ${incoming.headers.cookie}
+
+extract_token_data:
+  call: http.post
+  args:
+    url: http://ruuter:8080/mocks/mock-custom-jwt-userinfo # todo: replace with real TIM url
+    headers:
+      cookie: ${cookie}
+    body:
+      cookieName: "customJwtCookie" # todo: replace with real TIM cookie's name
+  result: jwtResult
+
+validate_role:
+  switch:
+    - condition: ${jwtResult.response.body.response.authorities.includes("ROLE_ANALYST")}
+      next: get_metrics_preferences
+  next: return_unauthorized
+
+get_metrics_preferences:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-metric-preferences
+    body:
+      user_id_code: ${jwtResult.response.body.response.idCode}
+  result: metrics
+
+return_value:
+  return: ${metrics.response.body}
+  next: end
+
+return_unauthorized:
+  status: 401
+  return: "unauthorized"

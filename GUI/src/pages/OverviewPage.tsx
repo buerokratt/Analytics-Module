@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useCallback, useEffect, useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { Button, Drawer, Icon, Track } from '../components'
+import { Button, Card, Drawer, Icon, Track } from '../components'
 import DraggableListItem from '../components/overview/DraggableListItem'
 import MainMetricsArea from '../components/overview/MainMetricsArea'
 import { overviewMetricPreferences } from '../resources/api-constants'
@@ -79,10 +79,15 @@ const OverviewPage: React.FC = () => {
       >
         {metricPreferences.map((m, i) => renderList(m, i))}
       </Drawer>
+
       <MainMetricsArea
         metricPreferences={metricPreferences}
         saveReorderedMetric={saveReorderedMetric}
       ></MainMetricsArea>
+
+      <Card header={<Track><h3>Vestluste koguarv</h3></Track>}>
+        test 
+      </Card>
     </DndProvider>
   )
 }

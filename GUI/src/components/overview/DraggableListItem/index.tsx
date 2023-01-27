@@ -6,8 +6,6 @@ import { FormCheckbox } from '../../FormElements'
 import Track from '../../Track'
 import Icon from '../../Icon'
 import { MdDragIndicator } from 'react-icons/md'
-import Box from '../../Box'
-import Card from '../../Card'
 import Section from '../../Section'
 
 type Props = {

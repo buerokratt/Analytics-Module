@@ -47,13 +47,14 @@ const DraggableCard = ({ metricData, metric, index, moveMetric, saveReorderedMet
   return (
     <div ref={ref} className={clsx(['draggable-card', isDragging && 'dragging'])}>
       <Card>
-        <Track>
-          <Icon icon={<MdDragIndicator />} size="medium" />
-          <h4>{metricData.metric}</h4>
+        <Track style={{margin: '0px 12px'}}>
+          <Icon icon={<MdDragIndicator />} size="medium"></Icon>
+          <span className="title">{metricData.metric}</span>
         </Track>
-        <h3>
+
+        <h2>
           {metricData.data.left.value} / {metricData.data.right.value}
-        </h3>
+        </h2>
       </Card>
     </div>
   )

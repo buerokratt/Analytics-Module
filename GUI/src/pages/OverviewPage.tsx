@@ -9,6 +9,7 @@ import { overviewMetricPreferences } from '../resources/api-constants'
 import { OverviewMetricPreference } from '../types/overview-metrics'
 import { reorderItem } from '../util/reorder-array'
 import { MdEdit } from 'react-icons/md'
+import BykLineChart from '../components/BykLineChart'
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([])
@@ -62,6 +63,14 @@ const OverviewPage: React.FC = () => {
     ></DraggableListItem>
   )
 
+  const data03 = [
+    { date: '10:00:00', price: 115.82, value: 30, output: 15},
+    { date: '11:00:00', price: 115.82, value: 30, output: 35 },
+    { date: '12:00:00', price: 80, value: 100, output: 55 },
+    { date: '13:00:00', price: 115.82, value: 30, output: 25 },
+    { date: '14:00:00', price: 115.82, value: 30, output: 15 },
+  ]
+
   return (
     <DndProvider backend={HTML5Backend}>
       <Track justify="between">
@@ -85,8 +94,14 @@ const OverviewPage: React.FC = () => {
         saveReorderedMetric={saveReorderedMetric}
       ></MainMetricsArea>
 
-      <Card header={<Track><h3>Vestluste koguarv</h3></Track>}>
-        test 
+      <Card
+        header={
+          <Track>
+            <h3>Vestluste koguarv</h3>
+          </Track>
+        }
+      >
+        <BykLineChart data={data03}></BykLineChart>
       </Card>
     </DndProvider>
   )

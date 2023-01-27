@@ -2,19 +2,15 @@ import React, { useRef } from 'react'
 import { OverviewMetricPreference } from '../../../types/overview-metrics'
 import { useDrag, useDrop, XYCoord } from 'react-dnd'
 
-const DraggableListItem = ({
-  metric,
-  toggleMetricActive,
-  moveMetric,
-  saveReorderedMetric,
-  index,
-}: {
+type Props = {
   metric: OverviewMetricPreference
   toggleMetricActive: (metric: OverviewMetricPreference) => void
-  moveMetric: (item: number, target: number) => void
+  moveMetric: (metricName: string, target: number) => void
   saveReorderedMetric: (metric: OverviewMetricPreference, newIndex: number) => void
   index: number
-}) => {
+}
+
+const DraggableListItem = ({ metric, toggleMetricActive, moveMetric, saveReorderedMetric, index }: Props) => {
   const ref = useRef<HTMLDivElement>(null)
 
   const [{ isDragging }, drag] = useDrag({
@@ -24,8 +20,6 @@ const DraggableListItem = ({
       isDragging: monitor.isDragging(),
     }),
   })
-
-  let reorderingRow = false
 
   const [, drop] = useDrop({
     accept: 'OverviewList',
@@ -42,8 +36,7 @@ const DraggableListItem = ({
       if (item.index < index && hoverClientY < hoverMiddleY) return
       if (item.index > index && hoverClientY > hoverMiddleY) return
 
-      moveMetric(item.index, index)
-      reorderingRow = true
+      moveMetric(item.metric.metric, index)
 
       item.index = index
     },

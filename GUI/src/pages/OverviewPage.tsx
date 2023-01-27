@@ -2,30 +2,25 @@ import axios from 'axios'
 import React, { useCallback, useEffect, useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { Card, Drawer, Track } from '../components'
+import DraggableCard from '../components/overview/DraggableCard'
 import DraggableListItem from '../components/overview/DraggableListItem'
-import OverviewSidebar from '../components/overview/OverviewSidebar'
+import MainMetricsArea from '../components/overview/MainMetricsArea'
 import { overviewMetricPreferences, overviewMetrics } from '../resources/api-constants'
 import { OverviewMetricData, OverviewMetricPreference } from '../types/overview-metrics'
+import { reorderItem } from '../util/reorder-array'
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([])
-  const [metrics, setMetrics] = useState<OverviewMetricData[]>([])
   const [drawerIsHidden, setDrawerIsHidden] = useState(false)
 
   useEffect(() => {
     fetchMetricPreferences().catch(console.error)
   }, [])
 
-  useEffect(() => {
-    const interval = setInterval(() => fetchMetrics(metricPreferences), 30000)
-    return () => clearInterval(interval)
-  }, [metricPreferences])
-
   const fetchMetricPreferences = async () => {
     const result = await axios.get(overviewMetricPreferences(), { withCredentials: true })
-
     setMetricPreferences(result.data.response)
-    fetchMetrics(result.data.response)
   }
 
   const updateMetricPreference = async (metric: OverviewMetricPreference) => {
@@ -38,23 +33,7 @@ const OverviewPage: React.FC = () => {
       },
       { withCredentials: true },
     )
-
     setMetricPreferences(result.data.response)
-    fetchMetrics(result.data.response)
-  }
-
-  const fetchMetrics = async (metricPreferences: OverviewMetricPreference[]) => {
-    const metricsToFetch = metricPreferences.filter((m) => m.active)
-    const results = await Promise.all(metricsToFetch.map((m) => axios.get(overviewMetrics(m.metric))))
-    setMetrics(
-      results.map((r, i) => ({
-        metric: metricsToFetch[i].metric,
-        data: {
-          left: { value: r.data.response[0].metricValue, title: 'Left' },
-          right: { value: r.data.response[1].metricValue, title: 'Right' },
-        },
-      })),
-    )
   }
 
   const toggleMetricActive = (metric: OverviewMetricPreference) => {
@@ -66,49 +45,39 @@ const OverviewPage: React.FC = () => {
     updateMetricPreference({ ...metric, ordinality: newIndex })
   }, [])
 
-  const moveMetric = useCallback(
-    (item: number, target: number) => {
-      setMetricPreferences((metrics) => {
-        const prevMetrics = metrics.slice()
-        const movingItem = prevMetrics.splice(item, 1)
-        prevMetrics.splice(target, 0, movingItem[0])
-        return prevMetrics
-      })
-    },
-    [metricPreferences],
-  )
+  const moveMetric = (metric: string, target: number) => {
+    setMetricPreferences((metrics) =>
+      reorderItem<OverviewMetricPreference>(metrics, (m) => m.metric === metric, target),
+    )
+  }
 
-  const renderList = useCallback(
-    (m: OverviewMetricPreference, i: number) => (
-      <DraggableListItem
-        key={m.metric}
-        metric={m}
-        toggleMetricActive={toggleMetricActive}
-        moveMetric={moveMetric}
-        saveReorderedMetric={saveReorderedMetric}
-        index={i}
-      ></DraggableListItem>
-    ),
-    [],
-  )
-
-  const renderCards = useCallback(
-    (m: OverviewMetricData, i: number) => (
-      <div style={{ width: '100px', height: '50px', border: '1px solid black' }}>{m.data.left.value}</div>
-    ),
-    [],
+  const renderList = (m: OverviewMetricPreference, i: number) => (
+    <DraggableListItem
+      key={m.metric}
+      metric={m}
+      toggleMetricActive={toggleMetricActive}
+      moveMetric={moveMetric}
+      saveReorderedMetric={saveReorderedMetric}
+      index={i}
+    ></DraggableListItem>
   )
 
   return (
     <DndProvider backend={HTML5Backend}>
       <h1>Overview</h1>
       <>
-        <h3>Main Metrics</h3>
         <button onClick={() => setDrawerIsHidden(false)}>Muuda</button>
-        <OverviewSidebar isHidden={drawerIsHidden} closeDrawer={() => setDrawerIsHidden(true)}>
+        <Drawer
+          onClose={() => setDrawerIsHidden(true)}
+          title="Muuda vaadet"
+          style={{ transform: drawerIsHidden ? 'translate(100%)' : 'none', width: '300px' }}
+        >
           {metricPreferences.map((m, i) => renderList(m, i))}
-        </OverviewSidebar>
-        <div style={{ display: 'flex' }}>{metrics.map((m, i) => renderCards(m, i))}</div>
+        </Drawer>
+        <MainMetricsArea
+          metricPreferences={metricPreferences}
+          saveReorderedMetric={saveReorderedMetric}
+        ></MainMetricsArea>
       </>
     </DndProvider>
   )

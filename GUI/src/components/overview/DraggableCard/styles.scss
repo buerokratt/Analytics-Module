@@ -1,0 +1,22 @@
+@import 'src/styles/tools/color';
+
+.draggable-card {
+  flex: 1 1 30%;
+  text-align: center;
+  .icon {
+    opacity: 0;
+  }
+}
+
+.draggable-card.dragging {
+  .card {
+    background: get-color(sapphire-blue-0);
+    border: 1px dotted get-color(sapphire-blue-10);
+  }
+}
+
+.draggable-card:hover {
+  .icon {
+    opacity: 1;
+  }
+}

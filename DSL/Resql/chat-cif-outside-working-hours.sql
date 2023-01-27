@@ -1,7 +1,21 @@
 WITH config AS (
     SELECT 
-        (SELECT value FROM configuration WHERE key = 'organizationWorkingTimeStartISO')::timestamptz AS workingTimeStart,
-        (SELECT value FROM configuration WHERE key = 'organizationWorkingTimeEndISO')::timestamptz AS workingTimeEnd
+        (
+            SELECT value
+            FROM configuration
+            WHERE key = 'organizationWorkingTimeStartISO'
+            AND deleted IS false
+			ORDER BY created DESC
+			LIMIT 1
+        )::timestamptz AS workingTimeStart,
+        (
+            SELECT value
+            FROM configuration
+            WHERE key = 'organizationWorkingTimeEndISO'
+            AND deleted IS false
+			ORDER BY created DESC
+			LIMIT 1
+        )::timestamptz AS workingTimeEnd
 )
 SELECT
     DATE_TRUNC(:period, chat.created) AS time,

@@ -95,4 +95,3 @@ assign_all_csas_away:
 
 respond:
   return: ${[outside_working_hours_result, long_waiting_time_result, all_csas_away_result]}
-  

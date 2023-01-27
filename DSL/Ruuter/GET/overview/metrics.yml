@@ -24,6 +24,8 @@ checkMetric:
       next: getAvgWaitingTimeWeekResult
     - condition: ${requestedMetric === 'total_forwarded_chats_yesterday'}
       next: getTotalForwardedChatsResult
+    - condition: ${requestedMetric === 'chat-activity'}
+      next: getChatActivityResult
   next: invalidMetric
 
 getTotalChatsDayResults:
@@ -114,6 +116,12 @@ getTotalForwardedChatsResult:
   result: results
   next: respond
 
+getChatActivityResult:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-chat-activity-chart
+  result: results
+  next: respond
 
 respond:
   return: ${results.response.body}
@@ -122,4 +130,3 @@ respond:
 invalidMetric:
   status: 400
   return: 'invalid metric requested'
-

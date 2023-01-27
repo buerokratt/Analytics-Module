@@ -71,4 +71,3 @@ assign_median:
 
 respond:
   return: ${[avg_result, median_result]}
-  

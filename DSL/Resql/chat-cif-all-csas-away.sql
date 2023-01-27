@@ -6,7 +6,7 @@ JOIN customer_support_agent_activity AS csa
 ON chat.customer_support_id = csa.id_code
 WHERE chat.created BETWEEN :start::timestamptz AND :end::timestamptz
 AND csa.status = 'AWAY'
-AND exists (
+AND EXISTS (
     SELECT 1
     FROM message
     WHERE message.chat_base_id = chat.base_id

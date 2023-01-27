@@ -63,6 +63,7 @@ long_waiting_time:
       period: ${period}
       start: ${start}
       end: ${end}
+      threshold_seconds: ${10 * 60}
   result: results
 
 assign_long_waiting_time:

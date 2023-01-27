@@ -1,6 +1,14 @@
 import React, { useRef } from 'react'
 import { OverviewMetricPreference } from '../../../types/overview-metrics'
 import { useDrag, useDrop, XYCoord } from 'react-dnd'
+import './styles.scss'
+import { FormCheckbox } from '../../FormElements'
+import Track from '../../Track'
+import Icon from '../../Icon'
+import { MdDragIndicator } from 'react-icons/md'
+import Box from '../../Box'
+import Card from '../../Card'
+import Section from '../../Section'
 
 type Props = {
   metric: OverviewMetricPreference
@@ -40,17 +48,28 @@ const DraggableListItem = ({ metric, toggleMetricActive, moveMetric, saveReorder
 
       item.index = index
     },
-    drop: (item: { index: number; metric: OverviewMetricPreference }, monitor) => {
+    drop: (item: { index: number; metric: OverviewMetricPreference }) => {
       saveReorderedMetric(item.metric, item.index)
     },
   })
 
+  // <input type="checkbox" checked={metric.active} onChange={() => toggleMetricActive(metric)}></input>{' '}
+  //     {metric.metric}
+
   drag(drop(ref))
   return (
-    <div ref={ref} style={{ padding: '10px', border: '1px solid black', margin: '4px', opacity: isDragging ? 0 : 1 }}>
-      <input type="checkbox" checked={metric.active} onChange={() => toggleMetricActive(metric)}></input>{' '}
-      {metric.metric}
-    </div>
+    <Section ref={ref}>
+      <div style={{ opacity: isDragging ? 0 : 1 }} className="overview-list-item">
+        <Track>
+          <Icon icon={<MdDragIndicator />} size='medium'></Icon>
+          <FormCheckbox
+            item={{ label: metric.metric, value: metric.metric }}
+            checked={metric.active}
+            onChange={() => toggleMetricActive(metric)}
+          ></FormCheckbox>
+        </Track>
+      </div>
+    </Section>
   )
 }
 

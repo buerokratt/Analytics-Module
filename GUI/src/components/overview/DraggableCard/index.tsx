@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react'
+import clsx from 'clsx'
+import React, { useRef } from 'react'
+import { useDrag, useDrop } from 'react-dnd'
+import { MdDragIndicator } from 'react-icons/md'
 import { OverviewMetricData, OverviewMetricPreference } from '../../../types/overview-metrics'
 import Card from '../../Card'
 import Icon from '../../Icon'
-import { MdDragIndicator } from 'react-icons/md'
 import Track from '../../Track'
-import { useDrag, useDrop, XYCoord } from 'react-dnd'
-import clsx from 'clsx'
 import './styles.scss'
 
 type Props = {
@@ -29,7 +29,7 @@ const DraggableCard = ({ metricData, metric, index, moveMetric, saveReorderedMet
 
   const [, drop] = useDrop({
     accept: 'OverviewList',
-    hover: (item: { index: number; metric: OverviewMetricPreference }, monitor) => {
+    hover: (item: { index: number; metric: OverviewMetricPreference }) => {
       if (item.index === index) return
       if (!ref.current) return
 
@@ -37,7 +37,7 @@ const DraggableCard = ({ metricData, metric, index, moveMetric, saveReorderedMet
       moveMetric(item.metric.metric, index)
       item.index = index
     },
-    drop: (item: { index: number; metric: OverviewMetricPreference }, monitor) => {
+    drop: (item: { index: number; metric: OverviewMetricPreference }) => {
       saveReorderedMetric(item.metric, item.metric.ordinality)
     },
   })

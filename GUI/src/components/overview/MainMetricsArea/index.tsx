@@ -54,7 +54,7 @@ const MainMetricsArea = ({ metricPreferences, saveReorderedMetric }: Props) => {
         ></DraggableCard>
       )
     },
-    [metricPreferences],
+    [metricPreferences, saveReorderedMetric],
   )
 
   return (

@@ -2,13 +2,13 @@ import axios from 'axios'
 import React, { useCallback, useEffect, useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { Card, Drawer, Track } from '../components'
-import DraggableCard from '../components/overview/DraggableCard'
+import { Button, Drawer, Icon, Track } from '../components'
 import DraggableListItem from '../components/overview/DraggableListItem'
 import MainMetricsArea from '../components/overview/MainMetricsArea'
-import { overviewMetricPreferences, overviewMetrics } from '../resources/api-constants'
-import { OverviewMetricData, OverviewMetricPreference } from '../types/overview-metrics'
+import { overviewMetricPreferences } from '../resources/api-constants'
+import { OverviewMetricPreference } from '../types/overview-metrics'
 import { reorderItem } from '../util/reorder-array'
+import { MdEdit } from 'react-icons/md'
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([])
@@ -64,21 +64,25 @@ const OverviewPage: React.FC = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <h1>Overview</h1>
-      <>
-        <button onClick={() => setDrawerIsHidden(false)}>Muuda</button>
-        <Drawer
-          onClose={() => setDrawerIsHidden(true)}
-          title="Muuda vaadet"
-          style={{ transform: drawerIsHidden ? 'translate(100%)' : 'none', width: '300px' }}
-        >
-          {metricPreferences.map((m, i) => renderList(m, i))}
-        </Drawer>
-        <MainMetricsArea
-          metricPreferences={metricPreferences}
-          saveReorderedMetric={saveReorderedMetric}
-        ></MainMetricsArea>
-      </>
+      <Track justify="between">
+        <h1>Overview</h1>
+        <Button appearance="text" onClick={() => setDrawerIsHidden(false)}>
+          <Icon icon={<MdEdit />} size="medium" />
+          Muuda
+        </Button>
+      </Track>
+
+      <Drawer
+        onClose={() => setDrawerIsHidden(true)}
+        title="Muuda vaadet"
+        style={{ transform: drawerIsHidden ? 'translate(100%)' : 'none', width: '400px' }}
+      >
+        {metricPreferences.map((m, i) => renderList(m, i))}
+      </Drawer>
+      <MainMetricsArea
+        metricPreferences={metricPreferences}
+        saveReorderedMetric={saveReorderedMetric}
+      ></MainMetricsArea>
     </DndProvider>
   )
 }

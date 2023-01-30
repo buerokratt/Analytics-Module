@@ -7,13 +7,7 @@ export interface OverviewMetricPreference {
 export interface OverviewMetricData {
   metric: string
   data: {
-    left: {
-      value: number
-      title: string
-    }
-    right: {
-      value: number
-      title: string
-    }
+    left: number
+    right: number
   }
 }

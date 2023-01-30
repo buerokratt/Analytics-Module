@@ -2,26 +2,39 @@ import axios from 'axios'
 import React, { useCallback, useEffect, useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { useTranslation } from 'react-i18next'
+import { MdEdit } from 'react-icons/md'
 import { Button, Card, Drawer, Icon, Track } from '../components'
 import DraggableListItem from '../components/overview/DraggableListItem'
 import MainMetricsArea from '../components/overview/MainMetricsArea'
-import { overviewMetricPreferences } from '../resources/api-constants'
+import OverviewLineChart from '../components/OverviewLineChart'
+import { overviewMetricPreferences, overviewMetrics } from '../resources/api-constants'
 import { OverviewMetricPreference } from '../types/overview-metrics'
 import { reorderItem } from '../util/reorder-array'
-import { MdEdit } from 'react-icons/md'
-import BykLineChart from '../components/BykLineChart'
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([])
+  const [chartData, setChartData] = useState([])
   const [drawerIsHidden, setDrawerIsHidden] = useState(false)
+
+  const { t } = useTranslation()
 
   useEffect(() => {
     fetchMetricPreferences().catch(console.error)
+    fetchChartData().catch(console.error)
+
+    const interval = setInterval(() => fetchChartData(), 30000)
+    return () => clearInterval(interval)
   }, [])
 
   const fetchMetricPreferences = async () => {
     const result = await axios.get(overviewMetricPreferences(), { withCredentials: true })
     setMetricPreferences(result.data.response)
+  }
+
+  const fetchChartData = async () => {
+    const result = await axios.get(overviewMetrics('chat-activity'))
+    setChartData(result.data.response)
   }
 
   const updateMetricPreference = async (metric: OverviewMetricPreference) => {
@@ -52,6 +65,18 @@ const OverviewPage: React.FC = () => {
     )
   }
 
+  const translateChartKeys = (obj: any) =>
+    Object.keys(obj).reduce(
+      (acc, key) =>
+        key === 'created'
+          ? acc
+          : {
+              ...acc,
+              ...{ [t(`overview.chart.${key}`)]: obj[key] },
+            },
+      {},
+    )
+
   const renderList = (m: OverviewMetricPreference, i: number) => (
     <DraggableListItem
       key={m.metric}
@@ -63,28 +88,20 @@ const OverviewPage: React.FC = () => {
     ></DraggableListItem>
   )
 
-  const data03 = [
-    { date: '10:00:00', price: 115.82, value: 30, output: 15},
-    { date: '11:00:00', price: 115.82, value: 30, output: 35 },
-    { date: '12:00:00', price: 80, value: 100, output: 55 },
-    { date: '13:00:00', price: 115.82, value: 30, output: 25 },
-    { date: '14:00:00', price: 115.82, value: 30, output: 15 },
-  ]
-
   return (
     <DndProvider backend={HTML5Backend}>
       <Track justify="between">
-        <h1>Overview</h1>
+        <h1>{t('menu.overview')}</h1>
         <Button appearance="text" onClick={() => setDrawerIsHidden(false)}>
           <Icon icon={<MdEdit />} size="medium" />
-          Muuda
+          {t('overview.edit')}
         </Button>
       </Track>
 
       <Drawer
         onClose={() => setDrawerIsHidden(true)}
-        title="Muuda vaadet"
-        style={{ transform: drawerIsHidden ? 'translate(100%)' : 'none', width: '400px' }}
+        title={t('overview.editView')}
+        style={{ transform: drawerIsHidden ? 'translate(100%)' : 'none', width: '450px' }}
       >
         {metricPreferences.map((m, i) => renderList(m, i))}
       </Drawer>
@@ -97,11 +114,18 @@ const OverviewPage: React.FC = () => {
       <Card
         header={
           <Track>
-            <h3>Vestluste koguarv</h3>
+            <h3>{t('overview.totalChatsChart')}</h3>
           </Track>
         }
       >
-        <BykLineChart data={data03}></BykLineChart>
+        {chartData.length > 0 && (
+          <OverviewLineChart
+            data={chartData.map((entry: any) => ({
+              ...translateChartKeys(entry),
+              created: new Date(entry.created).toLocaleTimeString('default'),
+            }))}
+          ></OverviewLineChart>
+        )}
       </Card>
     </DndProvider>
   )

@@ -26,8 +26,8 @@ const MainMetricsArea = ({ metricPreferences, saveReorderedMetric }: Props) => {
       results.map((r, i) => ({
         metric: metricsToFetch[i].metric,
         data: {
-          left: { value: r.data.response[0].metricValue, title: 'Left' },
-          right: { value: r.data.response[1].metricValue, title: 'Right' },
+          left: r.data.response[0].metricValue,
+          right: r.data.response[1].metricValue,
         },
       })),
     )

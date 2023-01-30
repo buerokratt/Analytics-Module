@@ -1,0 +1,9 @@
+get_intents:
+  call: http.post
+  args:
+    url: http://resql:8082/get-intents
+  result: results
+
+return_value:
+  return: ${results.response.body}
+  next: end

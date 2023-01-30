@@ -1,0 +1,20 @@
+check_for_request_data:
+  switch:
+    - condition: ${incoming.params == null || incoming.params.intent == null}
+      next: missing_params
+
+missing_params:
+  status: 400
+  return: 'required parameters were not provided'
+  next: end
+
+get_intent:
+  call: http.post
+  args:
+    url: http://resql:8082/get-intent
+  body:
+    intent: ${incoming.params.intent}
+  result: results
+
+return_value:
+  return: ${results.response.body}

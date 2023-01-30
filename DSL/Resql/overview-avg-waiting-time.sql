@@ -56,4 +56,4 @@ FROM (
     ) AS timescale
     LEFT JOIN customer_support_changes ON customer_support_changes.created = timescale.created
 GROUP BY 1
-ORDER BY 1;
+ORDER BY 1 DESC

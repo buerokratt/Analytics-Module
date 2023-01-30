@@ -43,4 +43,4 @@ FROM (
     ) AS timescale
     LEFT JOIN chats ON chats.created = timescale.created
 GROUP BY 1
-ORDER BY 1
+ORDER BY 1 DESC

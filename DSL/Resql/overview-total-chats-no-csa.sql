@@ -26,7 +26,7 @@ WITH chats AS (
         )
 )
 SELECT timescale.created AS created,
-    COUNT(DISTINCT base_id) as metric_value
+    COUNT(DISTINCT base_id) AS metric_value
 FROM (
         SELECT date_trunc(
                 :group_period,
@@ -39,4 +39,4 @@ FROM (
     ) AS timescale
     LEFT JOIN chats ON chats.created = timescale.created
 GROUP BY 1
-ORDER BY 1
+ORDER BY 1 DESC

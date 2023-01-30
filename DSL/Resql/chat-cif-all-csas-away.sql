@@ -4,7 +4,7 @@ SELECT
 FROM chat
 JOIN customer_support_agent_activity AS csa
 ON chat.customer_support_id = csa.id_code
-WHERE chat.created BETWEEN :start::timestamptz AND :end::timestamptz
+WHERE chat.created BETWEEN :start::date AND :end::date
 AND csa.status = 'AWAY'
 AND EXISTS (
     SELECT 1

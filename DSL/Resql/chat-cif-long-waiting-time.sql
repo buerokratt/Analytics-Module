@@ -23,7 +23,7 @@ SELECT
 FROM chat
 JOIN contact_response_times
 ON chat.base_id = contact_response_times.base_id
-WHERE created BETWEEN :start::timestamptz AND :end::timestamptz
+WHERE created BETWEEN :start::date AND :end::date
 AND waiting_time_seconds > :threshold_seconds
 GROUP BY time
 ORDER BY time

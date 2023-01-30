@@ -9,7 +9,7 @@ WITH waiting_times AS (
     WHERE m1.author_role = 'end-user'
     AND m2.author_role = 'chatbot'
     AND m2.created > m1.created
-    AND m1.created BETWEEN :start::timestamptz AND :end::timestamptz
+    AND m1.created BETWEEN :start::date AND :end::date
 )
 SELECT time, PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY waiting_time) AS median_waiting_time
 FROM waiting_times

@@ -51,15 +51,21 @@ services:
       context: ./GUI
       dockerfile: Dockerfile.dev
     ports:
-      - 3000:3000
+      - 3001:3001
     volumes:
       - /app/node_modules
       - ./GUI:/app
     networks:
       - bykstack
-      
+  data_mapper: 
+     container_name: data_mapper 
+     image: datamapper-node
+     ports:
+      - 3000:3000
+     networks:
+      - bykstack
+     
 networks:
   bykstack:
     name: bykstack
     driver: bridge
-

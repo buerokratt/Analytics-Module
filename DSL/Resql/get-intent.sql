@@ -1,4 +1,5 @@
-SELECT COUNT(DISTINCT base_id) AS intent_count
+SELECT COUNT(*) AS count
 FROM message
-WHERE intent = :inent::varchar(50)
+WHERE intent = :intent::varchar(50)
+AND created BETWEEN :start::date AND :end::date
 GROUP BY intent

@@ -1,0 +1,4 @@
+{{#each data.[0]}}{{@key}}{{#unless @last}},{{/unless}}{{/each}}
+{{#each data}}
+{{#each this}}{{this}}{{#unless @last}},{{/unless}}{{/each}}
+{{/each}}

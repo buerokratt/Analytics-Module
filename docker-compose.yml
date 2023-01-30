@@ -61,7 +61,8 @@ services:
      container_name: data_mapper 
      image: datamapper-node
      volumes:
-      - ./DSL/DMapper:/DSL
+      - ./DSL/DMapper/hbs:/workspace/app/views/my/restful/url
+      - ./DSL/DMapper/js:/workspace/app/js/my/restful/url
      ports:
       - 3000:3000
      networks:

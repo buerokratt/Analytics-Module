@@ -7,10 +7,12 @@
  * Navigate to Ruuter and build the image `docker build -t ruuter .`
  * Clone [Resql](https://github.com/buerokratt/Resql)
  * Navigate to Resql and build the image `docker build -t resql .`
+ * Clone [Data Mapper](https://github.com/buerokratt/DataMapper)
+ * Navigate to Data Mapper and build the image `docker build -t datamapper-node .`
   
  * Navigate to current repo and run `docker compose up -d`
 
- * Go to https://localhost:3000
+ * Go to https://localhost:3001
  
  * For setting up the database initially, run 
  `docker run --platform linux/amd64 --network=bykstack riaee/byk-users-db:liquibase20220615 --url=jdbc:postgresql://users_db:5432/byk --username=byk --password=01234 --changelog-file=./master.yml update

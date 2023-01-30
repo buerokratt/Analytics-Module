@@ -60,6 +60,8 @@ services:
   data_mapper: 
      container_name: data_mapper 
      image: datamapper-node
+     volumes:
+      - ./DSL/DMapper:/DSL
      ports:
       - 3000:3000
      networks:

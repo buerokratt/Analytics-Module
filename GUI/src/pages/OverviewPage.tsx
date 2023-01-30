@@ -15,7 +15,7 @@ import { reorderItem } from '../util/reorder-array'
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([])
   const [chartData, setChartData] = useState([])
-  const [drawerIsHidden, setDrawerIsHidden] = useState(false)
+  const [drawerIsHidden, setDrawerIsHidden] = useState(true)
 
   const { t } = useTranslation()
 

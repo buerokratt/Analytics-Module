@@ -4,6 +4,8 @@
 
  * Clone [Ruuter](https://github.com/buerokratt/Ruuter)
  * For Apple Silicon, replace Ruuter's Dockerfile line and add platform specification `FROM --platform=linux/amd64 openjdk:17-jdk-alpine`
+ * Ruuter has an unresolved issue with allowing cross-origin credentials to be sent, for now fix this by adding:
+  `.allowCredentials(true);` to line 24 in CORSConfiguration.java
  * Navigate to Ruuter and build the image `docker build -t ruuter .`
  * Clone [Resql](https://github.com/buerokratt/Resql)
  * Navigate to Resql and build the image `docker build -t resql .`

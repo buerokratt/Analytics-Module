@@ -12,6 +12,9 @@
 
  * Go to https://localhost:3000
  
+ ### Database setup
  * For setting up the database initially, run 
  `docker run --platform linux/amd64 --network=bykstack riaee/byk-users-db:liquibase20220615 --url=jdbc:postgresql://users_db:5432/byk --username=byk --password=01234 --changelog-file=./master.yml update
+ * Run migrations added in this repository by running the helper script `./migrate.sh`
+ * When creating new migrations, use the helper `./create-migration.sh name-of-migration` which will create a timestamped file in the correct directory and add the required headers
 `

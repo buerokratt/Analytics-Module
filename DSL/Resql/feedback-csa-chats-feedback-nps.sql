@@ -32,5 +32,5 @@ SELECT date_trunc(:metric, created) AS date_time,
        SUM(CASE WHEN feedback_rating::int BETWEEN 0 AND 6 THEN 1 ELSE 0 END)
        ) / COUNT(base_id) * 100) AS int), 0) AS nps
 FROM chat_csas
-GROUP BY 1
-ORDER BY 1
+GROUP BY date_time
+ORDER BY date_time

@@ -1,13 +1,21 @@
 {
-    "global": {
-      "title": "Analyticsi moodul"
-    },
-    "menu": {
-      "overview": "Ülevaade",
-      "chats": "Vestlused",
-      "burokratt": "Bürokratt",
-      "feedbacks": "Tagasiside",
-      "advisors": "Nõustajad",
-      "reports": "Raportid"
-    }
+  "global": {
+    "title": "Analyticsi moodul",
+    "resultCount": "Kuvan korraga"
+  },
+  "menu": {
+    "overview": "Ülevaade",
+    "chats": "Vestlused",
+    "burokratt": "Bürokratt",
+    "feedbacks": "Tagasiside",
+    "advisors": "Nõustajad",
+    "reports": "Raportid"
+  },
+  "feedback": {
+    "startTime": "Algusaeg",
+    "endTime": "Lõppaeg",
+    "status": "Staatus",
+    "ended": "Lõppenud",
+    "view": "Vaata"
+  }
 }

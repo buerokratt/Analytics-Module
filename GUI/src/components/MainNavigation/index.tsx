@@ -116,6 +116,10 @@ const MainNavigation: FC = () => {
           path: '/analytics/chats',
         },
         {
+          label: 'Feedback',
+          path: '/analytics/feedbacks',
+        },
+        {
           label: 'Reports',
           path: '/analytics/reports',
         },

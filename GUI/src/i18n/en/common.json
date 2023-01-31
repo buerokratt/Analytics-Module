@@ -1,13 +1,21 @@
 {
-    "global": {
-      "title": "Analytics Module"
-    },
-    "menu": {
-      "overview": "Overview",
-      "chats": "chats",
-      "burokratt": "Bürokratt",
-      "feedbacks": "Feedbacks",
-      "advisors": "Advisors",
-      "reports": "Reports"
-    }
+  "global": {
+    "title": "Analytics Module",
+    "resultCount": "Results per page"
+  },
+  "menu": {
+    "overview": "Overview",
+    "chats": "chats",
+    "burokratt": "Bürokratt",
+    "feedbacks": "Feedbacks",
+    "advisors": "Advisors",
+    "reports": "Reports"
+  },
+  "feedback": {
+    "startTime": "Start time",
+    "endTime": "End time",
+    "status": "Status",
+    "ended": "Ended",
+    "view": "View"
+  }
 }

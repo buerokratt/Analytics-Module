@@ -4,7 +4,7 @@ services:
     container_name: ruuter
     image: ruuter
     environment:
-      - application.cors.allowedOrigins=http://localhost:3000
+      - application.cors.allowedOrigins=http://localhost:3001
     volumes:
       - ./DSL/Ruuter:/DSL
     ports:

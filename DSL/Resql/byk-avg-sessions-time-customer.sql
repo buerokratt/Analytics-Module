@@ -5,7 +5,7 @@ WITH closed_chats AS (
         MAX(m.created) AS end_time
     FROM message m
     JOIN chat ON m.chat_base_id = chat.base_id
-    WHERE chat.status IN ('ANSWERED', 'CLIENT-LEFT')
+    WHERE m.events IN ('ANSWERED', 'CLIENT-LEFT')
     AND chat.created BETWEEN :start::timestamptz AND :end::timestamptz
     GROUP BY chat_base_id
 )

@@ -12,4 +12,4 @@ WHERE EXISTS
      WHERE message.chat_base_id = chat.base_id
        AND message.author_role = 'end-user')
   AND created::date BETWEEN :start::date AND :end::date
-GROUP BY 1
+GROUP BY date_time

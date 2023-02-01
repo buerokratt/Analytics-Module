@@ -1,6 +1,7 @@
 FROM node:alpine AS development
 
 ENV NODE_ENV development
+ENV PORT=3001
 
 WORKDIR /app
 COPY ./package.json .
@@ -8,6 +9,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3001
+EXPOSE ${PORT}
 
 CMD ["npm", "run", "start"]

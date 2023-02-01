@@ -17,3 +17,9 @@
  * For setting up the database initially, run 
  `docker run --platform linux/amd64 --network=bykstack riaee/byk-users-db:liquibase20220615 --url=jdbc:postgresql://users_db:5432/byk --username=byk --password=01234 --changelog-file=./master.yml update
 `
+
+### Data Mapper Changes
+
+* In Server.js add `app.use(express.json());` to enable data mapper to recive json input
+* In Server.js add `res.render(req.params[0], req.body);` in `app.get('/hbs/*', (req, res)` to enable handlebars templates to receive a body
+* Need to add configurable response headers in case you want to return the body as `text/plain` or `application/json` instead of `text/html`

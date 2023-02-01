@@ -58,12 +58,12 @@ const DraggableListItem = ({ metric, toggleMetricActive, moveMetric, saveReorder
     <Section ref={ref}>
       <div style={{ opacity: isDragging ? 0 : 1 }} className="overview-list-item">
         <Track>
-          <Icon icon={<MdDragIndicator />} size="medium"></Icon>
+          <Icon icon={<MdDragIndicator />} size="medium" />
           <FormCheckbox
             item={{ label: t(`overview.metric.${metric.metric}`), value: metric.metric }}
             checked={metric.active}
             onChange={() => toggleMetricActive(metric)}
-          ></FormCheckbox>
+          />
         </Track>
       </div>
     </Section>

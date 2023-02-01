@@ -4,6 +4,7 @@ import { overviewMetrics } from '../../../resources/api-constants'
 import { OverviewMetricData, OverviewMetricPreference } from '../../../types/overview-metrics'
 import { reorderItem } from '../../../util/reorder-array'
 import DraggableCard from '../DraggableCard'
+import './styles.scss'
 
 type Props = {
   metricPreferences: OverviewMetricPreference[]
@@ -21,7 +22,8 @@ const MainMetricsArea = ({ metricPreferences, saveReorderedMetric }: Props) => {
 
   const fetchMetrics = async (metricPreferences: OverviewMetricPreference[]) => {
     const metricsToFetch = metricPreferences.filter((m) => m.active)
-    const results = await Promise.all(metricsToFetch.map((m) => axios.get(overviewMetrics(m.metric))))
+    const promises = metricsToFetch.map((m) => axios.get(overviewMetrics(m.metric)))
+    const results = await Promise.all(promises)
     setMetrics(
       results.map((r, i) => ({
         metric: metricsToFetch[i].metric,
@@ -51,15 +53,13 @@ const MainMetricsArea = ({ metricPreferences, saveReorderedMetric }: Props) => {
           metricData={mData}
           moveMetric={moveMetric}
           saveReorderedMetric={saveReorderedMetric}
-        ></DraggableCard>
+        />
       )
     },
     [metricPreferences, saveReorderedMetric],
   )
 
-  return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>{metrics.map((m, i) => renderCards(m, i))}</div>
-  )
+  return <div className="main-metrics-area">{metrics.map((m, i) => renderCards(m, i))}</div>
 }
 
 export default MainMetricsArea

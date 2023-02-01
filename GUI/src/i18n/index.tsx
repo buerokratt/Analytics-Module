@@ -11,7 +11,6 @@ i18n
   .init({
     debug: process.env.NODE_ENV === 'development',
     fallbackLng: 'et',
-
     supportedLngs: ['et', 'en'],
     resources: {
       en: {

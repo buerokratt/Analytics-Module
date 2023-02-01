@@ -85,7 +85,7 @@ const OverviewPage: React.FC = () => {
       moveMetric={moveMetric}
       saveReorderedMetric={saveReorderedMetric}
       index={i}
-    ></DraggableListItem>
+    />
   )
 
   return (
@@ -106,10 +106,7 @@ const OverviewPage: React.FC = () => {
         {metricPreferences.map((m, i) => renderList(m, i))}
       </Drawer>
 
-      <MainMetricsArea
-        metricPreferences={metricPreferences}
-        saveReorderedMetric={saveReorderedMetric}
-      ></MainMetricsArea>
+      <MainMetricsArea metricPreferences={metricPreferences} saveReorderedMetric={saveReorderedMetric} />
 
       <Card
         header={
@@ -124,7 +121,7 @@ const OverviewPage: React.FC = () => {
               ...translateChartKeys(entry),
               created: new Date(entry.created).toLocaleTimeString('default'),
             }))}
-          ></OverviewLineChart>
+          />
         )}
       </Card>
     </DndProvider>

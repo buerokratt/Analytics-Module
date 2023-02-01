@@ -52,8 +52,8 @@ const DraggableCard = ({ metricData, metric, index, moveMetric, saveReorderedMet
   return (
     <div ref={ref} className={clsx(['draggable-card', isDragging && 'dragging'])} data-handler-id={handlerId}>
       <Card>
-        <Track style={{ margin: '0px 12px' }}>
-          <Icon icon={<MdDragIndicator />} size="medium"></Icon>
+        <Track className='title-track'>
+          <Icon icon={<MdDragIndicator />} size="medium" />
           <span className="title">{t(`overview.metric.${metricData.metric}`)}</span>
         </Track>
 

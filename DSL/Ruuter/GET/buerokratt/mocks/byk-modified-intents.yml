@@ -1,0 +1,33 @@
+check_for_params:
+  switch:
+    - condition: ${incoming.params == null}
+      next: missing_parameter
+
+extract_request_data:
+  assign:
+    start: ${incoming.params.start_date}
+    end: ${incoming.params.end_date}
+    period: ${incoming.params.period}
+
+check_for_required_parameters:
+  switch:
+    - condition: ${start == null || end == null || period == null}
+      next: missing_parameter
+  next: get_result
+
+missing_parameter:
+  status: 400
+  return: 'required parameters were not provided'
+  next: end
+
+get_result:
+  call: reflect.mock
+  args:
+    response:
+        time: "2022-01-01 00:00:00+00"
+        intent: "COMPLAIN"
+        intent_count: 1
+  result: results
+
+respond:
+  return: ${results.response.body}

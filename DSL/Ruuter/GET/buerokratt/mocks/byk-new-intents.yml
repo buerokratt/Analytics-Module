@@ -20,15 +20,23 @@ missing_parameter:
   return: 'required parameters were not provided'
   next: end
 
-
 get_result:
   call: reflect.mock
   args:
     response:
-        time: "2022-01-01 00:00:00+00"
-        intent: "COMPLAIN"
-        intent_count: 1
-  result: results
+      time: "2022-01-01 00:00:00+00"
+      intent: "COMPLAIN"
+      intent_count: 1
+  result: results1
+
+get_result2:
+  call: reflect.mock
+  args:
+    response:
+      time: "2022-01-02 00:00:00+00"
+      intent: "HELP"
+      intent_count: 3
+  result: results2
 
 respond:
-  return: ${results.response.body}
+  return: ${[results1.response.body, results2.response.body]}

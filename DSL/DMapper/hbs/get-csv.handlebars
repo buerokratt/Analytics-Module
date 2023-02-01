@@ -1,4 +1,4 @@
-{{#each data.[0]}}{{@key}}{{#unless @last}},{{/unless}}{{/each}}
+{{#each data.[0]}}{{#if ../qul}}{{../qul}}{{@key}}{{../qul}} {{/if}}{{#unless ../qul}}{{@key}}{{/unless}}{{#unless @last}}{{#if ../del}}{{../del}}{{/if}}{{#unless ../del}},{{/unless}}{{/unless}}{{/each}}
 {{#each data}}
-{{#each this}}{{this}}{{#unless @last}},{{/unless}}{{/each}}
+{{#each this}}{{#if ../../qul}}{{../../qul}}{{this}}{{../../qul}} {{/if}}{{#unless ../../qul}}{{this}}{{/unless}}{{#unless @last}}{{#if ../../del}}{{../../del}}{{/if}}{{#unless ../../del}},{{/unless}}{{/unless}}{{/each}}
 {{/each}}

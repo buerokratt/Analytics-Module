@@ -1,5 +1,5 @@
 function getCsv({array, delimiter, fields}) {
-    const header = fields !== undefined ? fields : Object.keys(array[0]);
+    const header = fields ?? Object.keys(array[0]);
   
     const headerString = header.join(delimiter);
   

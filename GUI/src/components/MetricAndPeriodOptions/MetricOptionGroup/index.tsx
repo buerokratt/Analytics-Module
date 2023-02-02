@@ -7,7 +7,7 @@ interface MetricOptionsGroupProps {
     label: string,
     options: Option[],
     onChange: (value: string) => void,
-    onDatePicked?: (start: string, end: string) => void,
+    onDatePicked?: (date: string, type: 'start' | 'end' | 'month') => void,
 }
 
 const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
@@ -53,8 +53,17 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
 
                 </div>
                 <div>
-                    {additionalKey === 'monthpicker' && <span><button onClick={() => onDatePicked?.('sss', 'vvv')}>click</button></span>}
-                    {additionalKey === 'customperiodpicker' && <span>period selection</span>}
+                    {additionalKey === 'monthpicker' &&
+                        <input type='date' onChange={(value) => onDatePicked?.(value.target.value, 'month')} />
+                        //  <span><button onClick={() => onDatePicked?.('sss', 'vvv')}>click</button></span>
+                    }
+                    {
+                        additionalKey === 'customperiodpicker' &&
+                        <>
+                            from <input type='date' onChange={(value) => onDatePicked?.(value.target.value, 'start')} /> to
+                            <input type='date' onChange={(value) => onDatePicked?.(value.target.value, 'end')} />
+                        </>
+                    }
                 </div>
             </div>
         </div>

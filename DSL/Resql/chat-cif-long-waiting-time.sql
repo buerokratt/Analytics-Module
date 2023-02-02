@@ -1,28 +1,27 @@
-WITH contact_response_times AS (
+WITH user_messages AS (
     SELECT 
-        base_id, 
-        EXTRACT(EPOCH FROM 
-            MIN(created) FILTER (
-                WHERE author_role = 'backoffice-user'
-                AND created > (
-                    SELECT MIN(created)
-                    FROM message
-                    WHERE event = 'contact-information-fulfilled'
-                    AND base_id = message.base_id
-                )
-            ) - 
-            MIN(created) FILTER (WHERE event = 'contact-information-fulfilled')
-        ) AS waiting_time_seconds
+        chat_base_id, 
+        created, 
+        LAG(created) OVER (PARTITION BY chat_base_id, author_role ORDER BY created) AS prev_message_time
     FROM message
-    GROUP BY base_id
+    WHERE author_role = 'end-user' 
+),
+waiting_times AS(
+    SELECT
+        m.chat_base_id AS chat_base_id,
+        MIN(m.created) AS created, 
+        EXTRACT(epoch FROM MAX(m.created - prev_message_time))::INT AS waiting_time_seconds
+    FROM user_messages m
+    JOIN message ms
+    ON m.chat_base_id = ms.chat_base_id
+    AND ms.author_role = 'backoffice-user'
+    WHERE prev_message_time IS NOT NULL
+    GROUP BY m.chat_base_id
 )
-
 SELECT 
     DATE_TRUNC(:period, created) AS time, 
-    COUNT(waiting_time_seconds) AS long_waiting_time
-FROM chat
-JOIN contact_response_times
-ON chat.base_id = contact_response_times.base_id
+    COUNT(*) AS long_waiting_time
+FROM waiting_times
 WHERE created BETWEEN :start::date AND :end::date
 AND waiting_time_seconds > :threshold_seconds
 GROUP BY time

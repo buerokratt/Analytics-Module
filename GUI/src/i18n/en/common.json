@@ -1,13 +1,40 @@
 {
-    "global": {
-      "title": "Analytics Module"
+  "global": {
+    "title": "Analytics Module"
+  },
+  "menu": {
+    "overview": "Overview",
+    "chats": "Chats",
+    "burokratt": "Bürokratt",
+    "feedbacks": "Feedbacks",
+    "advisors": "Advisors",
+    "reports": "Reports"
+  },
+  "overview": {
+    "editView": "Edit view",
+    "totalChatsChart": "Total number of chats",
+    "edit": "Edit",
+    "openSearch": "Open OpenSearch",
+    "openSearchDashboard": "OpenSearch Dashboard (OSD)",
+    "metric": {
+      "avg_chats_by_month": "Average chats per day: month / previous",
+      "avg_chats_by_week": "Average chats per day: week / previous",
+      "avg_chats_no_csa_by_month": "Average chats answered by Bürokrat: month / previous",
+      "avg_chats_no_csa_by_week": "Average chats answered by Bürokrat: week / previous",
+      "total_chats_no_csa_day": "Answered by Bürokrat: today / yesterday",
+      "total_chats_month": "Number of chats: month / previous",
+      "total_chats_day": "Number of chats: today / yesterday",
+      "total_forwarded_chats_yesterday": "Forwarded chats yesterday: internal / external",
+      "avg_waiting_time_day": "Average waiting time: today / yesterday",
+      "avg_waiting_time_week": "Average waiting time: week / previous"
     },
-    "menu": {
-      "overview": "Overview",
-      "chats": "chats",
-      "burokratt": "Bürokratt",
-      "feedbacks": "Feedbacks",
-      "advisors": "Advisors",
-      "reports": "Reports"
+    "chart": {
+      "metricValue": "Chats started",
+      "answered": "Left with an answer",
+      "notAnswered": "Left with no answer",
+      "hateSpeech": "Hate speech",
+      "terminated": "Unspecified reason",
+      "toContact": "Answered in other channel"
     }
+  }
 }

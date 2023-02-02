@@ -13,3 +13,4 @@ WHERE feedback_rating IS NOT NULL
             AND message.event IN (:events)
     )
 GROUP BY chat.base_id
+ORDER BY created DESC

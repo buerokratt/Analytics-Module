@@ -1,8 +1,13 @@
 import React from 'react'
-import Layout from '../components/Layout'
+import MetricOptions from '../components/MetricOptions';
 
 const ChatsPage: React.FC = () => {
-  return <h1>Chats</h1>
+    return (
+        <>
+            <h1>Chats</h1>
+            <MetricOptions />
+        </>
+    )
 }
 
 export default ChatsPage

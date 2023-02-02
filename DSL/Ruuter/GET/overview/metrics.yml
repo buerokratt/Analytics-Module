@@ -1,0 +1,132 @@
+extract_request_data:
+  assign:
+    requestedMetric: ${incoming.params.metric}
+
+checkMetric:
+  switch:
+    - condition: ${requestedMetric === 'total_chats_day'}
+      next: getTotalChatsDayResults
+    - condition: ${requestedMetric === 'total_chats_month'}
+      next: getTotalChatsMonthResults
+    - condition: ${requestedMetric === 'total_chats_no_csa_day'}
+      next: getTotalChatsNoCSAResults
+    - condition: ${requestedMetric === 'avg_chats_by_month'}
+      next: getAvgChatsMonthResults
+    - condition: ${requestedMetric === 'avg_chats_by_week'}
+      next: getAvgChatsWeekResults
+    - condition: ${requestedMetric === 'avg_chats_no_csa_by_month'}
+      next: getAvgChatsNoCSAMonthResult
+    - condition: ${requestedMetric === 'avg_chats_no_csa_by_week'}
+      next: getAvgChatsNoCSAWeekResult
+    - condition: ${requestedMetric === 'avg_waiting_time_day'}
+      next: getAvgWaitingTimeDayResult
+    - condition: ${requestedMetric === 'avg_waiting_time_week'}
+      next: getAvgWaitingTimeWeekResult
+    - condition: ${requestedMetric === 'total_forwarded_chats_yesterday'}
+      next: getTotalForwardedChatsResult
+    - condition: ${requestedMetric === 'chat-activity'}
+      next: getChatActivityResult
+  next: invalidMetric
+
+getTotalChatsDayResults:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-total-chats
+    body:
+      group_period: 'day'
+  result: results
+  next: respond
+
+getTotalChatsMonthResults:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-total-chats
+    body:
+      group_period: 'month'
+  result: results
+  next: respond
+
+getTotalChatsNoCSAResults:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-total-chats-no-csa
+    body:
+      group_period: 'day'
+  result: results
+  next: respond
+
+getAvgChatsMonthResults:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-avg-chats
+    body:
+      group_period: 'month'
+  result: results
+  next: respond
+
+getAvgChatsWeekResults:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-avg-chats
+    body:
+      group_period: 'week'
+  result: results
+  next: respond
+
+getAvgChatsNoCSAMonthResult:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-avg-chats-no-csa
+    body:
+      group_period: 'month'
+  result: results
+  next: respond
+
+getAvgChatsNoCSAWeekResult:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-avg-chats-no-csa
+    body:
+      group_period: 'week'
+  result: results
+  next: respond
+
+getAvgWaitingTimeDayResult:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-avg-waiting-time
+    body:
+      group_period: 'day'
+  result: results
+  next: respond
+
+getAvgWaitingTimeWeekResult:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-avg-waiting-time
+    body:
+      group_period: 'week'
+  result: results
+  next: respond
+
+getTotalForwardedChatsResult:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-total-forwarded-chats
+  result: results
+  next: respond
+
+getChatActivityResult:
+  call: http.post
+  args:
+    url: http://resql:8082/overview-chat-activity-chart
+  result: results
+  next: respond
+
+respond:
+  return: ${results.response.body}
+  next: end
+
+invalidMetric:
+  status: 400
+  return: 'invalid metric requested'

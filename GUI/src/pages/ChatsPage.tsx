@@ -5,16 +5,16 @@ import MetricOptions, { Option } from '../components/MetricAndPeriodOptions';
 const metricOptions: Option[] = [
     {
         id: 'metric1',
-        labelKey: 'metric1',
+        labelKey: 'general.metric1',
         subOptions: [
-            { id: 'option1', labelKey: 'option1', color: 'red' },
-            { id: 'option2', labelKey: 'option2', color: 'green' },
-            { id: 'option3', labelKey: 'option3', color: 'blue' },
+            { id: 'option1', labelKey: 'general.option1', color: 'red' },
+            { id: 'option2', labelKey: 'general.option2', color: 'green' },
+            { id: 'option3', labelKey: 'general.option3', color: 'blue' },
         ]
     },
-    { id: 'metric2', labelKey: 'metric2' },
-    { id: 'metric3', labelKey: 'metric3' },
-    { id: 'metric4', labelKey: 'metric4' },
+    { id: 'metric2', labelKey: 'general.metric2' },
+    { id: 'metric3', labelKey: 'general.metric3' },
+    { id: 'metric4', labelKey: 'general.metric4' },
 ];
 
 const ChatsPage: React.FC = () => {

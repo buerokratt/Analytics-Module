@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import ToggleButton from "../ToggleButton";
 import { Option } from "../types";
 
@@ -16,6 +17,7 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
     onChange,
     onDatePicked,
 }) => {
+    const { t } = useTranslation()
     const [selectedValue, setSelectedValue] = useState(options[0].id)
 
     useEffect(() => {
@@ -45,7 +47,7 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
                     {options.map((option) =>
                         <ToggleButton
                             key={option.id}
-                            label={option.labelKey}
+                            label={t(option.labelKey)}
                             value={option.id}
                             selectedValue={selectedValue}
                             onClick={setSelectedValue} />
@@ -55,12 +57,12 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
                 <div>
                     {additionalKey === 'monthpicker' &&
                         <input type='date' onChange={(value) => onDatePicked?.(value.target.value, 'month')} />
-                        //  <span><button onClick={() => onDatePicked?.('sss', 'vvv')}>click</button></span>
                     }
                     {
                         additionalKey === 'customperiodpicker' &&
                         <>
-                            from <input type='date' onChange={(value) => onDatePicked?.(value.target.value, 'start')} /> to
+                            <input type='date' onChange={(value) => onDatePicked?.(value.target.value, 'start')} />
+                            {t('general.until')}
                             <input type='date' onChange={(value) => onDatePicked?.(value.target.value, 'end')} />
                         </>
                     }

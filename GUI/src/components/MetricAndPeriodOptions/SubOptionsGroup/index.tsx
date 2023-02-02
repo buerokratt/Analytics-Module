@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import CheckBoxButton from "../ColoredCheckbox";
 import { SubOption } from "../types";
 
@@ -13,6 +14,7 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({
     subOptions,
     onChange,
 }) => {
+    const { t } = useTranslation()
     const [selectedValues, setSelectedValues] = useState<string[]>([])
 
     useEffect(() => {
@@ -50,7 +52,7 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({
                             }
                         }}
                         selected={selectedValues.includes(option.id)}
-                        label={option.labelKey}
+                        label={t(option.labelKey)}
                         color={option.color}
                     />
                 )}

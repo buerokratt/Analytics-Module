@@ -21,7 +21,10 @@ const ChatsPage: React.FC = () => {
     return (
         <>
             <h1>Chats</h1>
-            <MetricOptions metricOptions={metricOptions} />
+            <MetricOptions
+                metricOptions={metricOptions}
+                onChange={(config) => console.log(config)}
+            />
         </>
     )
 }

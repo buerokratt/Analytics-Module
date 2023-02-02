@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Card from '../Card';
 import { periodOptions } from './data';
 import Divider from './Divider';
@@ -9,9 +9,13 @@ import { MetricOptionsState, Option } from "./types";
 
 interface MetricOptionsProps {
     metricOptions: Option[],
+    onChange: (selection: MetricOptionsState) => void,
 }
 
-const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions }) => {
+const MetricOptions: React.FC<MetricOptionsProps> = ({
+    metricOptions,
+    onChange,
+}) => {
     const [selection, setSelection] = useState<MetricOptionsState>({
         period: '',
         metric: '',
@@ -20,6 +24,11 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions }) => {
         end: '',
         options: [],
     })
+
+    useEffect(() => {
+        onChange(selection)
+    }, [selection])
+
 
     const subOptions = useMemo(() =>
         metricOptions.find((x) => x.id === selection.metric)?.subOptions ?? [],

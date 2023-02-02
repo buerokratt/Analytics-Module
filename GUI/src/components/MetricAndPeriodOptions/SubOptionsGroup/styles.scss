@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+}
+
+.options-label {
+    width: 12vw;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.option-group-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    justify-items: center;
+}

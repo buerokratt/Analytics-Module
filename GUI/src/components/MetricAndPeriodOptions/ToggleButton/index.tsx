@@ -1,4 +1,5 @@
-import React from 'react'
+import React from "react"
+import "./styles.scss";
 
 interface ToggleButtonProps {
     label: string,
@@ -16,15 +17,7 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({
     const pressed = value === selectedValue;
     return <button
         onClick={() => onClick(value)}
-        style={{
-            background: pressed ? '#004277' : '#fff',
-            color: pressed ? '#fff' : '#000',
-            cursor: 'pointer',
-            border: '1px solid gray',
-            borderRadius: '1rem',
-            padding: '.3rem 1.5rem',
-            margin: '.2rem',
-        }}
+        className={`toggle-button ${pressed ? 'selected' : ''}`}
     >
         {label}
     </button>

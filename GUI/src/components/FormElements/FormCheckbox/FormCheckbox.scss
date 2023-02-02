@@ -20,7 +20,7 @@
     input[type=checkbox] {
       display: none;
 
-      + label {
+      +label {
         display: block;
         padding-left: 32px;
         position: relative;
@@ -41,7 +41,7 @@
       }
 
       &:checked {
-        + label {
+        +label {
           &::before {
             background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTEiIHZpZXdCb3g9IjAgMCAxNCAxMSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQuNzQ5NzkgOC4xMjkwNkwxLjYyMjI5IDUuMDAxNTZMMC41NjEwMzUgNi4wNjI4MUw0Ljc0OTc5IDEwLjI1MTZMMTMuNzQ5OCAxLjI1MTU2TDEyLjY4ODUgMC4xOTAzMDhMNC43NDk3OSA4LjEyOTA2WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==');
             background-color: get-color(sapphire-blue-10);

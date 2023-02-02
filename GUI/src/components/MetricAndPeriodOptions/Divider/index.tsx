@@ -1,11 +1,8 @@
-import React from 'react'
+import React from "react"
+import "./styles.scss"
 
 const Divider: React.FC = () => {
-    return <div style={{
-        height: '1px',
-        background: 'lightgray',
-        margin: '1rem 0',
-    }} />
+    return <div className='divider' />
 }
 
 export default Divider;

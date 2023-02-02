@@ -3,10 +3,9 @@ import { useTranslation } from 'react-i18next';
 import Card from '../../Card';
 import { periodOptions } from './data';
 import Divider from '../Divider';
-import MetricOptionsGroup from '../MetricOptionGroup';
+import MetricOptionsGroup from '../MetricOptionsGroup';
 import SubOptionsGroup from '../SubOptionsGroup';
 import { MetricOptionsState, Option } from "../types";
-
 
 interface MetricOptionsProps {
     metricOptions: Option[],

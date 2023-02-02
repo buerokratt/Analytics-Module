@@ -1,0 +1,49 @@
+.container {
+    display: flex;
+}
+
+.options-label {
+    width: 12vw;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.option-group-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.date-picker-wrapper-container {
+    padding-top: 1rem;
+}
+
+.picker-container {
+    border: 1px solid gray;
+    border-radius: 4px;
+    padding: .7rem 0 .7rem 1rem;
+    cursor: pointer;
+    user-select: none;
+    background-color: #fff0;
+}
+
+.picker-container-wrapper {
+    width: auto;
+    background-repeat: no-repeat;
+    background-size: 25px 25px;
+    background-position-x: 130px;
+    background-position-y: 7px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAyUlEQVR4nO2ZWwqDMBREzz7sZ9u9F3FnLVQ3MEXIT6UPkqC5yhyYX53JHYkkYPaHFor2vL84wAJ5Aj84AT0wfViptTUBA3CpMf9oYFwLzR66kgB9APNKupUEaFEbfdGzJICCKZvWhuUAtF91uUIc6CPeGjkAnkAVcoVwhaqQK4QrdKwKKfNXQQ6AJ/CGK5SLK7TAFcrFO3EliraRbf5+7T3AGOAoRTWHu0MA40qaj/qzuQL3IBccZwrp0uVCizqNaeWLzRtjDKvzAutL9szsk7zrAAAAAElFTkSuQmCC');
+}
+
+.date-range-picker-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+}
+
+.until {
+    margin: 0 1.5rem;
+}

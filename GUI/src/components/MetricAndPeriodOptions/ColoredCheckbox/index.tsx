@@ -1,4 +1,5 @@
-import React from 'react'
+import React from "react"
+import "./styles.scss"
 
 interface CheckBoxButtonProps {
     label: string,
@@ -15,41 +16,21 @@ const CheckBoxButton: React.FC<CheckBoxButtonProps> = ({
 }) => {
     return (
         <label>
-            <div style={{
-                padding: '0 .75rem',
-                display: 'flex',
-                alignItems: 'center',
-                userSelect: 'none',
-                // user-select: none;
-                // -moz-user-select: none;
-                // -webkit-user-select: none;
-                // -ms-user-select: none;
-            }}>
+            <div className="container">
                 <input
                     type="checkbox"
                     checked={selected}
                     onChange={onClick}
-
-                    style={{
-                        zoom: 1.5,
-                        cursor: 'pointer',
-                        background: '#004277',
-                    }}
+                    className="checkbox-input"
                 />
-                <span
-                    style={{
-                        margin: '0 .5rem'
-                    }}
-                >
+                <span className="checkbox-label">
                     {label}
                 </span>
 
-                <span style={{
-                    background: color,
-                    height: '.5rem',
-                    width: '.5rem',
-                    borderRadius: '1rem',
-                }} />
+                <span
+                    className="color-circle"
+                    style={{ background: color }}
+                />
             </div>
         </label>
     )

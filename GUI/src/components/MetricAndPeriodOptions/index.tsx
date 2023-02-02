@@ -1,4 +1,4 @@
-import MetricOptions from './MetricOptions'
+import OptionsPanel from './OptionsPanel'
 
-export default MetricOptions;
+export default OptionsPanel;
 export type { Option } from './types'

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import CheckBoxButton from "../ColoredCheckbox";
 import { SubOption } from "../types";
+import "./styles.scss";
 
 interface SubOptionsGroupProps {
     label: string,
@@ -22,24 +23,11 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({
     }, [selectedValues.length])
 
     return (
-        <div style={{ display: 'flex' }}>
-            <div
-                style={{
-                    width: '12vw',
-                    height: '2rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    fontSize: '1rem',
-                }}
-            >
+        <div className="container">
+            <div className="options-label">
                 {label}
             </div>
-            <div style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'center',
-                justifyItems: 'center',
-            }}>
+            <div className="option-group-row">
                 {subOptions.map((option) =>
                     <CheckBoxButton
                         key={option.id}

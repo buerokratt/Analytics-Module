@@ -40,7 +40,7 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({
             <MetricOptionsGroup
                 options={periodOptions}
                 label='Period'
-                onChange={(period) => setSelection({ ...selection, period, })}
+                onChange={(period) => setSelection({ ...selection, period, start: '', end: '', })}
                 onDatePicked={(date, type) => {
                     let newValue = {};
                     if (type === 'start')

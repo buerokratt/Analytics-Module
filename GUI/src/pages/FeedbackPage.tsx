@@ -1,8 +1,6 @@
 import axios from 'axios'
 import React from 'react'
 import ChatsTable from '../components/ChatsTable'
-
-import DataTable from '../components/DataTable'
 import { getNegativeFeedbackChats } from '../resources/api-constants'
 
 const FeedbackPage = () => {
@@ -22,7 +20,7 @@ const FeedbackPage = () => {
   return (
     <>
       <h1>Feedback</h1>
-      <ChatsTable dataSource={negativeFeedbackDatasource}></ChatsTable>
+      <ChatsTable dataSource={negativeFeedbackDatasource} />
     </>
   )
 }

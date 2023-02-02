@@ -6,6 +6,7 @@ import { MdOutlineRemoveRedEye } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import { getLinkToChat } from '../../resources/api-constants'
 import { Chat } from '../../types/chat'
+import Button from '../Button'
 import Card from '../Card'
 import DataTable from '../DataTable'
 import Icon from '../Icon'
@@ -50,12 +51,12 @@ const ChatsTable = (props: Props) => {
       columnHelper.display({
         id: 'detail',
         cell: (props) => (
-          <Link to={getLinkToChat(props.row.original?.id)}>
+          <Button appearance="text" onClick={() => window.location.replace(getLinkToChat(props.row.original?.id))}>
             <Track>
               <Icon icon={<MdOutlineRemoveRedEye color={'rgba(0,0,0,0.54)'} />} />
               {t('feedback.view')}
             </Track>
-          </Link>
+          </Button>
         ),
         meta: {
           size: '1%',

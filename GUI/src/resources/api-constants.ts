@@ -1,5 +1,5 @@
 const baseUrl = process.env.REACT_APP_API_URL
-const chatsUrl = process.env.BUEROKRATT_CHATBOT_URL
+const chatsUrl = process.env.REACT_APP_BUEROKRATT_CHATBOT_URL
 
 export const getLinkToChat = (chatId: string) => `${chatsUrl}/vestlus/ajalugu?chat=${chatId}`
 

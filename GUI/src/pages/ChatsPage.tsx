@@ -1,5 +1,5 @@
 import React from 'react'
-import MetricOptions from '../components/MetricOptions';
+import MetricOptions from '../components/MetricAndPeriodOptions';
 
 const ChatsPage: React.FC = () => {
     return (

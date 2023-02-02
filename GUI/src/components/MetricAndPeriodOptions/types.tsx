@@ -10,3 +10,12 @@ export interface SubOption {
     labelKey: string;
     color: string,
 }
+
+export interface MetricOptionsState {
+    period: string,
+    metric: string,
+
+    start: string,
+    end: string,
+    options: string[],
+}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ToggleButton from "../ToggleButton";
 import { Option } from "../types";
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CheckBoxButton from "../ColoredCheckbox";
 import { SubOption } from "../types";
 

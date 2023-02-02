@@ -8,7 +8,7 @@ import { Button, Card, Drawer, Icon, Track } from '../components'
 import DraggableListItem from '../components/overview/DraggableListItem'
 import MainMetricsArea from '../components/overview/MainMetricsArea'
 import OverviewLineChart from '../components/OverviewLineChart'
-import { overviewMetricPreferences, overviewMetrics } from '../resources/api-constants'
+import { openSearchDashboard, overviewMetricPreferences, overviewMetrics } from '../resources/api-constants'
 import { OverviewMetricPreference } from '../types/overview-metrics'
 import { reorderItem } from '../util/reorder-array'
 
@@ -123,6 +123,10 @@ const OverviewPage: React.FC = () => {
             }))}
           />
         )}
+      </Card>
+
+      <Card header={<h3>{t('overview.openSearchDashboard')}</h3>}>
+        <Button onClick={() => window.open(openSearchDashboard)}>{t('overview.openSearch')}</Button>
       </Card>
     </DndProvider>
   )

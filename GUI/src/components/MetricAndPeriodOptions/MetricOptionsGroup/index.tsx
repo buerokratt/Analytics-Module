@@ -15,10 +15,6 @@ interface MetricOptionsGroupProps {
     onDatePicked?: DatePickHandler,
 }
 
-const handleDatePick = (onDatePicked: DatePickHandler, type: PickedDateType) =>
-    (value: React.ChangeEvent<HTMLInputElement>) =>
-        onDatePicked?.(value.target.value, type)
-
 const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
     label,
     options,
@@ -37,7 +33,20 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
     const additionalKey = useMemo(() =>
         options.find((x) => x.id === selectedValue)?.additionalKey,
         [selectedValue]
-    );
+    )
+
+    const changeMonthDate = (date: Date) => {
+        setStart(date)
+        onDatePicked?.(date?.toDateString() ?? '', 'month')
+    }
+    const changeStartDate = (date: Date) => {
+        setStart(date)
+        onDatePicked?.(date?.toDateString() ?? '', 'start')
+    }
+    const changeEndDate = (date: Date) => {
+        setEnd(date)
+        onDatePicked?.(date?.toDateString() ?? '', 'end')
+    }
 
     return (
         <div className="container">
@@ -61,11 +70,12 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
                         <ReactDatePicker
                             selected={start}
                             onChange={(date) => {
-                                setStart(date!)
-                                onDatePicked?.(date?.toDateString() ?? '', 'month')
+                                if (!date) return;
+                                changeMonthDate(date)
                             }}
                             showMonthYearPicker
                             dateFormat={'MMMM yyyy'}
+                            locale='et-EE'
                             wrapperClassName="picker-container-wrapper"
                             className='picker-container'
                         />
@@ -76,21 +86,27 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
                             <ReactDatePicker
                                 selected={start}
                                 onChange={(date) => {
-                                    setStart(date!)
-                                    onDatePicked?.(date?.toDateString() ?? '', 'month')
+                                    if (!date) return;
+                                    changeStartDate(date);
+
+                                    if (date > end)
+                                        changeEndDate(date);
                                 }}
                                 dateFormat={'dd.MM.yyyy'}
+                                locale='et-EE'
                                 wrapperClassName='picker-container-wrapper'
                                 className='picker-container'
                             />
                             <span className="until">{t('general.until')}</span>
                             <ReactDatePicker
                                 selected={end}
+                                minDate={start}
                                 onChange={(date) => {
-                                    setEnd(date!)
-                                    onDatePicked?.(date?.toDateString() ?? '', 'month')
+                                    if (!date) return;
+                                    changeEndDate(date);
                                 }}
                                 dateFormat={'dd.MM.yyyy'}
+                                locale='et-EE'
                                 wrapperClassName='picker-container-wrapper'
                                 className='picker-container'
                             />

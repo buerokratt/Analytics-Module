@@ -19,7 +19,7 @@ type Props = {
 
 const DraggableCard = ({ metricData, metric, index, moveMetric, saveReorderedMetric }: Props) => {
   const ref = useRef<HTMLDivElement>(null)
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   const [{ isDragging }, drag] = useDrag({
     type: 'OverviewList',
@@ -35,12 +35,11 @@ const DraggableCard = ({ metricData, metric, index, moveMetric, saveReorderedMet
       if (item.index === index) return
       if (!ref.current) return
 
-      item.metric.ordinality = metric.ordinality
       moveMetric(item.metric.metric, index)
       item.index = index
     },
     drop: (item: { index: number; metric: OverviewMetricPreference }) => {
-      saveReorderedMetric(item.metric, item.metric.ordinality)
+      saveReorderedMetric(item.metric, item.index)
     },
     collect: (monitor) => ({
       handlerId: monitor.getHandlerId(),
@@ -52,7 +51,7 @@ const DraggableCard = ({ metricData, metric, index, moveMetric, saveReorderedMet
   return (
     <div ref={ref} className={clsx(['draggable-card', isDragging && 'dragging'])} data-handler-id={handlerId}>
       <Card>
-        <Track className='title-track'>
+        <Track className="title-track">
           <Icon icon={<MdDragIndicator />} size="medium" />
           <span className="title">{t(`overview.metric.${metricData.metric}`)}</span>
         </Track>

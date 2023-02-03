@@ -1,13 +1,51 @@
 {
-    "global": {
-      "title": "Analyticsi moodul"
+  "global": {
+    "title": "Analyticsi moodul"
+  },
+  "general": {
+    "period": "Periood",
+    "metric": "Mõõdik",
+    "additionalOptions": "Lisavalikud",
+    "today": "Täna",
+    "yesterday": "Eile",
+    "last30days": "Viimased 30 päeva",
+    "months": "Valitud kuu",
+    "customperiod": "Valitud periood",
+    "until": "kuni"
+  },
+  "menu": {
+    "overview": "Ülevaade",
+    "chats": "Vestlused",
+    "burokratt": "Bürokratt",
+    "feedbacks": "Tagasiside",
+    "advisors": "Nõustajad",
+    "reports": "Raportid"
+  },
+  "overview": {
+    "editView": "Muuda vaadet",
+    "totalChatsChart": "Vestluste koguarv",
+    "edit": "Muuda",
+    "openSearch": "Ava OpenSearch",
+    "openSearchDashboard": "OpenSearch Dashboard (OSD)",
+    "metric": {
+      "avg_chats_by_month": "Keskmine vestluste arv päevas: kuu / eelmine",
+      "avg_chats_by_week": "Keskmine vestluste arv päevas: nädal / eelmine",
+      "avg_chats_no_csa_by_month": "Keskmine Bürokrati vastatud: kuu / eelmine",
+      "avg_chats_no_csa_by_week": "Keskmine Bürokrati vastatud: nädal / eelmine",
+      "total_chats_no_csa_day": "Bürokrati vastatud: täna / eile",
+      "total_chats_month": "Vestluste arv: kuu / eelmine",
+      "total_chats_day": "Vestluste arv: täna / eile",
+      "total_forwarded_chats_yesterday": "Suunatud vestluse eile: sisesed / välised",
+      "avg_waiting_time_day": "Keskmine ooteaeg: täna / eile",
+      "avg_waiting_time_week": "Keskmine ootaeg: nädal - eelmine"
     },
-    "menu": {
-      "overview": "Ülevaade",
-      "chats": "Vestlused",
-      "burokratt": "Bürokratt",
-      "feedbacks": "Tagasiside",
-      "advisors": "Nõustajad",
-      "reports": "Raportid"
+    "chart": {
+      "metricValue": "Alustatud vestlused",
+      "answered": "Lahkus vastusega",
+      "notAnswered": "Lahkus vastuseta",
+      "hateSpeech": "Vihakõne",
+      "terminated": "Määramata põhjus",
+      "toContact": "Vastus muus kanalis"
     }
+  }
 }

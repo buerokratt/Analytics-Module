@@ -24,4 +24,4 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({
 }
 
 
-export default ToggleButton;
+export default ToggleButton

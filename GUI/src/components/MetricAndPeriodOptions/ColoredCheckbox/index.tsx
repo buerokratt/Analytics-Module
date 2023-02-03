@@ -36,4 +36,4 @@ const CheckBoxButton: React.FC<CheckBoxButtonProps> = ({
     )
 }
 
-export default CheckBoxButton;
+export default CheckBoxButton

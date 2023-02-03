@@ -49,4 +49,4 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({
     )
 }
 
-export default SubOptionsGroup;
+export default SubOptionsGroup

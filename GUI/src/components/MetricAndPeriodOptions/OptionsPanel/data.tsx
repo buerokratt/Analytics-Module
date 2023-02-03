@@ -23,4 +23,4 @@ export const periodOptions: Option[] = [
         labelKey: 'general.customperiod',
         additionalKey: 'customperiodpicker',
     },
-];
+]

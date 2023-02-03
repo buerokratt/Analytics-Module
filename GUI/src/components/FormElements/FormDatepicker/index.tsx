@@ -18,6 +18,7 @@ type FormDatepickerProps = ControllerRenderProps & {
   disabled?: boolean;
   placeholder?: string;
   timePicker?: boolean;
+  monthPicker?: boolean;
 }
 
 const FormDatepicker = forwardRef<any, FormDatepickerProps>((
@@ -28,17 +29,24 @@ const FormDatepicker = forwardRef<any, FormDatepickerProps>((
     disabled,
     placeholder,
     timePicker,
+    monthPicker,
     ...rest
   },
   ref,
 ) => {
   const id = useId();
-  const {value, onChange} = rest;
+  const { value, onChange } = rest;
 
   const datepickerClasses = clsx(
     'datepicker',
     disabled && 'datepicker--disabled',
   );
+
+  let format = 'dd.MM.yyyy'
+  if (monthPicker)
+    format = 'MMMM'
+  else if (timePicker)
+    format = 'hh:mm:ss'
 
   return (
     <div className={datepickerClasses}>
@@ -46,7 +54,7 @@ const FormDatepicker = forwardRef<any, FormDatepickerProps>((
       <div className='datepicker__wrapper'>
         <ReactDatePicker
           selected={new Date(value)}
-          dateFormat={timePicker ? 'hh:mm:ss' : 'dd.MM.yyyy'}
+          dateFormat={format}
           locale='et-EE'
           placeholderText={placeholder}
           previousMonthButtonLabel={<MdChevronLeft />}
@@ -58,6 +66,7 @@ const FormDatepicker = forwardRef<any, FormDatepickerProps>((
           timeFormat='hh:mm:ss'
           timeInputLabel=''
           portalId='overlay-root'
+          showMonthYearPicker={monthPicker}
           {...rest}
           onChange={onChange}
         />

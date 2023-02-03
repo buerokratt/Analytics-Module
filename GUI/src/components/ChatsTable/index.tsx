@@ -1,9 +1,8 @@
-import { createColumnHelper, PaginationState } from '@tanstack/react-table'
+import { createColumnHelper, PaginationState, CellContext } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MdOutlineRemoveRedEye } from 'react-icons/md'
-import { Link } from 'react-router-dom'
 import { getLinkToChat } from '../../resources/api-constants'
 import { Chat } from '../../types/chat'
 import Button from '../Button'
@@ -35,6 +34,9 @@ const ChatsTable = (props: Props) => {
     fetchChats().catch(console.error)
   }, [props.dataSource])
 
+  const dateTimeFormat = (props: CellContext<Chat, string>) =>
+    format(new Date(props.getValue()), 'd. MMM yyyy HH:ii:ss')
+
   const chatColumns = useMemo(
     () => [
       columnHelper.accessor('id', {
@@ -42,21 +44,23 @@ const ChatsTable = (props: Props) => {
       }),
       columnHelper.accessor('created', {
         header: t('feedback.startTime') || '',
-        cell: (props) => format(new Date(props.getValue()), 'd. MMM yyyy HH:ii:ss'),
+        cell: dateTimeFormat,
       }),
       columnHelper.accessor('ended', {
         header: t('feedback.endTime') || '',
-        cell: (props) => format(new Date(props.getValue()), 'd. MMM yyyy HH:ii:ss'),
+        cell: dateTimeFormat,
       }),
       columnHelper.display({
         id: 'detail',
         cell: (props) => (
-          <Button appearance="text" onClick={() => window.location.replace(getLinkToChat(props.row.original?.id))}>
-            <Track>
-              <Icon icon={<MdOutlineRemoveRedEye color={'rgba(0,0,0,0.54)'} />} />
-              {t('feedback.view')}
-            </Track>
-          </Button>
+          <a href={getLinkToChat(props.row.original?.id)}>
+            <Button appearance="text">
+              <Track>
+                <Icon icon={<MdOutlineRemoveRedEye color={'rgba(0,0,0,0.54)'} />} />
+                {t('feedback.view')}
+              </Track>
+            </Button>
+          </a>
         ),
         meta: {
           size: '1%',
@@ -68,7 +72,12 @@ const ChatsTable = (props: Props) => {
 
   return (
     <Card>
-      <DataTable data={chats} columns={chatColumns} pagination={pagination} setPagination={setPagination} />
+      <DataTable
+        data={chats}
+        columns={chatColumns}
+        pagination={pagination}
+        setPagination={setPagination}
+      />
     </Card>
   )
 }

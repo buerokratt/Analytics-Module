@@ -22,6 +22,22 @@ const MainMetricsArea = ({ metricPreferences, saveReorderedMetric }: Props) => {
 
   const fetchMetrics = async (metricPreferences: OverviewMetricPreference[]) => {
     const metricsToFetch = metricPreferences.filter((m) => m.active)
+
+    const noRemovedMetrics = metrics.every((m) => metricsToFetch.find((mf) => mf.metric === m.metric))
+    const noNewMetrics = metricsToFetch.every((mf) => metrics.find((m) => mf.metric === m.metric))
+    if (noRemovedMetrics && noNewMetrics) {
+      setMetrics(
+        metricsToFetch.map((r) => ({
+          metric: r.metric,
+          data: {
+            left: metrics.find((m) => m.metric === r.metric)!.data.left,
+            right: metrics.find((m) => m.metric === r.metric)!.data.right,
+          },
+        })),
+      )
+      return
+    }
+
     const promises = metricsToFetch.map((m) => axios.get(overviewMetrics(m.metric)))
     const results = await Promise.all(promises)
     setMetrics(

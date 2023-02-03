@@ -2,6 +2,17 @@
   "global": {
     "title": "Analytics Module"
   },
+  "general": {
+    "period": "Period",
+    "metric": "Meter",
+    "additionalOptions": "Additional Options",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "last30days": "Last 30 Days",
+    "months": "Selected Months",
+    "customperiod": "Selected Period",
+    "until": "until"
+  },
   "menu": {
     "overview": "Overview",
     "chats": "Chats",

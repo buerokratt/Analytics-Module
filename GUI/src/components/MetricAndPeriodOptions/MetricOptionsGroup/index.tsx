@@ -35,17 +35,21 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
         [selectedValue]
     )
 
+    const dateToStr = (date: Date) => {
+        return date.toISOString();
+    }
+
     const changeMonthDate = (date: Date) => {
         setStart(date)
-        onDatePicked?.(date?.toDateString() ?? '', 'month')
+        onDatePicked?.(dateToStr(date), 'month')
     }
     const changeStartDate = (date: Date) => {
         setStart(date)
-        onDatePicked?.(date?.toDateString() ?? '', 'start')
+        onDatePicked?.(dateToStr(date), 'start')
     }
     const changeEndDate = (date: Date) => {
         setEnd(date)
-        onDatePicked?.(date?.toDateString() ?? '', 'end')
+        onDatePicked?.(dateToStr(date), 'end')
     }
 
     return (

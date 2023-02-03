@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import CheckBoxButton from "../ColoredCheckbox";
+import Track from "../../Track";
+import CheckBoxWithColorIndicator from "../CheckboxWithColorIndicator";
 import { SubOption } from "../types";
-import "./styles.scss";
 
 interface SubOptionsGroupProps {
     label: string,
@@ -23,13 +23,11 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({
     }, [selectedValues.length])
 
     return (
-        <div className="container">
-            <div className="options-label">
-                {label}
-            </div>
-            <div className="option-group-row">
+        <Track gap={100}>
+            {label}
+            <Track>
                 {subOptions.map((option) =>
-                    <CheckBoxButton
+                    <CheckBoxWithColorIndicator
                         key={option.id}
                         onClick={() => {
                             const newlist = selectedValues.filter(x => x !== option.id)
@@ -44,8 +42,8 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({
                         color={option.color}
                     />
                 )}
-            </div>
-        </div>
+            </Track>
+        </Track>
     )
 }
 

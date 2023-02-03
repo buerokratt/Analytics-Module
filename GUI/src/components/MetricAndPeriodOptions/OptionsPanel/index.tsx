@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import Card from '../../Card';
 import { periodOptions } from './data';
-import Divider from '../Divider';
 import MetricOptionsGroup from '../MetricOptionsGroup';
 import SubOptionsGroup from '../SubOptionsGroup';
 import { MetricOptionsState, Option } from "../types";
+import Section from '../../Section';
 
 interface MetricOptionsProps {
     metricOptions: Option[],
@@ -38,39 +38,43 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({
 
     return (
         <Card>
-            <MetricOptionsGroup
-                options={periodOptions}
-                label={t('general.period')}
-                onChange={(period) => setSelection({ ...selection, period, start: '', end: '', })}
-                onDatePicked={(date, type) => {
-                    let newValue = {};
-                    if (type === 'start')
-                        newValue = { start: date }
-                    else if (type === 'end')
-                        newValue = { end: date }
-                    else if (type === 'month')
-                        newValue = {
-                            start: date,
-                            end: date,
-                        }
+            <Section>
+                <MetricOptionsGroup
+                    options={periodOptions}
+                    label={t('general.period')}
+                    onChange={(period) => setSelection({ ...selection, period, start: '', end: '', })}
+                    onDatePicked={(date, type) => {
+                        let newValue = {};
+                        if (type === 'start')
+                            newValue = { start: date }
+                        else if (type === 'end')
+                            newValue = { end: date }
+                        else if (type === 'month')
+                            newValue = {
+                                start: date,
+                                end: date,
+                            }
 
-                    setSelection({ ...selection, ...newValue })
-                }}
-            />
-            <Divider />
-            <MetricOptionsGroup
-                options={metricOptions}
-                label={t('general.metric')}
-                onChange={(metric) => setSelection({ ...selection, metric, options: [] })}
-            />
-            {subOptions.length > 0 && <Divider />}
+                        setSelection({ ...selection, ...newValue })
+                    }}
+                />
+            </Section>
+            <Section>
+                <MetricOptionsGroup
+                    options={metricOptions}
+                    label={t('general.metric')}
+                    onChange={(metric) => setSelection({ ...selection, metric, options: [] })}
+                />
+            </Section>
             {
                 subOptions.length > 0 &&
-                <SubOptionsGroup
-                    subOptions={subOptions}
-                    label={t('general.additionalOptions')}
-                    onChange={(options) => setSelection({ ...selection, options, })}
-                />
+                <Section>
+                    <SubOptionsGroup
+                        subOptions={subOptions}
+                        label={t('general.additionalOptions')}
+                        onChange={(options) => setSelection({ ...selection, options, })}
+                    />
+                </Section>
             }
         </Card>
     )

@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import ReactDatePicker from "react-datepicker";
 import { useTranslation } from "react-i18next";
-import ToggleButton from "../ToggleButton";
+import Button from "../../Button";
+import { FormDatepicker } from "../../FormElements";
+import Track from "../../Track";
 import { Option } from "../types";
-import "./styles.scss";
 
 type PickedDateType = 'start' | 'end' | 'month'
 type DatePickHandler = ((date: string, type: PickedDateType) => void) | undefined
@@ -53,72 +53,70 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
     }
 
     return (
-        <div className="container">
-            <div className="options-label">
-                {label}
-            </div>
-            <div className="option-group-column">
-                <div>
+        <Track gap={130} align='left'>
+            {label}
+            <Track direction="vertical" align="left" gap={additionalKey ? 10 : 0}>
+                <Track>
                     {options.map((option) =>
-                        <ToggleButton
+                        <Button
                             key={option.id}
-                            label={t(option.labelKey)}
-                            value={option.id}
-                            selectedValue={selectedValue}
-                            onClick={setSelectedValue} />
+                            onClick={() => setSelectedValue(option.id)}
+                            appearance={option.id === selectedValue ? 'primary' : 'secondary'}
+                            size="s"
+                            style={{ marginRight: '.5rem' }}
+                        >
+                            {t(option.labelKey)}
+                        </Button>
                     )}
-                </div>
-                <div className="date-picker-wrapper-container">
+                </Track>
+                <Track>
                     {
                         additionalKey === 'monthpicker' &&
-                        <ReactDatePicker
-                            selected={start}
-                            onChange={(date) => {
-                                if (!date) return;
-                                changeMonthDate(date)
-                            }}
-                            showMonthYearPicker
-                            dateFormat={'MMMM yyyy'}
-                            locale='et-EE'
-                            wrapperClassName="picker-container-wrapper"
-                            className='picker-container'
+                        <FormDatepicker
+                            label=''
+                            hideLabel
+                            name='start'
+                            value={start}
+                            onChange={(date) => changeMonthDate(date)}
+                            onBlur={() => { }}
+                            monthPicker
                         />
                     }
                     {
                         additionalKey === 'customperiodpicker' &&
-                        <div className="date-range-picker-container">
-                            <ReactDatePicker
-                                selected={start}
+                        <Track gap={20}>
+                            <FormDatepicker
+                                label=''
+                                hideLabel
+                                name='start'
+                                value={start}
                                 onChange={(date) => {
-                                    if (!date) return;
-                                    changeStartDate(date);
+                                    changeStartDate(date)
 
                                     if (date > end)
-                                        changeEndDate(date);
+                                        changeEndDate(date)
                                 }}
-                                dateFormat={'dd.MM.yyyy'}
-                                locale='et-EE'
-                                wrapperClassName='picker-container-wrapper'
-                                className='picker-container'
+                                onBlur={() => { }}
                             />
-                            <span className="until">{t('general.until')}</span>
-                            <ReactDatePicker
-                                selected={end}
-                                minDate={start}
+                            {t('general.until')}
+                            <FormDatepicker
+                                label={t('general.until')}
+                                hideLabel
+                                name='end'
+                                value={end}
                                 onChange={(date) => {
-                                    if (!date) return;
-                                    changeEndDate(date);
+                                    changeEndDate(date)
+
+                                    if (date < start)
+                                        changeStartDate(date)
                                 }}
-                                dateFormat={'dd.MM.yyyy'}
-                                locale='et-EE'
-                                wrapperClassName='picker-container-wrapper'
-                                className='picker-container'
+                                onBlur={() => { }}
                             />
-                        </div>
+                        </Track>
                     }
-                </div>
-            </div>
-        </div>
+                </Track>
+            </Track>
+        </Track >
     )
 }
 

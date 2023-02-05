@@ -1,25 +1,24 @@
 import React from 'react';
 import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions';
 
-const exampleOptions: Option[] = [
+const feedbackMetrics: Option[] = [
     {
-        id: 'metric1',
-        labelKey: 'general.metric1',
+        id: 'statuses',
+        labelKey: 'feedback.statuses',
         subOptions: [
-            { id: 'option1', labelKey: 'general.option1', color: '#f00' },
-            { id: 'option2', labelKey: 'general.option2', color: '#0f0' },
+            { id: 'client_left_with_answer', labelKey: 'feedback.status.client_left_with_answer', color: '#f00' },
+            { id: 'client_left_without_answer', labelKey: 'feedback.status.client_left_without_answer', color: '#0f0' },
+            { id: 'terminated', labelKey: 'feedback.status.terminated', color: '#0f0' },
+            { id: 'accepted', labelKey: 'feedback.status.accepted', color: '#0f0' },
+            { id: 'hate_speech', labelKey: 'feedback.status.hate_speech', color: '#0f0' },
+            { id: 'answered_in_other_channel', labelKey: 'feedback.status.answered_in_other_channel', color: '#0f0' },
+            { id: 'other_reasons', labelKey: 'feedback.status.other_reasons', color: '#0f0' },
         ]
     },
-    {
-        id: 'metric2',
-        labelKey: 'general.metric2',
-        subOptions: [
-            { id: 'option3', labelKey: 'general.option3', color: '#0ff' },
-            { id: 'option4', labelKey: 'general.option4', color: '#00f' },
-        ]
-    },
-    { id: 'metric3', labelKey: 'general.metric3' },
-    { id: 'metric4', labelKey: 'general.metric4' },
+    { id: 'burokratt_chats', labelKey: 'feedback.burokratt_chats' },
+    { id: 'advisor_chats', labelKey: 'feedback.advisor_chats' },
+    { id: 'selected_advisor_chats', labelKey: 'feedback.selected_advisor_chats' },
+    { id: 'negative_feedback', labelKey: 'feedback.negative_feedback' },
 ];
 
 const FeedbackPage: React.FC = () => {
@@ -27,7 +26,7 @@ const FeedbackPage: React.FC = () => {
         <>
             <h1>Feedback</h1>
             <OptionsPanel
-                metricOptions={exampleOptions}
+                metricOptions={feedbackMetrics}
                 onChange={(config) => console.log(config)}
             />
         </>

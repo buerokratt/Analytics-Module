@@ -47,5 +47,21 @@
       "terminated": "Määramata põhjus",
       "toContact": "Vastus muus kanalis"
     }
+  },
+  "feedback": {
+    "statuses": "Lõpetatud staatused / vestluste arv",
+    "burokratt_chats": "Tagasiside bürokrati vestlustele",
+    "advisor_chats": "Tagasiside nõustajate vestlustele",
+    "selected_advisor_chats": "Tagasiside valitud nõustajale",
+    "negative_feedback": "Negatiivse tagasisidega vestlused",
+    "status": {
+       "client_left_with_answer": "Bürokratt - klient lahkus vastusega",
+       "client_left_without_answer": "Bürokratt - klient lahkus vastuseta",
+       "terminated": "Bürokratt - lõpetatud määramata põhjusel",
+       "accepted": "Nõustaja - aksepteeritud vastus",
+       "hate_speech": "Nõustaja - vihakõne tunnused",
+       "answered_in_other_channel": "Nõustaja - vastatud teises kanalis",
+       "other_reasons": "Nõustaja - muud põhjused"
+    }
   }
 }

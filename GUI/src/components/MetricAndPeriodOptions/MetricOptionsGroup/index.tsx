@@ -56,15 +56,15 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
     return (
         <Track gap={130} align='left'>
             <div className='option-label'>{label}</div>
-            <Track direction="vertical" align="left" gap={additionalKey ? 10 : 0}>
-                <Track>
-                    {options.map((option) =>
+            <Track direction="vertical" align="left" gap={additionalKey ? 10 : 0} >
+                <Track isMultiline={true}>
+                    {options.map((option) => 
                         <Button
                             key={option.id}
                             onClick={() => setSelectedValue(option.id)}
                             appearance={option.id === selectedValue ? 'primary' : 'secondary'}
                             size="s"
-                            style={{ marginRight: '.5rem' }}
+                            style={{ marginRight: '.5rem', marginBottom :'.3rem',  marginTop :'.3rem'}}
                         >
                             {t(option.labelKey)}
                         </Button>

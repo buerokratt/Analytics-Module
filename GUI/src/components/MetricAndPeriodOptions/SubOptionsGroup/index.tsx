@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import Track from "../../Track";
 import CheckBoxWithColorIndicator from "../CheckboxWithColorIndicator";
 import { SubOption } from "../types";
+import './styles.scss'
 
 interface SubOptionsGroupProps {
     label: string,
@@ -24,7 +25,7 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({
 
     return (
         <Track gap={100}>
-            {label}
+            <div className='additional-option-label'>{label}</div>
             <Track>
                 {subOptions.map((option) =>
                     <CheckBoxWithColorIndicator

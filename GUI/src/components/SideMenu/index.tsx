@@ -8,7 +8,7 @@ const menuItems = [
     { to: ROUTES.OVERVIEW_ROUTE, titleKey: 'menu.overview' },
     { to: ROUTES.CHATS_ROUTE, titleKey: 'menu.chats' },
     { to: ROUTES.BUROKRATT_ROUTE, titleKey: 'menu.burokratt' },
-    { to: ROUTES.FEEDBACKS_ROUTE, titleKey: 'menu.feedbacks' },
+    { to: ROUTES.FEEDBACK_ROUTE, titleKey: 'menu.feedback' },
     { to: ROUTES.ADVISORS_ROUTE, titleKey: 'menu.advisors' },
     { to: ROUTES.REPORTS_ROUTE, titleKey: 'menu.reports' },
 ]

@@ -4,7 +4,7 @@
   },
   "general": {
     "period": "Period",
-    "metric": "Meter",
+    "chooseMetric": "Choose a metric",
     "additionalOptions": "Additional Options",
     "today": "Today",
     "yesterday": "Yesterday",
@@ -17,9 +17,9 @@
     "overview": "Overview",
     "chats": "Chats",
     "burokratt": "Bürokratt",
-    "feedbacks": "Feedbacks",
+    "feedback": "Feedback",
     "advisors": "Advisors",
-    "reports": "Reports"
+    "reports": "Open Data"
   },
   "overview": {
     "editView": "Edit view",

@@ -4,6 +4,7 @@ import Button from "../../Button";
 import { FormDatepicker } from "../../FormElements";
 import Track from "../../Track";
 import { Option } from "../types";
+import './styles.scss'
 
 type PickedDateType = 'start' | 'end' | 'month'
 type DatePickHandler = ((date: string, type: PickedDateType) => void) | undefined
@@ -54,7 +55,7 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
 
     return (
         <Track gap={130} align='left'>
-            {label}
+            <div className='option-label'>{label}</div>
             <Track direction="vertical" align="left" gap={additionalKey ? 10 : 0}>
                 <Track>
                     {options.map((option) =>

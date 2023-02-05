@@ -4,7 +4,7 @@
   },
   "general": {
     "period": "Periood",
-    "metric": "Mõõdik",
+    "chooseMetric": "Vali mõõdik",
     "additionalOptions": "Lisavalikud",
     "today": "Täna",
     "yesterday": "Eile",
@@ -17,9 +17,9 @@
     "overview": "Ülevaade",
     "chats": "Vestlused",
     "burokratt": "Bürokratt",
-    "feedbacks": "Tagasiside",
+    "feedback": "Tagasiside",
     "advisors": "Nõustajad",
-    "reports": "Raportid"
+    "reports": "Avaandmed"
   },
   "overview": {
     "editView": "Muuda vaadet",

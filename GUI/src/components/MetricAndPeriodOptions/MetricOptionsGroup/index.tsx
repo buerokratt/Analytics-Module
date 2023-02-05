@@ -56,7 +56,7 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
     return (
         <Track gap={130} align='left'>
             <div className='option-label'>{label}</div>
-            <Track direction="vertical" align="left" gap={additionalKey ? 10 : 0} >
+            <Track direction="vertical" align="left" gap={additionalKey ? 10 : 0} isFlex={true}>
                 <Track isMultiline={true}>
                     {options.map((option) => 
                         <Button

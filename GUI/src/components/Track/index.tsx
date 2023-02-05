@@ -33,7 +33,7 @@ const Track: FC<PropsWithChildren<TrackProps>> = (
     justify = 'start',
     direction = 'horizontal',
     isMultiline = false,
-    isFlex = true,
+    isFlex = false,
     isAlignItems = true,
     flex = 1,
     children,

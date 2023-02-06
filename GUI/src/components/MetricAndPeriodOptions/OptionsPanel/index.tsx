@@ -27,6 +27,12 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({
     })
 
     useEffect(() => {
+        if (metricOptions.length === 1) {
+            setSelection({ ...selection, metric: metricOptions[0].id, options: [] })
+        }
+    }, [])
+
+    useEffect(() => {
         onChange(selection)
     }, [selection])
 
@@ -59,13 +65,16 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({
                     }}
                 />
             </Section>
-            <Section>
-                <MetricOptionsGroup
-                    options={metricOptions}
-                    label={t('general.metric')}
-                    onChange={(metric) => setSelection({ ...selection, metric, options: [] })}
-                />
-            </Section>
+            {
+                metricOptions.length > 1 &&
+                <Section>
+                    <MetricOptionsGroup
+                        options={metricOptions}
+                        label={t('general.metric')}
+                        onChange={(metric) => setSelection({ ...selection, metric, options: [] })}
+                    />
+                </Section>
+            }
             {
                 subOptions.length > 0 &&
                 <Section>

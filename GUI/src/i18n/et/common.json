@@ -62,6 +62,7 @@
        "hate_speech": "Nõustaja - vihakõne tunnused",
        "answered_in_other_channel": "Nõustaja - vastatud teises kanalis",
        "other_reasons": "Nõustaja - muud põhjused"
-    }
+    },
+    "csv": "CSV"
   }
 }

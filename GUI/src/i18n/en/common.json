@@ -62,6 +62,7 @@
        "hate_speech": "Advisor - signs of hate speech",
        "answered_in_other_channel": "Advisor - answered in another channel",
        "other_reasons": "Advisor - other reasons"
-    }
+    },
+    "csv": "CSV"
   }
 }

@@ -15,7 +15,7 @@ const MetricsCharts = ({ title, data }: Props) => {
 
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const charts = ['Tulpdiagramm', 'Sektordiagramm', 'joondiagramm'];
-  const [selectedChart, setSelectedChart] = useState<string>('');
+  const [selectedChart, setSelectedChart] = useState<string>('Tulpdiagramm');
 
   const translateChartKeys = (obj: any) =>
   Object.keys(obj).reduce(
@@ -41,7 +41,7 @@ const MetricsCharts = ({ title, data }: Props) => {
            <DropDown options={charts} defaultValue='Tulpdiagramm' onChangeSelection={(value) => {setSelectedChart(value)}}></DropDown>
           </Track>
         } >
-        {data.length > 0 && (
+        {data.length > 0 && selectedChart === 'Tulpdiagramm' && (
           <OverviewLineChart
             data={data.map((entry: any) => ({
               ...translateChartKeys(entry),

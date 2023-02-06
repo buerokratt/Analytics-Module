@@ -3,10 +3,13 @@ check_for_cookie:
     - condition: ${incoming.headers.cookie == null || incoming.headers.cookie == ""}
       next: return_unauthorized
   next: extract_request_data
-    
+
 extract_request_data:
   assign:
     cookie: ${incoming.headers.cookie}
+    start: ${incoming.params.start}
+    end: ${incoming.params.end}
+    events: ${incoming.params.events}
 
 extract_cookie_data:
   call: http.post
@@ -15,7 +18,7 @@ extract_cookie_data:
     headers:
       cookie: ${cookie}
     body:
-      cookieName: "customJwtCookie" # todo: replace with real TIM cookie's name
+      cookieName: 'customJwtCookie' # todo: replace with real TIM cookie's name
   result: jwtResult
 
 validate_role:
@@ -28,12 +31,16 @@ get_negative_feedback:
   call: http.post
   args:
     url: http://resql:8082/negative-feedback
+    body:
+      start: ${start}
+      end: ${end}
+      events: ${events.split(',')}
   result: feedback
 
 return_value:
   return: ${feedback.response.body}
   next: end
-  
+
 return_unauthorized:
   status: 401
-  return: "unauthorized"
+  return: 'unauthorized'

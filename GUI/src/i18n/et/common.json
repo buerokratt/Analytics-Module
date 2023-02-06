@@ -3,6 +3,17 @@
     "title": "Analyticsi moodul",
     "resultCount": "Kuvan korraga"
   },
+  "general": {
+    "period": "Periood",
+    "metric": "Mõõdik",
+    "additionalOptions": "Lisavalikud",
+    "today": "Täna",
+    "yesterday": "Eile",
+    "last30days": "Viimased 30 päeva",
+    "months": "Valitud kuu",
+    "customperiod": "Valitud periood",
+    "until": "kuni"
+  },
   "menu": {
     "overview": "Ülevaade",
     "chats": "Vestlused",

@@ -8,7 +8,7 @@ export interface Option {
 export interface SubOption {
     id: string;
     labelKey: string;
-    color: string,
+    color?: string,
 }
 
 export interface MetricOptionsState {

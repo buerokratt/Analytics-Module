@@ -5,7 +5,7 @@ type Props = {
   data: any
 }
 
-const OverviewLineChart = ({ data }: Props) => {
+const LineGraph = ({ data }: Props) => {
   const [width, setWidth] = useState<number>(10)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -25,7 +25,7 @@ const OverviewLineChart = ({ data }: Props) => {
         <XAxis dataKey="created" />
         <YAxis />
         <CartesianGrid stroke="#f5f5f5" />
-        {Object.keys(data[0]).map((k, i) => {
+        {data.length > 0 && Object.keys(data[0]).map((k, i) => {
           return k === 'created' ? null : (
             <Line key={`line-${i}`} type="monotone" dataKey={k} stroke={`hsl(${i * 20}, 80%, 45%)`} yAxisId={0} />
           )
@@ -36,4 +36,4 @@ const OverviewLineChart = ({ data }: Props) => {
   )
 }
 
-export default OverviewLineChart
+export default LineGraph

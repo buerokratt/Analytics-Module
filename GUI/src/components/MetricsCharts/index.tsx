@@ -3,8 +3,10 @@ import React, { useState } from 'react'
 import { MdOutlineDownload } from 'react-icons/md'
 import { Button, Card, Icon, Track } from '../../components'
 import DropDown from '../Dropdown'
-import OverviewLineChart from '../OverviewLineChart'
+import BarGraph from '../BarGraph'
 import './MetricsCharts.scss'
+import LineGraph from '../LineGraph'
+import PieGraph from '../PieGraph'
 
 type Props = {
   title: any  
@@ -12,8 +14,6 @@ type Props = {
 }
 
 const MetricsCharts = ({ title, data }: Props) => {
-
-  const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const charts = ['Tulpdiagramm', 'Sektordiagramm', 'joondiagramm'];
   const [selectedChart, setSelectedChart] = useState<string>('Tulpdiagramm');
 
@@ -41,8 +41,24 @@ const MetricsCharts = ({ title, data }: Props) => {
            <DropDown options={charts} defaultValue='Tulpdiagramm' onChangeSelection={(value) => {setSelectedChart(value)}}></DropDown>
           </Track>
         } >
-        {data.length > 0 && selectedChart === 'Tulpdiagramm' && (
-          <OverviewLineChart
+        {selectedChart === 'Tulpdiagramm' && (
+          <BarGraph
+            data={data.map((entry: any) => ({
+              ...translateChartKeys(entry),
+              created: new Date(entry.created).toLocaleTimeString('default'),
+            }))}
+          />
+        )}
+        {selectedChart === 'Sektordiagramm' && (
+          <PieGraph
+            data={data.map((entry: any) => ({
+              ...translateChartKeys(entry),
+              created: new Date(entry.created).toLocaleTimeString('default'),
+            }))}
+          />
+        )}
+        {selectedChart === 'joondiagramm' && (
+          <LineGraph
             data={data.map((entry: any) => ({
               ...translateChartKeys(entry),
               created: new Date(entry.created).toLocaleTimeString('default'),

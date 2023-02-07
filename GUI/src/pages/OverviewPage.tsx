@@ -7,7 +7,7 @@ import { MdEdit } from 'react-icons/md'
 import { Button, Card, Drawer, Icon, Track } from '../components'
 import DraggableListItem from '../components/overview/DraggableListItem'
 import MainMetricsArea from '../components/overview/MainMetricsArea'
-import OverviewLineChart from '../components/OverviewLineChart'
+import LineGraph from '../components/LineGraph'
 import { openSearchDashboard, overviewMetricPreferences, overviewMetrics } from '../resources/api-constants'
 import { OverviewMetricPreference } from '../types/overview-metrics'
 import { reorderItem } from '../util/reorder-array'
@@ -116,7 +116,7 @@ const OverviewPage: React.FC = () => {
         }
       >
         {chartData.length > 0 && (
-          <OverviewLineChart
+          <LineGraph
             data={chartData.map((entry: any) => ({
               ...translateChartKeys(entry),
               created: new Date(entry.created).toLocaleTimeString('default'),

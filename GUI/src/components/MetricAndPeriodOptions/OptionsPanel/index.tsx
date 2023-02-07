@@ -61,7 +61,7 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, onChange }
         <Section>
           <MetricOptionsGroup
             options={metricOptions}
-            label={t('general.metric')}
+            label={t('general.chooseMetric')}
             onChange={(metric) => setSelection({ ...selection, metric, options: [] })}
           />
         </Section>

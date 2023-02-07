@@ -1,6 +1,7 @@
 {
   "global": {
-    "title": "Analytics Module"
+    "title": "Analytics Module",
+    "resultCount": "Results per page"
   },
   "general": {
     "period": "Period",
@@ -20,6 +21,13 @@
     "feedbacks": "Feedbacks",
     "advisors": "Advisors",
     "reports": "Reports"
+  },
+  "feedback": {
+    "startTime": "Start time",
+    "endTime": "End time",
+    "status": "Status",
+    "ended": "Ended",
+    "view": "View"
   },
   "overview": {
     "editView": "Edit view",

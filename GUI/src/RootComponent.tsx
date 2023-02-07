@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { Layout } from './components'
 import ChatsPage from './pages/ChatsPage'
+import FeedbackPage from './pages/FeedbackPage'
 import NotFoundPage from './pages/NotFoundPage'
 import OverviewPage from './pages/OverviewPage'
 import { ROUTES } from './resources/routes-constants'
@@ -13,6 +14,7 @@ const RootComponent: React.FC = () => {
       <Route element={<Layout />}>
         <Route path={ROUTES.OVERVIEW_ROUTE} element={<OverviewPage />} />
         <Route path={ROUTES.CHATS_ROUTE} element={<ChatsPage />} />
+        <Route path={ROUTES.FEEDBACKS_ROUTE} element={<FeedbackPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

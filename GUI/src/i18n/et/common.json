@@ -1,6 +1,7 @@
 {
   "global": {
-    "title": "Analyticsi moodul"
+    "title": "Analyticsi moodul",
+    "resultCount": "Kuvan korraga"
   },
   "general": {
     "period": "Periood",
@@ -20,6 +21,13 @@
     "feedback": "Tagasiside",
     "advisors": "Nõustajad",
     "reports": "Avaandmed"
+  },
+  "feedback": {
+    "startTime": "Algusaeg",
+    "endTime": "Lõppaeg",
+    "status": "Staatus",
+    "ended": "Lõppenud",
+    "view": "Vaata"
   },
   "overview": {
     "editView": "Muuda vaadet",

@@ -4,12 +4,12 @@ import Card from '../../Card'
 import { periodOptions } from './data'
 import MetricOptionsGroup from '../MetricOptionsGroup'
 import SubOptionsGroup from '../SubOptionsGroup'
-import { MetricOptionsState, Option } from '../types'
+import { MetricOptionsState, Option, OnChangeCallback } from '../types'
 import Section from '../../Section'
 
 interface MetricOptionsProps {
   metricOptions: Option[]
-  onChange: (selection: MetricOptionsState & { groupByPeriod: string }) => void
+  onChange: (selection: OnChangeCallback) => void
 }
 
 const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, onChange }) => {

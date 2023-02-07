@@ -1,3 +1,5 @@
+import { DownloadReportsMetricsProps } from '../types/reports-metrics'
+
 const baseUrl = process.env.REACT_APP_API_URL
 const chatsUrl = process.env.REACT_APP_BUEROKRATT_CHATBOT_URL
 
@@ -15,6 +17,26 @@ export const overviewMetricPreferences = (): string => {
 
 export const overviewMetrics = (metric: string): string => {
   return baseUrl + `/overview/metrics?metric=${metric}`
+}
+
+export const reportMetricsDownload = (): string => {
+  return baseUrl + '/reports/metrics/download'
+}
+
+export const reportMetricsUpload = (): string => {
+  return baseUrl + '/reports/metrics/upload'
+}
+
+export const reportMetricsDatasets = (): string => {
+  return baseUrl + '/reports/metrics/dataset'
+}
+
+export const reportMetricsDeleteDataset = (): string => {
+  return baseUrl + '/reports/metrics/delete-dataset'
+}
+
+export const reportODPKey = (): string => {
+  return baseUrl + '/reports/odpkey';
 }
 
 export const getNegativeFeedbackChats = ({

@@ -9,7 +9,7 @@ import Section from '../../Section'
 
 interface MetricOptionsProps {
   metricOptions: Option[]
-  onChange: (selection: MetricOptionsState) => void
+  onChange: (selection: MetricOptionsState & { groupByPeriod: string }) => void
 }
 
 const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, onChange }) => {
@@ -35,7 +35,8 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, onChange }
   }, [])
 
   useEffect(() => {
-    onChange(selection)
+    const groupByPeriod = selection.start === selection.end ? 'hour' : 'day'
+    onChange({ ...selection, groupByPeriod })
   }, [selection])
 
   const subOptions = useMemo(

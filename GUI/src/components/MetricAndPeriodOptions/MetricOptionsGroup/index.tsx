@@ -55,7 +55,7 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({ label, options,
   const additionalKey = useMemo(() => options.find((x) => x.id === selectedValue)?.additionalKey, [selectedValue])
 
   const dateToStr = (date: Date) => {
-    return date.toISOString()
+    return date.toDateString()
   }
 
   const changeMonthDate = (date: Date) => {

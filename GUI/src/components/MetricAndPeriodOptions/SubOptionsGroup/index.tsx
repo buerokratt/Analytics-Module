@@ -25,7 +25,7 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({
     return (
         <Track gap={100}>
             {label}
-            <Track>
+            <Track isMultiline={true} gap={8}>
                 {subOptions.map((option) =>
                     <CheckBoxWithColorIndicator
                         key={option.id}

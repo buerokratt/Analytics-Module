@@ -22,13 +22,6 @@
     "advisors": "Nõustajad",
     "reports": "Avaandmed"
   },
-  "feedback": {
-    "startTime": "Algusaeg",
-    "endTime": "Lõppaeg",
-    "status": "Staatus",
-    "ended": "Lõppenud",
-    "view": "Vaata"
-  },
   "overview": {
     "editView": "Muuda vaadet",
     "totalChatsChart": "Vestluste koguarv",
@@ -62,7 +55,7 @@
     "advisor_chats": "Tagasiside nõustajate vestlustele",
     "selected_advisor_chats": "Tagasiside valitud nõustajale",
     "negative_feedback": "Negatiivse tagasisidega vestlused",
-    "status": {
+    "status_options": {
        "client_left_with_answer": "Bürokratt - klient lahkus vastusega",
        "client_left_without_answer": "Bürokratt - klient lahkus vastuseta",
        "terminated": "Bürokratt - lõpetatud määramata põhjusel",
@@ -71,6 +64,12 @@
        "answered_in_other_channel": "Nõustaja - vastatud teises kanalis",
        "other_reasons": "Nõustaja - muud põhjused"
     },
-    "csv": "CSV"
+    "csv": "CSV",
+    "startTime": "Algusaeg",
+    "endTime": "Lõppaeg",
+    "status": "Staatus",
+    "ended": "Lõppenud",
+    "view": "Vaata",
+    "comment": "Kommentaar"
   }
 }

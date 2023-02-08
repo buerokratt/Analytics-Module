@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Component } from "react";
 import { useTranslation } from "react-i18next";
 import Track from "../../Track";
 import CheckBoxWithColorIndicator from "../CheckboxWithColorIndicator";
@@ -18,6 +18,11 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({
 }) => {
     const { t } = useTranslation()
     const [selectedValues, setSelectedValues] = useState<string[]>([])
+
+    useState(() => {
+        const selectedOptions = subOptions.filter((x => x.isSelected === undefined || x.isSelected === true)).map((x) => x.id);
+        setSelectedValues(selectedOptions);
+    })
 
     useEffect(() => {
         onChange(selectedValues);

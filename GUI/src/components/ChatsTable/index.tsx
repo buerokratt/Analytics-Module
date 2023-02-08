@@ -12,7 +12,7 @@ import Icon from '../Icon'
 import Track from '../Track'
 
 type Props = {
-  dataSource: () => Promise<Chat[]>
+  dataSource: Chat[]
 }
 
 const ChatsTable = (props: Props) => {
@@ -28,8 +28,7 @@ const ChatsTable = (props: Props) => {
 
   useEffect(() => {
     const fetchChats = async () => {
-      const result = await props.dataSource()
-      setChats(result)
+      setChats(props.dataSource)
     }
     fetchChats().catch(console.error)
   }, [props.dataSource])
@@ -41,6 +40,9 @@ const ChatsTable = (props: Props) => {
     () => [
       columnHelper.accessor('id', {
         header: 'ID',
+      }),
+      columnHelper.accessor('comment', {
+        header: t('feedback.comment') || '',
       }),
       columnHelper.accessor('created', {
         header: t('feedback.startTime') || '',

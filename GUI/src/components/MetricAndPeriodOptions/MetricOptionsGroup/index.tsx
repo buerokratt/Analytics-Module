@@ -4,6 +4,7 @@ import Button from '../../Button'
 import { FormDatepicker } from '../../FormElements'
 import Track from '../../Track'
 import { Option } from '../types'
+import { format } from 'date-fns'
 import './styles.scss'
 
 type DatePickHandler = ((startDate: string, endDate: string) => void) | undefined
@@ -11,12 +12,20 @@ type StartEndTimes = { start: Date; end: Date }
 
 interface MetricOptionsGroupProps {
   label: string
+  dateFormat?: string
   options: Option[]
   onChange: (value: string) => void
   onDatePicked?: DatePickHandler
 }
 
-const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({ label, options, onChange, onDatePicked }) => {
+const defaultProps: MetricOptionsGroupProps = {
+  dateFormat: 'EEE MMM dd yyyy',
+  label: '',
+  options: [],
+  onChange: ((_) => {})
+}
+
+const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({ label, dateFormat, options, onChange, onDatePicked }) => {
   const { t } = useTranslation()
   const [selectedValue, setSelectedValue] = useState(options[0].id)
   const [startEndTimes, setStartEndTimes] = useState<StartEndTimes>({ start: new Date(), end: new Date() })
@@ -56,7 +65,7 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({ label, options,
   const additionalKey = useMemo(() => options.find((x) => x.id === selectedValue)?.additionalKey, [selectedValue])
 
   const dateToStr = (date: Date) => {
-    return date.toDateString()
+    return format(date, dateFormat ?? 'EEE MMM dd yyyy')
   }
 
   const changeMonthDate = (date: Date) => {
@@ -138,4 +147,5 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({ label, options,
   )
 }
 
+MetricOptionsGroup.defaultProps = defaultProps;
 export default MetricOptionsGroup

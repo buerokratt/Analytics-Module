@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Card from '../../Card'
 import { periodOptions } from './data'
@@ -6,20 +6,21 @@ import MetricOptionsGroup from '../MetricOptionsGroup'
 import SubOptionsGroup from '../SubOptionsGroup'
 import { MetricOptionsState, Option } from '../types'
 import Section from '../../Section'
+import { format } from 'date-fns'
 
 interface MetricOptionsProps {
   metricOptions: Option[]
+  dateFormat?: string
   onChange: (selection: MetricOptionsState & { groupByPeriod: string }) => void
 }
 
-const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, onChange }) => {
+const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat, onChange }) => {
   const { t } = useTranslation()
   const [selection, setSelection] = useState<MetricOptionsState>({
     period: '',
     metric: '',
-
-    start: '',
-    end: '',
+    start: format(new Date(), dateFormat ?? 'EEE MMM dd yyyy'),
+    end: format(new Date(), dateFormat ?? 'EEE MMM dd yyyy'),
     options: [],
   })
 
@@ -50,6 +51,7 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, onChange }
     <Card>
       <Section>
         <MetricOptionsGroup
+          dateFormat={dateFormat}
           options={periodOptions}
           label={t('general.period')}
           onChange={setPeriod}
@@ -61,6 +63,7 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, onChange }
       {metricOptions.length > 1 && (
         <Section>
           <MetricOptionsGroup
+            dateFormat={dateFormat}
             options={metricOptions}
             label={t('general.chooseMetric')}
             onChange={(metric) => setSelection({ ...selection, metric, options: [] })}

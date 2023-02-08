@@ -17,12 +17,17 @@ export const overviewMetrics = (metric: string): string => {
   return baseUrl + `/overview/metrics?metric=${metric}`
 }
 
-export const getNegativeFeedbackChats = ({
-  startTime,
-  endTime,
-  events,
-}: {
-  startTime: string
-  endTime: string
-  events: string[]
-}): string => `${baseUrl}/negative-feedback?start=${startTime}&end=${endTime}&events=${events}`
+
+// Feedback
+
+export const getAverageFeedbackOnBuerokrattChats = (): string => {
+  return baseUrl + '/feedback/avg-feedback-to-buerokratt-chats'
+}
+
+export const getNpsOnCSAChatsFeedback = (): string => {
+  return baseUrl + '/feedback/csa-chats-feedback-nps'
+}
+
+export const getNegativeFeedbackChats = (): string => {
+  return baseUrl + '/feedback/chats-with-negative-feedback'
+}

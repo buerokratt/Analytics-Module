@@ -4,9 +4,10 @@ import Track from '../Track'
 
 type Props = {
   data: any
+  dataKey: string
 }
 
-const PieGraph = ({ data }: Props) => {
+const PieGraph = ({ data, dataKey }: Props) => {
   const [width, setWidth] = useState<number>(10)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -30,10 +31,10 @@ const PieGraph = ({ data }: Props) => {
             labelLine={false}
             outerRadius={200}
             fill="#8884d8"
-            dataKey="value"
+            dataKey={dataKey}
           >
           {data.length > 0 && Object.keys(data[0]).map((k, i) => {
-          return k === 'created' ? null : (
+          return k === `${{dataKey}}` ? null : (
             <Cell key={`line-${i}`} type="monotone" stroke={`hsl(${i * 20}, 80%, 45%)`} fill={'#0088FE'} />
           )
         })}

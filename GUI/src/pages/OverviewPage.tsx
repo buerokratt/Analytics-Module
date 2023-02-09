@@ -117,6 +117,7 @@ const OverviewPage: React.FC = () => {
       >
         {chartData.length > 0 && (
           <LineGraph
+            dataKey='created'
             data={chartData.map((entry: any) => ({
               ...translateChartKeys(entry),
               created: new Date(entry.created).toLocaleTimeString('default'),

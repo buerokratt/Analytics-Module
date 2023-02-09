@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, Legend } from 'recharts'
 
 type Props = {
+  dataKey: string
   data: any
 }
 
-const LineGraph = ({ data }: Props) => {
+const LineGraph = ({ data, dataKey }: Props) => {
   const [width, setWidth] = useState<number>(10)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -22,7 +23,7 @@ const LineGraph = ({ data }: Props) => {
     <div ref={ref}>
       <LineChart width={width} height={width / 3.86} data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
         <Tooltip />
-        <XAxis dataKey="created" />
+        <XAxis dataKey={dataKey} />
         <YAxis />
         <CartesianGrid stroke="#f5f5f5" />
         {data.length > 0 && Object.keys(data[0]).map((k, i) => {

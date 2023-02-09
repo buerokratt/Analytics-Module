@@ -30,7 +30,7 @@ const BarGraph = ({ data, dataKey }: Props) => {
       <Legend />
       {data.length > 0 && (Object.keys(data[0]).map((k, i) => {
           return k === `${{dataKey}}` ? null : (
-            <Bar key={`line-${i}`} type="monotone" dataKey={k} stroke={`hsl(${i * 20}, 80%, 45%)`} yAxisId={0} />
+            <Bar dataKey={k} stackId={k} fill="#8884d8" />
           )
       }))}
     </BarChart>

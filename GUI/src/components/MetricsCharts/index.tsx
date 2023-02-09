@@ -18,17 +18,17 @@ const MetricsCharts = ({ title, dataKey, data }: Props) => {
   const charts = ['Tulpdiagramm', 'Sektordiagramm', 'joondiagramm'];
   const [selectedChart, setSelectedChart] = useState<string>('Tulpdiagramm');
 
-  const translateChartKeys = (obj: any) =>
-  Object.keys(obj).reduce(
-    (acc, key) =>
-        key === 'created'
-          ? acc
-          : {
-              ...acc,
-              ...{ [t(`overview.chart.${key}`)]: obj[key] },
-            },
-      {},
-  )
+  // const translateChartKeys = (obj: any) =>
+  // Object.keys(obj).reduce(
+  //   (acc, key) =>
+  //       key === 'created'
+  //         ? acc
+  //         : {
+  //             ...acc,
+  //             ...{ [t(`overview.chart.${key}`)]: obj[key] },
+  //           },
+  //     {},
+  // )
 
   return (
     <Card
@@ -45,26 +45,31 @@ const MetricsCharts = ({ title, dataKey, data }: Props) => {
         {selectedChart === 'Tulpdiagramm' && (
           <BarGraph
           dataKey={dataKey}
-            data={data.map((entry: any) => ({
-              ...translateChartKeys(entry),
-              created: new Date(entry.created).toLocaleTimeString('default'),
-            }))}
+          data={data}
+            // data={data.map((entry: any) => ({
+            //   // ...translateChartKeys(entry),
+            //   dataKey: new Date(entry.created).toLocaleTimeString('default'),
+            // }))}
           />
         )}
         {selectedChart === 'Sektordiagramm' && (
           <PieGraph
-            data={data.map((entry: any) => ({
-              ...translateChartKeys(entry),
-              created: new Date(entry.created).toLocaleTimeString('default'),
-            }))}
+           dataKey={dataKey}
+           data={data}
+            // data={data.map((entry: any) => ({
+            //   // ...translateChartKeys(entry),
+            //   created: new Date(entry.created).toLocaleTimeString('default'),
+            // }))}
           />
         )}
         {selectedChart === 'joondiagramm' && (
           <LineGraph
-            data={data.map((entry: any) => ({
-              ...translateChartKeys(entry),
-              created: new Date(entry.created).toLocaleTimeString('default'),
-            }))}
+            dataKey={dataKey}
+            data={data}
+            // data={data.map((entry: any) => ({
+            //   // ...translateChartKeys(entry),
+            //   created: new Date(entry.created).toLocaleTimeString('default'),
+            // }))}
           />
         )}
       </Card>

@@ -10,6 +10,7 @@ import { Chat } from '../types/chat';
 
 const FeedbackPage: React.FC = () => {
     const [chartData, setChartData] = useState([])
+    const [chartKey, setChartKey] = useState('created');
     const [negativeFeedbackChats, setNegativeFeedbackChats] = useState<Chat[]>([]);
     const [currentMetric, setCurrentMetric] = useState('feedback.statuses')
     const random = () => Math.floor(Math.random() * 255);
@@ -60,18 +61,22 @@ const FeedbackPage: React.FC = () => {
     }, [currentConfigs]);
 
     const fetchChatsStatuses = async () => {
-       const events = currentConfigs?.options.filter((e) => e === 'answered' || e === 'client-left' || e === 'idle');
-       const csa_events= currentConfigs?.options.filter((e) => e !== 'answered' && e !== 'client-left' && e !== 'idle');
+       const events = currentConfigs?.options.filter((e) => e === 'answered' || e === 'client-left' || e === 'idle') ?? [];
+       const csa_events= currentConfigs?.options.filter((e) => e !== 'answered' && e !== 'client-left' && e !== 'idle') ?? [];
        const result = await axios.post(getChatsStatuses(), {
         'metric': currentConfigs?.groupByPeriod ?? 'day',
-        'start_date': currentConfigs?.start,
-        'end_date': currentConfigs?.end,
-        'events': events,
-        'csa_events': csa_events
+        // 'start_date': currentConfigs?.start,
+        // 'end_date': currentConfigs?.end,
+        "start_date": "2021-01-16",
+        "end_date": "2023-01-17",
+        'events': events?.length > 0 ? events : null,
+        'csa_events': csa_events?.length > 0 ? csa_events : null
       });
      
-      console.log(result.data.response);
-      setChartData(result.data.response);
+      const response: [] = result.data.response.flat(1);
+      console.log(response);
+      setChartKey('dateTime')
+      setChartData(response);
 
     }
 
@@ -143,7 +148,7 @@ const FeedbackPage: React.FC = () => {
                     setCurrentMetric(`feedback.${config.metric}`);
                 }}
             />
-            <MetricsCharts title={currentMetric} data={chartData} dataKey={'created'}/>
+            <MetricsCharts title={currentMetric} data={chartData} dataKey={chartKey}/>
             {negativeFeedbackChats.length > 0 && currentConfigs?.metric === 'negative_feedback' && <ChatsTable dataSource={negativeFeedbackChats} />}
         </>
     )

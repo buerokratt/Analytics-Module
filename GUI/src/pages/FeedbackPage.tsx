@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios'
 import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions';
 import MetricsCharts from '../components/MetricsCharts';
 import ChatsTable from '../components/ChatsTable'
-import { getAverageFeedbackOnBuerokrattChats, getNegativeFeedbackChats, getNpsOnCSAChatsFeedback } from '../resources/api-constants'
+import { getAverageFeedbackOnBuerokrattChats, getNegativeFeedbackChats, getNpsOnCSAChatsFeedback, getNpsOnSelectedCSAChatsFeedback } from '../resources/api-constants'
 import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types';
 import { Chat } from '../types/chat';
 
@@ -16,52 +16,8 @@ const FeedbackPage: React.FC = () => {
     const [currentConfigs, setConfigs] = useState<MetricOptionsState & {
         groupByPeriod: string;
     }>()
-    const { t } = useTranslation()
 
-    useEffect(() => {
-        switch (currentConfigs?.metric) {
-            case 'burokratt_chats':
-              fetchAverageFeedbackOnBuerokrattChats();
-              break;
-            case 'advisor_chats':
-                fetchNpsOnCSAChatsFeedback();
-              break;
-            case 'negative_feedback':
-                fetchChatsWithNegativeFeedback();
-              break;  
-        }
-    }, [currentConfigs]);
-
-    const fetchAverageFeedbackOnBuerokrattChats = async () => {
-        const result = await axios.post(getAverageFeedbackOnBuerokrattChats(), {
-            'metric': currentConfigs?.groupByPeriod ?? 'day',
-            'start_date': currentConfigs?.start,
-            'end_date': currentConfigs?.end,
-        });
-        setChartData(result.data.response)
-    }
-
-
-    const fetchNpsOnCSAChatsFeedback = async () => {
-        const result = await axios.post(getNpsOnCSAChatsFeedback(), {
-            'metric': currentConfigs?.groupByPeriod ?? 'day',
-            'start_date': currentConfigs?.start,
-            'end_date': currentConfigs?.end,
-        });
-        setChartData(result.data.response)
-    }
-
-    const fetchChatsWithNegativeFeedback = async () => {
-        const result = await axios.post(getNegativeFeedbackChats(), {
-            'events': "",
-            'start_date': currentConfigs?.start,
-            'end_date': currentConfigs?.end,
-        }, { withCredentials: true });
-        setChartData(result.data.response)
-        setNegativeFeedbackChats(result.data.response)
-    }
-
-    const feedbackMetrics: Option[] = [
+    const [feedbackMetrics, setFeedbackMetrics] = useState<Option[]>([
         {
             id: 'statuses',
             labelKey: 'feedback.statuses',
@@ -75,11 +31,94 @@ const FeedbackPage: React.FC = () => {
                 { id: 'other_reasons', labelKey: 'feedback.status_options.other_reasons', color: `rgb(${random()}, ${random()}, ${random()})` },
             ]
         },
-        { id: 'burokratt_chats', labelKey: 'feedback.burokratt_chats' },
+        { id: 'burokratt_chats', labelKey: 'feedback.burokratt_chats'},
         { id: 'advisor_chats', labelKey: 'feedback.advisor_chats' },
-        { id: 'selected_advisor_chats', labelKey: 'feedback.selected_advisor_chats' },
+        { id: 'selected_advisor_chats', labelKey: 'feedback.selected_advisor_chats'},
         { id: 'negative_feedback', labelKey: 'feedback.negative_feedback' },
-    ];
+    ])
+
+    const { t } = useTranslation()
+
+    useEffect(() => {
+        switch (currentConfigs?.metric) {
+            case 'statuses':
+                fetchChatsStatuses();
+              break;
+            case 'burokratt_chats':
+              fetchAverageFeedbackOnBuerokrattChats();
+              break;
+            case 'advisor_chats':
+                fetchNpsOnCSAChatsFeedback();
+              break;
+            case 'selected_advisor_chats':
+                fetchNpsOnSelectedCSAChatsFeedback();
+              break;  
+            case 'negative_feedback':
+                fetchChatsWithNegativeFeedback();
+              break;  
+        }
+    }, [currentConfigs]);
+
+    const fetchChatsStatuses = async () => {
+       // Todo
+    }
+
+    const fetchAverageFeedbackOnBuerokrattChats = async () => {
+        const result = await axios.post(getAverageFeedbackOnBuerokrattChats(), {
+            'metric': currentConfigs?.groupByPeriod ?? 'day',
+            'start_date': currentConfigs?.start,
+            'end_date': currentConfigs?.end,
+        });
+        console.log(result.data.response);
+        setChartData(result.data.response)
+    }
+
+    const fetchNpsOnCSAChatsFeedback = async () => {
+        const result = await axios.post(getNpsOnCSAChatsFeedback(), {
+            'metric': currentConfigs?.groupByPeriod ?? 'day',
+            'start_date': currentConfigs?.start,
+            'end_date': currentConfigs?.end,
+        });
+        setChartData(result.data.response)
+    }
+
+    const fetchNpsOnSelectedCSAChatsFeedback = async () => {
+        const result = await axios.post(getNpsOnSelectedCSAChatsFeedback(), {
+            'metric': currentConfigs?.groupByPeriod ?? 'day',
+            'start_date': '2022-11-07',//currentConfigs?.start,
+            'end_date': '2023-11-07', //currentConfigs?.end,
+            'excluded_csas': ['']
+        });
+ 
+        const res = result.data.response;
+        setChartData(res)
+
+        const advisorsIds = new Set(res.map((advisor: any) => advisor.customerSupportId))
+        const advisorsList : Map<any,any>[] = [];
+        advisorsIds.forEach((id) => {
+           return advisorsList.push(res.find((e: any) => e.customerSupportId === id));
+        })
+        const updatedMetrics = [...feedbackMetrics]
+        const updatedMetricsAdvisors: any = [];
+ 
+        advisorsList.forEach((advisor: any) => {
+            updatedMetricsAdvisors.push({id: advisor?.customerSupportId ?? '', labelKey: advisor?.customerSupportDisplayName ?? '', color: `rgb(${random()}, ${random()}, ${random()})` });
+        })
+        updatedMetrics[3].subOptions = updatedMetricsAdvisors;
+        console.log(updatedMetrics);
+        setFeedbackMetrics(updatedMetrics);
+        console.log(advisorsList);
+    }
+    
+    const fetchChatsWithNegativeFeedback = async () => {
+        const result = await axios.post(getNegativeFeedbackChats(), {
+            'events': "",
+            'start_date': currentConfigs?.start,
+            'end_date': currentConfigs?.end,
+        }, { withCredentials: true });
+        setChartData(result.data.response)
+        setNegativeFeedbackChats(result.data.response)
+    }
 
     return (
         <>
@@ -92,7 +131,7 @@ const FeedbackPage: React.FC = () => {
                     setCurrentMetric(`feedback.${config.metric}`);
                 }}
             />
-            <MetricsCharts title={currentMetric} data={chartData}/>
+            <MetricsCharts title={currentMetric} data={chartData} dataKey={'created'}/>
             {negativeFeedbackChats.length > 0 && currentConfigs?.metric === 'negative_feedback' && <ChatsTable dataSource={negativeFeedbackChats} />}
         </>
     )
@@ -100,3 +139,7 @@ const FeedbackPage: React.FC = () => {
 
 
 export default FeedbackPage
+function useFocusEffect(arg0: () => void, arg1: ((MetricOptionsState & { groupByPeriod: string; }) | undefined)[]) {
+    throw new Error('Function not implemented.');
+}
+

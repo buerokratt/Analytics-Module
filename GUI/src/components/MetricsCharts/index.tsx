@@ -11,9 +11,10 @@ import PieGraph from '../PieGraph'
 type Props = {
   title: any  
   data: any
+  dataKey: string
 }
 
-const MetricsCharts = ({ title, data }: Props) => {
+const MetricsCharts = ({ title, dataKey, data }: Props) => {
   const charts = ['Tulpdiagramm', 'Sektordiagramm', 'joondiagramm'];
   const [selectedChart, setSelectedChart] = useState<string>('Tulpdiagramm');
 
@@ -43,6 +44,7 @@ const MetricsCharts = ({ title, data }: Props) => {
         } >
         {selectedChart === 'Tulpdiagramm' && (
           <BarGraph
+          dataKey={dataKey}
             data={data.map((entry: any) => ({
               ...translateChartKeys(entry),
               created: new Date(entry.created).toLocaleTimeString('default'),

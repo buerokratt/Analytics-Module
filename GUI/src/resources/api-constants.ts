@@ -28,6 +28,10 @@ export const getNpsOnCSAChatsFeedback = (): string => {
   return baseUrl + '/feedback/csa-chats-feedback-nps'
 }
 
+export const getNpsOnSelectedCSAChatsFeedback = (): string => {
+  return baseUrl + '/feedback/selected-csa-feedback-nps'
+}
+
 export const getNegativeFeedbackChats = (): string => {
   return baseUrl + '/feedback/chats-with-negative-feedback'
 }

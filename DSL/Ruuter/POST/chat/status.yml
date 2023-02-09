@@ -5,7 +5,7 @@ assign_step:
 
 check_for_required_parameters:
   switch:
-    - condition: ${incoming.body == null || incoming.body.period == null || incoming.body.start_date == null || incoming.body.end_date == null}
+    - condition: ${incoming.body == null || incoming.body.metric == null || incoming.body.start_date == null || incoming.body.end_date == null}
       next: return_incorrect_request
   next: check_for_events
 
@@ -27,7 +27,7 @@ call_all_chats:
     url: http://resql:8082/status-all-chats
     body:
       events: ${incoming.body.events}
-      period: ${incoming.body.period}
+      metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
   result: result
@@ -39,7 +39,7 @@ call_csa_chats:
     url: http://resql:8082/status-csa-chats
     body:
       events: ${incoming.body.csa_events}
-      period: ${incoming.body.period}
+      metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
   result: csa_result

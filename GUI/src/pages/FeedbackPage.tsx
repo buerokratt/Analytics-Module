@@ -4,7 +4,7 @@ import axios from 'axios'
 import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions';
 import MetricsCharts from '../components/MetricsCharts';
 import ChatsTable from '../components/ChatsTable'
-import { getAverageFeedbackOnBuerokrattChats, getNegativeFeedbackChats, getNpsOnCSAChatsFeedback, getNpsOnSelectedCSAChatsFeedback } from '../resources/api-constants'
+import { getAverageFeedbackOnBuerokrattChats, getChatsStatuses, getNegativeFeedbackChats, getNpsOnCSAChatsFeedback, getNpsOnSelectedCSAChatsFeedback } from '../resources/api-constants'
 import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types';
 import { Chat } from '../types/chat';
 
@@ -22,13 +22,13 @@ const FeedbackPage: React.FC = () => {
             id: 'statuses',
             labelKey: 'feedback.statuses',
             subOptions: [
-                { id: 'client_left_with_answer', labelKey: 'feedback.status_options.client_left_with_answer', color: `rgb(${random()}, ${random()}, ${random()})`},
-                { id: 'client_left_without_answer', labelKey: 'feedback.status_options.client_left_without_answer', color: `rgb(${random()}, ${random()}, ${random()})` },
-                { id: 'terminated', labelKey: 'feedback.status_options.terminated', color: `rgb(${random()}, ${random()}, ${random()})` },
+                { id: 'answered', labelKey: 'feedback.status_options.answered', color: `rgb(${random()}, ${random()}, ${random()})`},
+                { id: 'client-left', labelKey: 'feedback.status_options.client_left', color: `rgb(${random()}, ${random()}, ${random()})` },
+                { id: 'idle', labelKey: 'feedback.status_options.idle', color: `rgb(${random()}, ${random()}, ${random()})` },
                 { id: 'accepted', labelKey: 'feedback.status_options.accepted', color: `rgb(${random()}, ${random()}, ${random()})` },
-                { id: 'hate_speech', labelKey: 'feedback.status_options.hate_speech', color: `rgb(${random()}, ${random()}, ${random()})` },
-                { id: 'answered_in_other_channel', labelKey: 'feedback.status_options.answered_in_other_channel', color:`rgb(${random()}, ${random()}, ${random()})` },
-                { id: 'other_reasons', labelKey: 'feedback.status_options.other_reasons', color: `rgb(${random()}, ${random()}, ${random()})` },
+                { id: 'hate-speech', labelKey: 'feedback.status_options.hate_speech', color: `rgb(${random()}, ${random()}, ${random()})` },
+                { id: 'to-contact', labelKey: 'feedback.status_options.to_contact', color:`rgb(${random()}, ${random()}, ${random()})` },
+                { id: 'terminated', labelKey: 'feedback.status_options.terminated', color: `rgb(${random()}, ${random()}, ${random()})` },
             ]
         },
         { id: 'burokratt_chats', labelKey: 'feedback.burokratt_chats'},
@@ -60,7 +60,19 @@ const FeedbackPage: React.FC = () => {
     }, [currentConfigs]);
 
     const fetchChatsStatuses = async () => {
-       // Todo
+       const events = currentConfigs?.options.filter((e) => e === 'answered' || e === 'client-left' || e === 'idle');
+       const csa_events= currentConfigs?.options.filter((e) => e !== 'answered' && e !== 'client-left' && e !== 'idle');
+       const result = await axios.post(getChatsStatuses(), {
+        'metric': currentConfigs?.groupByPeriod ?? 'day',
+        'start_date': currentConfigs?.start,
+        'end_date': currentConfigs?.end,
+        'events': events,
+        'csa_events': csa_events
+      });
+     
+      console.log(result.data.response);
+      setChartData(result.data.response);
+
     }
 
     const fetchAverageFeedbackOnBuerokrattChats = async () => {

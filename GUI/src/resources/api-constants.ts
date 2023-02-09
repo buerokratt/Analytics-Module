@@ -20,6 +20,10 @@ export const overviewMetrics = (metric: string): string => {
 
 // Feedback
 
+export const getChatsStatuses = (): string => {
+  return baseUrl + '/chat/status'
+}
+
 export const getAverageFeedbackOnBuerokrattChats = (): string => {
   return baseUrl + '/feedback/avg-feedback-to-buerokratt-chats'
 }

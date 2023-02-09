@@ -56,13 +56,13 @@
     "selected_advisor_chats": "Feedback to selected advisor",
     "negative_feedback": "Conversations with negative feedback",
     "status_options": {
-       "client_left_with_answer": "Bureaucrat - the client left with an answer",
-       "client_left_without_answer": "Bureaucrat - the customer left without an answer",
-       "terminated": "Bureaucrat - Terminated for an unspecified reason",
+       "answered": "Bureaucrat - the client left with an answer",
+       "client_left": "Bureaucrat - the customer left without an answer",
+       "idle": "Bureaucrat - Terminated for an unspecified reason",
        "accepted": "Advisor - Accepted answer",
        "hate_speech": "Advisor - signs of hate speech",
-       "answered_in_other_channel": "Advisor - answered in another channel",
-       "other_reasons": "Advisor - other reasons"
+       "to_contact": "Advisor - answered in another channel",
+       "terminated": "Advisor - other reasons"
     },
     "csv": "CSV",
     "startTime": "Start time",

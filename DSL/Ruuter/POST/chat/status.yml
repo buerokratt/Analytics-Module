@@ -1,24 +1,25 @@
+assign_step:
+  assign:
+    result: null
+    csa_result: null
+
 check_for_required_parameters:
   switch:
-    - condition: ${incoming.body == null || incoming.body.type == null || incoming.body.events == null || incoming.body.start_date == null || incoming.body.end_date == null}
+    - condition: ${incoming.body == null || incoming.body.period == null || incoming.body.start_date == null || incoming.body.end_date == null}
       next: return_incorrect_request
-  next: check_is_csa
+  next: check_for_events
 
-check_is_csa:
+check_for_events:
   switch:
-   - condition: ${incoming.body.type === 'csa'}
-     next: call_csa_chats
-  next: call_all_chats
+    - condition: ${incoming.body.events != null}
+      next: call_all_chats
+  next: check_for_csa_events
 
-call_csa_chats:
-  call: http.post
-  args:
-    url: http://resql:8082/status-csa-chats
-    body:
-      events: ${incoming.body.events}
-      start: ${incoming.body.start_date}
-      end: ${incoming.body.end_date}
-  result: result     
+check_for_csa_events:
+  switch:
+    - condition: ${incoming.body.csa_events != null}
+      next: call_csa_chats
+  next: return_response  
 
 call_all_chats:
   call: http.post
@@ -26,12 +27,48 @@ call_all_chats:
     url: http://resql:8082/status-all-chats
     body:
       events: ${incoming.body.events}
+      period: ${incoming.body.period}
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
   result: result
+  next: check_for_csa_events
 
-return_value:
-  return: ${result.response.body}
+call_csa_chats:
+  call: http.post
+  args:
+    url: http://resql:8082/status-csa-chats
+    body:
+      events: ${incoming.body.csa_events}
+      period: ${incoming.body.period}
+      start: ${incoming.body.start_date}
+      end: ${incoming.body.end_date}
+  result: csa_result
+  next: return_response
+
+return_response:
+  switch:
+    - condition: ${result != null && csa_result != null}
+      next: return_both_events
+    - condition: ${result != null && csa_result == null}
+      next: return_only_events
+    - condition: ${result == null && csa_result != null}
+      next: return_only_csa_events  
+  next: return_empty_response
+
+return_both_events:
+   return: ${[result.response.body, csa_result.response.body]}
+   next: end
+
+return_only_events:
+   return: ${[result.response.body]}
+   next: end
+
+return_only_csa_events:
+   return: ${[csa_result.response.body]}
+   next: end
+
+return_empty_response:
+  return: ${[]}
   next: end
 
 return_incorrect_request:

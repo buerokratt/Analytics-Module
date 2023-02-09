@@ -1,3 +1,5 @@
+import { format, fromUnixTime } from 'date-fns'
+import moment from 'moment'
 import React, { useEffect, useRef, useState } from 'react'
 import { BarChart, XAxis, CartesianGrid, YAxis, Tooltip, Legend, Bar } from 'recharts'
 
@@ -24,7 +26,11 @@ const BarGraph = ({ data, dataKey }: Props) => {
     <div ref={ref}>
     <BarChart width={width} height={width / 2.8} data={data} margin={{top: 20, right: 30, left: 20, bottom: 5 }} >
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey={dataKey} />
+      <XAxis
+        dataKey = {dataKey}
+        name = 'Time'
+        tickFormatter = {(unixTime) => moment(unixTime).format('yyyy-MM-d')}
+      />
       <YAxis />
       <Tooltip />
       <Legend />

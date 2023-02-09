@@ -7,6 +7,9 @@ import BarGraph from '../BarGraph'
 import './MetricsCharts.scss'
 import LineGraph from '../LineGraph'
 import PieGraph from '../PieGraph'
+import axios from 'axios'
+import { getCsv } from '../../resources/api-constants'
+import { saveAs } from 'file-saver';
 
 type Props = {
   title: any  
@@ -30,12 +33,23 @@ const MetricsCharts = ({ title, dataKey, data }: Props) => {
   //     {},
   // )
 
+  const downloadCSV = async (data: any) => {
+   const res =  await axios.post(getCsv(), {
+      'data': data,
+       "del": "",
+       "qul": ""
+    }, {responseType: 'blob'});
+     saveAs(res.data, 'metrics.csv')
+  }
+
   return (
     <Card
         header={
           <Track>
             <h3 style={{ flex: 2 }}>{t(title)}</h3>
-            <Button appearance="text" onClick={() => {}}>
+            <Button appearance="text" onClick={() => {
+              downloadCSV(data)
+            }}>
              <Icon icon={<MdOutlineDownload />} size='small' />
                {t('feedback.csv')}
             </Button>

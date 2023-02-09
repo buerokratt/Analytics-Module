@@ -17,6 +17,10 @@ export const overviewMetrics = (metric: string): string => {
   return baseUrl + `/overview/metrics?metric=${metric}`
 }
 
+export const getCsv = (): string => {
+  return baseUrl + '/csv'
+}
+
 
 // Feedback
 

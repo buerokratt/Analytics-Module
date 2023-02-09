@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios'
 import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions';
 import MetricsCharts from '../components/MetricsCharts';
@@ -12,8 +12,9 @@ const FeedbackPage: React.FC = () => {
     const [chartData, setChartData] = useState([])
     const [chartKey, setChartKey] = useState('created');
     const [negativeFeedbackChats, setNegativeFeedbackChats] = useState<Chat[]>([]);
+    const [advisors, setAdvisors] = useState<any[]>([])
     const [currentMetric, setCurrentMetric] = useState('feedback.statuses')
-    const random = () => Math.floor(Math.random() * 255);
+    const randomColor = () => '#'+(Math.random()*0xFFFFFF<<0).toString(16);
     const [currentConfigs, setConfigs] = useState<MetricOptionsState & {
         groupByPeriod: string;
     }>()
@@ -23,13 +24,13 @@ const FeedbackPage: React.FC = () => {
             id: 'statuses',
             labelKey: 'feedback.statuses',
             subOptions: [
-                { id: 'answered', labelKey: 'feedback.status_options.answered', color: `rgb(${random()}, ${random()}, ${random()})`},
-                { id: 'client-left', labelKey: 'feedback.status_options.client_left', color: `rgb(${random()}, ${random()}, ${random()})` },
-                { id: 'idle', labelKey: 'feedback.status_options.idle', color: `rgb(${random()}, ${random()}, ${random()})` },
-                { id: 'accepted', labelKey: 'feedback.status_options.accepted', color: `rgb(${random()}, ${random()}, ${random()})` },
-                { id: 'hate-speech', labelKey: 'feedback.status_options.hate_speech', color: `rgb(${random()}, ${random()}, ${random()})` },
-                { id: 'to-contact', labelKey: 'feedback.status_options.to_contact', color:`rgb(${random()}, ${random()}, ${random()})` },
-                { id: 'terminated', labelKey: 'feedback.status_options.terminated', color: `rgb(${random()}, ${random()}, ${random()})` },
+                { id: 'answered', labelKey: 'feedback.status_options.answered', color: randomColor()},
+                { id: 'client-left', labelKey: 'feedback.status_options.client_left', color: randomColor()},
+                { id: 'idle', labelKey: 'feedback.status_options.idle', color: randomColor()},
+                { id: 'accepted', labelKey: 'feedback.status_options.accepted', color: randomColor()},
+                { id: 'hate-speech', labelKey: 'feedback.status_options.hate_speech', color: randomColor()},
+                { id: 'to-contact', labelKey: 'feedback.status_options.to_contact', color: randomColor()},
+                { id: 'terminated', labelKey: 'feedback.status_options.terminated', color: randomColor()},
             ]
         },
         { id: 'burokratt_chats', labelKey: 'feedback.burokratt_chats'},
@@ -65,10 +66,10 @@ const FeedbackPage: React.FC = () => {
        const csa_events= currentConfigs?.options.filter((e) => e !== 'answered' && e !== 'client-left' && e !== 'idle') ?? [];
        const result = await axios.post(getChatsStatuses(), {
         'metric': currentConfigs?.groupByPeriod ?? 'day',
-        // 'start_date': currentConfigs?.start,
-        // 'end_date': currentConfigs?.end,
-        "start_date": "2021-01-16",
-        "end_date": "2023-01-17",
+        'start_date': currentConfigs?.start,
+        'end_date': currentConfigs?.end,
+        // "start_date": "2021-01-16",
+        // "end_date": "2023-01-17",
         'events': events?.length > 0 ? events : null,
         'csa_events': csa_events?.length > 0 ? csa_events : null
       });
@@ -100,31 +101,36 @@ const FeedbackPage: React.FC = () => {
     }
 
     const fetchNpsOnSelectedCSAChatsFeedback = async () => {
+        const excluded_csas = advisors.map((e) => e.id).filter(e => !currentConfigs?.options.includes(e));
         const result = await axios.post(getNpsOnSelectedCSAChatsFeedback(), {
             'metric': currentConfigs?.groupByPeriod ?? 'day',
-            'start_date': '2022-11-07',//currentConfigs?.start,
-            'end_date': '2023-11-07', //currentConfigs?.end,
-            'excluded_csas': ['']
+            'start_date': currentConfigs?.start,
+            'end_date': currentConfigs?.end,
+            // 'start_date': '2022-11-07',
+            // 'end_date': '2023-11-07',
+            'excluded_csas': excluded_csas.length ?? 0 > 0 ? excluded_csas : ['']
         });
  
         const res = result.data.response;
-        setChartData(res)
 
-        const advisorsIds = new Set(res.map((advisor: any) => advisor.customerSupportId))
-        const advisorsList : Map<any,any>[] = [];
-        advisorsIds.forEach((id) => {
-           return advisorsList.push(res.find((e: any) => e.customerSupportId === id));
+        const advisorsList = Array.from(new Set(res.map((advisor: any) => advisor.customerSupportId))).map((id: any) => 
+             res.find((e: any) => e.customerSupportId == id)
+        ).map((e) => {
+            return {
+                id: e?.customerSupportId ?? '', 
+                labelKey: e?.customerSupportDisplayName ?? '', 
+                color: randomColor()
+            }
         })
-        const updatedMetrics = [...feedbackMetrics]
-        const updatedMetricsAdvisors: any = [];
- 
-        advisorsList.forEach((advisor: any) => {
-            updatedMetricsAdvisors.push({id: advisor?.customerSupportId ?? '', labelKey: advisor?.customerSupportDisplayName ?? '', color: `rgb(${random()}, ${random()}, ${random()})` });
-        })
-        updatedMetrics[3].subOptions = updatedMetricsAdvisors;
-        console.log(updatedMetrics);
-        setFeedbackMetrics(updatedMetrics);
-        console.log(advisorsList);
+
+
+        if (advisorsList.length > advisors.length) {
+            const updatedMetrics = [...feedbackMetrics]
+            updatedMetrics[3].subOptions = advisorsList
+            setFeedbackMetrics(updatedMetrics);
+            setAdvisors(advisorsList)
+        }
+        setChartData(res)
     }
     
     const fetchChatsWithNegativeFeedback = async () => {
@@ -156,7 +162,3 @@ const FeedbackPage: React.FC = () => {
 
 
 export default FeedbackPage
-function useFocusEffect(arg0: () => void, arg1: ((MetricOptionsState & { groupByPeriod: string; }) | undefined)[]) {
-    throw new Error('Function not implemented.');
-}
-

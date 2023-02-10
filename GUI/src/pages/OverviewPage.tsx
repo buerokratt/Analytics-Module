@@ -72,7 +72,7 @@ const OverviewPage: React.FC = () => {
           ? acc
           : {
               ...acc,
-              ...{ [t(`overview.chart.${key}`)]: obj[key] },
+              ...{ [t(`chart.${key}`)]: obj[key] },
             },
       {},
     )

@@ -39,14 +39,6 @@
       "total_forwarded_chats_yesterday": "Suunatud vestluse eile: sisesed / välised",
       "avg_waiting_time_day": "Keskmine ooteaeg: täna / eile",
       "avg_waiting_time_week": "Keskmine ootaeg: nädal - eelmine"
-    },
-    "chart": {
-      "metricValue": "Alustatud vestlused",
-      "answered": "Lahkus vastusega",
-      "notAnswered": "Lahkus vastuseta",
-      "hateSpeech": "Vihakõne",
-      "terminated": "Määramata põhjus",
-      "toContact": "Vastus muus kanalis"
     }
   },
   "feedback": {
@@ -71,5 +63,15 @@
     "ended": "Lõppenud",
     "view": "Vaata",
     "comment": "Kommentaar"
+  },
+  "chart": {
+    "metricValue": "Alustatud vestlused",
+    "answered": "Lahkus vastusega",
+    "notAnswered": "Lahkus vastuseta",
+    "hateSpeech": "Vihakõne",
+    "terminated": "Määramata põhjus",
+    "toContact": "Vastus muus kanalis",
+    "count": "Count",
+    "event": "Sündmus"
   }
 }

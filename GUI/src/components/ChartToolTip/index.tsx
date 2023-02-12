@@ -4,8 +4,6 @@ import './ChartToolTip.scss'
 import { TooltipProps } from 'recharts'
 
 const ChartToolTip = ({ active, payload, label }: TooltipProps<number, string>) => {
-  console.log(payload)
-  console.log(active)
   if (active) {
     const currData = payload && payload.length ? payload[0].payload : null
     return (

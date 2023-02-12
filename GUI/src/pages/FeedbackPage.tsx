@@ -240,7 +240,6 @@ const FeedbackPage: React.FC = () => {
       { withCredentials: true },
     )
 
-    console.log(result.data.response)
     const response = result.data.response.map((entry: any) => ({
       ...translateChartKeys(entry, 'created'),
       dateTime: new Date(entry.created).getTime(),

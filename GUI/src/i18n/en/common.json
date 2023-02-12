@@ -72,6 +72,12 @@
     "terminated": "Unspecified reason",
     "toContact": "Answered in other channel",
     "count": "Count",
-    "event": "Event"
+    "event": "Event",
+    "avg": "Average",
+    "nps": "Nps",
+    "id": "Id",
+    "ended": "Ended",
+    "customerSupportId": "Customer Support Id",
+    "customerSupportDisplayName": "Customer Support Display Name"
   }
 }

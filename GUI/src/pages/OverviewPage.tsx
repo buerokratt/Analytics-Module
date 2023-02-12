@@ -11,6 +11,7 @@ import LineGraph from '../components/LineGraph'
 import { openSearchDashboard, overviewMetricPreferences, overviewMetrics } from '../resources/api-constants'
 import { OverviewMetricPreference } from '../types/overview-metrics'
 import { reorderItem } from '../util/reorder-array'
+import OverviewLineChart from '../components/OverviewLineChart'
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([])
@@ -92,8 +93,14 @@ const OverviewPage: React.FC = () => {
     <DndProvider backend={HTML5Backend}>
       <Track justify="between">
         <h1>{t('menu.overview')}</h1>
-        <Button appearance="text" onClick={() => setDrawerIsHidden(false)}>
-          <Icon icon={<MdEdit />} size="medium" />
+        <Button
+          appearance="text"
+          onClick={() => setDrawerIsHidden(false)}
+        >
+          <Icon
+            icon={<MdEdit />}
+            size="medium"
+          />
           {t('overview.edit')}
         </Button>
       </Track>
@@ -106,7 +113,10 @@ const OverviewPage: React.FC = () => {
         {metricPreferences.map((m, i) => renderList(m, i))}
       </Drawer>
 
-      <MainMetricsArea metricPreferences={metricPreferences} saveReorderedMetric={saveReorderedMetric} />
+      <MainMetricsArea
+        metricPreferences={metricPreferences}
+        saveReorderedMetric={saveReorderedMetric}
+      />
 
       <Card
         header={
@@ -116,8 +126,7 @@ const OverviewPage: React.FC = () => {
         }
       >
         {chartData.length > 0 && (
-          <LineGraph
-            dataKey='created'
+          <OverviewLineChart
             data={chartData.map((entry: any) => ({
               ...translateChartKeys(entry),
               created: new Date(entry.created).toLocaleTimeString('default'),

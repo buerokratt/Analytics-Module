@@ -2,11 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, Legend } from 'recharts'
 
 type Props = {
-  dataKey: string
   data: any
 }
 
-const LineGraph = ({ data, dataKey }: Props) => {
+const OverviewLineChart = ({ data }: Props) => {
   const [width, setWidth] = useState<number>(10)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -24,29 +23,28 @@ const LineGraph = ({ data, dataKey }: Props) => {
       <LineChart
         width={width}
         height={width / 3.86}
-        data={data.chartData}
+        data={data}
         margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
       >
         <Tooltip />
-        <XAxis dataKey={dataKey} />
+        <XAxis dataKey="created" />
         <YAxis />
         <CartesianGrid stroke="#f5f5f5" />
-        {(data?.chartData?.length > 0 ?? false) &&
-          Object.keys(data.chartData[0]).map((k, i) => {
-            return k === `${dataKey}` ? null : (
-              <Line
-                key={k}
-                dataKey={k}
-                type="monotone"
-                stroke={data.colors.find((e: any) => e.id == k)?.color ?? '#FFB511'}
-                fill={data.colors.find((e: any) => e.id == k)?.color ?? '#FFB511'}
-              />
-            )
-          })}
+        {Object.keys(data[0]).map((k, i) => {
+          return k === 'created' ? null : (
+            <Line
+              key={`line-${i}`}
+              type="monotone"
+              dataKey={k}
+              stroke={`hsl(${i * 20}, 80%, 45%)`}
+              yAxisId={0}
+            />
+          )
+        })}
         <Legend />
       </LineChart>
     </div>
   )
 }
 
-export default LineGraph
+export default OverviewLineChart

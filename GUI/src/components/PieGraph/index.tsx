@@ -3,11 +3,11 @@ import { PieChart, Cell, Pie } from 'recharts'
 import Track from '../Track'
 
 type Props = {
-  data: any
   dataKey: string
+  data: any
 }
 
-const PieGraph = ({ data, dataKey }: Props) => {
+const PieGraph = ({ dataKey, data }: Props) => {
   const [width, setWidth] = useState<number>(10)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -26,26 +26,25 @@ const PieGraph = ({ data, dataKey }: Props) => {
         <PieChart
           width={width / 2}
           height={width / 2.8}
-          data={data}
+          data={data.chartData}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
           <Pie
-            data={data}
+            data={data.chartData}
             cx="50%"
             cy="50%"
-            labelLine={false}
             outerRadius={200}
             fill="#8884d8"
             dataKey={dataKey}
           >
-            {data.length > 0 &&
-              Object.keys(data[0]).map((k, i) => {
-                return k === `${{ dataKey }}` ? null : (
+            {(data?.chartData?.length > 0 ?? false) &&
+              Object.keys(data.chartData[0]).map((k, i) => {
+                return k === `${dataKey}` ? null : (
                   <Cell
-                    key={`line-${i}`}
+                    key={k}
                     type="monotone"
-                    stroke={`hsl(${i * 20}, 80%, 45%)`}
-                    fill={'#0088FE'}
+                    stroke={data.colors.find((e: any) => e.id == k)?.color ?? '#FFB511'}
+                    fill={data.colors.find((e: any) => e.id == k)?.color ?? '#FFB511'}
                   />
                 )
               })}
@@ -53,9 +52,18 @@ const PieGraph = ({ data, dataKey }: Props) => {
         </PieChart>
         <Track
           direction="vertical"
+          flex={0}
+          align="left"
+          isFlex={true}
           isMultiline={true}
         >
-          {/* <label>data</label> */}
+          {(data?.chartData?.length > 0 ?? false) &&
+            Object.keys(data.chartData[0]).map((k, i) => {
+              console.log(i)
+              return k === `${dataKey}` ? null : (
+                <label color={data.colors.find((e: any) => e.id == k)?.color ?? '#FFB511'}>{k}</label>
+              )
+            })}
         </Track>
       </Track>
     </div>

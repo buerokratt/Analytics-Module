@@ -16,7 +16,7 @@ import { Chat } from '../types/chat'
 import { format } from 'date-fns'
 
 const FeedbackPage: React.FC = () => {
-  const [chartData, setChartData] = useState([])
+  const [chartData, setChartData] = useState({})
   const [chartKey, setChartKey] = useState('created')
   const [negativeFeedbackChats, setNegativeFeedbackChats] = useState<Chat[]>([])
   const [advisors, setAdvisors] = useState<any[]>([])
@@ -70,6 +70,18 @@ const FeedbackPage: React.FC = () => {
     }
   }, [currentConfigs])
 
+  const translateChartKeys = (obj: any, key: string) =>
+    Object.keys(obj).reduce(
+      (acc, k) =>
+        k === key
+          ? acc
+          : {
+              ...acc,
+              ...{ [t(`chart.${k}`)]: obj[k] },
+            },
+      {},
+    )
+
   const fetchChatsStatuses = async () => {
     const events = currentConfigs?.options.filter((e) => e === 'answered' || e === 'client-left' || e === 'idle') ?? []
     const csa_events =
@@ -78,16 +90,41 @@ const FeedbackPage: React.FC = () => {
       metric: currentConfigs?.groupByPeriod ?? 'day',
       start_date: currentConfigs?.start,
       end_date: currentConfigs?.end,
-      // "start_date": "2021-01-16",
-      // "end_date": "2023-01-17",
       events: events?.length > 0 ? events : null,
       csa_events: csa_events?.length > 0 ? csa_events : null,
     })
 
-    const response: [] = result.data.response.flat(1)
-    console.log(response)
+    const response = result.data.response
+      .flat(1)
+      .map((entry: any) => ({
+        ...translateChartKeys(entry, 'dateTime'),
+        dateTime: new Date(entry.dateTime).getTime(),
+      }))
+      .reduce((a: any, b: any) => {
+        const dateRow = a.find((i: any) => i['dateTime'] === b['dateTime'])
+        if (dateRow) {
+          dateRow[b['Event']] = b['Count']
+        } else {
+          a.push({
+            dateTime: b['dateTime'],
+            [b['Event']]: b['Count'],
+          })
+        }
+        return a
+      }, [])
+
+    const chartData = {
+      chartData: response,
+      colors: feedbackMetrics[0].subOptions!.map(({ id, color }) => {
+        return {
+          id,
+          color,
+        }
+      }),
+    }
+
     setChartKey('dateTime')
-    setChartData(response)
+    setChartData(chartData)
   }
 
   const fetchAverageFeedbackOnBuerokrattChats = async () => {
@@ -96,8 +133,19 @@ const FeedbackPage: React.FC = () => {
       start_date: currentConfigs?.start,
       end_date: currentConfigs?.end,
     })
-    console.log(result.data.response)
-    setChartData(result.data.response)
+
+    const response = result.data.response.map((entry: any) => ({
+      ...translateChartKeys(entry, 'dateTime'),
+      dateTime: new Date(entry.dateTime).getTime(),
+    }))
+
+    const chartData = {
+      chartData: response,
+      colors: [{ id: 'average', color: '#FFB511' }],
+    }
+
+    setChartKey('dateTime')
+    setChartData(chartData)
   }
 
   const fetchNpsOnCSAChatsFeedback = async () => {
@@ -106,7 +154,19 @@ const FeedbackPage: React.FC = () => {
       start_date: currentConfigs?.start,
       end_date: currentConfigs?.end,
     })
-    setChartData(result.data.response)
+
+    const response = result.data.response.map((entry: any) => ({
+      ...translateChartKeys(entry, 'dateTime'),
+      dateTime: new Date(entry.dateTime).getTime(),
+    }))
+
+    const chartData = {
+      chartData: response,
+      colors: [{ id: 'Nps', color: '#FFB511' }],
+    }
+
+    setChartKey('dateTime')
+    setChartData(chartData)
   }
 
   const fetchNpsOnSelectedCSAChatsFeedback = async () => {
@@ -115,8 +175,6 @@ const FeedbackPage: React.FC = () => {
       metric: currentConfigs?.groupByPeriod ?? 'day',
       start_date: currentConfigs?.start,
       end_date: currentConfigs?.end,
-      // 'start_date': '2022-11-07',
-      // 'end_date': '2023-11-07',
       excluded_csas: excluded_csas.length ?? 0 > 0 ? excluded_csas : [''],
     })
 
@@ -138,7 +196,37 @@ const FeedbackPage: React.FC = () => {
       setFeedbackMetrics(updatedMetrics)
       setAdvisors(advisorsList)
     }
-    setChartData(res)
+
+    const response = res
+      .flat(1)
+      .map((entry: any) => ({
+        ...translateChartKeys(entry, 'dateTime'),
+        dateTime: new Date(entry.dateTime).getTime(),
+      }))
+      .reduce((a: any, b: any) => {
+        const dateRow = a.find((i: any) => i['dateTime'] === b['dateTime'])
+        if (dateRow) {
+          dateRow[b['Customer Support Display Name']] = b['Nps']
+        } else {
+          a.push({
+            dateTime: b['dateTime'],
+            [b['Customer Support Display Name']]: b['Nps'],
+          })
+        }
+        return a
+      }, [])
+
+    const chartData = {
+      chartData: response,
+      colors: feedbackMetrics[3].subOptions!.map(({ id, color }) => {
+        return {
+          id,
+          color,
+        }
+      }),
+    }
+    setChartKey('dateTime')
+    setChartData(chartData)
   }
 
   const fetchChatsWithNegativeFeedback = async () => {
@@ -151,7 +239,23 @@ const FeedbackPage: React.FC = () => {
       },
       { withCredentials: true },
     )
-    setChartData(result.data.response)
+
+    console.log(result.data.response)
+    const response = result.data.response.map((entry: any) => ({
+      ...translateChartKeys(entry, 'created'),
+      dateTime: new Date(entry.created).getTime(),
+    }))
+
+    const chartData = {
+      chartData: response,
+      colors: [
+        { id: 'dateTime', color: '#FFB511' },
+        { id: 'Ended', color: '#FFB511' },
+      ],
+    }
+
+    setChartKey('dateTime')
+    setChartData(chartData)
     setNegativeFeedbackChats(result.data.response)
   }
 

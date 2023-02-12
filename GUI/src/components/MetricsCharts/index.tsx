@@ -10,7 +10,6 @@ import PieGraph from '../PieGraph'
 import axios from 'axios'
 import { getCsv } from '../../resources/api-constants'
 import { saveAs } from 'file-saver'
-import { format } from 'date-fns'
 
 type Props = {
   title: any
@@ -24,23 +23,11 @@ const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
   const charts = ['Tulpdiagramm', 'Sektordiagramm', 'joondiagramm']
   const [selectedChart, setSelectedChart] = useState<string>('Tulpdiagramm')
 
-  const translateChartKeys = (obj: any) =>
-    Object.keys(obj).reduce(
-      (acc, key) =>
-        key === 'dateTime'
-          ? acc
-          : {
-              ...acc,
-              ...{ [t(`chart.${key}`)]: obj[key] },
-            },
-      {},
-    )
-
   const downloadCSV = async (data: any) => {
     const res = await axios.post(
       getCsv(),
       {
-        data: data,
+        data: data.chartData,
         del: '',
         qul: '',
       },
@@ -79,33 +66,21 @@ const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
       {selectedChart === 'Tulpdiagramm' && (
         <BarGraph
           dataKey={dataKey}
-          // data={data}
+          data={data}
           startDate={startDate}
           endDate={endDate}
-          data={data.map((entry: any) => ({
-            ...translateChartKeys(entry),
-            dateTime: new Date(entry.dateTime).getTime(),
-          }))}
         />
       )}
       {selectedChart === 'Sektordiagramm' && (
         <PieGraph
           dataKey={dataKey}
           data={data}
-          // data={data.map((entry: any) => ({
-          //   ...translateChartKeys(entry),
-          //   dateTime: new Date(entry.created).toLocaleTimeString('default'),
-          // }))}
         />
       )}
       {selectedChart === 'joondiagramm' && (
         <LineGraph
           dataKey={dataKey}
           data={data}
-          // data={data.map((entry: any) => ({
-          //   // ...translateChartKeys(entry),
-          //   created: new Date(entry.created).toLocaleTimeString('default'),
-          // }))}
         />
       )}
     </Card>

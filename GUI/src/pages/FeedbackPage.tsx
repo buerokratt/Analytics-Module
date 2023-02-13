@@ -14,6 +14,8 @@ import {
 import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types'
 import { Chat } from '../types/chat'
 import { formatDate } from '../util/charts-utils'
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators'
+import { BehaviorSubject, fromEvent, Subject } from 'rxjs'
 
 const FeedbackPage: React.FC = () => {
   const [chartData, setChartData] = useState({})
@@ -71,6 +73,17 @@ const FeedbackPage: React.FC = () => {
         break
     }
   }, [currentConfigs])
+
+  const [configsSubject] = useState(() => new Subject())
+  useEffect(() => {
+    const subscription = configsSubject
+      .pipe(distinctUntilChanged(), debounceTime(500))
+      .subscribe((configs: any) => setConfigs(configs))
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [])
 
   const translateChartKeys = (obj: any, key: string) =>
     Object.keys(obj).reduce(
@@ -267,8 +280,7 @@ const FeedbackPage: React.FC = () => {
         metricOptions={feedbackMetrics}
         dateFormat="yyyy-MM-dd"
         onChange={(config) => {
-          console.log(config)
-          setConfigs(config)
+          configsSubject.next(config)
           setCurrentMetric(`feedback.${config.metric}`)
         }}
       />

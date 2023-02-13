@@ -50,12 +50,7 @@ const BarGraph = ({ dataKey, startDate, endDate, data }: Props) => {
           interval={0}
         />
         <YAxis />
-        <Tooltip
-          labelFormatter={(value) => `${format(new Date(value), 'dd-MM-yyyy')}`}
-          wrapperStyle={{
-            visibility: 'visible',
-          }}
-        />
+        <Tooltip labelFormatter={(value) => `${format(new Date(value), 'dd-MM-yyyy')}`} />
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
         {(data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {

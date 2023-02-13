@@ -9,3 +9,22 @@
       line-height: 24px;
     }
   }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    direction: 'horizontal';
+  }
+  
+  .title {
+    flex: 1;
+    margin-right: 4px;
+  }
+
+  .other_content {
+    display: flex;
+    direction: 'horizontal';
+    flex-direction: 'row';
+    width: 270px;
+    margin-Left: 4px;
+  }

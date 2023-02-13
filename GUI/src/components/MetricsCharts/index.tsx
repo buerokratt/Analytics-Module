@@ -1,8 +1,7 @@
-import { t } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import React, { useState } from 'react'
 import { MdOutlineDownload } from 'react-icons/md'
-import { Button, Card, Icon, Track } from '../../components'
-import DropDown from '../Dropdown'
+import { Button, Card, FormSelect, Icon, Track } from '../../components'
 import BarGraph from '../BarGraph'
 import './MetricsCharts.scss'
 import LineGraph from '../LineGraph'
@@ -11,6 +10,7 @@ import axios from 'axios'
 import { getCsv } from '../../resources/api-constants'
 import { saveAs } from 'file-saver'
 import { format } from 'date-fns'
+import { ChartType } from '../../types/chart-type'
 
 type Props = {
   title: any
@@ -21,8 +21,23 @@ type Props = {
 }
 
 const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
-  const charts = ['Tulpdiagramm', 'Sektordiagramm', 'joondiagramm']
-  const [selectedChart, setSelectedChart] = useState<string>('Tulpdiagramm')
+  const { t } = useTranslation()
+
+  const charts: ChartType[] = [
+    {
+      label: t('chart.barChart'),
+      value: 'barChart',
+    },
+    {
+      label: t('chart.pieChart'),
+      value: 'pieChart',
+    },
+    {
+      label: t('chart.lineChart'),
+      value: 'lineChart',
+    },
+  ]
+  const [selectedChart, setSelectedChart] = useState<string>('barChart')
 
   const downloadCSV = async (data: any[]) => {
     const res = await axios.post(
@@ -40,31 +55,36 @@ const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
   return (
     <Card
       header={
-        <Track>
-          <h3 style={{ flex: 2 }}>{t(title)}</h3>
-          <Button
-            appearance="text"
-            onClick={() => {
-              downloadCSV(data.chartData)
-            }}
-          >
-            <Icon
-              icon={<MdOutlineDownload />}
-              size="small"
+        <div className="container">
+          <div className="title">
+            <h3>{t(title)}</h3>
+          </div>
+          <div className="other_content">
+            <Button
+              appearance="text"
+              style={{ marginRight: 15 }}
+              onClick={() => {
+                downloadCSV(data.chartData)
+              }}
+            >
+              <Icon
+                icon={<MdOutlineDownload />}
+                size="small"
+              />
+              {t('feedback.csv')}
+            </Button>
+            <FormSelect
+              name={''}
+              label={''}
+              defaultValue={'barChart'}
+              options={charts}
+              onSelectionChange={(value) => setSelectedChart(value?.value ?? 'barChart')}
             />
-            {t('feedback.csv')}
-          </Button>
-          <DropDown
-            options={charts}
-            defaultValue="Tulpdiagramm"
-            onChangeSelection={(value) => {
-              setSelectedChart(value)
-            }}
-          ></DropDown>
-        </Track>
+          </div>
+        </div>
       }
     >
-      {selectedChart === 'Tulpdiagramm' && (
+      {selectedChart === 'barChart' && (
         <BarGraph
           dataKey={dataKey}
           data={data}
@@ -72,13 +92,13 @@ const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
           endDate={endDate}
         />
       )}
-      {selectedChart === 'Sektordiagramm' && (
+      {selectedChart === 'pieChart' && (
         <PieGraph
           dataKey={dataKey}
           data={data}
         />
       )}
-      {selectedChart === 'joondiagramm' && (
+      {selectedChart === 'lineChart' && (
         <LineGraph
           dataKey={dataKey}
           data={data}

@@ -78,6 +78,9 @@
     "id": "Id",
     "ended": "Ended",
     "customerSupportId": "Customer Support Id",
-    "customerSupportDisplayName": "Customer Support Display Name"
+    "customerSupportDisplayName": "Customer Support Display Name",
+    "barChart": "Tulpdiagramm",
+    "pieChart": "Sektordiagramm",
+    "lineChart": "joondiagramm"
   }
 }

@@ -77,7 +77,7 @@ const FeedbackPage: React.FC = () => {
   const [configsSubject] = useState(() => new Subject())
   useEffect(() => {
     const subscription = configsSubject
-      .pipe(distinctUntilChanged(), debounceTime(500))
+      .pipe(distinctUntilChanged(), debounceTime(700))
       .subscribe((configs: any) => setConfigs(configs))
 
     return () => {

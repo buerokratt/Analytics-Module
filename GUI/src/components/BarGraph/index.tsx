@@ -39,7 +39,7 @@ const BarGraph = ({ dataKey, startDate, endDate, data }: Props) => {
           allowDuplicatedCategory={false}
           dataKey={dataKey}
           scale="time"
-          tickFormatter={(value) => dateFormatter(value, startDate, endDate)}
+          tickFormatter={(value) => dateFormatter(startDate, endDate, value)}
           type="number"
           domain={domain}
           ticks={ticks}

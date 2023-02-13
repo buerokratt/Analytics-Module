@@ -82,6 +82,8 @@ const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
         <LineGraph
           dataKey={dataKey}
           data={data}
+          startDate={startDate}
+          endDate={endDate}
         />
       )}
     </Card>

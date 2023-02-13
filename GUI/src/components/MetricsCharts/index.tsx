@@ -10,6 +10,7 @@ import PieGraph from '../PieGraph'
 import axios from 'axios'
 import { getCsv } from '../../resources/api-constants'
 import { saveAs } from 'file-saver'
+import { format } from 'date-fns'
 
 type Props = {
   title: any
@@ -23,11 +24,11 @@ const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
   const charts = ['Tulpdiagramm', 'Sektordiagramm', 'joondiagramm']
   const [selectedChart, setSelectedChart] = useState<string>('Tulpdiagramm')
 
-  const downloadCSV = async (data: any) => {
+  const downloadCSV = async (data: any[]) => {
     const res = await axios.post(
       getCsv(),
       {
-        data: data.chartData,
+        data: data.map((p) => ({ ...p, dateTime: format(new Date(p[dataKey]), 'yyyy-MM-dd hh:mm:ss a') })),
         del: '',
         qul: '',
       },
@@ -44,7 +45,7 @@ const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
           <Button
             appearance="text"
             onClick={() => {
-              downloadCSV(data)
+              downloadCSV(data.chartData)
             }}
           >
             <Icon

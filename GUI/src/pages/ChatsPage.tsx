@@ -1,26 +1,34 @@
 import React from 'react'
 import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions';
 
-
-const exampleOptions: Option[] = [
+const chatMetricOptions: Option[] = [
     {
-        id: 'metric1',
-        labelKey: 'general.metric1',
+        id: 'totalChatNumber',
+        labelKey: 'chats.metric.totalNumber',
         subOptions: [
-            { id: 'option1', labelKey: 'general.option1', color: '#f00' },
-            { id: 'option2', labelKey: 'general.option2', color: '#0f0' },
+            { id: 'burokrat', labelKey: 'chats.metric.median', color: '#0ff' },
+            { id: 'csa', labelKey: 'chats.metric.arithmetic', color: '#00f' },
         ]
     },
     {
-        id: 'metric2',
-        labelKey: 'general.metric2',
+        id: 'cip',
+        labelKey: 'chats.metric.cip',
         subOptions: [
             { id: 'option3', labelKey: 'general.option3', color: '#0ff' },
             { id: 'option4', labelKey: 'general.option4', color: '#00f' },
         ]
     },
-    { id: 'metric3', labelKey: 'general.metric3' },
-    { id: 'metric4', labelKey: 'general.metric4' },
+    {
+        id: 'avgWaitingTime',
+        labelKey: 'chats.metric.avgWaitingTime',
+        subOptions: [
+            { id: 'median', labelKey: 'chats.metric.median', color: '#0ff' },
+            { id: 'arithmetic', labelKey: 'chats.metric.arithmetic', color: '#00f' },
+        ]
+    },
+    { id: 'avgMessageNumberInChat', labelKey: 'chats.metric.avgMessageNumberInChat' },
+    { id: 'avgDurationOfChat', labelKey: 'chats.metric.avgDurationOfChat' },
+    { id: 'idleChatCount', labelKey: 'chats.metric.idleChatCount' },
 ];
 
 const ChatsPage: React.FC = () => {
@@ -28,7 +36,7 @@ const ChatsPage: React.FC = () => {
         <>
             <h1>Chats</h1>
             <OptionsPanel
-                metricOptions={exampleOptions}
+                metricOptions={chatMetricOptions}
                 onChange={(config) => console.log(config)}
             />
         </>

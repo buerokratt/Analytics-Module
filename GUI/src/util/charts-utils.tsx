@@ -26,3 +26,7 @@ export const getTicks = (startDate: string, endDate: string, start: Date, end: D
 
   return ticks
 }
+
+export const formatDate = (value: Date, dateFormat?: string) => format(value, dateFormat ?? 'dd-MM-yyyy')
+
+export const getColor = (data: any, key: any) => data.colors.find((e: any) => e.id == key)?.color ?? '#FFB511'

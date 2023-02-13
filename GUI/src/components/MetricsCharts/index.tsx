@@ -9,8 +9,8 @@ import PieGraph from '../PieGraph'
 import axios from 'axios'
 import { getCsv } from '../../resources/api-constants'
 import { saveAs } from 'file-saver'
-import { format } from 'date-fns'
 import { ChartType } from '../../types/chart-type'
+import { formatDate } from '../../util/charts-utils'
 
 type Props = {
   title: any
@@ -72,7 +72,7 @@ const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
     const res = await axios.post(
       getCsv(),
       {
-        data: data.map((p) => ({ ...p, dateTime: format(new Date(p[dataKey]), 'yyyy-MM-dd hh:mm:ss a') })),
+        data: data.map((p) => ({ ...p, dateTime: formatDate(new Date(p[dataKey]), 'yyyy-MM-dd hh:mm:ss a') })),
         del: '',
         qul: '',
       },

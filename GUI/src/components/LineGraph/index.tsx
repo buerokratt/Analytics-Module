@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import React, { useEffect, useRef, useState } from 'react'
 import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, Legend } from 'recharts'
-import { dateFormatter } from '../../util/charts-utils'
+import { dateFormatter, formatDate, getColor } from '../../util/charts-utils'
 
 type Props = {
   dataKey: string
@@ -31,7 +31,7 @@ const LineGraph = ({ data, dataKey, startDate, endDate }: Props) => {
         data={data.chartData}
         margin={{ top: 20, right: 65, left: 10, bottom: 70 }}
       >
-        <Tooltip labelFormatter={(value) => `${format(new Date(value), 'dd-MM-yyyy')}`} />
+        <Tooltip labelFormatter={(value) => `${formatDate(new Date(value), 'dd-MM-yyyy')}`} />
         <XAxis
           dataKey={dataKey}
           tickFormatter={(value) => dateFormatter(startDate, endDate, value)}
@@ -49,8 +49,8 @@ const LineGraph = ({ data, dataKey, startDate, endDate }: Props) => {
                 key={k}
                 dataKey={k}
                 type="monotone"
-                stroke={data.colors.find((e: any) => e.id == k)?.color ?? '#FFB511'}
-                fill={data.colors.find((e: any) => e.id == k)?.color ?? '#FFB511'}
+                stroke={getColor(data,k)}
+                fill={getColor(data,k)}
               />
             )
           })}

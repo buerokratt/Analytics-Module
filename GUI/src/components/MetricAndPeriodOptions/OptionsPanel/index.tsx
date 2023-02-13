@@ -6,7 +6,7 @@ import MetricOptionsGroup from '../MetricOptionsGroup'
 import SubOptionsGroup from '../SubOptionsGroup'
 import { MetricOptionsState, Option } from '../types'
 import Section from '../../Section'
-import { format } from 'date-fns'
+import { formatDate } from '../../../util/charts-utils'
 
 interface MetricOptionsProps {
   metricOptions: Option[]
@@ -19,8 +19,8 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
   const [selection, setSelection] = useState<MetricOptionsState>({
     period: '',
     metric: '',
-    start: format(new Date(), dateFormat ?? 'EEE MMM dd yyyy'),
-    end: format(new Date(), dateFormat ?? 'EEE MMM dd yyyy'),
+    start: formatDate(new Date(), dateFormat ?? 'EEE MMM dd yyyy'),
+    end: formatDate(new Date(), dateFormat ?? 'EEE MMM dd yyyy'),
     options: [],
   })
 

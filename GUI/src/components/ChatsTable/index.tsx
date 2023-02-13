@@ -1,10 +1,10 @@
 import { createColumnHelper, PaginationState, CellContext } from '@tanstack/react-table'
-import { format } from 'date-fns'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MdOutlineRemoveRedEye } from 'react-icons/md'
 import { getLinkToChat } from '../../resources/api-constants'
 import { Chat } from '../../types/chat'
+import { formatDate } from '../../util/charts-utils'
 import Button from '../Button'
 import Card from '../Card'
 import DataTable from '../DataTable'
@@ -34,7 +34,7 @@ const ChatsTable = (props: Props) => {
   }, [props.dataSource])
 
   const dateTimeFormat = (props: CellContext<Chat, string>) =>
-    format(new Date(props.getValue()), 'd. MMM yyyy HH:ii:ss')
+    formatDate(new Date(props.getValue()), 'd. MMM yyyy HH:ii:ss')
 
   const chatColumns = useMemo(
     () => [

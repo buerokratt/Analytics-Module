@@ -1,6 +1,6 @@
-import { format } from 'date-fns'
 import React, { useEffect, useRef, useState } from 'react'
 import { PieChart, Cell, Pie, Tooltip } from 'recharts'
+import { getColor } from '../../util/charts-utils'
 import Track from '../Track'
 
 type Props = {
@@ -44,8 +44,8 @@ const PieGraph = ({ dataKey, data }: Props) => {
                   <Cell
                     key={k}
                     type="monotone"
-                    stroke={data.colors.find((e: any) => e.id == k)?.color ?? '#FFB511'}
-                    fill={data.colors.find((e: any) => e.id == k)?.color ?? '#FFB511'}
+                    stroke={getColor(data,k)}
+                    fill={getColor(data,k)}
                   />
                 )
               })}
@@ -61,7 +61,7 @@ const PieGraph = ({ dataKey, data }: Props) => {
           {(data?.chartData?.length > 0 ?? false) &&
             Object.keys(data.chartData[0]).map((k, i) => {
               return k === `${dataKey}` ? null : (
-                <label color={data.colors.find((e: any) => e.id == k)?.color ?? '#FFB511'}>{k}</label>
+                <label color={getColor(data,k)}>{k}</label>
               )
             })}
         </Track>

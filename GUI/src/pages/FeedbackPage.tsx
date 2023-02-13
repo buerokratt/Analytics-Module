@@ -13,7 +13,7 @@ import {
 } from '../resources/api-constants'
 import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types'
 import { Chat } from '../types/chat'
-import { format } from 'date-fns'
+import { formatDate } from '../util/charts-utils'
 
 const FeedbackPage: React.FC = () => {
   const [chartData, setChartData] = useState({})
@@ -267,6 +267,7 @@ const FeedbackPage: React.FC = () => {
         metricOptions={feedbackMetrics}
         dateFormat="yyyy-MM-dd"
         onChange={(config) => {
+          console.log(config)
           setConfigs(config)
           setCurrentMetric(`feedback.${config.metric}`)
         }}
@@ -275,8 +276,8 @@ const FeedbackPage: React.FC = () => {
         title={currentMetric}
         data={chartData}
         dataKey={chartKey}
-        startDate={currentConfigs?.start ?? format(new Date(), 'yyyy-MM-dd')}
-        endDate={currentConfigs?.end ?? format(new Date(), 'yyyy-MM-dd')}
+        startDate={currentConfigs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
+        endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
       />
       {showNegativeChart && <ChatsTable dataSource={negativeFeedbackChats} />}
     </>

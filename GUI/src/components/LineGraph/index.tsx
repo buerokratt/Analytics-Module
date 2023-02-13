@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import React, { useEffect, useRef, useState } from 'react'
 import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, Legend } from 'recharts'
 
@@ -27,7 +28,7 @@ const LineGraph = ({ data, dataKey }: Props) => {
         data={data.chartData}
         margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
       >
-        <Tooltip />
+        <Tooltip labelFormatter={(value) => `${format(new Date(value), 'dd-MM-yyyy')}`} />
         <XAxis dataKey={dataKey} />
         <YAxis />
         <CartesianGrid stroke="#f5f5f5" />

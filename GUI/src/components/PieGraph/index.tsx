@@ -1,5 +1,6 @@
+import { format } from 'date-fns'
 import React, { useEffect, useRef, useState } from 'react'
-import { PieChart, Cell, Pie } from 'recharts'
+import { PieChart, Cell, Pie, Tooltip } from 'recharts'
 import Track from '../Track'
 
 type Props = {
@@ -59,7 +60,6 @@ const PieGraph = ({ dataKey, data }: Props) => {
         >
           {(data?.chartData?.length > 0 ?? false) &&
             Object.keys(data.chartData[0]).map((k, i) => {
-              console.log(i)
               return k === `${dataKey}` ? null : (
                 <label color={data.colors.find((e: any) => e.id == k)?.color ?? '#FFB511'}>{k}</label>
               )

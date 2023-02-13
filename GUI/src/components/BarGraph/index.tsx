@@ -1,7 +1,7 @@
+import { format } from 'date-fns'
 import React, { useEffect, useRef, useState } from 'react'
 import { BarChart, XAxis, CartesianGrid, YAxis, Tooltip, Legend, Bar } from 'recharts'
 import { dateFormatter, getTicks } from '../../util/charts-utils'
-import ChartToolTip from '../ChartToolTip'
 
 type Props = {
   dataKey: string
@@ -51,23 +51,11 @@ const BarGraph = ({ dataKey, startDate, endDate, data }: Props) => {
         />
         <YAxis />
         <Tooltip
-          content={<ChartToolTip />}
+          labelFormatter={(value) => `${format(new Date(value), 'dd-MM-yyyy')}`}
           wrapperStyle={{
             visibility: 'visible',
           }}
         />
-        {/* <Tooltip
-          wrapperStyle={{
-            visibility: 'visible',
-          }}
-          content={
-            <ChartTooltip
-              active={true}
-              payload={data.chartData}
-              dataKey={dataKey}
-            />
-          }
-        /> */}
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
         {(data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {

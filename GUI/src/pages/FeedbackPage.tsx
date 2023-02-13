@@ -50,6 +50,8 @@ const FeedbackPage: React.FC = () => {
 
   const { t } = useTranslation()
 
+  const showNegativeChart = negativeFeedbackChats.length > 0 && currentConfigs?.metric === 'negative_feedback'
+
   useEffect(() => {
     switch (currentConfigs?.metric) {
       case 'statuses':
@@ -276,9 +278,7 @@ const FeedbackPage: React.FC = () => {
         startDate={currentConfigs?.start ?? format(new Date(), 'yyyy-MM-dd')}
         endDate={currentConfigs?.end ?? format(new Date(), 'yyyy-MM-dd')}
       />
-      {negativeFeedbackChats.length > 0 && currentConfigs?.metric === 'negative_feedback' && (
-        <ChatsTable dataSource={negativeFeedbackChats} />
-      )}
+      {showNegativeChart && <ChatsTable dataSource={negativeFeedbackChats} />}
     </>
   )
 }

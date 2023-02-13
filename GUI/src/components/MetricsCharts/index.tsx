@@ -39,6 +39,35 @@ const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
   ]
   const [selectedChart, setSelectedChart] = useState<string>('barChart')
 
+  const buildChart = () => {
+    if (selectedChart === 'pieChart') {
+      return (
+        <PieGraph
+          dataKey={dataKey}
+          data={data}
+        />
+      )
+    } else if (selectedChart === 'lineChart') {
+      return (
+        <LineGraph
+          dataKey={dataKey}
+          data={data}
+          startDate={startDate}
+          endDate={endDate}
+        />
+      )
+    } else {
+      return (
+        <BarGraph
+          dataKey={dataKey}
+          data={data}
+          startDate={startDate}
+          endDate={endDate}
+        />
+      )
+    }
+  }
+
   const downloadCSV = async (data: any[]) => {
     const res = await axios.post(
       getCsv(),
@@ -84,28 +113,7 @@ const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
         </div>
       }
     >
-      {selectedChart === 'barChart' && (
-        <BarGraph
-          dataKey={dataKey}
-          data={data}
-          startDate={startDate}
-          endDate={endDate}
-        />
-      )}
-      {selectedChart === 'pieChart' && (
-        <PieGraph
-          dataKey={dataKey}
-          data={data}
-        />
-      )}
-      {selectedChart === 'lineChart' && (
-        <LineGraph
-          dataKey={dataKey}
-          data={data}
-          startDate={startDate}
-          endDate={endDate}
-        />
-      )}
+      {buildChart()}
     </Card>
   )
 }

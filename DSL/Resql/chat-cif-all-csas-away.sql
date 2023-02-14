@@ -11,8 +11,20 @@ FROM chat c
 JOIN customer_support_agent_activity AS csa
 ON c.customer_support_id = csa.id_code
 WHERE chat.created BETWEEN :start::date AND :end::date
-AND csa.status = 'AWAY'
-AND csa.created BETWEEN c.created AND c.ended
+AND (
+    (
+        csa.status = 'offline' 
+        AND csa.created BETWEEN c.created AND c.ended
+    )
+    OR (
+        SELECT status
+        FROM customer_support_agent_activity AS csa2
+        WHERE csa2.id_code = c.customer_support_id
+        AND csa2.created < c.created
+        ORDER BY created DESC
+        LIMIT 1
+    ) = 'offline'
+)
 AND NOT EXISTS (
     SELECT 1
     FROM chat

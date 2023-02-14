@@ -1,10 +1,11 @@
 {
   "global": {
-    "title": "Analytics Module"
+    "title": "Analytics Module",
+    "resultCount": "Results per page"
   },
   "general": {
     "period": "Period",
-    "metric": "Meter",
+    "chooseMetric": "Choose a metric",
     "additionalOptions": "Additional Options",
     "today": "Today",
     "yesterday": "Yesterday",
@@ -17,9 +18,9 @@
     "overview": "Overview",
     "chats": "Chats",
     "burokratt": "Bürokratt",
-    "feedbacks": "Feedbacks",
+    "feedback": "Feedback",
     "advisors": "Advisors",
-    "reports": "Reports"
+    "reports": "Open Data"
   },
   "overview": {
     "editView": "Edit view",
@@ -38,31 +39,65 @@
       "total_forwarded_chats_yesterday": "Forwarded chats yesterday: internal / external",
       "avg_waiting_time_day": "Average waiting time: today / yesterday",
       "avg_waiting_time_week": "Average waiting time: week / previous"
-    },
-    "chats": {
-      "total": "Total number of chats",
-      "cip": "Contact information provided",
-      "avgWaitingTime": "Average waiting time",
-      "totalMessages": "Average number of messages in a chat",
-      "duration": "Average duration of chats",
-      "idle": "Count of idle chats ended by Bürokratt",
-      "options": {
-        "onlyBYK": "Only Bürokratt involved",
-        "csaInvolved": "CSA involved",
-        "outsideWorkingHours": "Outside working hours",
-        "longWaitingTime": "Long waiting time",
-        "allCsvAway": "All CSAs away with red status",
-        "median": "Median",
-        "arithmetic": "Arithmetic average"
-      }
-    },
-    "chart": {
-      "metricValue": "Chats started",
-      "answered": "Left with an answer",
-      "notAnswered": "Left with no answer",
-      "hateSpeech": "Hate speech",
-      "terminated": "Unspecified reason",
-      "toContact": "Answered in other channel"
     }
+  },
+  "feedback": {
+    "statuses": "Completed statuses / number of conversations",
+    "burokratt_chats": "Feedback on bureaucrat conversations",
+    "advisor_chats": "Feedback on advisor conversations",
+    "selected_advisor_chats": "Feedback to selected advisor",
+    "negative_feedback": "Conversations with negative feedback",
+    "status_options": {
+      "answered": "Bureaucrat - the client left with an answer",
+      "client_left": "Bureaucrat - the customer left without an answer",
+      "idle": "Bureaucrat - Terminated for an unspecified reason",
+      "accepted": "Advisor - Accepted answer",
+      "hate_speech": "Advisor - signs of hate speech",
+      "to_contact": "Advisor - answered in another channel",
+      "terminated": "Advisor - other reasons"
+    },
+    "csv": "CSV",
+    "startTime": "Start time",
+    "endTime": "End time",
+    "status": "Status",
+    "ended": "Ended",
+    "view": "View",
+    "comment": "Comment"
+  },
+  "chats": {
+    "total": "Total number of chats",
+    "cip": "Contact information provided",
+    "avgWaitingTime": "Average waiting time",
+    "totalMessages": "Average number of messages in a chat",
+    "duration": "Average duration of chats",
+    "idle": "Count of idle chats ended by Bürokratt",
+    "options": {
+      "onlyBYK": "Only Bürokratt involved",
+      "csaInvolved": "CSA involved",
+      "outsideWorkingHours": "Outside working hours",
+      "longWaitingTime": "Long waiting time",
+      "allCsvAway": "All CSAs away with red status",
+      "median": "Median",
+      "arithmetic": "Arithmetic average"
+    }
+  },
+  "chart": {
+    "metricValue": "Chats started",
+    "answered": "Left with an answer",
+    "notAnswered": "Left with no answer",
+    "hateSpeech": "Hate speech",
+    "terminated": "Unspecified reason",
+    "toContact": "Answered in other channel",
+    "count": "Count",
+    "event": "Event",
+    "avg": "Average",
+    "nps": "Nps",
+    "id": "Id",
+    "ended": "Ended",
+    "customerSupportId": "Customer Support Id",
+    "customerSupportDisplayName": "Customer Support Display Name",
+    "barChart": "Bar Chart",
+    "pieChart": "Pie Chart",
+    "lineChart": "Line Chart"
   }
 }

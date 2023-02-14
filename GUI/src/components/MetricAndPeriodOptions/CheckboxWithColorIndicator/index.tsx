@@ -7,7 +7,7 @@ interface CheckBoxWithColorIndicatorProps {
     label: string,
     selected: boolean,
     onClick: () => void,
-    color: string,
+    color?: string,
 }
 
 const CheckBoxWithColorIndicator: React.FC<CheckBoxWithColorIndicatorProps> = ({
@@ -17,7 +17,7 @@ const CheckBoxWithColorIndicator: React.FC<CheckBoxWithColorIndicatorProps> = ({
     color,
 }) => {
     return (
-        <Track>
+        <Track isFlex={false} isAlignItems={false}>
             <FormCheckbox
                 item={{
                     label: label,
@@ -27,10 +27,13 @@ const CheckBoxWithColorIndicator: React.FC<CheckBoxWithColorIndicatorProps> = ({
                 onChange={onClick}
             />
 
-            <span
-                className="color-circle"
-                style={{ background: color }}
-            />
+            { 
+                color && 
+                <span
+                    className="color-circle"
+                    style={{ background: color }}
+                />
+            }
         </Track>
     )
 }

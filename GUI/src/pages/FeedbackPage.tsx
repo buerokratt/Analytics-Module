@@ -63,17 +63,17 @@ const FeedbackPage: React.FC = () => {
         switchMap((config: any) => {
           switch (config.metric) {
             case 'statuses':
-              return fetchChatsStatuses()
+              return fetchChatsStatuses(config)
             case 'burokratt_chats':
-              return fetchAverageFeedbackOnBuerokrattChats()
+              return fetchAverageFeedbackOnBuerokrattChats(config)
             case 'advisor_chats':
-              return fetchNpsOnCSAChatsFeedback()
+              return fetchNpsOnCSAChatsFeedback(config)
             case 'selected_advisor_chats':
-              return fetchNpsOnSelectedCSAChatsFeedback()
+              return fetchNpsOnSelectedCSAChatsFeedback(config)
             case 'negative_feedback':
-              return fetchChatsWithNegativeFeedback()
+              return fetchChatsWithNegativeFeedback(config)
             default:
-              return fetchChatsStatuses()
+              return fetchChatsStatuses(config)
           }
         }),
       )
@@ -96,16 +96,19 @@ const FeedbackPage: React.FC = () => {
       {},
     )
 
-  const fetchChatsStatuses = async () => {
+  const fetchChatsStatuses = async (
+    config: MetricOptionsState & {
+      groupByPeriod: string
+    },
+  ) => {
     let chartData = {}
-    const events = currentConfigs?.options.filter((e) => e === 'answered' || e === 'client-left' || e === 'idle') ?? []
-    const csa_events =
-      currentConfigs?.options.filter((e) => e !== 'answered' && e !== 'client-left' && e !== 'idle') ?? []
+    const events = config?.options.filter((e) => e === 'answered' || e === 'client-left' || e === 'idle') ?? []
+    const csa_events = config?.options.filter((e) => e !== 'answered' && e !== 'client-left' && e !== 'idle') ?? []
     try {
       const result = await axios.post(getChatsStatuses(), {
-        metric: currentConfigs?.groupByPeriod ?? 'day',
-        start_date: currentConfigs?.start,
-        end_date: currentConfigs?.end,
+        metric: config?.groupByPeriod ?? 'day',
+        start_date: config?.start,
+        end_date: config?.end,
         events: events?.length > 0 ? events : null,
         csa_events: csa_events?.length > 0 ? csa_events : null,
       })
@@ -144,13 +147,13 @@ const FeedbackPage: React.FC = () => {
     return chartData
   }
 
-  const fetchAverageFeedbackOnBuerokrattChats = async () => {
+  const fetchAverageFeedbackOnBuerokrattChats = async (config: any) => {
     let chartData = {}
     try {
       const result = await axios.post(getAverageFeedbackOnBuerokrattChats(), {
-        metric: currentConfigs?.groupByPeriod ?? 'day',
-        start_date: currentConfigs?.start,
-        end_date: currentConfigs?.end,
+        metric: config?.groupByPeriod ?? 'day',
+        start_date: config?.start,
+        end_date: config?.end,
       })
 
       const response = result.data.response.map((entry: any) => ({
@@ -163,18 +166,19 @@ const FeedbackPage: React.FC = () => {
         colors: [{ id: 'average', color: '#FFB511' }],
       }
     } catch (_) {
+      console.log('a7a')
       //error
     }
     return chartData
   }
 
-  const fetchNpsOnCSAChatsFeedback = async () => {
+  const fetchNpsOnCSAChatsFeedback = async (config: any) => {
     let chartData = {}
     try {
       const result = await axios.post(getNpsOnCSAChatsFeedback(), {
-        metric: currentConfigs?.groupByPeriod ?? 'day',
-        start_date: currentConfigs?.start,
-        end_date: currentConfigs?.end,
+        metric: config?.groupByPeriod ?? 'day',
+        start_date: config?.start,
+        end_date: config?.end,
       })
 
       const response = result.data.response.map((entry: any) => ({
@@ -192,14 +196,14 @@ const FeedbackPage: React.FC = () => {
     return chartData
   }
 
-  const fetchNpsOnSelectedCSAChatsFeedback = async () => {
+  const fetchNpsOnSelectedCSAChatsFeedback = async (config: any) => {
     let chartData = {}
     try {
-      const excluded_csas = advisors.map((e) => e.id).filter((e) => !currentConfigs?.options.includes(e))
+      const excluded_csas = advisors.map((e) => e.id).filter((e) => !config?.options.includes(e))
       const result = await axios.post(getNpsOnSelectedCSAChatsFeedback(), {
-        metric: currentConfigs?.groupByPeriod ?? 'day',
-        start_date: currentConfigs?.start,
-        end_date: currentConfigs?.end,
+        metric: config?.groupByPeriod ?? 'day',
+        start_date: config?.start,
+        end_date: config?.end,
         excluded_csas: excluded_csas.length ?? 0 > 0 ? excluded_csas : [''],
       })
 
@@ -256,15 +260,15 @@ const FeedbackPage: React.FC = () => {
     return chartData
   }
 
-  const fetchChatsWithNegativeFeedback = async () => {
+  const fetchChatsWithNegativeFeedback = async (config: any) => {
     let chartData = {}
     try {
       const result = await axios.post(
         getNegativeFeedbackChats(),
         {
           events: '',
-          start_date: currentConfigs?.start,
-          end_date: currentConfigs?.end,
+          start_date: config?.start,
+          end_date: config?.end,
         },
         { withCredentials: true },
       )
@@ -295,6 +299,7 @@ const FeedbackPage: React.FC = () => {
         metricOptions={feedbackMetrics}
         dateFormat="yyyy-MM-dd"
         onChange={(config) => {
+          setConfigs(config)
           configsSubject.next(config)
           setCurrentMetric(`feedback.${config.metric}`)
         }}

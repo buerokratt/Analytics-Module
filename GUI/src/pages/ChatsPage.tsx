@@ -2,25 +2,35 @@ import React from 'react'
 import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions';
 
 
-const exampleOptions: Option[] = [
+const chatOptions: Option[] = [
     {
-        id: 'metric1',
-        labelKey: 'general.metric1',
+        id: 'total',
+        labelKey: 'chats.total',
         subOptions: [
-            { id: 'option1', labelKey: 'general.option1', color: '#f00' },
-            { id: 'option2', labelKey: 'general.option2', color: '#0f0' },
+            { id: 'onlyBYK', labelKey: 'chats.options.onlyBYK', color: '#f00' },
+            { id: 'csaInvolved', labelKey: 'chats.options.csaInvolved', color: '#0f0' },
         ]
     },
     {
-        id: 'metric2',
-        labelKey: 'general.metric2',
+        id: 'cip',
+        labelKey: 'chats.cip',
         subOptions: [
-            { id: 'option3', labelKey: 'general.option3', color: '#0ff' },
-            { id: 'option4', labelKey: 'general.option4', color: '#00f' },
+            { id: 'outsideWork', labelKey: 'chats.options.outsideWorkingHours', color: '#f00' },
+            { id: 'longWaitting', labelKey: 'chats.options.longWaitingTime', color: '#0f0' },
+            { id: 'allCsvAway', labelKey: 'chats.options.allCsvAway', color: '#00f' },
         ]
     },
-    { id: 'metric3', labelKey: 'general.metric3' },
-    { id: 'metric4', labelKey: 'general.metric4' },
+    {
+        id: 'avgWaiting',
+        labelKey: 'chats.avgWaitingTime',
+        subOptions: [
+            { id: 'median', labelKey: 'chats.options.median', color: '#f00' },
+            { id: 'arithmetic', labelKey: 'chats.options.arithmetic', color: '#0f0' },
+        ]
+    },
+    { id: 'totalMessages', labelKey: 'chats.totalMessages' },
+    { id: 'duration', labelKey: 'chats.duration' },
+    { id: 'idle', labelKey: 'chats.idle' },
 ];
 
 const ChatsPage: React.FC = () => {
@@ -28,10 +38,10 @@ const ChatsPage: React.FC = () => {
         <>
             <h1>Chats</h1>
             <OptionsPanel
-                metricOptions={exampleOptions}
+                metricOptions={chatOptions}
                 onChange={(config) => console.log(config)}
             />
-            
+
         </>
     )
 }

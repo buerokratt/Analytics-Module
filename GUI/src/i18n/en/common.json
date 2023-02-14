@@ -39,6 +39,23 @@
       "avg_waiting_time_day": "Average waiting time: today / yesterday",
       "avg_waiting_time_week": "Average waiting time: week / previous"
     },
+    "chats": {
+      "total": "Total number of chats",
+      "cip": "Contact information provided",
+      "avgWaitingTime": "Average waiting time",
+      "totalMessages": "Average number of messages in a chat",
+      "duration": "Average duration of chats",
+      "idle": "Count of idle chats ended by Bürokratt",
+      "options": {
+        "onlyBYK": "Only Bürokratt involved",
+        "csaInvolved": "CSA involved",
+        "outsideWorkingHours": "Outside working hours",
+        "longWaitingTime": "Long waiting time",
+        "allCsvAway": "All CSAs away with red status",
+        "median": "Median",
+        "arithmetic": "Arithmetic average"
+      }
+    },
     "chart": {
       "metricValue": "Chats started",
       "answered": "Left with an answer",

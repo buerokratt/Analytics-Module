@@ -2,10 +2,13 @@ import React, { FC, HTMLAttributes, PropsWithChildren } from 'react';
 
 type TrackProps = HTMLAttributes<HTMLDivElement> & {
   gap?: number;
+  flex?: number;
   align?: 'left' | 'center' | 'right' | 'stretch';
   justify?: 'start' | 'between' | 'center' | 'around' | 'end';
   direction?: 'horizontal' | 'vertical';
   isMultiline?: boolean;
+  isFlex?: boolean;
+  isAlignItems?: boolean;
 }
 
 const alignMap = {
@@ -30,6 +33,9 @@ const Track: FC<PropsWithChildren<TrackProps>> = (
     justify = 'start',
     direction = 'horizontal',
     isMultiline = false,
+    isFlex = false,
+    isAlignItems = true,
+    flex = 1,
     children,
     style,
     ...rest
@@ -41,9 +47,10 @@ const Track: FC<PropsWithChildren<TrackProps>> = (
       style={{
         display: 'flex',
         gap,
-        alignItems: alignMap[align],
+        alignItems: isAlignItems === true ? alignMap[align] : undefined,
         justifyContent: justifyMap[justify],
         flexDirection: direction === 'horizontal' ? 'row' : 'column',
+        flex: isFlex === true ? flex : undefined,
         flexWrap: isMultiline ? 'wrap' : undefined,
         ...style,
       }}

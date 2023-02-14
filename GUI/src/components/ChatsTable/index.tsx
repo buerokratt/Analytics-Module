@@ -1,10 +1,10 @@
 import { createColumnHelper, PaginationState, CellContext } from '@tanstack/react-table'
-import { format } from 'date-fns'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MdOutlineRemoveRedEye } from 'react-icons/md'
 import { getLinkToChat } from '../../resources/api-constants'
 import { Chat } from '../../types/chat'
+import { formatDate } from '../../util/charts-utils'
 import Button from '../Button'
 import Card from '../Card'
 import DataTable from '../DataTable'
@@ -12,7 +12,7 @@ import Icon from '../Icon'
 import Track from '../Track'
 
 type Props = {
-  dataSource: () => Promise<Chat[]>
+  dataSource: Chat[]
 }
 
 const ChatsTable = (props: Props) => {
@@ -28,19 +28,21 @@ const ChatsTable = (props: Props) => {
 
   useEffect(() => {
     const fetchChats = async () => {
-      const result = await props.dataSource()
-      setChats(result)
+      setChats(props.dataSource)
     }
     fetchChats().catch(console.error)
   }, [props.dataSource])
 
   const dateTimeFormat = (props: CellContext<Chat, string>) =>
-    format(new Date(props.getValue()), 'd. MMM yyyy HH:ii:ss')
+    formatDate(new Date(props.getValue()), 'd. MMM yyyy HH:ii:ss')
 
   const chatColumns = useMemo(
     () => [
       columnHelper.accessor('id', {
         header: 'ID',
+      }),
+      columnHelper.accessor('comment', {
+        header: t('feedback.comment') || '',
       }),
       columnHelper.accessor('created', {
         header: t('feedback.startTime') || '',

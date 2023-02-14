@@ -7,10 +7,11 @@ import { MdEdit } from 'react-icons/md'
 import { Button, Card, Drawer, Icon, Track } from '../components'
 import DraggableListItem from '../components/overview/DraggableListItem'
 import MainMetricsArea from '../components/overview/MainMetricsArea'
-import OverviewLineChart from '../components/OverviewLineChart'
+import LineGraph from '../components/LineGraph'
 import { openSearchDashboard, overviewMetricPreferences, overviewMetrics } from '../resources/api-constants'
 import { OverviewMetricPreference } from '../types/overview-metrics'
 import { reorderItem } from '../util/reorder-array'
+import OverviewLineChart from '../components/OverviewLineChart'
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([])
@@ -72,7 +73,7 @@ const OverviewPage: React.FC = () => {
           ? acc
           : {
               ...acc,
-              ...{ [t(`overview.chart.${key}`)]: obj[key] },
+              ...{ [t(`chart.${key}`)]: obj[key] },
             },
       {},
     )
@@ -92,8 +93,14 @@ const OverviewPage: React.FC = () => {
     <DndProvider backend={HTML5Backend}>
       <Track justify="between">
         <h1>{t('menu.overview')}</h1>
-        <Button appearance="text" onClick={() => setDrawerIsHidden(false)}>
-          <Icon icon={<MdEdit />} size="medium" />
+        <Button
+          appearance="text"
+          onClick={() => setDrawerIsHidden(false)}
+        >
+          <Icon
+            icon={<MdEdit />}
+            size="medium"
+          />
           {t('overview.edit')}
         </Button>
       </Track>
@@ -106,7 +113,10 @@ const OverviewPage: React.FC = () => {
         {metricPreferences.map((m, i) => renderList(m, i))}
       </Drawer>
 
-      <MainMetricsArea metricPreferences={metricPreferences} saveReorderedMetric={saveReorderedMetric} />
+      <MainMetricsArea
+        metricPreferences={metricPreferences}
+        saveReorderedMetric={saveReorderedMetric}
+      />
 
       <Card
         header={

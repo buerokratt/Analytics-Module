@@ -31,6 +31,7 @@ const ChatsPage: React.FC = () => {
                 metricOptions={exampleOptions}
                 onChange={(config) => console.log(config)}
             />
+            
         </>
     )
 }

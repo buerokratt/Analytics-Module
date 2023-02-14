@@ -20,14 +20,25 @@ const OverviewLineChart = ({ data }: Props) => {
 
   return (
     <div ref={ref}>
-      <LineChart width={width} height={width / 3.86} data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+      <LineChart
+        width={width}
+        height={width / 3.86}
+        data={data}
+        margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+      >
         <Tooltip />
         <XAxis dataKey="created" />
         <YAxis />
         <CartesianGrid stroke="#f5f5f5" />
         {Object.keys(data[0]).map((k, i) => {
           return k === 'created' ? null : (
-            <Line key={`line-${i}`} type="monotone" dataKey={k} stroke={`hsl(${i * 20}, 80%, 45%)`} yAxisId={0} />
+            <Line
+              key={`line-${i}`}
+              type="monotone"
+              dataKey={k}
+              stroke={`hsl(${i * 20}, 80%, 45%)`}
+              yAxisId={0}
+            />
           )
         })}
         <Legend />

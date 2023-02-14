@@ -15,11 +15,10 @@ import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types'
 import { Chat } from '../types/chat'
 import { formatDate } from '../util/charts-utils'
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators'
-import { BehaviorSubject, fromEvent, Subject } from 'rxjs'
+import { Subject } from 'rxjs'
 
 const FeedbackPage: React.FC = () => {
   const [chartData, setChartData] = useState({})
-  const [chartKey, setChartKey] = useState('created')
   const [negativeFeedbackChats, setNegativeFeedbackChats] = useState<Chat[]>([])
   const [advisors, setAdvisors] = useState<any[]>([])
   const [currentMetric, setCurrentMetric] = useState('feedback.statuses')
@@ -29,6 +28,7 @@ const FeedbackPage: React.FC = () => {
       groupByPeriod: string
     }
   >()
+  const chartKey = 'dateTime'
 
   const [feedbackMetrics, setFeedbackMetrics] = useState<Option[]>([
     {
@@ -54,31 +54,30 @@ const FeedbackPage: React.FC = () => {
 
   const showNegativeChart = negativeFeedbackChats.length > 0 && currentConfigs?.metric === 'negative_feedback'
 
-  useEffect(() => {
-    switch (currentConfigs?.metric) {
-      case 'statuses':
-        fetchChatsStatuses()
-        break
-      case 'burokratt_chats':
-        fetchAverageFeedbackOnBuerokrattChats()
-        break
-      case 'advisor_chats':
-        fetchNpsOnCSAChatsFeedback()
-        break
-      case 'selected_advisor_chats':
-        fetchNpsOnSelectedCSAChatsFeedback()
-        break
-      case 'negative_feedback':
-        fetchChatsWithNegativeFeedback()
-        break
-    }
-  }, [currentConfigs])
-
   const [configsSubject] = useState(() => new Subject())
   useEffect(() => {
     const subscription = configsSubject
-      .pipe(distinctUntilChanged(), debounceTime(700))
-      .subscribe((configs: any) => setConfigs(configs))
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(300),
+        switchMap((config: any) => {
+          switch (config.metric) {
+            case 'statuses':
+              return fetchChatsStatuses()
+            case 'burokratt_chats':
+              return fetchAverageFeedbackOnBuerokrattChats()
+            case 'advisor_chats':
+              return fetchNpsOnCSAChatsFeedback()
+            case 'selected_advisor_chats':
+              return fetchNpsOnSelectedCSAChatsFeedback()
+            case 'negative_feedback':
+              return fetchChatsWithNegativeFeedback()
+            default:
+              return fetchChatsStatuses()
+          }
+        }),
+      )
+      .subscribe((chartData: any) => setChartData(chartData))
 
     return () => {
       subscription.unsubscribe()
@@ -98,179 +97,195 @@ const FeedbackPage: React.FC = () => {
     )
 
   const fetchChatsStatuses = async () => {
+    let chartData = {}
     const events = currentConfigs?.options.filter((e) => e === 'answered' || e === 'client-left' || e === 'idle') ?? []
     const csa_events =
       currentConfigs?.options.filter((e) => e !== 'answered' && e !== 'client-left' && e !== 'idle') ?? []
-    const result = await axios.post(getChatsStatuses(), {
-      metric: currentConfigs?.groupByPeriod ?? 'day',
-      start_date: currentConfigs?.start,
-      end_date: currentConfigs?.end,
-      events: events?.length > 0 ? events : null,
-      csa_events: csa_events?.length > 0 ? csa_events : null,
-    })
+    try {
+      const result = await axios.post(getChatsStatuses(), {
+        metric: currentConfigs?.groupByPeriod ?? 'day',
+        start_date: currentConfigs?.start,
+        end_date: currentConfigs?.end,
+        events: events?.length > 0 ? events : null,
+        csa_events: csa_events?.length > 0 ? csa_events : null,
+      })
 
-    const response = result.data.response
-      .flat(1)
-      .map((entry: any) => ({
-        ...translateChartKeys(entry, 'dateTime'),
-        dateTime: new Date(entry.dateTime).getTime(),
-      }))
-      .reduce((a: any, b: any) => {
-        const dateRow = a.find((i: any) => i['dateTime'] === b['dateTime'])
-        if (dateRow) {
-          dateRow[b['Event']] = b['Count']
-        } else {
-          a.push({
-            dateTime: b['dateTime'],
-            [b['Event']]: b['Count'],
-          })
-        }
-        return a
-      }, [])
+      const response = result.data.response
+        .flat(1)
+        .map((entry: any) => ({
+          ...translateChartKeys(entry, 'dateTime'),
+          dateTime: new Date(entry.dateTime).getTime(),
+        }))
+        .reduce((a: any, b: any) => {
+          const dateRow = a.find((i: any) => i['dateTime'] === b['dateTime'])
+          if (dateRow) {
+            dateRow[b['Event']] = b['Count']
+          } else {
+            a.push({
+              dateTime: b['dateTime'],
+              [b['Event']]: b['Count'],
+            })
+          }
+          return a
+        }, [])
 
-    const chartData = {
-      chartData: response,
-      colors: feedbackMetrics[0].subOptions!.map(({ id, color }) => {
-        return {
-          id,
-          color,
-        }
-      }),
+      chartData = {
+        chartData: response,
+        colors: feedbackMetrics[0].subOptions!.map(({ id, color }) => {
+          return {
+            id,
+            color,
+          }
+        }),
+      }
+    } catch (_) {
+      //error
     }
-
-    setChartKey('dateTime')
-    setChartData(chartData)
+    return chartData
   }
 
   const fetchAverageFeedbackOnBuerokrattChats = async () => {
-    const result = await axios.post(getAverageFeedbackOnBuerokrattChats(), {
-      metric: currentConfigs?.groupByPeriod ?? 'day',
-      start_date: currentConfigs?.start,
-      end_date: currentConfigs?.end,
-    })
-
-    const response = result.data.response.map((entry: any) => ({
-      ...translateChartKeys(entry, 'dateTime'),
-      dateTime: new Date(entry.dateTime).getTime(),
-    }))
-
-    const chartData = {
-      chartData: response,
-      colors: [{ id: 'average', color: '#FFB511' }],
-    }
-
-    setChartKey('dateTime')
-    setChartData(chartData)
-  }
-
-  const fetchNpsOnCSAChatsFeedback = async () => {
-    const result = await axios.post(getNpsOnCSAChatsFeedback(), {
-      metric: currentConfigs?.groupByPeriod ?? 'day',
-      start_date: currentConfigs?.start,
-      end_date: currentConfigs?.end,
-    })
-
-    const response = result.data.response.map((entry: any) => ({
-      ...translateChartKeys(entry, 'dateTime'),
-      dateTime: new Date(entry.dateTime).getTime(),
-    }))
-
-    const chartData = {
-      chartData: response,
-      colors: [{ id: 'Nps', color: '#FFB511' }],
-    }
-
-    setChartKey('dateTime')
-    setChartData(chartData)
-  }
-
-  const fetchNpsOnSelectedCSAChatsFeedback = async () => {
-    const excluded_csas = advisors.map((e) => e.id).filter((e) => !currentConfigs?.options.includes(e))
-    const result = await axios.post(getNpsOnSelectedCSAChatsFeedback(), {
-      metric: currentConfigs?.groupByPeriod ?? 'day',
-      start_date: currentConfigs?.start,
-      end_date: currentConfigs?.end,
-      excluded_csas: excluded_csas.length ?? 0 > 0 ? excluded_csas : [''],
-    })
-
-    const res = result.data.response
-
-    const advisorsList = Array.from(new Set(res.map((advisor: any) => advisor.customerSupportId)))
-      .map((id: any) => res.find((e: any) => e.customerSupportId == id))
-      .map((e) => {
-        return {
-          id: e?.customerSupportId ?? '',
-          labelKey: e?.customerSupportDisplayName ?? '',
-          color: randomColor(),
-        }
+    let chartData = {}
+    try {
+      const result = await axios.post(getAverageFeedbackOnBuerokrattChats(), {
+        metric: currentConfigs?.groupByPeriod ?? 'day',
+        start_date: currentConfigs?.start,
+        end_date: currentConfigs?.end,
       })
 
-    if (advisorsList.length > advisors.length) {
-      const updatedMetrics = [...feedbackMetrics]
-      updatedMetrics[3].subOptions = advisorsList
-      setFeedbackMetrics(updatedMetrics)
-      setAdvisors(advisorsList)
-    }
-
-    const response = res
-      .flat(1)
-      .map((entry: any) => ({
+      const response = result.data.response.map((entry: any) => ({
         ...translateChartKeys(entry, 'dateTime'),
         dateTime: new Date(entry.dateTime).getTime(),
       }))
-      .reduce((a: any, b: any) => {
-        const dateRow = a.find((i: any) => i['dateTime'] === b['dateTime'])
-        if (dateRow) {
-          dateRow[b['Customer Support Display Name']] = b['Nps']
-        } else {
-          a.push({
-            dateTime: b['dateTime'],
-            [b['Customer Support Display Name']]: b['Nps'],
-          })
-        }
-        return a
-      }, [])
 
-    const chartData = {
-      chartData: response,
-      colors: feedbackMetrics[3].subOptions!.map(({ id, color }) => {
-        return {
-          id,
-          color,
-        }
-      }),
+      chartData = {
+        chartData: response,
+        colors: [{ id: 'average', color: '#FFB511' }],
+      }
+    } catch (_) {
+      //error
     }
-    setChartKey('dateTime')
-    setChartData(chartData)
+    return chartData
+  }
+
+  const fetchNpsOnCSAChatsFeedback = async () => {
+    let chartData = {}
+    try {
+      const result = await axios.post(getNpsOnCSAChatsFeedback(), {
+        metric: currentConfigs?.groupByPeriod ?? 'day',
+        start_date: currentConfigs?.start,
+        end_date: currentConfigs?.end,
+      })
+
+      const response = result.data.response.map((entry: any) => ({
+        ...translateChartKeys(entry, 'dateTime'),
+        dateTime: new Date(entry.dateTime).getTime(),
+      }))
+
+      chartData = {
+        chartData: response,
+        colors: [{ id: 'Nps', color: '#FFB511' }],
+      }
+    } catch (_) {
+      //error
+    }
+    return chartData
+  }
+
+  const fetchNpsOnSelectedCSAChatsFeedback = async () => {
+    let chartData = {}
+    try {
+      const excluded_csas = advisors.map((e) => e.id).filter((e) => !currentConfigs?.options.includes(e))
+      const result = await axios.post(getNpsOnSelectedCSAChatsFeedback(), {
+        metric: currentConfigs?.groupByPeriod ?? 'day',
+        start_date: currentConfigs?.start,
+        end_date: currentConfigs?.end,
+        excluded_csas: excluded_csas.length ?? 0 > 0 ? excluded_csas : [''],
+      })
+
+      const res = result.data.response
+
+      const advisorsList = Array.from(new Set(res.map((advisor: any) => advisor.customerSupportId)))
+        .map((id: any) => res.find((e: any) => e.customerSupportId == id))
+        .map((e) => {
+          return {
+            id: e?.customerSupportId ?? '',
+            labelKey: e?.customerSupportDisplayName ?? '',
+            color: randomColor(),
+          }
+        })
+
+      if (advisorsList.length > advisors.length) {
+        const updatedMetrics = [...feedbackMetrics]
+        updatedMetrics[3].subOptions = advisorsList
+        setFeedbackMetrics(updatedMetrics)
+        setAdvisors(advisorsList)
+      }
+
+      const response = res
+        .flat(1)
+        .map((entry: any) => ({
+          ...translateChartKeys(entry, 'dateTime'),
+          dateTime: new Date(entry.dateTime).getTime(),
+        }))
+        .reduce((a: any, b: any) => {
+          const dateRow = a.find((i: any) => i['dateTime'] === b['dateTime'])
+          if (dateRow) {
+            dateRow[b['Customer Support Display Name']] = b['Nps']
+          } else {
+            a.push({
+              dateTime: b['dateTime'],
+              [b['Customer Support Display Name']]: b['Nps'],
+            })
+          }
+          return a
+        }, [])
+
+      chartData = {
+        chartData: response,
+        colors: feedbackMetrics[3].subOptions!.map(({ id, color }) => {
+          return {
+            id,
+            color,
+          }
+        }),
+      }
+    } catch (_) {
+      //error
+    }
+    return chartData
   }
 
   const fetchChatsWithNegativeFeedback = async () => {
-    const result = await axios.post(
-      getNegativeFeedbackChats(),
-      {
-        events: '',
-        start_date: currentConfigs?.start,
-        end_date: currentConfigs?.end,
-      },
-      { withCredentials: true },
-    )
+    let chartData = {}
+    try {
+      const result = await axios.post(
+        getNegativeFeedbackChats(),
+        {
+          events: '',
+          start_date: currentConfigs?.start,
+          end_date: currentConfigs?.end,
+        },
+        { withCredentials: true },
+      )
 
-    const response = result.data.response.map((entry: any) => ({
-      ...translateChartKeys(entry, 'created'),
-      dateTime: new Date(entry.created).getTime(),
-    }))
+      const response = result.data.response.map((entry: any) => ({
+        ...translateChartKeys(entry, 'created'),
+        dateTime: new Date(entry.created).getTime(),
+      }))
 
-    const chartData = {
-      chartData: response,
-      colors: [
-        { id: 'dateTime', color: '#FFB511' },
-        { id: 'Ended', color: '#FFB511' },
-      ],
+      chartData = {
+        chartData: response,
+        colors: [
+          { id: 'dateTime', color: '#FFB511' },
+          { id: 'Ended', color: '#FFB511' },
+        ],
+      }
+      setNegativeFeedbackChats(result.data.response)
+    } catch (_) {
+      //error
     }
-
-    setChartKey('dateTime')
-    setChartData(chartData)
-    setNegativeFeedbackChats(result.data.response)
+    return chartData
   }
 
   return (

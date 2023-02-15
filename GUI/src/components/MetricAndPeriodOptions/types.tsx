@@ -8,6 +8,7 @@ export interface Option {
 export interface SubOption {
   id: string
   labelKey: string
+  isSelected?: boolean
   color?: string
 }
 

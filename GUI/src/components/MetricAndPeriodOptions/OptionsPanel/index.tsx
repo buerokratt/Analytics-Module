@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Card from '../../Card'
 import { periodOptions } from './data'
@@ -6,20 +6,21 @@ import MetricOptionsGroup from '../MetricOptionsGroup'
 import SubOptionsGroup from '../SubOptionsGroup'
 import { MetricOptionsState, Option, OnChangeCallback } from '../types'
 import Section from '../../Section'
+import { formatDate } from '../../../util/charts-utils'
 
 interface MetricOptionsProps {
   metricOptions: Option[]
   onChange: (selection: OnChangeCallback) => void
+  dateFormat?: string
 }
 
-const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, onChange }) => {
+const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat, onChange }) => {
   const { t } = useTranslation()
   const [selection, setSelection] = useState<MetricOptionsState>({
     period: '',
     metric: '',
-
-    start: '',
-    end: '',
+    start: formatDate(new Date(), dateFormat ?? 'EEE MMM dd yyyy'),
+    end: formatDate(new Date(), dateFormat ?? 'EEE MMM dd yyyy'),
     options: [],
   })
 
@@ -39,10 +40,7 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, onChange }
     onChange({ ...selection, groupByPeriod })
   }, [selection])
 
-  const subOptions = useMemo(
-    () => metricOptions.find((x) => x.id === selection.metric)?.subOptions ?? [],
-    [selection.metric],
-  )
+  const subOptions = metricOptions.find((x) => x.id === selection.metric)?.subOptions ?? []
 
   const setPeriod = (period: string): void => setSelection((selection) => ({ ...selection, period }))
 
@@ -50,6 +48,7 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, onChange }
     <Card>
       <Section>
         <MetricOptionsGroup
+          dateFormat={dateFormat}
           options={periodOptions}
           label={t('general.period')}
           onChange={setPeriod}
@@ -61,8 +60,9 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, onChange }
       {metricOptions.length > 1 && (
         <Section>
           <MetricOptionsGroup
+            dateFormat={dateFormat}
             options={metricOptions}
-            label={t('general.metric')}
+            label={t('general.chooseMetric')}
             onChange={(metric) => setSelection({ ...selection, metric, options: [] })}
           />
         </Section>

@@ -1,0 +1,30 @@
+.metrics_charts {
+    height: 100%;
+    display: flex;
+  
+    &__csv {
+      color: #005AA3;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+    }
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    direction: 'horizontal';
+  }
+  
+  .title {
+    flex: 1;
+    margin-right: 4px;
+  }
+
+  .other_content {
+    display: flex;
+    direction: 'horizontal';
+    flex-direction: 'row';
+    width: 270px;
+    margin-Left: 4px;
+  }

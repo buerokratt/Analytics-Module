@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Component } from "react";
 import { useTranslation } from "react-i18next";
 import Track from "../../Track";
 import CheckBoxWithColorIndicator from "../CheckboxWithColorIndicator";
 import { SubOption } from "../types";
+import './styles.scss'
 
 interface SubOptionsGroupProps {
     label: string,
@@ -18,14 +19,19 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({
     const { t } = useTranslation()
     const [selectedValues, setSelectedValues] = useState<string[]>([])
 
+    useState(() => {
+        const selectedOptions = subOptions.filter((x => x.isSelected === undefined || x.isSelected === true)).map((x) => x.id);
+        setSelectedValues(selectedOptions);
+    })
+
     useEffect(() => {
         onChange(selectedValues);
     }, [selectedValues.length])
 
     return (
-        <Track gap={100}>
-            {label}
-            <Track isMultiline={true} gap={8}>
+        <Track gap={100} isAlignItems={false}>
+            <div className='additional-option-label'>{label}</div>
+            <Track isMultiline={true} isFlex={true}>
                 {subOptions.map((option) =>
                     <CheckBoxWithColorIndicator
                         key={option.id}

@@ -17,7 +17,7 @@ const CheckBoxWithColorIndicator: React.FC<CheckBoxWithColorIndicatorProps> = ({
     color,
 }) => {
     return (
-        <Track>
+        <Track isFlex={false} isAlignItems={false}>
             <FormCheckbox
                 item={{
                     label: label,

@@ -5,7 +5,7 @@
   },
   "general": {
     "period": "Period",
-    "metric": "Meter",
+    "chooseMetric": "Choose a metric",
     "additionalOptions": "Additional Options",
     "today": "Today",
     "yesterday": "Yesterday",
@@ -18,16 +18,9 @@
     "overview": "Overview",
     "chats": "Chats",
     "burokratt": "Bürokratt",
-    "feedbacks": "Feedbacks",
+    "feedback": "Feedback",
     "advisors": "Advisors",
     "reports": "Open Data"
-  },
-  "feedback": {
-    "startTime": "Start time",
-    "endTime": "End time",
-    "status": "Status",
-    "ended": "Ended",
-    "view": "View"
   },
   "overview": {
     "editView": "Edit view",
@@ -46,14 +39,48 @@
       "total_forwarded_chats_yesterday": "Forwarded chats yesterday: internal / external",
       "avg_waiting_time_day": "Average waiting time: today / yesterday",
       "avg_waiting_time_week": "Average waiting time: week / previous"
-    },
-    "chart": {
-      "metricValue": "Chats started",
-      "answered": "Left with an answer",
-      "notAnswered": "Left with no answer",
-      "hateSpeech": "Hate speech",
-      "terminated": "Unspecified reason",
-      "toContact": "Answered in other channel"
     }
+  },
+  "feedback": {
+    "statuses": "Completed statuses / number of conversations",
+    "burokratt_chats": "Feedback on bureaucrat conversations",
+    "advisor_chats": "Feedback on advisor conversations",
+    "selected_advisor_chats": "Feedback to selected advisor",
+    "negative_feedback": "Conversations with negative feedback",
+    "status_options": {
+      "answered": "Bureaucrat - the client left with an answer",
+      "client_left": "Bureaucrat - the customer left without an answer",
+      "idle": "Bureaucrat - Terminated for an unspecified reason",
+      "accepted": "Advisor - Accepted answer",
+      "hate_speech": "Advisor - signs of hate speech",
+      "to_contact": "Advisor - answered in another channel",
+      "terminated": "Advisor - other reasons"
+    },
+    "csv": "CSV",
+    "startTime": "Start time",
+    "endTime": "End time",
+    "status": "Status",
+    "ended": "Ended",
+    "view": "View",
+    "comment": "Comment"
+  },
+  "chart": {
+    "metricValue": "Chats started",
+    "answered": "Left with an answer",
+    "notAnswered": "Left with no answer",
+    "hateSpeech": "Hate speech",
+    "terminated": "Unspecified reason",
+    "toContact": "Answered in other channel",
+    "count": "Count",
+    "event": "Event",
+    "avg": "Average",
+    "nps": "Nps",
+    "id": "Id",
+    "ended": "Ended",
+    "customerSupportId": "Customer Support Id",
+    "customerSupportDisplayName": "Customer Support Display Name",
+    "barChart": "Bar Chart",
+    "pieChart": "Pie Chart",
+    "lineChart": "Line Chart"
   }
 }

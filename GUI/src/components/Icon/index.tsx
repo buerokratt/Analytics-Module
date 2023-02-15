@@ -13,7 +13,7 @@ type IconProps = StyleHTMLAttributes<CSSProperties> & {
 const Icon = forwardRef<HTMLSpanElement, IconProps>(({ label, icon, size = 'small', ...rest }, ref) => {
   const iconClasses = clsx(
     'icon',
-    `icon--${size}`,
+    `icon--${size}`
   );
 
   return (

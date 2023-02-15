@@ -4,18 +4,34 @@ import Button from '../../Button'
 import { FormDatepicker } from '../../FormElements'
 import Track from '../../Track'
 import { Option } from '../types'
+import './styles.scss'
+import { formatDate } from '../../../util/charts-utils'
 
 type DatePickHandler = ((startDate: string, endDate: string) => void) | undefined
 type StartEndTimes = { start: Date; end: Date }
 
 interface MetricOptionsGroupProps {
   label: string
+  dateFormat?: string
   options: Option[]
   onChange: (value: string) => void
   onDatePicked?: DatePickHandler
 }
 
-const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({ label, options, onChange, onDatePicked }) => {
+const defaultProps: MetricOptionsGroupProps = {
+  dateFormat: 'EEE MMM dd yyyy',
+  label: '',
+  options: [],
+  onChange: (_) => {},
+}
+
+const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
+  label,
+  dateFormat,
+  options,
+  onChange,
+  onDatePicked,
+}) => {
   const { t } = useTranslation()
   const [selectedValue, setSelectedValue] = useState(options[0].id)
   const [startEndTimes, setStartEndTimes] = useState<StartEndTimes>({ start: new Date(), end: new Date() })
@@ -23,28 +39,28 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({ label, options,
   useEffect(() => {
     onChange(selectedValue)
 
-    const sd = new Date()
-    const ed = new Date()
+    const startDate = new Date()
+    const endDate = new Date()
 
     switch (selectedValue) {
       case 'today':
       case 'period':
-        setStartEndTimes({ start: sd, end: ed })
+        setStartEndTimes({ start: startDate, end: endDate })
         break
       case 'yesterday':
-        sd.setDate(sd.getDate() - 1)
-        ed.setDate(ed.getDate() - 1)
-        setStartEndTimes({ start: sd, end: ed })
+        startDate.setDate(startDate.getDate() - 1)
+        endDate.setDate(endDate.getDate() - 1)
+        setStartEndTimes({ start: startDate, end: endDate })
         break
       case 'last30days':
-        sd.setDate(sd.getDate() - 30)
-        setStartEndTimes({ start: sd, end: ed })
+        startDate.setDate(startDate.getDate() - 30)
+        setStartEndTimes({ start: startDate, end: endDate })
         break
       case 'month':
         changeMonthDate(new Date())
         break
       default:
-        setStartEndTimes({ start: sd, end: ed })
+        setStartEndTimes({ start: startDate, end: endDate })
     }
   }, [selectedValue])
 
@@ -55,7 +71,7 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({ label, options,
   const additionalKey = useMemo(() => options.find((x) => x.id === selectedValue)?.additionalKey, [selectedValue])
 
   const dateToStr = (date: Date) => {
-    return date.toDateString()
+    return formatDate(date, dateFormat ?? 'EEE MMM dd yyyy')
   }
 
   const changeMonthDate = (date: Date) => {
@@ -78,20 +94,21 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({ label, options,
       gap={130}
       align="left"
     >
-      {label}
+      <div className="option-label">{label}</div>
       <Track
         direction="vertical"
         align="left"
         gap={additionalKey ? 10 : 0}
+        isFlex={true}
       >
-        <Track>
+        <Track isMultiline={true}>
           {options.map((option) => (
             <Button
               key={option.id}
               onClick={() => setSelectedValue(option.id)}
               appearance={option.id === selectedValue ? 'primary' : 'secondary'}
               size="s"
-              style={{ marginRight: '.5rem' }}
+              style={{ marginRight: '.5rem', marginBottom: '.3rem', marginTop: '.3rem' }}
             >
               {t(option.labelKey)}
             </Button>
@@ -136,4 +153,5 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({ label, options,
   )
 }
 
+MetricOptionsGroup.defaultProps = defaultProps
 export default MetricOptionsGroup

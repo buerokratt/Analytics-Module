@@ -1,10 +1,20 @@
+import axios from 'axios';
+import { t } from 'i18next';
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { Subject } from 'rxjs'
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators'
 import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions';
-import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types';
+import { MetricOptionsState, SubOption } from '../components/MetricAndPeriodOptions/types';
 import MetricsCharts from '../components/MetricsCharts';
+import {
+    getAvgChatWaitingTime,
+    getAvgMessagesInChats,
+    getCipChats,
+    getDurationChats,
+    getIdleChats,
+    getTotalChats
+} from '../resources/api-constants';
 import { formatDate } from '../util/charts-utils';
 
 const chatOptions: Option[] = [
@@ -12,17 +22,17 @@ const chatOptions: Option[] = [
         id: 'total',
         labelKey: 'chats.total',
         subOptions: [
-            { id: 'onlyBYK', labelKey: 'chats.options.onlyBYK', color: '#f00' },
-            { id: 'csaInvolved', labelKey: 'chats.options.csaInvolved', color: '#0f0' },
+            { id: 'byk', labelKey: 'chats.options.onlyBYK', color: '#f00' },
+            { id: 'csa', labelKey: 'chats.options.csaInvolved', color: '#0f0' },
         ]
     },
     {
         id: 'cip',
         labelKey: 'chats.cip',
         subOptions: [
-            { id: 'outsideWork', labelKey: 'chats.options.outsideWorkingHours', color: '#f00' },
-            { id: 'longWaitting', labelKey: 'chats.options.longWaitingTime', color: '#0f0' },
-            { id: 'allCsvAway', labelKey: 'chats.options.allCsvAway', color: '#00f' },
+            { id: 'outside-working-hours', labelKey: 'chats.options.outsideWorkingHours', color: '#f00' },
+            { id: 'long-waiting-time', labelKey: 'chats.options.longWaitingTime', color: '#0f0' },
+            { id: 'all-csas-away', labelKey: 'chats.options.allCsvAway', color: '#00f' },
         ]
     },
     {
@@ -30,7 +40,7 @@ const chatOptions: Option[] = [
         labelKey: 'chats.avgWaitingTime',
         subOptions: [
             { id: 'median', labelKey: 'chats.options.median', color: '#f00' },
-            { id: 'arithmetic', labelKey: 'chats.options.arithmetic', color: '#0f0' },
+            { id: 'avg', labelKey: 'chats.options.arithmetic', color: '#0f0' },
         ]
     },
     { id: 'totalMessages', labelKey: 'chats.totalMessages' },
@@ -52,6 +62,18 @@ const ChatsPage: React.FC = () => {
                 debounceTime(500),
                 switchMap((config: any) => {
                     switch (config.metric) {
+                        case 'total':
+                            return fetchTotalChats(config)
+                        case 'cip':
+                            return fetchCipChats(config)
+                        case 'avgWaitingTime':
+                            return fetchAvgWaitingTime(config)
+                        case 'totalMessages':
+                            return fetchAvgMessagesInChats(config)
+                        case 'duration':
+                            return fetchDurationChats(config)
+                        case 'idle':
+                            return fetchIdleChats(config)
                         default:
                             return fetchData()
                     }
@@ -67,6 +89,7 @@ const ChatsPage: React.FC = () => {
     const fetchData = async () => {
         console.log('first')
     }
+
 
     return (
         <>
@@ -84,7 +107,7 @@ const ChatsPage: React.FC = () => {
             />
             <MetricsCharts
                 title={tableTitleKey}
-                data={[]}
+                data={chartData}
                 dataKey='chartKey'
                 startDate={configs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
                 endDate={configs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
@@ -94,3 +117,97 @@ const ChatsPage: React.FC = () => {
 }
 
 export default ChatsPage
+
+const fetchTotalChats = async (config: any) => {
+    return fetchChartDataWithSubOptions(getTotalChats(), config, chatOptions[0].subOptions!);
+}
+
+const fetchCipChats = async (config: any) => {
+    return fetchChartDataWithSubOptions(getCipChats(), config, chatOptions[1].subOptions!);
+}
+
+const fetchAvgWaitingTime = async (config: any) => {
+    return fetchChartDataWithSubOptions(getAvgChatWaitingTime(), config, chatOptions[2].subOptions!);
+}
+
+const fetchAvgMessagesInChats = async (config: any) => {
+    return fetchChartData(getAvgMessagesInChats(), config, 'Messages', '#FFB511')
+}
+
+const fetchDurationChats = async (config: any) => {
+    return fetchChartData(getDurationChats(), config, 'Duration', '#FFB511')
+}
+
+const fetchIdleChats = async (config: any) => {
+    return fetchChartData(getIdleChats(), config, 'Idle chats', '#FFB511')
+}
+
+const fetchChartDataWithSubOptions = async (url: string, config: any, subOptions: SubOption[]) => {
+    let chartData = {}
+    try {
+        const result = await axios.post(url,
+            {
+                start_date: config?.start,
+                end_date: config?.end,
+                period: config?.groupByPeriod ?? 'day',
+                options: subOptions.map(x => x.id).join(',')
+            })
+        const res = result.data.response.map((entry: any) => ({
+            ...translateChartKeys(entry, 'dateTime'),
+            dateTime: new Date(entry.dateTime).getTime(),
+        }))
+
+        const requiredKeys = ['dateTime', ...config.options]
+
+        const response = res.map((item: any) => {
+            const returnValue: any = {}
+            requiredKeys.forEach((key: string) => (returnValue[key] = item[key]))
+            return returnValue
+        })
+
+        chartData = {
+            chartData: response,
+            colors: subOptions!.map(({ id, color }) => ({ id, color })),
+        }
+    } catch (_) {
+        //error
+    }
+    return chartData
+}
+
+const fetchChartData = async (url: string, config: any, resultId: string, resultColor: string) => {
+    let chartData = {}
+    try {
+        const result = await axios.post(url,
+            {
+                start_date: config?.start,
+                end_date: config?.end,
+                period: config?.groupByPeriod ?? 'day'
+            })
+
+        const response = result.data.response.map((entry: any) => ({
+            ...translateChartKeys(entry, 'dateTime'),
+            dateTime: new Date(entry.dateTime).getTime(),
+        }))
+
+        chartData = {
+            chartData: response,
+            colors: [{ id: resultId, color: resultColor }],
+        }
+    } catch (_) {
+        //error
+    }
+    return chartData
+}
+
+export const translateChartKeys = (obj: any, key: string) =>
+    Object.keys(obj).reduce(
+        (acc, k) =>
+            k === key
+                ? acc
+                : {
+                    ...acc,
+                    ...{ [t(`chart.${k}`)]: obj[k] },
+                },
+        {},
+    )

@@ -43,3 +43,29 @@ export const getNpsOnSelectedCSAChatsFeedback = (): string => {
 export const getNegativeFeedbackChats = (): string => {
   return baseUrl + '/feedback/chats-with-negative-feedback'
 }
+
+// Chats
+
+export const getTotalChats = (): string => {
+  return baseUrl + '/chats/chat-total-count'
+}
+
+export const getCipChats = (): string => {
+  return baseUrl + '/chats/contact-information-fulfilled'
+}
+
+export const getAvgChatWaitingTime = (): string => {
+  return baseUrl + '/chats/avg-median-waiting-time'
+}
+
+export const getAvgMessagesInChats = (): string => {
+  return baseUrl + '/chats/chat-avg-num-of-messages'
+}
+
+export const getDurationChats = (): string => {
+  return baseUrl + '/chats/chat_avg_duration'
+}
+
+export const getIdleChats = (): string => {
+  return baseUrl + '/chats/chat_idle_count'
+}

@@ -1,17 +1,31 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { isNullishCoalesce } from 'typescript'
-import { Button, Card, Drawer, FormInput, Section, Track } from '../components'
+import { MdDelete } from 'react-icons/md'
+import { Button, Card, Dialog, Drawer, Icon, Section, Track } from '../components'
 import OptionsPanel from '../components/MetricAndPeriodOptions'
 import MetricOptionsGroup, { Option, OnChangeCallback } from '../components/MetricAndPeriodOptions'
-import { reportMetricsDownload, reportODPKey } from '../resources/api-constants'
+import { ToastContext } from '../components/Toast/ToastContext'
+import { deleteOpenDataSettings, downloadOpenDataCSV, openDataSettings } from '../resources/api-constants'
+import APISetupDrawer from '../components/OpenData/APISetupDrawer'
+import { ODPSettings } from '../types/reports'
+import DatasetCreation from '../components/OpenData/DatasetCreation'
+import Popup from '../components/Popup'
 
 const ReportsPage = () => {
   const { t } = useTranslation()
   const [options, setOptions] = useState<OnChangeCallback>()
   const [apiSetupDrawerVisible, setApiSetupDrawerVisible] = useState(false)
-  const [apiKey, setApiKey] = useState(null)
+  const [datasetCreationVisible, setDatasetCreationVisible] = useState(false)
+  const [apiSettings, setApiSettings] = useState<ODPSettings>({ odpKey: null, orgId: null })
+
+  const [isSettingsConfirmationVisible, setIsSettingsConfirmationVisible] = useState(false)
+
+  const toast = useContext(ToastContext)
+
+  useEffect(() => {
+    fetchSettings()
+  }, [])
 
   const odpQueries = [
     'get-chat-count-total',
@@ -37,36 +51,22 @@ const ReportsPage = () => {
   ]
 
   const getCSVFile = async () => {
-    const response = await axios.post(reportMetricsDownload(), {
+    const result = await axios.post(downloadOpenDataCSV(), {
       start: options?.start,
       end: options?.end,
       metrics: options?.options,
     })
-    console.log(response)
+    console.log(result)
   }
 
-  const getODPKey = async () => {
-    return null
-    const response = await axios.get(reportODPKey())
-    const key = response.data.response?.key
-    setApiKey(key)
-    return key
+  const fetchSettings = async () => {
+    const result = await axios.get(openDataSettings())
+    setApiSettings(result.data.response)
   }
 
-  const setODPKey = async (key: string) => {
-    const response = await axios.post(reportODPKey(), { apiKey: key })
-    return response.data.response?.key
-  }
-
-  const createNewDataset = async () => {
-    const existingKey = apiKey ?? (await getODPKey())
-    console.log(existingKey)
-    if (!existingKey) {
-      setApiSetupDrawerVisible(true)
-    }
-
-    // present dataset creation fields
-    // let API know what metrics and
+  const deleteSettings = async () => {
+    setApiSettings({ odpKey: null, orgId: null })
+    await axios.post(deleteOpenDataSettings())
   }
 
   return (
@@ -81,8 +81,14 @@ const ReportsPage = () => {
         ></OptionsPanel>
         <Section>
           <Track gap={16}>
-            <Button onClick={() => createNewDataset()}>{t('reports.create-new-dataset')}</Button>
             <Button
+              disabled={options?.options.length === 0 || apiSettings.odpKey === null}
+              onClick={() => setDatasetCreationVisible(true)}
+            >
+              {t('reports.create-new-dataset')}
+            </Button>
+            <Button
+              disabled={options?.options.length === 0}
               appearance="secondary"
               onClick={() => getCSVFile()}
             >
@@ -91,41 +97,73 @@ const ReportsPage = () => {
           </Track>
         </Section>
       </Card>
+
+      <Card header={<h3>Eesti avaandmete teabevärav</h3>}>
+        {!apiSettings.odpKey && (
+          <Button onClick={() => setApiSetupDrawerVisible(true)}>{t('reports.setup_odp_access')}</Button>
+        )}
+        {apiSettings.odpKey && (
+          <Track gap={20}>
+            {t('reports.apikey')}:
+            <strong style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {apiSettings.odpKey}
+            </strong>
+            <Button
+              appearance="text"
+              onClick={() => setIsSettingsConfirmationVisible(true)}
+            >
+              <Icon icon={<MdDelete />} /> {t('global.delete')}
+            </Button>
+          </Track>
+        )}
+      </Card>
+
+      {isSettingsConfirmationVisible && (
+        <Dialog
+          title={t('reports.are_you_sure')}
+          onClose={() => setIsSettingsConfirmationVisible(false)}
+        >
+          <Track gap={20}>
+            <Button
+              onClick={() => {
+                setIsSettingsConfirmationVisible(false)
+                deleteSettings()
+              }}
+            >
+              {t('global.delete')}
+            </Button>
+            <Button
+              appearance="secondary"
+              onClick={() => setIsSettingsConfirmationVisible(false)}
+            >
+              {t('global.cancel')}
+            </Button>
+          </Track>
+        </Dialog>
+      )}
+
       <Drawer
-        title={t('reports.create-new-dataset')}
+        title={t('reports.setup_odp_access')}
         onClose={() => setApiSetupDrawerVisible(false)}
         style={{ transform: apiSetupDrawerVisible ? 'none' : 'translate(100%)', width: '450px' }}
       >
-        <Track
-          direction="vertical"
-          justify="between"
-          style={{ height: '100%' }}
-        >
-          <Section>
-            <Section>
-              <h6>Juurdepääs on vaja seadistada ainult esimesel korral</h6>
-              <br />
-              <ol>
-                <li>
-                  Loo konto <a href="https://avaandmed.eesti.ee">avaandmed.eesti.ee</a> ja seo see asutusega
-                </li>
-                <li>Loo settingutes uus API key</li>
-                <li>Juurdepääsu loomiseks sisest API võti siia</li>
-              </ol>
-            </Section>
-            {t('reports.api_key')}
-            <FormInput
-              label="API Key"
-              hideLabel={true}
-              name="apiKey"
-            ></FormInput>
-          </Section>
-          <Section>
-            <Button>Edasi</Button>
-            <Button appearance="secondary">Tühista</Button>
-          </Section>
-        </Track>
+        <APISetupDrawer
+          onClose={(settings) => {
+            setApiSettings(settings)
+            setApiSetupDrawerVisible(false)
+          }}
+        />
       </Drawer>
+      {!datasetCreationVisible && (
+        <Popup
+          onClose={() => {setDatasetCreationVisible(false)}}
+          title={t('reports.create-new-dataset')}
+        >
+          <Card>
+            <DatasetCreation />
+          </Card>
+        </Popup>
+      )}
     </>
   )
 }

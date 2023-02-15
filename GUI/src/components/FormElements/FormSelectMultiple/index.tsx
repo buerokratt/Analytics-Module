@@ -1,4 +1,4 @@
-import React, { FC, SelectHTMLAttributes, useId, useState } from 'react'
+import React, { FC, SelectHTMLAttributes, useEffect, useId, useState } from 'react'
 import { useMultipleSelection, useSelect } from 'downshift'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
@@ -10,21 +10,16 @@ import './FormSelect.scss'
 type FormSelectMultipleProps = SelectHTMLAttributes<HTMLSelectElement> & {
   label: string
   name: string
-  hideLabel?: boolean
+  defaultValue?: string[]
   options: {
     label: string
     value: string
   }[]
-  onSelectionChange?: (selection: { label: string; value: string } | null) => void
-}
-
-const itemToString = (item: { label: string; value: string } | null) => {
-  return item ? item.value : ''
+  onSelectionChange?: (selection: { label: string; value: string }[]) => void
 }
 
 const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
   label,
-  hideLabel,
   options,
   disabled,
   placeholder,
@@ -33,13 +28,10 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
 }) => {
   const id = useId()
   const { t } = useTranslation()
-  const defaultSelected = options.find((o) => o.value === defaultValue) || null
-  const [selectedItem, setSelectedItem] = useState<{ label: string; value: string } | null>(defaultSelected)
   const { isOpen, getToggleButtonProps, getLabelProps, getMenuProps, getItemProps } = useSelect({
     id,
     items: options,
-    itemToString,
-    selectedItem,
+    selectedItem: null,
     defaultHighlightedIndex: 0,
     stateReducer: (_, actionAndChanges) => {
       const { changes, type } = actionAndChanges
@@ -60,14 +52,12 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
         case useSelect.stateChangeTypes.ToggleButtonKeyDownSpaceButton:
         case useSelect.stateChangeTypes.ItemClick:
           if (selectedItem) {
-            if (selectedItems.includes(selectedItem)) {
-              removeSelectedItem(selectedItem)
+            const existingItem = selectedItems.find((o) => o.value === selectedItem.value)
+            if (existingItem) {
+              removeSelectedItem(existingItem)
             } else {
               addSelectedItem(selectedItem)
             }
-
-            //setSelectedItem(newSelectedItem ?? null)
-            //if (onSelectionChange) onSelectionChange(newSelectedItem ?? null)
           }
           break
         default:
@@ -75,10 +65,21 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
       }
     },
   })
-  const { addSelectedItem, removeSelectedItem, selectedItems } = useMultipleSelection<{
-    label: string
-    value: string
-  }>()
+  const { addSelectedItem, removeSelectedItem, selectedItems, getDropdownProps, setSelectedItems } =
+    useMultipleSelection<{
+      label: string
+      value: string
+    }>()
+  const [selectedStateItems, setSelectedStateItems] = useState<{ label: string; value: string }[]>()
+
+  useEffect(() => {
+    if (onSelectionChange) onSelectionChange(selectedItems)
+  }, [selectedItems])
+
+  useEffect(() => {
+    setSelectedItems(options.filter((o) => defaultValue?.includes(String(o.value))))
+    setSelectedStateItems(options.filter((o) => defaultValue?.includes(String(o.value))))
+  }, [])
 
   const selectClasses = clsx('select', disabled && 'select--disabled')
 
@@ -86,7 +87,7 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
 
   return (
     <div className={selectClasses}>
-      {label && !hideLabel && (
+      {label && (
         <label
           htmlFor={id}
           className="select__label"
@@ -98,7 +99,7 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
       <div className="select__wrapper">
         <div
           className="select__trigger"
-          {...getToggleButtonProps()}
+          {...getToggleButtonProps(getDropdownProps({ preventKeyAction: isOpen }))}
         >
           {selectedItems.map((i) => i.label).join(', ') || placeholderValue}
           <Icon
@@ -114,7 +115,9 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
           {isOpen &&
             options.map((item, index) => (
               <li
-                className={clsx('select__option', { 'select__option--selected': selectedItems.includes(item) })}
+                className={clsx('select__option', {
+                  'select__option--selected': selectedItems.find((i) => i.value === item.value),
+                })}
                 key={`${item.value}${index}`}
                 {...getItemProps({ item, index })}
               >

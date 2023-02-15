@@ -42,6 +42,25 @@ services:
       - ./data:/var/lib/postgresql/data
     networks:
       - bykstack
+  gui_dev: # For development
+    container_name: gui_dev
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_API_URL=http://localhost:8080
+      - REACT_APP_BUEROKRATT_CHATBOT_URL=http://buerokratt-chat:8080
+      - REACT_APP_OPENSEARCH_DASHBOARD_URL=https://opensearch.org/
+      - PORT=3001
+    build:
+      context: ./GUI
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3001:3001
+    volumes:
+      - /app/node_modules
+      - ./GUI:/app
+    networks:
+      - bykstack
   data_mapper: 
      container_name: data_mapper 
      image: datamapper-node

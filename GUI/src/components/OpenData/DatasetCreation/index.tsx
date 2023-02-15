@@ -94,7 +94,7 @@ const DatasetCreation = () => {
 
   return (
     <Card>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} className='dataset'>
         <Track
           direction="vertical"
           gap={8}

@@ -1,15 +1,21 @@
-.input, .textarea, .select, .datepicker {
-  display: block !important;
-  min-width: 250px;
-  flex: 1;
-}
+.dataset {
+  .input,
+  .textarea,
+  .select,
+  .datepicker {
+    display: block !important;
+    min-width: 250px;
+    flex: 1;
+  }
 
-input.error, textarea.error, select.error {
-  border-color: red;
-}
+  input.error,
+  textarea.error,
+  select.error {
+    border-color: red;
+  }
 
-.interval-explanation {
-  min-width: 250px;
-  flex: 1;
-  
+  .interval-explanation {
+    min-width: 250px;
+    flex: 1;
+  }
 }

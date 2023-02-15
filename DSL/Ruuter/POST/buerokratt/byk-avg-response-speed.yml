@@ -1,29 +1,29 @@
-check_for_params:
+check_for_body:
   switch:
-    - condition: ${incoming.params == null}
+    - condition: ${incoming.body == null}
       next: missing_parameter
 
 extract_request_data:
   assign:
-    start: ${incoming.params.start_date}
-    end: ${incoming.params.end_date}
-    period: ${incoming.params.period}
+    start: ${incoming.body.start_date}
+    end: ${incoming.body.end_date}
+    period: ${incoming.body.period}
 
 check_for_required_parameters:
   switch:
     - condition: ${start == null || end == null || period == null}
       next: missing_parameter
-  next: get_result
+  next: avg_response_time
 
 missing_parameter:
   status: 400
   return: 'required parameters were not provided'
   next: end
 
-get_result:
+avg_response_time:
   call: http.post
   args:
-    url: http://resql:8082/byk-avg-intents
+    url: http://resql:8082/byk-avg-response-speed
     body:
       period: ${period}
       start: ${start}

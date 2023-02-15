@@ -13,7 +13,7 @@ import {
 } from '../resources/api-constants'
 import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types'
 import { Chat } from '../types/chat'
-import { formatDate } from '../util/charts-utils'
+import { formatDate, translateChartKeys } from '../util/charts-utils'
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators'
 import { Subject } from 'rxjs'
 
@@ -83,18 +83,6 @@ const FeedbackPage: React.FC = () => {
       subscription.unsubscribe()
     }
   }, [])
-
-  const translateChartKeys = (obj: any, key: string) =>
-    Object.keys(obj).reduce(
-      (acc, k) =>
-        k === key
-          ? acc
-          : {
-              ...acc,
-              ...{ [t(`chart.${k}`)]: obj[k] },
-            },
-      {},
-    )
 
   const fetchChatsStatuses = async (
     config: MetricOptionsState & {
@@ -166,7 +154,6 @@ const FeedbackPage: React.FC = () => {
         colors: [{ id: 'average', color: '#FFB511' }],
       }
     } catch (_) {
-      console.log('a7a')
       //error
     }
     return chartData

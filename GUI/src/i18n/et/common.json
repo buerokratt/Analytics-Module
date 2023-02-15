@@ -81,6 +81,23 @@
     "customerSupportDisplayName": "Customer Support Display Name",
     "barChart": "Tulpdiagramm",
     "pieChart": "Sektordiagramm",
-    "lineChart": "Joondiagramm"
+    "lineChart": "Joondiagramm",
+    "avgWaitingTimeSeconds": "Average (Sec)",
+    "receivedChats": "receivedChats",
+    "forwardedChats": "forwardedChats",
+    "forwardedExternally": "forwardedExternally",
+    "timeInterval": "timeInterval"
+  },
+  "advisors": {
+    "chat_forwards": "Suunamised",
+    "forwards": {
+      "from_csa": "Nõustajalt suunatud vestluste arv",
+      "to_csa": "Nõustajale suunatud vestlused",
+      "to_other": "Suunamised asutusest välja"
+    },
+    "avg_pick_time": "Keskmine vastamise kiirus asutuses",
+    "avg_present_csa": "Keskmine nõustajate kohalolu",
+    "num_chats_csa": "Vestluste arv nõustaja lõikes",
+    "avg_chat_time_csa": "Vestluste aeg nõustaja lõikes"
   }
 }

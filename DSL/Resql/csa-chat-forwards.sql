@@ -42,9 +42,9 @@ GROUP BY date_time),
    FROM f_chats
    FULL JOIN r_chats ON f_chats.date_time = r_chats.date_time
    FULL JOIN e_chats ON f_chats.date_time = e_chats.date_time)
-SELECT DISTINCT time_date,
+SELECT DISTINCT time_date AS date_time,
                 SUM(forwarded_chats) AS forwarded_chats,
                 SUM(received_chats) AS received_chats,
                 SUM(forwarded_externally) AS forwarded_externally
 FROM chat_forwards
-GROUP BY time_date
+GROUP BY date_time

@@ -62,8 +62,8 @@ const ChatsPage: React.FC = () => {
                 debounceTime(500),
                 switchMap((config: any) => {
                     switch (config.metric) {
-                        // case 'total':
-                        //     return fetchTotalChats(config)
+                        case 'total':
+                            return fetchTotalChats(config)
                         case 'cip':
                             return fetchCipChats(config)
                         case 'avgWaitingTime':

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { MdDelete } from 'react-icons/md'
 import { Button, Card, Dialog, Drawer, Icon, Section, Track } from '../components'
 import OptionsPanel from '../components/MetricAndPeriodOptions'
-import MetricOptionsGroup, { Option, OnChangeCallback } from '../components/MetricAndPeriodOptions'
+import { Option, OnChangeCallback } from '../components/MetricAndPeriodOptions'
 import { ToastContext } from '../components/Toast/ToastContext'
 import { deleteOpenDataSettings, downloadOpenDataCSV, openDataSettings } from '../resources/api-constants'
 import APISetupDrawer from '../components/OpenData/APISetupDrawer'
@@ -98,7 +98,7 @@ const ReportsPage = () => {
         </Section>
       </Card>
 
-      <Card header={<h3>Eesti avaandmete teabevärav</h3>}>
+      <Card header={<h3>{t('reports.odp_title')}</h3>}>
         {!apiSettings.odpKey && (
           <Button onClick={() => setApiSetupDrawerVisible(true)}>{t('reports.setup_odp_access')}</Button>
         )}
@@ -122,23 +122,22 @@ const ReportsPage = () => {
         <Dialog
           title={t('reports.are_you_sure')}
           onClose={() => setIsSettingsConfirmationVisible(false)}
+          footer={<><Button
+            onClick={() => {
+              setIsSettingsConfirmationVisible(false)
+              deleteSettings()
+            }}
+          >
+            {t('global.delete')}
+          </Button>
+          <Button
+            appearance="secondary"
+            onClick={() => setIsSettingsConfirmationVisible(false)}
+          >
+            {t('global.cancel')}
+          </Button></>}
         >
-          <Track gap={20}>
-            <Button
-              onClick={() => {
-                setIsSettingsConfirmationVisible(false)
-                deleteSettings()
-              }}
-            >
-              {t('global.delete')}
-            </Button>
-            <Button
-              appearance="secondary"
-              onClick={() => setIsSettingsConfirmationVisible(false)}
-            >
-              {t('global.cancel')}
-            </Button>
-          </Track>
+          <p>{t('reports.api_key_delete_warning')}</p>
         </Dialog>
       )}
 
@@ -154,14 +153,14 @@ const ReportsPage = () => {
           }}
         />
       </Drawer>
-      {!datasetCreationVisible && (
+      {datasetCreationVisible && (
         <Popup
-          onClose={() => {setDatasetCreationVisible(false)}}
+          onClose={() => {
+            setDatasetCreationVisible(false)
+          }}
           title={t('reports.create-new-dataset')}
         >
-          <Card>
-            <DatasetCreation />
-          </Card>
+          <DatasetCreation />
         </Popup>
       )}
     </>

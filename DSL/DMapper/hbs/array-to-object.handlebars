@@ -1,0 +1,8 @@
+{
+{{#each results as |item i|}}
+{{#each item.response.body.[0]}}
+  "{{lookup @root.fields i}}": "{{this}}",
+{{/each}}
+{{/each}}
+  "eof": true
+}

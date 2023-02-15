@@ -1,0 +1,13 @@
+get_metrics:
+  call: http.post
+  args:
+    url: http://ruuter:8082/odp/metrics
+    body:
+      metrics: ${incoming.body.metrics}
+      start: ${incoming.body.start}
+      end: ${incoming.body.end}
+      period: ${incoming.body.updateIntervalUnit}
+  result: metricDataCSV
+
+return:
+  return: metricDataCSV # replace with upload file using ${incoming.body.datasetId}

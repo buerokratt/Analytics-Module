@@ -25,9 +25,22 @@ export const getBykAvgSessionTime = (): string => {
   return baseUrl + '/byk-avg-sessions-time'
 }
 
-export const getPercentCurrectlyUnderstoodByByk = (): string => {
+export const getBykIntentsCount = (): string => {
+  return baseUrl + '/byk-intents-count'
+}
+
+export const getBykModifiedIntentsCount = (): string => {
+  return baseUrl + '/byk-modified-intents'
+}
+
+export const getBykNewIntentsCount = (): string => {
+  return baseUrl + '/byk-new-intents'
+}
+
+export const getBykPercentOfCorrecltyUnderstood = (): string => {
   return baseUrl + '/byk-pct-correctly-understood'
 }
+
 export const getNegativeFeedbackChats = ({
   startTime,
   endTime,

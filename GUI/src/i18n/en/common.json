@@ -93,7 +93,7 @@
     "forwards": {
       "from_csa": "Number of conversations directed from the advisor",
       "to_csa": "Counselor directed conversations",
-      "to_other": "Out-of-facility referrals"
+      "to_other": "Out-of-facility forwards"
     },
     "avg_pick_time": "Average response speed in the institution",
     "avg_present_csa": "Average presence of counselors",

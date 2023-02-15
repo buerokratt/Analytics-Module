@@ -37,12 +37,14 @@ INSERT INTO public."configuration" ("key",value) VALUES
 * In Server.js add
 ```
 app.post('/hbs/*', (req, res) => {
-    res.render(req.params[0], req.body, function(_, html) {
-        if (req.get('type') === 'csv') {
-            res.json({'csv': html});
-        }
-        res.render(req.params[0], req.body);
-    });
+    res.render(req.params[0], req.body, function(_, response) {
+        if (req.get('type') === 'csv') {
+            res.json({response});
+        } else if (req.get('type') === 'json') {
+            res.json(JSON.parse(response));
+        }
+        res.render(req.params[0], req.body);
+    });
 });
 ```
 to enable handlebars templates to receive a body and return a json

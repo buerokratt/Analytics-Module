@@ -26,7 +26,7 @@ const AdvisorsPage: React.FC = () => {
   >()
   const chartKey = 'dateTime'
 
-  const [advisorsMetrics, _] = useState<Option[]>([
+  const advisorsMetrics = [
     {
       id: 'chat_forwards',
       labelKey: 'advisors.chat_forwards',
@@ -40,7 +40,7 @@ const AdvisorsPage: React.FC = () => {
     { id: 'avg_present_csa', labelKey: 'advisors.avg_present_csa' },
     { id: 'num_chats_csa', labelKey: 'advisors.num_chats_csa' },
     { id: 'avg_chat_time_csa', labelKey: 'advisors.avg_chat_time_csa' },
-  ])
+  ]
 
   const [configsSubject] = useState(() => new Subject())
   useEffect(() => {

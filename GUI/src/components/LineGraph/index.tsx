@@ -26,8 +26,6 @@ const LineGraph = ({ data, dataKey, startDate, endDate }: Props) => {
   const domain = [new Date(startDate).getTime(), new Date(endDate).getTime()]
   const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5)
 
-  console.log(ticks)
-
   return (
     <div ref={ref}>
       <LineChart

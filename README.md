@@ -34,5 +34,16 @@ INSERT INTO public."configuration" ("key",value) VALUES
 
 ### Data Mapper Changes
 
-* In Server.js add `res.render(req.params[0], req.body);` in `app.get('/hbs/*', (req, res)` to enable handlebars templates to receive a body
-* Need to add configurable response headers in case you want to return the body as `text/plain` or `application/json` instead of `text/html`
+* In Server.js add
+```
+app.post('/hbs/*', (req, res) => {
+    res.render(req.params[0], req.body, function(_, html) {
+        if (req.get('type') === 'csv') {
+            res.json({'csv': html});
+        }
+        res.render(req.params[0], req.body);
+    });
+});
+```
+to enable handlebars templates to receive a body and return a json
+* When Building a handlebars template make sure to add `layout:false` so that hbs response in the data-mapper will discard the html layout and only return the body data

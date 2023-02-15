@@ -89,7 +89,7 @@
     "timeInterval": "timeInterval"
   },
   "advisors": {
-    "chat_forwards": "Referrals",
+    "chat_forwards": "Forwarding",
     "forwards": {
       "from_csa": "Number of conversations directed from the advisor",
       "to_csa": "Counselor directed conversations",

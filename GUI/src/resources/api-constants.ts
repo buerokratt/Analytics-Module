@@ -63,9 +63,9 @@ export const getAvgMessagesInChats = (): string => {
 }
 
 export const getDurationChats = (): string => {
-  return baseUrl + '/chats/chat_avg_duration'
+  return baseUrl + '/chats/chat-avg-duration'
 }
 
 export const getIdleChats = (): string => {
-  return baseUrl + '/chats/chat_idle_count'
+  return baseUrl + '/chats/chat-idle-count'
 }

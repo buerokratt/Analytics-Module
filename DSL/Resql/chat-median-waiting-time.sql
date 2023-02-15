@@ -11,7 +11,9 @@ WITH waiting_times AS (
     AND m2.created > m1.created
     AND m1.created BETWEEN :start::date AND :end::date
 )
-SELECT time, PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY waiting_time) AS median_waiting_time
+SELECT 
+    time, 
+    EXTRACT(epoch FROM (PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY waiting_time)))::integer AS median_waiting_time
 FROM waiting_times
 GROUP BY time
 ORDER BY time

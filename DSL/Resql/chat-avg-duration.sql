@@ -11,7 +11,7 @@ WITH chat_durations AS (
 )
 SELECT 
     DATE_TRUNC(:period, created) AS time,
-    AVG(duration) AS avg_duration
+    AVG(EXTRACT(epoch FROM duration)::integer) AS avg_duration
 FROM chat_durations
 GROUP BY time
-ORDER BY time;
+ORDER BY time

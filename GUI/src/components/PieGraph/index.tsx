@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { PieChart, Cell, Pie, Tooltip } from 'recharts'
+import { PieChart, Cell, Pie, Tooltip, Legend } from 'recharts'
 import { getColor } from '../../util/charts-utils'
+import ChartToolTip from '../ChartToolTip'
 import Track from '../Track'
+import './PieGraph.scss'
 
 type Props = {
   dataKey: string
@@ -44,12 +46,13 @@ const PieGraph = ({ dataKey, data }: Props) => {
                   <Cell
                     key={k}
                     type="monotone"
-                    stroke={getColor(data,k)}
-                    fill={getColor(data,k)}
+                    stroke={getColor(data, k)}
+                    fill={getColor(data, k)}
                   />
                 )
               })}
           </Pie>
+          <Tooltip content={<ChartToolTip />} />
         </PieChart>
         <Track
           direction="vertical"
@@ -60,8 +63,17 @@ const PieGraph = ({ dataKey, data }: Props) => {
         >
           {(data?.chartData?.length > 0 ?? false) &&
             Object.keys(data.chartData[0]).map((k, i) => {
-              return k === `${dataKey}` ? null : (
-                <label color={getColor(data,k)}>{k}</label>
+              return (
+                <Track key={k}>
+                  {k === `${dataKey}` ? null : (
+                    <div
+                      className="legend_circle"
+                      style={{ backgroundColor: getColor(data, k) }}
+                      key={k}
+                    />
+                  )}
+                  {k === `${dataKey}` ? null : <label style={{ color: getColor(data, k) }}>{k}</label>}
+                </Track>
               )
             })}
         </Track>

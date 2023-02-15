@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { BarChart, XAxis, CartesianGrid, YAxis, Tooltip, Legend, Bar } from 'recharts'
 import { dateFormatter, formatDate, getColor, getTicks } from '../../util/charts-utils'
+import ChartToolTip from '../ChartToolTip'
 
 type Props = {
   dataKey: string
@@ -59,8 +60,8 @@ const BarGraph = ({ dataKey, startDate, endDate, data }: Props) => {
                 dataKey={k}
                 type="monotone"
                 stackId={dataKey}
-                stroke={getColor(data,k)}
-                fill={getColor(data,k)}
+                stroke={getColor(data, k)}
+                fill={getColor(data, k)}
               />
             )
           })}

@@ -40,7 +40,10 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
     onChange({ ...selection, groupByPeriod })
   }, [selection])
 
-  const subOptions = metricOptions.find((x) => x.id === selection.metric)?.subOptions ?? []
+  const subOptions = useMemo(
+    () => metricOptions.find((x) => x.id === selection.metric)?.subOptions ?? [],
+    [selection.metric],
+  )
 
   const setPeriod = (period: string): void => setSelection((selection) => ({ ...selection, period }))
 

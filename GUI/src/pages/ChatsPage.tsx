@@ -62,8 +62,8 @@ const ChatsPage: React.FC = () => {
                 debounceTime(500),
                 switchMap((config: any) => {
                     switch (config.metric) {
-                        case 'total':
-                            return fetchTotalChats(config)
+                        // case 'total':
+                        //     return fetchTotalChats(config)
                         case 'cip':
                             return fetchCipChats(config)
                         case 'avgWaitingTime':
@@ -75,21 +75,19 @@ const ChatsPage: React.FC = () => {
                         case 'idle':
                             return fetchIdleChats(config)
                         default:
-                            return fetchData()
+                            return []
                     }
                 }),
             )
-            .subscribe((chartData: any) => setChartData(chartData))
+            .subscribe((chartData: any) => {
+                if (chartData)
+                    setChartData(chartData)
+            })
 
         return () => {
             subscription.unsubscribe()
         }
     }, [])
-
-    const fetchData = async () => {
-        console.log('first')
-    }
-
 
     return (
         <>
@@ -108,7 +106,7 @@ const ChatsPage: React.FC = () => {
             <MetricsCharts
                 title={tableTitleKey}
                 data={chartData}
-                dataKey='chartKey'
+                dataKey='dateTime'
                 startDate={configs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
                 endDate={configs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
             />
@@ -139,7 +137,7 @@ const fetchDurationChats = async (config: any) => {
 }
 
 const fetchIdleChats = async (config: any) => {
-    return fetchChartData(getIdleChats(), config, 'Idle chats', '#FFB511')
+    return fetchChartData(getIdleChats(), config, 'IdleChats', '#FFB511')
 }
 
 const fetchChartDataWithSubOptions = async (url: string, config: any, subOptions: SubOption[]) => {
@@ -152,10 +150,14 @@ const fetchChartDataWithSubOptions = async (url: string, config: any, subOptions
                 period: config?.groupByPeriod ?? 'day',
                 options: subOptions.map(x => x.id).join(',')
             })
-        const res = result.data.response.map((entry: any) => ({
-            ...translateChartKeys(entry, 'dateTime'),
-            dateTime: new Date(entry.dateTime).getTime(),
-        }))
+
+        const res = result.data.response
+            .map((array: any) =>
+                array.map((entry: any) => ({
+                    ...translateChartKeys(entry, 'time'),
+                    dateTime: new Date(entry.time).getTime(),
+                }))
+            )
 
         const requiredKeys = ['dateTime', ...config.options]
 
@@ -167,7 +169,7 @@ const fetchChartDataWithSubOptions = async (url: string, config: any, subOptions
 
         chartData = {
             chartData: response,
-            colors: subOptions!.map(({ id, color }) => ({ id, color })),
+            colors: subOptions.map(({ id, color }) => ({ id, color })),
         }
     } catch (_) {
         //error
@@ -186,8 +188,8 @@ const fetchChartData = async (url: string, config: any, resultId: string, result
             })
 
         const response = result.data.response.map((entry: any) => ({
-            ...translateChartKeys(entry, 'dateTime'),
-            dateTime: new Date(entry.dateTime).getTime(),
+            ...translateChartKeys(entry, 'time'),
+            dateTime: new Date(entry.time).getTime(),
         }))
 
         chartData = {

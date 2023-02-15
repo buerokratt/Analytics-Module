@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Option } from '../components/MetricAndPeriodOptions'
+import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions'
 
 const metricOptions: Option[] = [
     {
@@ -10,7 +10,7 @@ const metricOptions: Option[] = [
             { id: 'orderByUsability', labelKey: 'burokratt.orderByUsability', color: 'red' },
             { id: 'newIntents', labelKey: 'burokratt.newIntents', color: 'blue' },
             { id: 'modifiedIntents', labelKey: 'burokratt.modifiedIntents', color: 'green' },
-            { id: 'avgChatIntents', labelKey: 'burokratt.avgChatIntents', color: 'pinl' },
+            { id: 'avgChatIntents', labelKey: 'burokratt.avgChatIntents', color: 'brown ' },
         ]
     },
     {
@@ -18,8 +18,8 @@ const metricOptions: Option[] = [
         labelKey: 'burokratt.sessions',
         subOptions: [
             { id: 'csa', labelKey: 'burokratt.csa', color: 'red' },
-            { id: 'idle', labelKey: 'burokratt.idle', color: 'blue' },
-            { id: 'closed', labelKey: 'burokratt.closed', color: 'green' },
+            { id: 'byk', labelKey: 'burokratt.idle', color: 'blue' },
+            { id: 'customer', labelKey: 'burokratt.closed', color: 'green' },
         ]
     },
     { id: 'averageResponseSpeed', labelKey: 'burokratt.averageResponseSpeed' },
@@ -32,6 +32,10 @@ const BurokrattPage: React.FC = () => {
     return (
         <>
             <h1>{t('menu.burokratt')}</h1>
+            <OptionsPanel
+                metricOptions={metricOptions}
+                onChange={(config) => console.log(config)}
+            />
         </>
     )
 }

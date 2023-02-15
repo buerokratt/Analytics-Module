@@ -116,6 +116,10 @@ const MainNavigation: FC = () => {
           path: '/analytics/chats',
         },
         {
+          label: t('menu.burokratt'),
+          path: '/analytics/burokratt',
+        },
+        {
           label: 'Feedback',
           path: '/analytics/feedbacks',
         },

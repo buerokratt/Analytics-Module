@@ -5,6 +5,7 @@ services:
     image: ruuter
     environment:
       - application.cors.allowedOrigins=http://localhost:3001
+      - application.httpCodesAllowList=200,201,202,400,401,403,500
     volumes:
       - ./DSL/Ruuter:/DSL
     ports:
@@ -39,25 +40,6 @@ services:
       - 5433:5432
     volumes:
       - ./data:/var/lib/postgresql/data
-    networks:
-      - bykstack
-  gui_dev: # For development
-    container_name: gui_dev
-    environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
-      - REACT_APP_API_URL=http://localhost:8080
-      - REACT_APP_BUEROKRATT_CHATBOT_URL=http://buerokratt-chat:8080
-      - REACT_APP_OPENSEARCH_DASHBOARD_URL=https://opensearch.org/
-      - PORT=3001
-    build:
-      context: ./GUI
-      dockerfile: Dockerfile.dev
-    ports:
-      - 3001:3001
-    volumes:
-      - /app/node_modules
-      - ./GUI:/app
     networks:
       - bykstack
   data_mapper: 

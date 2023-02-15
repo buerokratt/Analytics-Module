@@ -1,0 +1,55 @@
+assign:
+  assign:
+    keyId: ${incoming.body.keyId}
+    apiKey: ${incoming.body.apiKey}
+    orgId: ${incoming.body.orgId}
+
+deleteOdpKey:
+  call: http.post
+  args:
+    url: http://resql:8082/delete-odp-settings
+  result: delete
+
+saveOdpKey:
+  call: http.post
+  args:
+    url: http://resql:8082/set-odp-settings
+    body:
+      keyId: ${keyId}
+      apiKey: ${apiKey}
+      orgId: ${orgId}
+  result: save
+
+getKey:
+  call: http.post
+  args:
+    url: http://resql:8082/get-odp-settings
+  result: settings
+  
+verify:
+  call: http.post
+  args:
+    url: https://avaandmed.eesti.ee/api/auth/key-login
+    headers:
+      X-API-KEY: ${settings.response.body[0].odpKey}
+  result: apiToken
+
+check_response:
+  switch:
+    - condition: ${apiToken.response.statusCodeValue === 201}
+      next: return_success
+
+cleanupInvalidKey:
+  call: http.post
+  args:
+    url: http://resql:8082/delete-odp-settings
+  result: delete
+  next: return_error
+
+return_success:
+  return: ${settings.response.body[0]}
+  next: end
+
+return_error:
+  return: ${false}
+  next: end

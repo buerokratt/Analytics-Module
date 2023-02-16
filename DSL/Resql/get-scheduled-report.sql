@@ -1,3 +1,3 @@
 SELECT *
 FROM scheduled_reports
-WHERE datasetId = :datasetId
+WHERE dataset_id = :datasetId

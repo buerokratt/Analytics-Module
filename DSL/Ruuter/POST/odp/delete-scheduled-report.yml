@@ -3,7 +3,7 @@ getJobDetails:
   args:
     url: http://resql:8082/get-scheduled-report
     body:
-      datasetId: ${incoming.params.datasetId}
+      datasetId: ${incoming.body.datasetId}
   result: jobDetails
 
 removeSchedule:

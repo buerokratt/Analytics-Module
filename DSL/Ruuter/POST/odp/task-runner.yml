@@ -11,8 +11,8 @@ upload:
   requestType: post
   body:
     metrics: ${jobDetails.response.body[0].metrics}
-    start: ''
-    end: ''
+    start: 'today'
+    end: 'today'
     period: ${jobDetails.response.body[0].period}
     datasetId: ${incoming.params.datasetId}
   result: result

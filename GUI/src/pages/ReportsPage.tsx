@@ -1,16 +1,15 @@
 import axios from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import { Button, Card, Dialog, Drawer, Icon, Section, Track } from '../components'
 import OptionsPanel from '../components/MetricAndPeriodOptions'
 import { Option, OnChangeCallback } from '../components/MetricAndPeriodOptions'
-import { ToastContext } from '../components/Toast/ToastContext'
 import {
   deleteOpenDataSettings,
+  deleteScheduledReport,
   downloadOpenDataCSV,
   getOpenDataDataset,
-  openDataDataset,
   openDataSettings,
   scheduledReports,
 } from '../resources/api-constants'
@@ -36,8 +35,6 @@ const ReportsPage = () => {
   const [datasets, setDatasets] = useState<ScheduledDataset[]>([])
 
   const [isSettingsConfirmationVisible, setIsSettingsConfirmationVisible] = useState(false)
-
-  const toast = useContext(ToastContext)
 
   useEffect(() => {
     fetchSettings()
@@ -104,6 +101,11 @@ const ReportsPage = () => {
     await axios.post(deleteOpenDataSettings())
   }
 
+  const deleteSchedule = async (datasetId: string) => {
+    await axios.post(deleteScheduledReport(), { datasetId })
+    fetchDatasets()
+  }
+
   return (
     <>
       <h1>{t('menu.reports')}</h1>
@@ -133,7 +135,7 @@ const ReportsPage = () => {
         </Section>
       </Card>
 
-      {datasets && (
+      {datasets.length > 0 && (
         <Card header={<h3>{t('reports.created_datasets')}</h3>}>
           {datasets.map((d) => (
             <Section key={d.id}>
@@ -151,7 +153,9 @@ const ReportsPage = () => {
                   </Button>
                   <Button
                     appearance="text"
-                    onClick={() => {}}
+                    onClick={() => {
+                      deleteSchedule(d.datasetId)
+                    }}
                   >
                     <Icon icon={<MdDelete />} /> {t('global.delete')}
                   </Button>

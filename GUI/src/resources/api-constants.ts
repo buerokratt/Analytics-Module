@@ -14,7 +14,7 @@ export const openDataDataset = (): string => baseUrl + '/odp/dataset'
 export const getOpenDataDataset = (datasetId: string): string => baseUrl + '/odp/dataset?datasetId=' + datasetId
 
 export const scheduledReports = (): string => baseUrl + '/odp/scheduled-reports'
-export const editScheduledReport = (): string => baseUrl + '/odp/edit-scheduled-report'
+export const editScheduledReport = (): string => baseUrl + '/odp/update-scheduled-report'
 export const deleteScheduledReport = (): string => baseUrl + '/odp/delete-scheduled-report'
 
 export const downloadOpenDataCSV = (): string => baseUrl + '/odp/download'
@@ -34,7 +34,6 @@ export const overviewMetrics = (metric: string): string => {
 export const getCsv = (): string => {
   return baseUrl + '/csv'
 }
-
 
 // Feedback
 

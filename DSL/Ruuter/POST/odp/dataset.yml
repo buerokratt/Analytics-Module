@@ -49,15 +49,14 @@ setUpSchedule:
   next: return_post_schedule
 
 uploadImmediately:
-  call: http.post
-  args:
-    url: http://ruuter:8080/odp/upload
-    body:
-      metrics: ${incoming.body.metrics}
-      start: ${incoming.body.start}
-      end: ${incoming.body.end}
-      period: ${incoming.body.updateIntervalUnit}
-      datasetId: ${datasetCreation.response.body.data.id}
+  template: odp/upload
+  requestType: post
+  body:
+    metrics: ${incoming.body.metrics}
+    start: ${incoming.body.start}
+    end: ${incoming.body.end}
+    period: ${incoming.body.updateIntervalUnit}
+    datasetId: ${datasetCreation.response.body.data.id}
   result: uploadResult
 
 return_post_upload:

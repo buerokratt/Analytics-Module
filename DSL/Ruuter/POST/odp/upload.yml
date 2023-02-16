@@ -1,13 +1,21 @@
 get_metrics:
-  call: http.post
-  args:
-    url: http://ruuter:8082/odp/metrics
-    body:
-      metrics: ${incoming.body.metrics}
-      start: ${incoming.body.start}
-      end: ${incoming.body.end}
-      period: ${incoming.body.updateIntervalUnit}
+  template: odp/metrics
+  requestType: post
+  body:
+    metrics: ${incoming.body.metrics}
+    start: ${incoming.body.start}
+    end: ${incoming.body.end}
+    period: ${incoming.body.updateIntervalUnit}
   result: metricDataCSV
 
-return:
-  return: metricDataCSV # replace with upload file using ${incoming.body.datasetId}
+#upload:
+#  call: http.post
+#  args:
+#    url: https://avaandmed.eesti.ee/api/organizations/my-organizations/${orgId}/datasets/${datasetId}/upload
+#    file:
+#      name: "metrics.csv"
+#        content: ${metricDataCSV}
+#  result: result
+
+#return:
+#  return: ${result.response.body}

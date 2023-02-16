@@ -11,6 +11,7 @@ import APISetupDrawer from '../components/OpenData/APISetupDrawer'
 import { ODPSettings } from '../types/reports'
 import DatasetCreation from '../components/OpenData/DatasetCreation'
 import Popup from '../components/Popup'
+import { saveAs } from 'file-saver'
 
 const ReportsPage = () => {
   const { t } = useTranslation()
@@ -26,6 +27,10 @@ const ReportsPage = () => {
   useEffect(() => {
     fetchSettings()
   }, [])
+
+  useEffect(() => {
+    console.log(options)
+  }, [options])
 
   const odpQueries = [
     'get-chat-count-total',
@@ -51,12 +56,16 @@ const ReportsPage = () => {
   ]
 
   const getCSVFile = async () => {
-    const result = await axios.post(downloadOpenDataCSV(), {
-      start: options?.start,
-      end: options?.end,
-      metrics: options?.options,
-    })
-    console.log(result)
+    const result = await axios.post(
+      downloadOpenDataCSV(),
+      {
+        start: options?.start,
+        end: options?.end,
+        metrics: options?.options,
+      },
+      { responseType: 'blob' },
+    )
+    saveAs(result.data, 'metrics.csv')
   }
 
   const fetchSettings = async () => {
@@ -122,20 +131,24 @@ const ReportsPage = () => {
         <Dialog
           title={t('reports.are_you_sure')}
           onClose={() => setIsSettingsConfirmationVisible(false)}
-          footer={<><Button
-            onClick={() => {
-              setIsSettingsConfirmationVisible(false)
-              deleteSettings()
-            }}
-          >
-            {t('global.delete')}
-          </Button>
-          <Button
-            appearance="secondary"
-            onClick={() => setIsSettingsConfirmationVisible(false)}
-          >
-            {t('global.cancel')}
-          </Button></>}
+          footer={
+            <>
+              <Button
+                onClick={() => {
+                  setIsSettingsConfirmationVisible(false)
+                  deleteSettings()
+                }}
+              >
+                {t('global.delete')}
+              </Button>
+              <Button
+                appearance="secondary"
+                onClick={() => setIsSettingsConfirmationVisible(false)}
+              >
+                {t('global.cancel')}
+              </Button>
+            </>
+          }
         >
           <p>{t('reports.api_key_delete_warning')}</p>
         </Dialog>

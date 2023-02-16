@@ -10,15 +10,15 @@ WITH chats AS (
         )
 ),
 chat_lengths AS (
-    SELECT age(
+    SELECT EXTRACT(EPOCH FROM (
             MAX(created) filter (
                 WHERE "event" = 'client-left'
-            ),
-            MIN(created)
+            ) -
+            MIN(created))
         ) AS chat_length
     FROM message
         JOIN chats ON message.chat_base_id = chats.base_id
     GROUP BY message.chat_base_id
 )
-SELECT COALESCE(AVG(chat_length), '0 seconds'::INTERVAL)
+SELECT COALESCE(AVG(chat_length), 0)
 FROM chat_lengths;

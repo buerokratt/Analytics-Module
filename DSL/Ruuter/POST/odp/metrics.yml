@@ -243,18 +243,29 @@ get-pct-correctly-understood:
 gather_responses:
   assign:
     results: ${[get_chat_count_total_result,get_chat_count_no_csa_result,get_avg_waiting_time_result,get_avg_messages_result,get_avg_time_result,get_avg_time_no_csa_result,get_avg_time_csa_result,get_avg_session_length_client_left_result,get_avg_session_length_csa_result,get_avg_session_length_no_csa_result,get_avg_response_time_result,get_pct_correctly_understood_result]}
-    fields: ${['chat_count_total','chat_count_no_csa','avg_waiting_time','avg_messages','avg_time','avg_time_no_csa','avg_time_csa','avg_session_length_client_left','avg_session_length_csa','avg_session_length_no_csa','avg_response_time','pct_correctly_understood']}
+    fields: ${['chat_count_total','chat_count_no_csa','avg_waiting_time_seconds','avg_messages','avg_time_seconds','avg_time_no_csa_seconds','avg_time_csa_seconds','avg_session_length_client_left_seconds','avg_session_length_csa_seconds','avg_session_length_no_csa_seconds','avg_response_time_seconds','pct_correctly_understood']}
 
 convert_data:
   call: http.post
   args:
     url: http://data_mapper:3000/hbs/analytics/array-to-object
+    headers:
+      type: 'json'
     body:
       results: ${results}
       fields: ${fields}
       layout: false
   result: dataObject
 
+to_csv:
+  template: csv
+  requestType: post
+  body:
+    data: ${[dataObject.response.body]}
+    qul: ''
+    del: ''
+  result: csv
+
 return:      
-  return: ${dataObject.response.body}
+  return: ${csv}
   next: end

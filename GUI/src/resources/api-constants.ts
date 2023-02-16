@@ -18,19 +18,19 @@ export const overviewMetrics = (metric: string): string => {
 }
 
 export const geBykAvgResponseTime = (): string => {
-  return baseUrl + '/byk-avg-response-speed'
+  return baseUrl + '/buerokratt/byk-avg-response-speed'
 }
 
 export const getBykAvgSessionTime = (): string => {
-  return baseUrl + '/byk-avg-sessions-time'
+  return baseUrl + '/buerokratt/byk-avg-sessions-time'
 }
 
 export const getBykIntents = (): string => {
-  return baseUrl + '/byk-intents'
+  return baseUrl + '/buerokratt/byk-intents'
 }
 
 export const getBykPercentOfCorrecltyUnderstood = (): string => {
-  return baseUrl + '/byk-pct-correctly-understood'
+  return baseUrl + '/buerokratt/byk-pct-correctly-understood'
 }
 
 export const getCsv = (): string => {

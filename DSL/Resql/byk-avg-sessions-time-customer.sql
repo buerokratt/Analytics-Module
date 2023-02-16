@@ -11,7 +11,7 @@ WITH closed_chats AS (
 )
 SELECT
     DATE_TRUNC(:period, start_time) AS time,
-    AVG(EXTRACT(EPOCH FROM end_time - start_time)) AS avg_sesssion_time
+    COALESCE(AVG(EXTRACT(EPOCH FROM end_time - start_time)),0) AS avg_sesssion_time
 FROM closed_chats
 GROUP BY time
 ORDER BY time

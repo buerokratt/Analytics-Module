@@ -1,23 +1,32 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { CgSpinner } from 'react-icons/cg'
 import * as yup from 'yup'
 import i18n from '../../../i18n'
-import { getOpenDataValues } from '../../../resources/api-constants'
+import { editScheduledReport, getOpenDataValues, openDataDataset } from '../../../resources/api-constants'
 import { ODPValues } from '../../../types/reports'
 import Button from '../../Button'
 import Card from '../../Card'
 import { FormDatepicker, FormInput, FormSelect, FormTextarea } from '../../FormElements'
 import FormSelectMultiple from '../../FormElements/FormSelectMultiple'
+import { ToastContext } from '../../Toast/ToastContext'
 import Track from '../../Track'
 
 import './styles.scss'
 
 type AccessType = NonNullable<'public' | 'protected' | 'private' | undefined>
 type UpdateIntervalUnitType = NonNullable<'day' | 'week' | 'month' | 'quarter' | 'year' | 'never' | undefined>
+
+type DatasetCreationProps = {
+  metrics: string[]
+  start: string
+  end: string
+  existingDataset: boolean | any
+  onClose: () => void
+}
 
 const dataSetSchema = yup
   .object({
@@ -26,29 +35,51 @@ const dataSetSchema = yup
     descriptionEt: yup.string().required().max(1500),
     descriptionEn: yup.string().required().max(1500),
     maintainer: yup.string().required().max(500),
-    maintainerEmail: yup.string().required(),
+    maintainerEmail: yup.string().email().required(),
     regionIds: yup.array().of(yup.number()).min(1).required(),
     keywordIds: yup.array().of(yup.number()).min(1).required(),
     categoryIds: yup.array().of(yup.number()).min(1).required(),
     updateIntervalUnit: yup.string().oneOf(['day', 'week', 'month', 'quarter', 'year', 'never']).required(),
     dataFrom: yup.date().default(new Date()).required(),
-    updateIntervalFrequence: yup.number().default(1),
+    updateIntervalFrequency: yup.number().default(1),
     access: yup.string().oneOf(['public', 'protected', 'private']).required(),
     licenceId: yup.number().required(),
     cron_expression: yup.string(),
   })
   .required()
 
-const DatasetCreation = () => {
+const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: DatasetCreationProps) => {
   const { register, handleSubmit, setValue, getValues, watch } = useForm({
     reValidateMode: 'onChange',
-    defaultValues: dataSetSchema.cast({}, { assert: false }),
+    defaultValues: dataSetSchema.cast(typeof existingDataset === 'boolean' ? {} : existingDataset, { assert: false }),
     resolver: yupResolver(dataSetSchema),
   })
   const [odpValues, setOdpValues] = useState<ODPValues>()
+  const [loading, setLoading] = useState(false)
+  const toast = useContext(ToastContext)
+
   const { t } = useTranslation()
-  const onSubmit = (d: any) => {
-    console.log(d)
+
+  const onSubmit = async (d: any) => {
+    if (loading) return
+    setLoading(true)
+    try {
+      if (existingDataset === true) {
+        await axios.post(openDataDataset(), { ...d, metrics, start, end })
+      } else {
+        await axios.post(editScheduledReport(), { ...d, datasetId: existingDataset.datasetId })
+      }
+      toast.open({
+        type: 'success',
+        title: t('reports.dataset_saved'),
+        message: t('reports.dataset_saved_message'),
+      })
+      onClose()
+    } catch {
+      toast.open({ type: 'error', title: t('reports.save_dataset_failed'), message: t('global.try_again_later') })
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -94,7 +125,10 @@ const DatasetCreation = () => {
 
   return (
     <Card>
-      <form onSubmit={handleSubmit(onSubmit)} className='dataset'>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="dataset"
+      >
         <Track
           direction="vertical"
           gap={8}
@@ -240,8 +274,10 @@ const DatasetCreation = () => {
             <Button
               type="submit"
               onClick={handleSubmit(onSubmit)}
+              disabled={loading}
             >
-              {t('reports.add')}
+              {loading && <CgSpinner className="spinner" />}
+              {!loading && t('reports.add')}
             </Button>
           </Track>
         </Track>

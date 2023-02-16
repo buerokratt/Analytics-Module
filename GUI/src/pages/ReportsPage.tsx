@@ -1,24 +1,39 @@
 import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { MdDelete } from 'react-icons/md'
+import { MdDelete, MdEdit } from 'react-icons/md'
 import { Button, Card, Dialog, Drawer, Icon, Section, Track } from '../components'
 import OptionsPanel from '../components/MetricAndPeriodOptions'
 import { Option, OnChangeCallback } from '../components/MetricAndPeriodOptions'
 import { ToastContext } from '../components/Toast/ToastContext'
-import { deleteOpenDataSettings, downloadOpenDataCSV, openDataSettings } from '../resources/api-constants'
+import {
+  deleteOpenDataSettings,
+  downloadOpenDataCSV,
+  getOpenDataDataset,
+  openDataDataset,
+  openDataSettings,
+  scheduledReports,
+} from '../resources/api-constants'
 import APISetupDrawer from '../components/OpenData/APISetupDrawer'
 import { ODPSettings } from '../types/reports'
 import DatasetCreation from '../components/OpenData/DatasetCreation'
 import Popup from '../components/Popup'
 import { saveAs } from 'file-saver'
 
+type ScheduledDataset = {
+  datasetId: string
+  name: string
+  id: number
+  period: string
+}
+
 const ReportsPage = () => {
   const { t } = useTranslation()
   const [options, setOptions] = useState<OnChangeCallback>()
   const [apiSetupDrawerVisible, setApiSetupDrawerVisible] = useState(false)
-  const [datasetCreationVisible, setDatasetCreationVisible] = useState(false)
+  const [datasetCreationVisible, setDatasetCreationVisible] = useState<boolean | any>(false)
   const [apiSettings, setApiSettings] = useState<ODPSettings>({ odpKey: null, orgId: null })
+  const [datasets, setDatasets] = useState<ScheduledDataset[]>([])
 
   const [isSettingsConfirmationVisible, setIsSettingsConfirmationVisible] = useState(false)
 
@@ -26,6 +41,7 @@ const ReportsPage = () => {
 
   useEffect(() => {
     fetchSettings()
+    fetchDatasets()
   }, [])
 
   useEffect(() => {
@@ -73,6 +89,16 @@ const ReportsPage = () => {
     setApiSettings(result.data.response)
   }
 
+  const fetchDatasets = async () => {
+    const result = await axios.get(scheduledReports())
+    setDatasets(result.data.response)
+  }
+
+  const fetchDataset = async (datasetId: string) => {
+    const result = await axios.get(getOpenDataDataset(datasetId))
+    setDatasetCreationVisible({ ...result.data.response, datasetId })
+  }
+
   const deleteSettings = async () => {
     setApiSettings({ odpKey: null, orgId: null })
     await axios.post(deleteOpenDataSettings())
@@ -106,6 +132,35 @@ const ReportsPage = () => {
           </Track>
         </Section>
       </Card>
+
+      {datasets && (
+        <Card header={<h3>{t('reports.created_datasets')}</h3>}>
+          {datasets.map((d) => (
+            <Section key={d.id}>
+              <Track justify="between">
+                <strong>{d.name}</strong>
+                <Track gap={16}>
+                  <p>{t('reports.interval_' + d.period)}</p>
+                  <Button
+                    appearance="text"
+                    onClick={() => {
+                      fetchDataset(d.datasetId)
+                    }}
+                  >
+                    <Icon icon={<MdEdit />} /> {t('global.edit')}
+                  </Button>
+                  <Button
+                    appearance="text"
+                    onClick={() => {}}
+                  >
+                    <Icon icon={<MdDelete />} /> {t('global.delete')}
+                  </Button>
+                </Track>
+              </Track>
+            </Section>
+          ))}
+        </Card>
+      )}
 
       <Card header={<h3>{t('reports.odp_title')}</h3>}>
         {!apiSettings.odpKey && (
@@ -173,7 +228,16 @@ const ReportsPage = () => {
           }}
           title={t('reports.create-new-dataset')}
         >
-          <DatasetCreation />
+          <DatasetCreation
+            metrics={options!.options}
+            start={options!.start}
+            end={options!.end}
+            existingDataset={datasetCreationVisible}
+            onClose={() => {
+              setDatasetCreationVisible(false)
+              fetchDatasets()
+            }}
+          />
         </Popup>
       )}
     </>

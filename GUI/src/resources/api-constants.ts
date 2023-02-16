@@ -4,11 +4,19 @@ const chatsUrl = process.env.REACT_APP_BUEROKRATT_CHATBOT_URL
 export const openSearchDashboard = process.env.REACT_APP_OPENSEARCH_DASHBOARD_URL
 
 export const getLinkToChat = (chatId: string) => `${chatsUrl}/vestlus/ajalugu?chat=${chatId}`
+
 export const getOpenDataValues = (lang: string): string => baseUrl + '/odp/values?lang=' + lang
+
 export const openDataSettings = (): string => baseUrl + '/odp/settings'
 export const deleteOpenDataSettings = (): string => baseUrl + '/odp/delete-settings'
+
 export const openDataDataset = (): string => baseUrl + '/odp/dataset'
-export const getOpenDataDataset = (id: string): string => baseUrl + '/odp/get-dataset'
+export const getOpenDataDataset = (datasetId: string): string => baseUrl + '/odp/dataset?datasetId=' + datasetId
+
+export const scheduledReports = (): string => baseUrl + '/odp/scheduled-reports'
+export const editScheduledReport = (): string => baseUrl + '/odp/edit-scheduled-report'
+export const deleteScheduledReport = (): string => baseUrl + '/odp/delete-scheduled-report'
+
 export const downloadOpenDataCSV = (): string => baseUrl + '/odp/download'
 
 export const getTesting = (): string => {

@@ -71,15 +71,13 @@
     "totalMessages": "Keskmine ooteaia pikkus",
     "duration": "Keskmine sonumite arv vestluses",
     "idle": "Bürokrati Iöpetatud vestluste arv",
-    "options": {
-      "onlyBYK": "Bürokrati vastatud",
-      "csaInvolved": "Nöustaja kaasatud",
-      "outsideWorkingHours": "Tööpäeva väline aeg",
-      "longWaitingTime": "Pikk ooteaeg",
-      "allCsvAway": "Kõik nõustajad ära / hõivatud",
-      "median": "Mediaan",
-      "arithmetic": "Aritmeetiline keskmine"
-    }
+    "onlyBYK": "Bürokrati vastatud",
+    "csaInvolved": "Nöustaja kaasatud",
+    "outsideWorkingHours": "Tööpäeva väline aeg",
+    "longWaitingTime": "Pikk ooteaeg",
+    "allCsvAway": "Kõik nõustajad ära / hõivatud",
+    "medianWaitingTime": "Mediaan",
+    "averageWaitingTime": "Aritmeetiline keskmine"
   },
   "chart": {
     "metricValue": "Alustatud vestlused",

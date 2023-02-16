@@ -22,25 +22,25 @@ const chatOptions: Option[] = [
         id: 'total',
         labelKey: 'chats.total',
         subOptions: [
-            { id: 'byk', labelKey: 'chats.options.onlyBYK', color: '#f00' },
-            { id: 'csa', labelKey: 'chats.options.csaInvolved', color: '#0f0' },
+            { id: 'byk', labelKey: 'chats.onlyBYK', color: '#f00' },
+            { id: 'csa', labelKey: 'chats.csaInvolved', color: '#0f0' },
         ]
     },
     {
         id: 'cip',
         labelKey: 'chats.cip',
         subOptions: [
-            { id: 'outside-working-hours', labelKey: 'chats.options.outsideWorkingHours', color: '#f00' },
-            { id: 'long-waiting-time', labelKey: 'chats.options.longWaitingTime', color: '#0f0' },
-            { id: 'all-csas-away', labelKey: 'chats.options.allCsvAway', color: '#00f' },
+            { id: 'outside-working-hours', labelKey: 'chats.outsideWorkingHours', color: '#f00' },
+            { id: 'long-waiting-time', labelKey: 'chats.longWaitingTime', color: '#0f0' },
+            { id: 'all-csas-away', labelKey: 'chats.allCsvAway', color: '#00f' },
         ]
     },
     {
         id: 'avgWaitingTime',
         labelKey: 'chats.avgWaitingTime',
         subOptions: [
-            { id: 'median', labelKey: 'chats.options.median', color: '#f00' },
-            { id: 'avg', labelKey: 'chats.options.arithmetic', color: '#0f0' },
+            { id: 'median', labelKey: 'chats.medianWaitingTime', color: '#f00' },
+            { id: 'avg', labelKey: 'chats.averageWaitingTime', color: '#0f0' },
         ]
     },
     { id: 'totalMessages', labelKey: 'chats.totalMessages' },
@@ -148,28 +148,33 @@ const fetchChartDataWithSubOptions = async (url: string, config: any, subOptions
                 start_date: config?.start,
                 end_date: config?.end,
                 period: config?.groupByPeriod ?? 'day',
-                options: subOptions.map(x => x.id).join(',')
+                options: config?.options?.join?.(',') ?? ''
             })
 
-        const res = result.data.response
+        const output = result.data.response
             .map((array: any) =>
                 array.map((entry: any) => ({
                     ...translateChartKeys(entry, 'time'),
                     dateTime: new Date(entry.time).getTime(),
                 }))
             )
+            .reduce((acc: any, row: any) => {
+                row.forEach((obj: any) => {
+                    const existingObj = acc.find((item: any) => item.dateTime === obj.dateTime);
+                    if (existingObj) {
+                        Object.assign(existingObj, obj)
+                    } else {
+                        acc.push(obj)
+                    }
+                })
+                return acc
+            }, [])
 
-        const requiredKeys = ['dateTime', ...config.options]
-
-        const response = res.map((item: any) => {
-            const returnValue: any = {}
-            requiredKeys.forEach((key: string) => (returnValue[key] = item[key]))
-            return returnValue
-        })
+        console.log(output)
 
         chartData = {
-            chartData: response,
-            colors: subOptions.map(({ id, color }) => ({ id, color })),
+            chartData: output,
+            colors: subOptions.map(x => ({ id: x.labelKey, color: x.color }))
         }
     } catch (_) {
         //error

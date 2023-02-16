@@ -71,15 +71,13 @@
     "totalMessages": "Average number of messages in a chat",
     "duration": "Average duration of chats",
     "idle": "Count of idle chats ended by Bürokratt",
-    "options": {
-      "onlyBYK": "Only Bürokratt involved",
-      "csaInvolved": "CSA involved",
-      "outsideWorkingHours": "Outside working hours",
-      "longWaitingTime": "Long waiting time",
-      "allCsvAway": "All CSAs away with red status",
-      "median": "Median",
-      "arithmetic": "Arithmetic average"
-    }
+    "onlyBYK": "Only Bürokratt involved",
+    "csaInvolved": "CSA involved",
+    "outsideWorkingHours": "Outside working hours",
+    "longWaitingTime": "Long waiting time",
+    "allCsvAway": "All CSAs away with red status",
+    "medianWaitingTime": "Median",
+    "averageWaitingTime": "Arithmetic average"
   },
   "chart": {
     "metricValue": "Chats started",

@@ -25,16 +25,8 @@ export const getBykAvgSessionTime = (): string => {
   return baseUrl + '/byk-avg-sessions-time'
 }
 
-export const getBykIntentsCount = (): string => {
-  return baseUrl + '/byk-intents-count'
-}
-
-export const getBykModifiedIntentsCount = (): string => {
-  return baseUrl + '/byk-modified-intents'
-}
-
-export const getBykNewIntentsCount = (): string => {
-  return baseUrl + '/byk-new-intents'
+export const getBykIntents = (): string => {
+  return baseUrl + '/byk-intents'
 }
 
 export const getBykPercentOfCorrecltyUnderstood = (): string => {

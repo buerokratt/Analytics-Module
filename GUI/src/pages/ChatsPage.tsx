@@ -1,11 +1,9 @@
-import axios from 'axios';
-import { t } from 'i18next';
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { Subject } from 'rxjs'
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators'
 import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions';
-import { MetricOptionsState, SubOption } from '../components/MetricAndPeriodOptions/types';
+import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types';
 import MetricsCharts from '../components/MetricsCharts';
 import {
     getAvgChatWaitingTime,
@@ -15,6 +13,7 @@ import {
     getIdleChats,
     getTotalChats
 } from '../resources/api-constants';
+import { fetchChartData, fetchChartDataWithSubOptions } from '../util/api-response-handler';
 import { formatDate } from '../util/charts-utils';
 
 const chatOptions: Option[] = [
@@ -46,7 +45,26 @@ const chatOptions: Option[] = [
     { id: 'totalMessages', labelKey: 'chats.totalMessages' },
     { id: 'duration', labelKey: 'chats.duration' },
     { id: 'idle', labelKey: 'chats.idle' },
-];
+]
+
+const fetchData = (config: any) => {
+    switch (config.metric) {
+        case 'total':
+            return fetchChartDataWithSubOptions(getTotalChats(), config, chatOptions[0].subOptions!)
+        case 'cip':
+            return fetchChartDataWithSubOptions(getCipChats(), config, chatOptions[1].subOptions!)
+        case 'avgWaitingTime':
+            return fetchChartDataWithSubOptions(getAvgChatWaitingTime(), config, chatOptions[2].subOptions!)
+        case 'totalMessages':
+            return fetchChartData(getAvgMessagesInChats(), config, chatOptions[3].labelKey)
+        case 'duration':
+            return fetchChartData(getDurationChats(), config, chatOptions[4].labelKey)
+        case 'idle':
+            return fetchChartData(getIdleChats(), config, chatOptions[5].labelKey)
+        default:
+            return []
+    }
+}
 
 const ChatsPage: React.FC = () => {
     const { t } = useTranslation();
@@ -60,29 +78,9 @@ const ChatsPage: React.FC = () => {
             .pipe(
                 distinctUntilChanged(),
                 debounceTime(500),
-                switchMap((config: any) => {
-                    switch (config.metric) {
-                        case 'total':
-                            return fetchTotalChats(config)
-                        case 'cip':
-                            return fetchCipChats(config)
-                        case 'avgWaitingTime':
-                            return fetchAvgWaitingTime(config)
-                        case 'totalMessages':
-                            return fetchAvgMessagesInChats(config)
-                        case 'duration':
-                            return fetchDurationChats(config)
-                        case 'idle':
-                            return fetchIdleChats(config)
-                        default:
-                            return []
-                    }
-                }),
+                switchMap(fetchData),
             )
-            .subscribe((chartData: any) => {
-                if (chartData)
-                    setChartData(chartData)
-            })
+            .subscribe((data: any) => data && setChartData(data))
 
         return () => {
             subscription.unsubscribe()
@@ -115,106 +113,3 @@ const ChatsPage: React.FC = () => {
 }
 
 export default ChatsPage
-
-const fetchTotalChats = async (config: any) => {
-    return fetchChartDataWithSubOptions(getTotalChats(), config, chatOptions[0].subOptions!);
-}
-
-const fetchCipChats = async (config: any) => {
-    return fetchChartDataWithSubOptions(getCipChats(), config, chatOptions[1].subOptions!);
-}
-
-const fetchAvgWaitingTime = async (config: any) => {
-    return fetchChartDataWithSubOptions(getAvgChatWaitingTime(), config, chatOptions[2].subOptions!);
-}
-
-const fetchAvgMessagesInChats = async (config: any) => {
-    return fetchChartData(getAvgMessagesInChats(), config, 'Messages', '#FFB511')
-}
-
-const fetchDurationChats = async (config: any) => {
-    return fetchChartData(getDurationChats(), config, 'Duration', '#FFB511')
-}
-
-const fetchIdleChats = async (config: any) => {
-    return fetchChartData(getIdleChats(), config, 'IdleChats', '#FFB511')
-}
-
-const fetchChartDataWithSubOptions = async (url: string, config: any, subOptions: SubOption[]) => {
-    let chartData = {}
-    try {
-        const result = await axios.post(url,
-            {
-                start_date: config?.start,
-                end_date: config?.end,
-                period: config?.groupByPeriod ?? 'day',
-                options: config?.options?.join?.(',') ?? ''
-            })
-
-        const output = result.data.response
-            .map((array: any) =>
-                array.map((entry: any) => ({
-                    ...translateChartKeys(entry, 'time'),
-                    dateTime: new Date(entry.time).getTime(),
-                }))
-            )
-            .reduce((acc: any, row: any) => {
-                row.forEach((obj: any) => {
-                    const existingObj = acc.find((item: any) => item.dateTime === obj.dateTime);
-                    if (existingObj) {
-                        Object.assign(existingObj, obj)
-                    } else {
-                        acc.push(obj)
-                    }
-                })
-                return acc
-            }, [])
-
-        console.log(output)
-
-        chartData = {
-            chartData: output,
-            colors: subOptions.map(x => ({ id: x.labelKey, color: x.color }))
-        }
-    } catch (_) {
-        //error
-    }
-    return chartData
-}
-
-const fetchChartData = async (url: string, config: any, resultId: string, resultColor: string) => {
-    let chartData = {}
-    try {
-        const result = await axios.post(url,
-            {
-                start_date: config?.start,
-                end_date: config?.end,
-                period: config?.groupByPeriod ?? 'day'
-            })
-
-        const response = result.data.response.map((entry: any) => ({
-            ...translateChartKeys(entry, 'time'),
-            dateTime: new Date(entry.time).getTime(),
-        }))
-
-        chartData = {
-            chartData: response,
-            colors: [{ id: resultId, color: resultColor }],
-        }
-    } catch (_) {
-        //error
-    }
-    return chartData
-}
-
-export const translateChartKeys = (obj: any, key: string) =>
-    Object.keys(obj).reduce(
-        (acc, k) =>
-            k === key
-                ? acc
-                : {
-                    ...acc,
-                    ...{ [t(`chart.${k}`)]: obj[k] },
-                },
-        {},
-    )

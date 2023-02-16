@@ -77,7 +77,7 @@
     "longWaitingTime": "Long waiting time",
     "allCsvAway": "All CSAs away with red status",
     "medianWaitingTime": "Median",
-    "averageWaitingTime": "Arithmetic average"
+    "averageWaitingTime": "Arithmetic"
   },
   "chart": {
     "metricValue": "Chats started",

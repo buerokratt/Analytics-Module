@@ -76,7 +76,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
       })
       onClose()
     } catch {
-      toast.open({ type: 'error', title: t('reports.save_dataset_failed'), message: t('global.try_again_later') })
+      toast.open({ type: 'error', title: t('reports.save_dataset_failed'), message: t('reports.check_input') })
     } finally {
       setLoading(false)
     }
@@ -238,7 +238,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
             <FormSelect
               {...register('updateIntervalUnit')}
               label={t('reports.updateIntervalUnit')}
-              options={['day', 'week', 'month', 'quarter', 'year', 'never'].map((v) => ({ label: v, value: v }))}
+              options={['day', 'week', 'month', 'quarter', 'year', 'never'].map((v) => ({ label: t('reports.interval_'+v), value: v }))}
               defaultValue={getValues('updateIntervalUnit')}
               onSelectionChange={(e) => {
                 const interval = e!.value as UpdateIntervalUnitType
@@ -246,7 +246,9 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
                 setValue('cron_expression', getCronExpression(interval))
               }}
             />
-            <div className="interval-explanation">{t('reports.explain_interval_' + watch('updateIntervalUnit'))}</div>
+            {watch('updateIntervalUnit') !== undefined && (
+              <div className="interval-explanation">{t('reports.explain_interval_' + watch('updateIntervalUnit'))}</div>
+            )}
           </Track>
           <Track
             gap={20}
@@ -277,7 +279,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
               disabled={loading}
             >
               {loading && <CgSpinner className="spinner" />}
-              {!loading && t('reports.add')}
+              {!loading && t('global.save')}
             </Button>
           </Track>
         </Track>

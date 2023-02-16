@@ -172,7 +172,7 @@ const ReportsPage = () => {
         )}
         {apiSettings.odpKey && (
           <Track gap={20}>
-            {t('reports.apikey')}:
+            {t('reports.api_key')}:
             <strong style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {apiSettings.odpKey}
             </strong>

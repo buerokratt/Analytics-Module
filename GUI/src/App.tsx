@@ -2,7 +2,7 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
-import { ToastContext, ToastProvider } from './components/Toast/ToastContext'
+import { ToastProvider } from './components/Toast/ToastContext'
 import RootComponent from './RootComponent'
 import { persistor, store } from './store/reducers/store'
 

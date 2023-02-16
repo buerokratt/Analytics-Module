@@ -69,14 +69,11 @@ const APISetupDrawer = ({ onClose }: Props) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <Section>
             <Section>
-              <h6>Juurdepääs on vaja seadistada ainult esimesel korral</h6>
-              <br />
               <ol>
                 <li>
-                  Loo konto <a href="https://avaandmed.eesti.ee">avaandmed.eesti.ee</a> ja seo see asutusega
+                  {t('reports.create_account')} <a href="https://avaandmed.eesti.ee">avaandmed.eesti.ee</a> {t('reports.and_connect_org')}
                 </li>
-                <li>Loo settingutes uus API key</li>
-                <li>Juurdepääsu loomiseks sisest API võti siia</li>
+                <li>{t('reports.create_apikey_settings')}</li>
               </ol>
             </Section>
 
@@ -104,12 +101,12 @@ const APISetupDrawer = ({ onClose }: Props) => {
               gap={10}
               justify="end"
             >
-              <Button type="submit">Edasi</Button>
+              <Button type="submit">{t('global.save')}</Button>
               <Button
                 appearance="secondary"
                 type="reset"
               >
-                Tühista
+                {t('global.cancel')}
               </Button>
             </Track>
           </Section>

@@ -1,0 +1,27 @@
+getJobDetails:
+  call: http.post
+  args:
+    url: http://resql:8082/get-scheduled-report
+    body:
+      datasetId: ${incoming.params.datasetId}
+  result: jobDetails
+
+removeSchedule:
+  call: reflect.mock
+  args:
+    request:
+      jobId: ${jobDetails.response.body[0].job_id}
+    response:
+      success: ${true}
+  result: scheduler
+
+deleteScheduledReport:
+  call: http.post
+  args:
+    url: http://resql:8082/delete-scheduled-report
+    body:
+      id: ${jobDetails.response.body[0].id}
+  result: delete
+
+return:
+  return: ${true}

@@ -35,7 +35,22 @@ createDataset:
       Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
   result: datasetCreation
 
+check_schedule:
+  switch:
+    - condition: ${incoming.body.updateIntervalUnit === 'never'}
+      next: uploadImmediately
+
 setUpSchedule:
+  call: reflect.mock
+  args:
+    request:
+      cron: ${incoming.body.cron_expression}
+      task: ${"odp/task-runner?datasetId=" + datasetCreation.response.body.data.id}
+    response:
+      jobId: 'some-unique-id'
+  result: scheduler
+
+saveJobInformation:
   call: http.post
   args:
     url: http://resql:8082/add-scheduled-report
@@ -43,9 +58,9 @@ setUpSchedule:
       name: ${incoming.body.nameEt}
       period: ${incoming.body.updateIntervalUnit}
       metrics: ${incoming.body.metrics}
-      cron_expression: ${incoming.body.cron_expression}
+      job_id: ${scheduler.response.body.jobId}
       dataset_id: ${datasetCreation.response.body.data.id}
-  result: added
+  result: scheduledReport
   next: return_post_schedule
 
 uploadImmediately:
@@ -64,7 +79,7 @@ return_post_upload:
   next: end
 
 return_post_schedule:
-  return: ${added.response.body}
+  return: ${scheduledReport.response.body}
   next: end
 
   

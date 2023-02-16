@@ -5,7 +5,8 @@
     "edit": "Muuda",
     "delete": "Kustuta",
     "choose": "Vali",
-    "cancel": "Tühista"
+    "cancel": "Tühista",
+    "notification": "Teade"
   },
   "mainMenu": {
     "closeMenu": "Sulge menüü"
@@ -145,6 +146,11 @@
     "are_you_sure": "Oled kindel?",
     "create_account": "Loo konto",
     "and_connect_org": "ja ühenda organisatsiooniga",
-    "create_apikey_settings": "Loo uus API võti seadetes"
+    "create_apikey_settings": "Loo uus API võti seadetes",
+    "verifying": "Kontrollin",
+    "incorrect_apikey_title": "Viga ühenduse loomisel",
+    "incorrect_apikey_message": "API võti või API võtme ID ei olnud õiged",
+    "correct_apikey_title": "API seaded salvestatud",
+    "correct_apikey_message": "API võti ja API võtme ID kinnitatud"
   }
 }

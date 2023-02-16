@@ -6,7 +6,8 @@
     "save": "Save",
     "delete": "Delete",
     "choose": "Choose",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "notification": "Notification"
   },
   "mainMenu": {
     "closeMenu": "Close menu"
@@ -145,6 +146,11 @@
     "are_you_sure": "Are you sure?",
     "create_account": "Create an account",
     "and_connect_org": "and connect it with an organization",
-    "create_apikey_settings": "Create a new API key in Settings"
+    "create_apikey_settings": "Create a new API key in Settings",
+    "verifying": "Verifying",
+    "incorrect_apikey_title": "Error validating key",
+    "incorrect_apikey_message": "API Key or API Key ID were not correct",
+    "correct_apikey_title": "API settings saved",
+    "correct_apikey_message": "API Key and API Key ID validated"
   }
 }

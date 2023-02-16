@@ -41,10 +41,6 @@ const ReportsPage = () => {
     fetchDatasets()
   }, [])
 
-  useEffect(() => {
-    console.log(options)
-  }, [options])
-
   const odpQueries = [
     'get-chat-count-total',
     'get-chat-count-no-csa',

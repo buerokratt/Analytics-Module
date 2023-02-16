@@ -22,8 +22,8 @@ export const chatOptions: Option[] = [
         id: 'avgWaitingTime',
         labelKey: 'chats.avgWaitingTime',
         subOptions: [
-            { id: 'median', labelKey: 'chats.medianWaitingTime', color: '#f00' },
             { id: 'avg', labelKey: 'chats.averageWaitingTime', color: '#0f0' },
+            { id: 'median', labelKey: 'chats.medianWaitingTime', color: '#f00' },
         ]
     },
     { id: 'totalMessages', labelKey: 'chats.totalMessages' },

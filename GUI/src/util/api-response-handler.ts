@@ -13,7 +13,7 @@ export const fetchChartDataWithSubOptions = async (
                 start_date: config?.start,
                 end_date: config?.end,
                 period: config?.groupByPeriod ?? 'day',
-                options: config?.options?.join?.(',') ?? ''
+                options: config?.options.join(',') ?? ''
             })
 
         const chartData = result.data.response

@@ -120,8 +120,12 @@ const MainNavigation: FC = () => {
           path: '/analytics/burokratt',
         },
         {
-          label: 'Feedback',
+          label: t('menu.feedback'),
           path: '/analytics/feedbacks',
+        },
+        {
+          label: t('menu.advisors'),
+          path: '/analytics/advisors',
         },
         {
           label: t('menu.reports'),

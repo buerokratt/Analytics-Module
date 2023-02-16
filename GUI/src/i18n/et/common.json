@@ -5,7 +5,7 @@
   },
   "general": {
     "period": "Periood",
-    "metric": "Mõõdik",
+    "chooseMetric": "Vali mõõdik",
     "additionalOptions": "Lisavalikud",
     "today": "Täna",
     "yesterday": "Eile",
@@ -18,9 +18,9 @@
     "overview": "Ülevaade",
     "chats": "Vestlused",
     "burokratt": "Bürokratt",
-    "feedbacks": "Tagasiside",
+    "feedback": "Tagasiside",
     "advisors": "Nõustajad",
-    "reports": "Raportid"
+    "reports": "Avaandmed"
   },
   "burokratt": {
     "intents": "Teemad",
@@ -34,13 +34,6 @@
     "csa": "Keskmine aeg, Bürokratt + nõustaja",
     "idle": "Keskmine aeg, ainult Bürokratt",
     "closed": "Keskmine aeg Bürokratiga, kliendi lõpetatud"
-  },
-  "feedback": {
-    "startTime": "Algusaeg",
-    "endTime": "Lõppaeg",
-    "status": "Staatus",
-    "ended": "Lõppenud",
-    "view": "Vaata"
   },
   "overview": {
     "editView": "Muuda vaadet",
@@ -59,14 +52,48 @@
       "total_forwarded_chats_yesterday": "Suunatud vestluse eile: sisesed / välised",
       "avg_waiting_time_day": "Keskmine ooteaeg: täna / eile",
       "avg_waiting_time_week": "Keskmine ootaeg: nädal - eelmine"
-    },
-    "chart": {
-      "metricValue": "Alustatud vestlused",
-      "answered": "Lahkus vastusega",
-      "notAnswered": "Lahkus vastuseta",
-      "hateSpeech": "Vihakõne",
-      "terminated": "Määramata põhjus",
-      "toContact": "Vastus muus kanalis"
     }
+  },
+  "feedback": {
+    "statuses": "Lõpetatud staatused / vestluste arv",
+    "burokratt_chats": "Tagasiside bürokrati vestlustele",
+    "advisor_chats": "Tagasiside nõustajate vestlustele",
+    "selected_advisor_chats": "Tagasiside valitud nõustajale",
+    "negative_feedback": "Negatiivse tagasisidega vestlused",
+    "status_options": {
+      "answered": "Bürokratt - klient lahkus vastusega",
+      "client_left": "Bürokratt - klient lahkus vastuseta",
+      "idle": "Bürokratt - lõpetatud määramata põhjusel",
+      "accepted": "Nõustaja - aksepteeritud vastus",
+      "hate_speech": "Nõustaja - vihakõne tunnused",
+      "to_contact": "Nõustaja - vastatud teises kanalis",
+      "terminated": "Nõustaja - muud põhjused"
+    },
+    "csv": "CSV",
+    "startTime": "Algusaeg",
+    "endTime": "Lõppaeg",
+    "status": "Staatus",
+    "ended": "Lõppenud",
+    "view": "Vaata",
+    "comment": "Kommentaar"
+  },
+  "chart": {
+    "metricValue": "Alustatud vestlused",
+    "answered": "Lahkus vastusega",
+    "notAnswered": "Lahkus vastuseta",
+    "hateSpeech": "Vihakõne",
+    "terminated": "Määramata põhjus",
+    "toContact": "Vastus muus kanalis",
+    "count": "Count",
+    "event": "Sündmus",
+    "avg": "Keskmine",
+    "nps": "Nps",
+    "id": "Id",
+    "ended": "Ended",
+    "customerSupportId": "Customer Support Id",
+    "customerSupportDisplayName": "Customer Support Display Name",
+    "barChart": "Tulpdiagramm",
+    "pieChart": "Sektordiagramm",
+    "lineChart": "Joondiagramm"
   }
 }

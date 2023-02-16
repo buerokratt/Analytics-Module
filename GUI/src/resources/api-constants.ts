@@ -41,12 +41,29 @@ export const getBykPercentOfCorrecltyUnderstood = (): string => {
   return baseUrl + '/byk-pct-correctly-understood'
 }
 
-export const getNegativeFeedbackChats = ({
-  startTime,
-  endTime,
-  events,
-}: {
-  startTime: string
-  endTime: string
-  events: string[]
-}): string => `${baseUrl}/negative-feedback?start=${startTime}&end=${endTime}&events=${events}`
+export const getCsv = (): string => {
+  return baseUrl + '/csv'
+}
+
+
+// Feedback
+
+export const getChatsStatuses = (): string => {
+  return baseUrl + '/chat/status'
+}
+
+export const getAverageFeedbackOnBuerokrattChats = (): string => {
+  return baseUrl + '/feedback/avg-feedback-to-buerokratt-chats'
+}
+
+export const getNpsOnCSAChatsFeedback = (): string => {
+  return baseUrl + '/feedback/csa-chats-feedback-nps'
+}
+
+export const getNpsOnSelectedCSAChatsFeedback = (): string => {
+  return baseUrl + '/feedback/selected-csa-feedback-nps'
+}
+
+export const getNegativeFeedbackChats = (): string => {
+  return baseUrl + '/feedback/chats-with-negative-feedback'
+}

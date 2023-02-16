@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { BarChart, XAxis, CartesianGrid, YAxis, Tooltip, Legend, Bar } from 'recharts'
 import { dateFormatter, formatDate, getColor, getTicks } from '../../util/charts-utils'
-import ChartToolTip from '../ChartToolTip'
 
 type Props = {
   dataKey: string
@@ -36,7 +35,6 @@ const BarGraph = ({ dataKey, startDate, endDate, data }: Props) => {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
-          allowDuplicatedCategory={false}
           dataKey={dataKey}
           scale="time"
           tickFormatter={(value) => dateFormatter(startDate, endDate, value)}
@@ -65,6 +63,7 @@ const BarGraph = ({ dataKey, startDate, endDate, data }: Props) => {
               />
             )
           })}
+        <Tooltip />
       </BarChart>
     </div>
   )

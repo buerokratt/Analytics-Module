@@ -34,7 +34,6 @@ export const fetchChartDataWithSubOptions = async (
             }, [])
 
         const colors = subOptions.map(x => ({ id: t(x.labelKey), color: x.color }))
-        console.log(chartData)
         return { chartData, colors }
     } catch (_) {
         return {}

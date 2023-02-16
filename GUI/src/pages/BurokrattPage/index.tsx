@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs'
+import { Subject } from 'rxjs'
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators'
 import OptionsPanel from '../../components/MetricAndPeriodOptions'
 import { MetricOptionsState } from '../../components/MetricAndPeriodOptions/types'
 import MetricsCharts from '../../components/MetricsCharts'

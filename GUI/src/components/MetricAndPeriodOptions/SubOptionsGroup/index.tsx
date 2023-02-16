@@ -19,10 +19,12 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({
     const { t } = useTranslation()
     const [selectedValues, setSelectedValues] = useState<string[]>([])
 
-    useState(() => {
-        const selectedOptions = subOptions.filter((x => x.isSelected === undefined || x.isSelected === true)).map((x) => x.id);
-        setSelectedValues(selectedOptions);
-    })
+    useEffect(() => {
+        const selectedOptions = subOptions
+            .filter((x => x.isSelected === undefined || x.isSelected === true))
+            .map((x) => x.id)
+        setSelectedValues(selectedOptions)
+    }, [subOptions])
 
     useEffect(() => {
         onChange(selectedValues);

@@ -28,22 +28,31 @@ const APISetupDrawer = ({ onClose }: Props) => {
   }
 
   const putSettings = async (apiKey: string, keyId: string, orgId: string) => {
-    const result = await axios.post(openDataSettings(), { apiKey, keyId, orgId })
-    if (!result.data.response) {
+    try {
+      const result = await axios.post(openDataSettings(), { apiKey, keyId, orgId })
+      if (!result.data.response) {
+        toast.open({
+          type: 'error',
+          title: t('reports.incorrect_apikey_title'),
+          message: t('reports.incorrect_apikey_message'),
+        })
+      } else {
+        toast.open({
+          type: 'success',
+          title: t('reports.correct_apikey_title'),
+          message: t('reports.correct_apikey_message'),
+        })
+        onClose(result.data.response)
+      }
+    } catch {
       toast.open({
         type: 'error',
         title: t('reports.incorrect_apikey_title'),
         message: t('reports.incorrect_apikey_message'),
       })
-    } else {
-      toast.open({
-        type: 'success',
-        title: t('reports.correct_apikey_title'),
-        message: t('reports.correct_apikey_message'),
-      })
-      onClose(result.data.response)
+    } finally {
+      setIsVerifyingSettings(false)
     }
-    setIsVerifyingSettings(false)
   }
 
   return (
@@ -71,7 +80,8 @@ const APISetupDrawer = ({ onClose }: Props) => {
             <Section>
               <ol>
                 <li>
-                  {t('reports.create_account')} <a href="https://avaandmed.eesti.ee">avaandmed.eesti.ee</a> {t('reports.and_connect_org')}
+                  {t('reports.create_account')} <a href="https://avaandmed.eesti.ee">avaandmed.eesti.ee</a>{' '}
+                  {t('reports.and_connect_org')}
                 </li>
                 <li>{t('reports.create_apikey_settings')}</li>
               </ol>

@@ -3,21 +3,14 @@ export type ODPSettings = {
   orgId: string | null
 }
 
+export type ODPValuesType = {
+  id: string
+  name: string
+}
+
 export type ODPValues = {
-  keywords: {
-    id: string
-    name: string
-  }[]
-  categories: {
-    id: string
-    name: string
-  }[]
-  regions: {
-    id: string
-    name: string
-  }[]
-  licences: {
-    id: string
-    name: string
-  }[]
+  keywords: ODPValuesType[]
+  categories: ODPValuesType[]
+  regions: ODPValuesType[]
+  licences: ODPValuesType[]
 }

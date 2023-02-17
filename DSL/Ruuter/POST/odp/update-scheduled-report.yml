@@ -78,5 +78,3 @@ saveJobInformation:
 return_post_schedule:
   return: ${scheduledReport.response.body}
   next: end
-
-  

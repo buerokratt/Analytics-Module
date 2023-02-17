@@ -1,7 +1,7 @@
 WITH chats AS (
     SELECT DISTINCT chat.base_id
     FROM chat
-    WHERE created BETWEEN :start::timestamptz AND :end::timestamptz
+    WHERE created::date BETWEEN :start::date AND :end::date
         AND EXISTS (
             SELECT 1
             FROM message

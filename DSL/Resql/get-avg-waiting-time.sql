@@ -16,7 +16,7 @@ WITH botname AS (
             ORDER BY updated
         ) AS prev_updated
     FROM chat
-    WHERE created BETWEEN :start::timestamptz AND :end::timestamptz
+    WHERE created::date BETWEEN :start::date AND :end::date
 )
 SELECT COALESCE(
         AVG(

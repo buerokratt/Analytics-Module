@@ -2,7 +2,7 @@ WITH chats AS (
     SELECT base_id,
         ended
     FROM chat
-    WHERE created BETWEEN :start::timestamptz AND :end::timestamptz
+    WHERE created::date BETWEEN :start::date AND :end::date
         AND EXISTS (
             SELECT 1
             FROM message

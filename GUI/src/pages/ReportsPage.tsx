@@ -215,6 +215,7 @@ const ReportsPage = () => {
         style={{ transform: apiSetupDrawerVisible ? 'none' : 'translate(100%)', width: '450px' }}
       >
         <APISetupDrawer
+          isDrawerVisible={apiSetupDrawerVisible}
           onClose={(settings) => {
             setApiSettings(settings)
             setApiSetupDrawerVisible(false)

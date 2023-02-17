@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { CgSpinner } from 'react-icons/cg'
@@ -14,18 +14,23 @@ import Track from '../../Track'
 
 type Props = {
   onClose: (settings: ODPSettings) => void
+  isDrawerVisible: boolean
 }
 
-const APISetupDrawer = ({ onClose }: Props) => {
+const APISetupDrawer = ({ onClose, isDrawerVisible }: Props) => {
   const [isVerifyingSettings, setIsVerifyingSettings] = useState(false)
   const { t } = useTranslation()
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit, reset } = useForm()
   const toast = useContext(ToastContext)
 
   const onSubmit = (d: any) => {
     setIsVerifyingSettings(true)
     putSettings(d.apiKey, d.apiKeyId, d.orgId)
   }
+
+  useEffect(() => {
+    if (!isDrawerVisible) reset()
+  }, [isDrawerVisible])
 
   const putSettings = async (apiKey: string, keyId: string, orgId: string) => {
     try {

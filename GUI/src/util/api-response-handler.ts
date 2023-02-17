@@ -44,7 +44,7 @@ export const fetchChartData = async (
     url: string,
     config: any,
     resultId: string,
-    resultColor = 'red'
+    resultColor = '#fdbf47'
 ) => {
     try {
         const result = await axios.post(url,

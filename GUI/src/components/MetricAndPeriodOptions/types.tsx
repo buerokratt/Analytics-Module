@@ -20,3 +20,5 @@ export interface MetricOptionsState {
   end: string
   options: string[]
 }
+
+export type OnChangeCallback = MetricOptionsState & { groupByPeriod: string }

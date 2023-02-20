@@ -4,14 +4,14 @@ import Card from '../../Card'
 import { periodOptions } from './data'
 import MetricOptionsGroup from '../MetricOptionsGroup'
 import SubOptionsGroup from '../SubOptionsGroup'
-import { MetricOptionsState, Option } from '../types'
+import { MetricOptionsState, Option, OnChangeCallback } from '../types'
 import Section from '../../Section'
 import { formatDate } from '../../../util/charts-utils'
 
 interface MetricOptionsProps {
   metricOptions: Option[]
+  onChange: (selection: OnChangeCallback) => void
   dateFormat?: string
-  onChange: (selection: MetricOptionsState & { groupByPeriod: string }) => void
 }
 
 const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat, onChange }) => {
@@ -40,7 +40,10 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
     onChange({ ...selection, groupByPeriod })
   }, [selection])
 
-  const subOptions = metricOptions.find((x) => x.id === selection.metric)?.subOptions ?? []
+  const subOptions = useMemo(
+    () => metricOptions.find((x) => x.id === selection.metric)?.subOptions ?? [],
+    [selection.metric],
+  )
 
   const setPeriod = (period: string): void => setSelection((selection) => ({ ...selection, period }))
 

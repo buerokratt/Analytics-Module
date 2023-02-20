@@ -1,0 +1,39 @@
+assign_vars:
+  assign:
+    lang: ${incoming.params.lang}
+
+get_keywords:
+  call: http.get
+  args:
+    url: https://avaandmed.eesti.ee/api/keywords
+    query:
+      lang: ${lang}
+  result: keywordsResult
+
+get_categories:
+  call: http.get
+  args:
+    url: https://avaandmed.eesti.ee/api/categories
+    query:
+      lang: ${lang}
+  result: categoriesResult
+
+get_regions:
+  call: http.get
+  args:
+    url: https://avaandmed.eesti.ee/api/regions
+    query:
+      lang: ${lang}
+  result: regionsResult
+
+get_licences:
+  call: http.get
+  args:
+    url: https://avaandmed.eesti.ee/api/licences
+    query:
+      lang: ${lang}
+  result: licencesResult
+
+return_step:
+  return: ${[keywordsResult.response.body.data, categoriesResult.response.body.data, regionsResult.response.body.data, licencesResult.response.body.data]}
+  next: end

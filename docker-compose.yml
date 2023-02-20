@@ -5,6 +5,7 @@ services:
     image: ruuter
     environment:
       - application.cors.allowedOrigins=http://localhost:3001
+      - application.httpCodesAllowList=200,201,202,400,401,403,500
     volumes:
       - ./DSL/Ruuter:/DSL
     ports:

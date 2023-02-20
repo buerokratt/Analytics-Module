@@ -21,7 +21,7 @@ return_value:
   wrapper: false
   headers:
     Content-disposition: "attachment;filename=metrics.csv"
-  return: ${result.response.body.csv}
+  return: ${result.response.body.response}
   next: end
 
 return_incorrect_request:

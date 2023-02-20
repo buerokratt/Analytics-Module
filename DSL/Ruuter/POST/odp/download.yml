@@ -1,0 +1,15 @@
+get_metrics:
+  template: odp/metrics
+  requestType: post
+  body:
+    metrics: ${incoming.body.metrics}
+    start: ${incoming.body.start}
+    end: ${incoming.body.end}
+    period: 'never'
+  result: metricDataCSV
+
+return:
+  wrapper: false
+  headers:
+    Content-disposition: "attachment;filename=metrics.csv"
+  return: ${metricDataCSV}

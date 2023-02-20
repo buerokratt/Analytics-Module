@@ -19,6 +19,7 @@ type FormDatepickerProps = ControllerRenderProps & {
   placeholder?: string;
   timePicker?: boolean;
   monthPicker?: boolean;
+  portalId?: string;
 }
 
 const FormDatepicker = forwardRef<any, FormDatepickerProps>((
@@ -30,6 +31,7 @@ const FormDatepicker = forwardRef<any, FormDatepickerProps>((
     placeholder,
     timePicker,
     monthPicker,
+    portalId = 'overlay-root',
     ...rest
   },
   ref,
@@ -65,7 +67,7 @@ const FormDatepicker = forwardRef<any, FormDatepickerProps>((
           timeIntervals={15}
           timeFormat='hh:mm:ss'
           timeInputLabel=''
-          portalId='overlay-root'
+          portalId={portalId}
           showMonthYearPicker={monthPicker}
           {...rest}
           onChange={onChange}

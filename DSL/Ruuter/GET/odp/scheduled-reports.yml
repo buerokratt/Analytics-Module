@@ -1,0 +1,8 @@
+getScheduledReports:
+  call: http.post
+  args:
+    url: http://resql:8082/get-scheduled-reports
+  result: scheduledReports
+
+return:
+  return: ${scheduledReports.response.body}

@@ -121,7 +121,7 @@ const MainNavigation: FC = () => {
         },
         {
           label: t('menu.feedback'),
-          path: '/analytics/feedback',
+          path: '/analytics/feedbacks',
         },
         {
           label: t('menu.advisors'),

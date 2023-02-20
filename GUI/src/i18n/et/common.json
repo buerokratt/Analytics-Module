@@ -30,6 +30,19 @@
     "advisors": "Nõustajad",
     "reports": "Avaandmed"
   },
+  "burokratt": {
+    "intents": "Teemad",
+    "sessions": "Sessioonid",
+    "averageResponseSpeed": "Bürokrati keskmine vastamise kiirus",
+    "understoodQuestions": "Õigesti mõistetud küsimuste %",
+    "orderByUsability": "Teemad kasutatavuse järgi",
+    "newIntents": "Uued treenitud teemad",
+    "modifiedIntents": "Muudetud teemad",
+    "avgChatIntents": "Keskmine tuvastatud teemade arv ühes vestluses",
+    "csa": "Keskmine aeg, Bürokratt + nõustaja",
+    "idle": "Keskmine aeg, ainult Bürokratt",
+    "closed": "Keskmine aeg Bürokratiga, kliendi lõpetatud"
+  },
   "overview": {
     "editView": "Muuda vaadet",
     "totalChatsChart": "Vestluste koguarv",

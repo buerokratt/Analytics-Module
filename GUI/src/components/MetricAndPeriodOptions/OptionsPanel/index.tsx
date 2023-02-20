@@ -29,7 +29,7 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
       setSelection((selection) => ({
         ...selection,
         metric: metricOptions[0].id,
-        options: [],
+        options: getSubOptionIds(metricOptions, metricOptions[0].id),
       }))
     }
     setPeriod('today')
@@ -66,7 +66,7 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
             dateFormat={dateFormat}
             options={metricOptions}
             label={t('general.chooseMetric')}
-            onChange={(metric) => setSelection({ ...selection, metric, options: [] })}
+            onChange={(metric) => setSelection({ ...selection, metric, options: getSubOptionIds(metricOptions, metric) })}
           />
         </Section>
       )}
@@ -82,5 +82,8 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
     </Card>
   )
 }
+
+const getSubOptionIds = (metricOptions: Option[], metric: string) =>
+  metricOptions.find((x) => x.id === metric)?.subOptions?.map(x => x.id) ?? []
 
 export default MetricOptions

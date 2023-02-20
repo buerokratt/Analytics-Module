@@ -29,31 +29,24 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({ label, subOptions, on
   }, [selectedValues.length])
 
   return (
-    <Track
-      gap={100}
-      isAlignItems={false}
-    >
-      <div className="additional-option-label">{label}</div>
-      <Track
-        isMultiline={true}
-        isFlex={true}
-      >
-        {subOptions.map((option) => (
+    <Track gap={100} isAlignItems={false}>
+      <div className='additional-option-label'>{label}</div>
+      <Track isMultiline isFlex>
+        {subOptions.map((option) =>
           <CheckBoxWithColorIndicator
             key={option.id}
-            onClick={() => {
-              const newlist = selectedValues.filter((x) => x !== option.id)
-              if (newlist.length == selectedValues.length) {
-                setSelectedValues([...selectedValues, option.id])
-              } else {
-                setSelectedValues(newlist)
-              }
-            }}
-            selected={selectedValues.includes(option.id)}
-            label={t(option.labelKey)}
             color={option.color}
+            label={t(option.labelKey)}
+            selected={selectedValues.includes(option.id)}
+            onClick={() => {
+              const newlist = selectedValues.filter(x => x !== option.id)
+              if (newlist.length == selectedValues.length)
+                setSelectedValues([...selectedValues, option.id])
+              else
+                setSelectedValues(newlist)
+            }}
           />
-        ))}
+        )}
       </Track>
     </Track>
   )

@@ -1,0 +1,98 @@
+check_for_body:
+  switch:
+    - condition: ${incoming.body == null}
+      next: missing_parameter
+
+extract_request_data:
+  assign:
+    options: ${incoming.body.options}
+    start: ${incoming.body.start_date}
+    end: ${incoming.body.end_date}
+    period: ${incoming.body.period}
+
+check_for_required_parameters:
+  switch:
+    - condition: ${start == null || end == null || options == null || period == null}
+      next: missing_parameter
+  next: check_outside_working_hours
+
+missing_parameter:
+  status: 400
+  return: 'required parameters were not provided'
+  next: end
+
+check_outside_working_hours:
+  switch:
+    - condition: ${options.includes('outside-working-hours')}
+      next: outside_working_hours
+
+empty_outside_working_hours:
+  assign:
+    outside_working_hours_result: ${[]}
+  next: check_long_waiting_time
+
+outside_working_hours:
+  call: http.post
+  args:
+    url: http://resql:8082/chat-cif-outside-working-hours
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: results
+
+assign_outside_working_hours:
+  assign: 
+    outside_working_hours_result: ${results.response.body}
+
+check_long_waiting_time:
+  switch:
+    - condition: ${options.includes('long-waiting-time')}
+      next: long_waiting_time
+
+empty_long_waiting_time:
+  assign:
+    long_waiting_time_result: ${[]}
+  next: check_all_csas_away
+
+long_waiting_time:
+  call: http.post
+  args:
+    url: http://resql:8082/chat-cif-long-waiting-time
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+      threshold_seconds: ${10 * 60}
+  result: results
+
+assign_long_waiting_time:
+  assign: 
+    long_waiting_time_result: ${results.response.body}
+
+check_all_csas_away:
+  switch:
+    - condition: ${options.includes('all-csas-away')}
+      next: all_csas_away
+
+empty_all_csas_away:
+  assign:
+    all_csas_away_result: ${[]}
+  next: respond
+
+all_csas_away:
+  call: http.post
+  args:
+    url: http://resql:8082/chat-cif-all-csas-away
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: results
+
+assign_all_csas_away:
+  assign: 
+    all_csas_away_result: ${results.response.body}
+
+respond:
+  return: ${[outside_working_hours_result, long_waiting_time_result, all_csas_away_result]}

@@ -1,0 +1,73 @@
+check_for_body:
+  switch:
+    - condition: ${incoming.body == null}
+      next: missing_parameter
+
+extract_request_data:
+  assign:
+    options: ${incoming.body.options}
+    start: ${incoming.body.start_date}
+    end: ${incoming.body.end_date}
+    period: ${incoming.body.period}
+
+check_for_required_parameters:
+  switch:
+    - condition: ${start == null || end == null || options == null || period == null}
+      next: missing_parameter
+  next: check_avg
+
+missing_parameter:
+  status: 400
+  return: 'required parameters were not provided'
+  next: end
+
+check_avg:
+  switch:
+    - condition: ${options.includes('avg')}
+      next: avg
+
+empty_avg:
+  assign:
+    avg_result: ${[]}
+  next: check_median
+
+avg:
+  call: http.post
+  args:
+    url: http://resql:8082/chat-avg-waiting-time
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: results
+
+assign_avg:
+  assign: 
+    avg_result: ${results.response.body}
+
+check_median:
+  switch:
+    - condition: ${options.includes('median')}
+      next: median
+
+empty_median:
+  assign:
+    median_result: ${[]}
+  next: respond
+
+median:
+  call: http.post
+  args:
+    url: http://resql:8082/chat-median-waiting-time
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: results
+
+assign_median:
+  assign: 
+    median_result: ${results.response.body}
+
+respond:
+  return: ${[avg_result, median_result]}

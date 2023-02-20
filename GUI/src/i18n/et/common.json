@@ -85,6 +85,21 @@
     "view": "Vaata",
     "comment": "Kommentaar"
   },
+  "chats": {
+    "total": "Vestluste koguarv",
+    "cip": "Kontakti jätmised",
+    "avgWaitingTime": "Vestluste keskmine aeg",
+    "totalMessages": "Keskmine ooteaia pikkus",
+    "duration": "Keskmine sonumite arv vestluses",
+    "idle": "Bürokrati Iöpetatud vestluste arv",
+    "onlyBYK": "Bürokrati vastatud",
+    "csaInvolved": "Nöustaja kaasatud",
+    "outsideWorkingHours": "Tööpäeva väline aeg",
+    "longWaitingTime": "Pikk ooteaeg",
+    "allCsvAway": "Kõik nõustajad ära / hõivatud",
+    "medianWaitingTime": "Mediaan",
+    "averageWaitingTime": "Aritmeetiline keskmine"
+  },
   "chart": {
     "metricValue": "Alustatud vestlused",
     "answered": "Lahkus vastusega",

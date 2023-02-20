@@ -18,6 +18,13 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({ label, subOptions, on
   )
 
   useEffect(() => {
+    const selectedOptions = subOptions
+      .filter((x => x.isSelected === undefined || x.isSelected === true))
+      .map((x) => x.id)
+    setSelectedValues(selectedOptions)
+  }, [subOptions])
+
+  useEffect(() => {
     onChange(selectedValues)
   }, [selectedValues.length])
 

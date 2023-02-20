@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { Layout } from './components'
 import AdvisorsPage from './pages/AdvisorsPage'
 import BurokrattPage from './pages/BurokrattPage'

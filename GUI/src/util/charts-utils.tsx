@@ -43,3 +43,4 @@ export const translateChartKeys = (obj: any, key: string) =>
           },
     {},
   )
+export const chartDateFormat = 'yyyy-MM-dd'

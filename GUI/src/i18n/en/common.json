@@ -31,6 +31,19 @@
     "advisors": "Advisors",
     "reports": "Open Data"
   },
+  "burokratt": {
+    "intents": "Intents",
+    "sessions": "Sessions",
+    "averageResponseSpeed": "Average Response Speed",
+    "understoodQuestions": "Correctly Understood Questions Percentage",
+    "orderByUsability": "Order of Intents by Usability",
+    "newIntents": "New Intents",
+    "modifiedIntents": "Modified Intents",
+    "avgChatIntents": "Average Number of Intents in a Chat",
+    "csa": "average time of session when CSA involved",
+    "idle": "average time of session with only Bürokratt involved, incl closed by Bürokratt",
+    "closed": "average time of session, closed by customer"
+  },
   "overview": {
     "editView": "Edit view",
     "totalChatsChart": "Total number of chats",

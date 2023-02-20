@@ -1,0 +1,8 @@
+deleteOdpKey:
+  call: http.post
+  args:
+    url: http://resql:8082/delete-odp-settings
+  result: delete
+
+return:
+  return: ${true}

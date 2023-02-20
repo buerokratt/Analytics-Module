@@ -1,0 +1,9 @@
+checkOdpKey:
+  call: http.post
+  args:
+    url: http://resql:8082/get-odp-settings
+  result: odpsettings
+
+return:
+  return: ${odpsettings.response.body[0]}
+

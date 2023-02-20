@@ -1,7 +1,7 @@
 WITH chats AS (
     SELECT DISTINCT base_id
     FROM chat
-    WHERE created BETWEEN :start::timestamptz AND :end::timestamptz
+    WHERE created::date BETWEEN :start::date AND :end::date
 ),
 chat_responses AS (
     SELECT chat_base_id,

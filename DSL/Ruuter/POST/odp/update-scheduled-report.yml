@@ -1,0 +1,80 @@
+getKey:
+  call: http.post
+  args:
+    url: http://resql:8082/get-odp-settings
+  result: settings
+  
+authenticate:
+  call: http.post
+  args:
+    url: https://avaandmed.eesti.ee/api/auth/key-login
+    headers:
+      X-API-KEY: ${settings.response.body[0].odpKey}
+  result: apiToken
+
+# this is a mock because it actually needs to be a PUT request and it needs to use variables in the URL
+updateDataset:
+  call: reflect.mock
+  requestType: post
+  args:
+    request:
+      #url: https://avaandmed.eesti.ee/api/users/organizations/my-organizations/${settings.response.body[0].orgId}/datasets/${incoming.body.datasetId}
+      body:
+        nameEt: ${incoming.body.nameEt}
+        nameEn: ${incoming.body.nameEn}
+        descriptionEt: ${incoming.body.descriptionEt}
+        descriptionEn: ${incoming.body.descriptionEn}
+        maintainer: ${incoming.body.maintainer}
+        maintainerEmail: ${incoming.body.maintainerEmail}
+        regionIds: ${incoming.body.regionIds}
+        keywordIds: ${incoming.body.keywordIds}
+        categoryIds: ${incoming.body.categoryIds}
+        updateIntervalUnit: ${incoming.body.updateIntervalUnit}
+        updateIntervalFrequency: ${incoming.body.updateIntervalFrequency}
+        dataFrom: ${incoming.body.dataFrom}
+        access: ${incoming.body.access}
+        licenceId: ${incoming.body.licenceId}
+      headers:
+        Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
+  result: datasetUpdate
+
+getJobDetails:
+  call: http.post
+  args:
+    url: http://resql:8082/get-scheduled-report
+    body:
+      datasetId: ${incoming.body.datasetId}
+  result: jobDetails
+
+removePreviousSchedule:
+  template: odp/delete-scheduled-report
+  body:
+    datasetId: ${incoming.body.datasetId}
+  requestType: post
+  result: removePrevious
+
+setUpSchedule:
+  call: reflect.mock
+  args:
+    request:
+      cron: ${incoming.body.cron_expression}
+      task: ${"odp/task-runner?datasetId=" + ${incoming.body.datasetId}}
+    response:
+      jobId: 'some-unique-id'
+  result: scheduler
+
+saveJobInformation:
+  call: http.post
+  args:
+    url: http://resql:8082/add-scheduled-report
+    body:
+      name: ${incoming.body.nameEt}
+      period: ${incoming.body.updateIntervalUnit}
+      metrics: ${jobDetails.response.body[0].metrics}
+      job_id: ${scheduler.response.body.jobId}
+      dataset_id: ${incoming.body.datasetId}
+  result: scheduledReport
+
+return_post_schedule:
+  return: ${scheduledReport.response.body}
+  next: end

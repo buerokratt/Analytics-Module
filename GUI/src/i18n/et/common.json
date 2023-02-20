@@ -151,8 +151,7 @@
     "incorrect_apikey_title": "Viga ühenduse loomisel",
     "incorrect_apikey_message": "API võti või API võtme ID ei olnud õiged",
     "correct_apikey_title": "API seaded salvestatud",
-    "correct_apikey_message": "API võti ja API võtme ID kinnitatud"
-    "lineChart": "Joondiagramm",
+    "correct_apikey_message": "API võti ja API võtme ID kinnitatud",
     "avgWaitingTimeSeconds": "Average (Sec)",
     "receivedChats": "receivedChats",
     "forwardedChats": "forwardedChats",

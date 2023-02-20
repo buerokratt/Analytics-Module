@@ -1,0 +1,121 @@
+check_for_body:
+  switch:
+    - condition: ${incoming.body == null}
+      next: missing_parameter
+
+extract_request_data:
+  assign:
+    options: ${incoming.body.options}
+    start: ${incoming.body.start_date}
+    end: ${incoming.body.end_date}
+    period: ${incoming.body.period}
+
+check_for_required_parameters:
+  switch:
+    - condition: ${start == null || end == null || options == null || period == null}
+      next: missing_parameter
+  next: check_option1
+
+missing_parameter:
+  status: 400
+  return: 'required parameters were not provided'
+  next: end
+
+check_option1:
+  switch:
+    - condition: ${options.includes('ordered')}
+      next: fetch_option1
+
+empty_option1:
+  assign:
+    option1_result: ${[]}
+  next: check_option2
+
+fetch_option1:
+  call: http.post
+  args:
+    url: http://resql:8082/byk-intents-count
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: results
+
+assign_option1:
+  assign: 
+    option1_result: ${results.response.body}
+
+check_option2:
+  switch:
+    - condition: ${options.includes('new')}
+      next: fetch_option2
+
+empty_option2:
+  assign:
+    option2_result: ${[]}
+  next: check_option3
+
+fetch_option2:
+  call: http.post
+  args:
+    url: http://resql:8082/byk-new-intents
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: results
+
+assign_option2:
+  assign: 
+    option2_result: ${results.response.body}
+
+check_option3:
+  switch:
+    - condition: ${options.includes('modified')}
+      next: fetch_option3
+
+empty_option3:
+  assign:
+    option3_result: ${[]}
+  next: check_option4
+
+fetch_option3:
+  call: http.post
+  args:
+    url: http://resql:8082/byk-modified-intents
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: results
+
+assign_option3:
+  assign: 
+    option3_result: ${results.response.body
+
+check_option4:
+  switch:
+    - condition: ${options.includes('avg')}
+      next: fetch_option4
+
+empty_option4:
+  assign:
+    option4_result: ${[]}
+  next: respond
+
+fetch_option4:
+  call: http.post
+  args:
+    url: http://resql:8082/byk-avg-intents
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: results
+
+assign_option4:
+  assign: 
+    option4_result: ${results.response.body
+
+respond:
+  return: ${[option1_result, option2_result, option3_result, option4_result]}

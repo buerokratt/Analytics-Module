@@ -95,3 +95,29 @@ export const getCsaAvgChatTime = (): string => {
   return baseUrl + '/csa/avg-chat-time'
 }
 
+
+// Chats
+
+export const getTotalChats = (): string => {
+  return baseUrl + '/chats/chat-total-count'
+}
+
+export const getCipChats = (): string => {
+  return baseUrl + '/chats/contact-information-fulfilled'
+}
+
+export const getAvgChatWaitingTime = (): string => {
+  return baseUrl + '/chats/avg-median-waiting-time'
+}
+
+export const getAvgMessagesInChats = (): string => {
+  return baseUrl + '/chats/chat-avg-num-of-messages'
+}
+
+export const getDurationChats = (): string => {
+  return baseUrl + '/chats/chat-avg-duration'
+}
+
+export const getIdleChats = (): string => {
+  return baseUrl + '/chats/chat-idle-count'
+}

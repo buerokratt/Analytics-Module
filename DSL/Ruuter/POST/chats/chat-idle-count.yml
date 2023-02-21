@@ -1,0 +1,34 @@
+check_for_body:
+  switch:
+    - condition: ${incoming.body == null}
+      next: missing_parameter
+
+extract_request_data:
+  assign:
+    start: ${incoming.body.start_date}
+    end: ${incoming.body.end_date}
+    period: ${incoming.body.period}
+
+check_for_required_parameters:
+  switch:
+    - condition: ${start == null || end == null || period == null}
+      next: missing_parameter
+  next: fetch
+
+missing_parameter:
+  status: 400
+  return: 'required parameters were not provided'
+  next: end
+
+fetch:
+  call: http.post
+  args:
+    url: http://resql:8082/chat-idle-count
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: results
+
+respond:
+  return: ${results.response.body}

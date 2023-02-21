@@ -1,0 +1,73 @@
+check_for_body:
+  switch:
+    - condition: ${incoming.body == null}
+      next: missing_parameter
+
+extract_request_data:
+  assign:
+    options: ${incoming.body.options}
+    start: ${incoming.body.start_date}
+    end: ${incoming.body.end_date}
+    period: ${incoming.body.period}
+
+check_for_required_parameters:
+  switch:
+    - condition: ${start == null || end == null || options == null || period == null}
+      next: missing_parameter
+  next: check_byk
+
+missing_parameter:
+  status: 400
+  return: 'required parameters were not provided'
+  next: end
+
+check_byk:
+  switch:
+    - condition: ${options.includes('byk')}
+      next: byk
+
+empty_byk:
+  assign:
+    byk_result: ${[]}
+  next: check_csa
+
+byk:
+  call: http.post
+  args:
+    url: http://resql:8082/chat-count-only-chatbot
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: results
+
+assign_byk:
+  assign: 
+    byk_result: ${results.response.body}
+
+check_csa:
+  switch:
+    - condition: ${options.includes('csa')}
+      next: csa
+
+empty_csa:
+  assign:
+    csa_result: ${[]}
+  next: respond
+
+csa:
+  call: http.post
+  args:
+    url: http://resql:8082/chat-count-with-csa
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: results
+
+assign_csa:
+  assign: 
+    csa_result: ${results.response.body}
+
+respond:
+  return: ${[byk_result, csa_result]}

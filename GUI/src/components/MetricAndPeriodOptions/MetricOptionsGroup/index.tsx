@@ -22,7 +22,7 @@ const defaultProps: MetricOptionsGroupProps = {
   dateFormat: 'EEE MMM dd yyyy',
   label: '',
   options: [],
-  onChange: (_) => { },
+  onChange: (_) => {},
 }
 
 const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
@@ -122,7 +122,7 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
               name="start"
               value={startEndTimes.start}
               onChange={(date) => changeMonthDate(date)}
-              onBlur={() => { }}
+              onBlur={() => {}}
               monthPicker
             />
           )}
@@ -134,7 +134,7 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
                 name="start"
                 value={startEndTimes.start}
                 onChange={(date) => changeStartDate(date)}
-                onBlur={() => { }}
+                onBlur={() => {}}
               />
               {t('general.until')}
               <FormDatepicker
@@ -143,7 +143,7 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
                 name="end"
                 value={startEndTimes.end}
                 onChange={(date) => changeEndDate(date)}
-                onBlur={() => { }}
+                onBlur={() => {}}
               />
             </Track>
           )}

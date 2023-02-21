@@ -121,7 +121,7 @@ const MainNavigation: FC = () => {
         },
         {
           label: t('menu.feedback'),
-          path: '/analytics/feedbacks',
+          path: '/analytics/feedback',
         },
         {
           label: t('menu.advisors'),
@@ -177,7 +177,10 @@ const MainNavigation: FC = () => {
 
   return (
     <nav className={clsx('nav', { 'nav--collapsed': navCollapsed })}>
-      <button className="nav__menu-toggle" onClick={() => setNavCollapsed(!navCollapsed)}>
+      <button
+        className="nav__menu-toggle"
+        onClick={() => setNavCollapsed(!navCollapsed)}
+      >
         <Icon icon={<MdClose />} />
         {t('mainMenu.closeMenu')}
       </button>

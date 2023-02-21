@@ -118,7 +118,24 @@
     "customerSupportDisplayName": "Customer Support Display Name",
     "barChart": "Bar Chart",
     "pieChart": "Pie Chart",
-    "lineChart": "Line Chart"
+    "lineChart": "Line Chart",
+    "avgWaitingTimeSeconds": "Average (Sec)",
+    "receivedChats": "receivedChats",
+    "forwardedChats": "forwardedChats",
+    "forwardedExternally": "forwardedExternally",
+    "timeInterval": "timeInterval"
+  },
+  "advisors": {
+    "chat_forwards": "Forwarding",
+    "forwards": {
+      "from_csa": "Number of conversations directed from the advisor",
+      "to_csa": "Counselor directed conversations",
+      "to_other": "Out-of-facility forwards"
+    },
+    "avg_pick_time": "Average response speed in the institution",
+    "avg_present_csa": "Average presence of counselors",
+    "num_chats_csa": "Number of conversations by adviser",
+    "avg_chat_time_csa": "Conversation time by advisor"
   },
   "reports": {
     "get-chat-count-total": "Total chat count",

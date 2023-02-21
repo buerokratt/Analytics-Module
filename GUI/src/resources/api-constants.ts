@@ -73,6 +73,29 @@ export const getNegativeFeedbackChats = (): string => {
   return baseUrl + '/feedback/chats-with-negative-feedback'
 }
 
+// Advisors
+
+export const getChatForwards = (): string => {
+  return baseUrl + '/csa/chat_forwards'
+}
+
+export const getAvgPickTime = (): string => {
+  return baseUrl + '/csa/avg-time-picking-up-chat'
+}
+
+export const getAvgCsaPresent = (): string => {
+  return baseUrl + '/csa/avg-present-number'
+}
+
+export const getCsaChatsTotal = (): string => {
+  return baseUrl + '/csa/total-chats'
+}
+
+export const getCsaAvgChatTime = (): string => {
+  return baseUrl + '/csa/avg-chat-time'
+}
+
+
 // Chats
 
 export const getTotalChats = (): string => {

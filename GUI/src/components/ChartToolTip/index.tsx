@@ -1,18 +1,20 @@
 import React from 'react'
 import './ChartToolTip.scss'
+import { format } from 'date-fns'
 import { TooltipProps } from 'recharts'
-import { formatDate } from '../../util/charts-utils'
 
 const ChartToolTip = ({ active, payload, label }: TooltipProps<number, string>) => {
   if (active) {
-    const currData = payload && payload.length ? payload[0].payload : null
+    const currData = payload && payload.length ? payload[0].payload.payload : null
     return (
       <div className="chart_tool_tip">
-        <p>{currData ? formatDate(new Date(currData.date), 'dd-MM-yyyy') : ' -- '}</p>
-        <p>
-          {'value : '}
-          <em>{currData ? currData.val : ' -- '}</em>
-        </p>
+        {Object.keys(currData).map((key, k) => (
+          <p key={k}>
+            {key === 'dateTime' || key === 'created'
+              ? format(new Date(currData.dateTime), 'yyyy-MM-dd')
+              : `${key}: ${currData[key]}`}
+          </p>
+        ))}
       </div>
     )
   }

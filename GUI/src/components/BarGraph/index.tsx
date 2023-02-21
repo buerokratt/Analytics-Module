@@ -35,7 +35,6 @@ const BarGraph = ({ dataKey, startDate, endDate, data }: Props) => {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
-          allowDuplicatedCategory={false}
           dataKey={dataKey}
           scale="time"
           tickFormatter={(value) => dateFormatter(startDate, endDate, value)}
@@ -59,11 +58,12 @@ const BarGraph = ({ dataKey, startDate, endDate, data }: Props) => {
                 dataKey={k}
                 type="monotone"
                 stackId={dataKey}
-                stroke={getColor(data,k)}
-                fill={getColor(data,k)}
+                stroke={getColor(data, k)}
+                fill={getColor(data, k)}
               />
             )
           })}
+        <Tooltip />
       </BarChart>
     </div>
   )

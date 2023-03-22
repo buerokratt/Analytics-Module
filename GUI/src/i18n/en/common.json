@@ -113,6 +113,8 @@
     "avg": "Average",
     "nps": "Nps",
     "id": "Id",
+    "baseId": "Id",
+    "rating": "Rating",
     "ended": "Ended",
     "customerSupportId": "Customer Support Id",
     "customerSupportDisplayName": "Customer Support Display Name",

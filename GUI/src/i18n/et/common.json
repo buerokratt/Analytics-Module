@@ -112,6 +112,8 @@
     "avg": "Keskmine",
     "nps": "Nps",
     "id": "Id",
+    "baseId": "Id",
+    "rating": "Hinnang",
     "ended": "Ended",
     "customerSupportId": "Customer Support Id",
     "customerSupportDisplayName": "Customer Support Display Name",

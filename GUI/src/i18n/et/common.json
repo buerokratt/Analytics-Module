@@ -114,6 +114,7 @@
     "id": "Id",
     "baseId": "Id",
     "rating": "Hinnang",
+    "feedback": "Tagasiside",
     "ended": "Ended",
     "customerSupportId": "Customer Support Id",
     "customerSupportDisplayName": "Customer Support Display Name",

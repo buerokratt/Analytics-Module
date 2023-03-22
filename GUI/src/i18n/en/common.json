@@ -115,6 +115,7 @@
     "id": "Id",
     "baseId": "Id",
     "rating": "Rating",
+    "feedback": "Feedback",
     "ended": "Ended",
     "customerSupportId": "Customer Support Id",
     "customerSupportDisplayName": "Customer Support Display Name",

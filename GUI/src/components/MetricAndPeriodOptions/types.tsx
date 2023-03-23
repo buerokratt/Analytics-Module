@@ -12,13 +12,16 @@ export interface SubOption {
   color?: string
 }
 
+export type PeriodType = 'today' | 'yesterday' | 'last30days' | 'month' | 'today' | '';
+export type GroupByPeriod = 'hour' | 'day' | '';
 export interface MetricOptionsState {
-  period: string
+  period: PeriodType
   metric: string
 
   start: string
   end: string
   options: string[]
+  groupByPeriod: GroupByPeriod
 }
 
-export type OnChangeCallback = MetricOptionsState & { groupByPeriod: string }
+export type OnChangeCallback = MetricOptionsState

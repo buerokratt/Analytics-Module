@@ -19,11 +19,7 @@ const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation()
   const [chartData, setChartData] = useState({})
   const [currentMetric, setCurrentMetric] = useState('')
-  const [currentConfigs, setConfigs] = useState<
-    MetricOptionsState & {
-      groupByPeriod: string
-    }
-  >()
+  const [currentConfigs, setConfigs] = useState<MetricOptionsState>()
   const chartKey = 'dateTime'
 
   const advisorsMetrics = [
@@ -229,6 +225,7 @@ const AdvisorsPage: React.FC = () => {
         dataKey={chartKey}
         startDate={currentConfigs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
         endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
+        groupByPeriod={currentConfigs?.groupByPeriod ?? 'day'}
       />
     </>
   )

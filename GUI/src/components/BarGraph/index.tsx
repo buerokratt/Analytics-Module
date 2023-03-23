@@ -1,15 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { BarChart, XAxis, CartesianGrid, YAxis, Tooltip, Legend, Bar } from 'recharts'
 import { dateFormatter, formatDate, getColor, getTicks } from '../../util/charts-utils'
+import { GroupByPeriod } from '../MetricAndPeriodOptions/types'
 
 type Props = {
   dataKey: string
   data: any
   startDate: string
   endDate: string
+  groupByPeriod: GroupByPeriod
 }
 
-const BarGraph = ({ dataKey, startDate, endDate, data }: Props) => {
+const BarGraph = ({ dataKey, startDate, endDate, data, groupByPeriod }: Props) => {
   const [width, setWidth] = useState<number>(10)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -22,7 +24,13 @@ const BarGraph = ({ dataKey, startDate, endDate, data }: Props) => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const domain = [new Date(startDate).getTime(), new Date(endDate).getTime()]
+  let minData = new Date(startDate).getTime()
+  if (groupByPeriod === 'day') {
+    const millisecondInOneDay = 24 * 60 * 60 * 1000;
+    minData = minData - millisecondInOneDay;
+  }
+
+  const domain = [minData, new Date(endDate).getTime()]
   const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5)
 
   return (

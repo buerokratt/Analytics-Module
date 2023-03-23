@@ -108,10 +108,9 @@ const ReportsPage = () => {
       <Card>
         <OptionsPanel
           metricOptions={openDataOptions}
-          onChange={(d) => {
-            setOptions(d)
-          }}
-        ></OptionsPanel>
+          onChange={(d) => setOptions(d)}
+          useColumns
+        />
         <Section>
           <Track gap={16}>
             <Button

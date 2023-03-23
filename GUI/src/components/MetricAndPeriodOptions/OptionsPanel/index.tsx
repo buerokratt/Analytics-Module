@@ -12,9 +12,10 @@ interface MetricOptionsProps {
   metricOptions: Option[]
   onChange: (selection: OnChangeCallback) => void
   dateFormat?: string
+  useColumns?: boolean
 }
 
-const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat, onChange }) => {
+const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat, onChange, useColumns }) => {
   const { t } = useTranslation()
   const [selection, setSelection] = useState<MetricOptionsState>({
     period: '',
@@ -76,6 +77,7 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
             subOptions={subOptions}
             label={t('general.additionalOptions')}
             onChange={(options) => setSelection({ ...selection, options })}
+            useColumns={useColumns}
           />
         </Section>
       )}

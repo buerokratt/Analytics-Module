@@ -24,13 +24,14 @@ const BarGraph = ({ dataKey, startDate, endDate, data, groupByPeriod }: Props) =
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  let minData = new Date(startDate).getTime()
+  let minDate = new Date(startDate).getTime()
   if (groupByPeriod === 'day') {
     const millisecondInOneDay = 24 * 60 * 60 * 1000;
-    minData = minData - millisecondInOneDay;
+    minDate = minDate - millisecondInOneDay;
   }
 
-  const domain = [minData, new Date(endDate).getTime()]
+
+  const domain = [minDate, new Date(endDate).getTime()]
   const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5)
 
   return (
@@ -56,7 +57,7 @@ const BarGraph = ({ dataKey, startDate, endDate, data, groupByPeriod }: Props) =
           interval={0}
         />
         <YAxis />
-        <Tooltip labelFormatter={(value) => `${formatDate(new Date(value), 'dd-MM-yyyy')}`} />
+        <Tooltip labelFormatter={(value) => formatDate(new Date(value), 'dd-MM-yyyy')} />
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
         {(data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {

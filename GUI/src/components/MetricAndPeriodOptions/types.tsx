@@ -12,8 +12,10 @@ export interface SubOption {
   color?: string
 }
 
-export type PeriodType = 'today' | 'yesterday' | 'last30days' | 'month' | 'today' | '';
-export type GroupByPeriod = 'hour' | 'day' | '';
+export type PeriodType = 'today' | 'yesterday' | 'last30days' | 'month' | 'today' | ''
+
+export type GroupByPeriod = 'hour' | 'day' | ''
+
 export interface MetricOptionsState {
   period: PeriodType
   metric: string

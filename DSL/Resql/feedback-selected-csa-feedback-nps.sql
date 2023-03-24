@@ -37,7 +37,7 @@ WITH chat_csas AS (
 )
 SELECT date_trunc(:metric, created) AS date_time,
     customer_support_id,
-    customer_support_display_name,
+    TRIM(customer_support_display_name) AS customer_support_display_name,
     coalesce(CAST(((
        SUM(CASE WHEN feedback_rating::int BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 -
        SUM(CASE WHEN feedback_rating::int BETWEEN 0 AND 6 THEN 1 ELSE 0 END)

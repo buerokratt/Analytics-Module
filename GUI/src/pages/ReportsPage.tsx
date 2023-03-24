@@ -148,19 +148,17 @@ const ReportsPage = () => {
                   <p>{t('reports.interval_' + d.period)}</p>
                   <Button
                     appearance="text"
-                    onClick={() => {
-                      fetchDataset(d.datasetId)
-                    }}
+                    onClick={() => fetchDataset(d.datasetId)}
                   >
-                    <Icon icon={<MdEdit />} /> {t('global.edit')}
+                    <Icon icon={<MdEdit />} />
+                    {t('global.edit')}
                   </Button>
                   <Button
                     appearance="text"
-                    onClick={() => {
-                      deleteSchedule(d.datasetId)
-                    }}
+                    onClick={() => deleteSchedule(d.datasetId)}
                   >
-                    <Icon icon={<MdDelete />} /> {t('global.delete')}
+                    <Icon icon={<MdDelete />} />
+                    {t('global.delete')}
                   </Button>
                 </Track>
               </Track>

@@ -19,6 +19,7 @@ const OverviewPage: React.FC = () => {
   const [drawerIsHidden, setDrawerIsHidden] = useState(true)
 
   const { t } = useTranslation()
+  
 
   useEffect(() => {
     fetchMetricPreferences().catch(console.error)

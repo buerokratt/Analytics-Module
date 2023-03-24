@@ -93,7 +93,12 @@ const APISetupDrawer = ({ onClose, isDrawerVisible }: Props) => {
             <Section>
               <ol>
                 <li>
-                  {t('reports.create_account')} <a href="https://avaandmed.eesti.ee">avaandmed.eesti.ee</a>{' '}
+                  {t('reports.create_account')}
+                  &nbsp;
+                  <a href={process.env.REACT_APP_OPENDATAPORT_URL} target="_blank" rel="noreferrer">
+                    {process.env.REACT_APP_OPENDATAPORT_URL}
+                  </a>
+                  &nbsp;
                   {t('reports.and_connect_org')}
                 </li>
                 <li>{t('reports.create_apikey_settings')}</li>

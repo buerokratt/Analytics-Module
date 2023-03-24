@@ -7,13 +7,13 @@ getKey:
 authenticate:
   call: http.post
   args:
-    url: https://avaandmed.eesti.ee/api/auth/key-login
+    url: http://open_data_service:8888/api/auth/key-login
     headers:
       X-API-KEY: ${settings.response.body[0].odpKey}
   result: apiToken
 
 
-  #url: https://avaandmed.eesti.ee/api/organizations/my-organization/${settings.response.body[0].orgId}/datasets/${incoming.params.datasetId}
+  #url: http://open_data_service:8888/api/organizations/my-organization/${settings.response.body[0].orgId}/datasets/${incoming.params.datasetId}
 get_dataset_metadata:
   call: reflect.mock
   args:

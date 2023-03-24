@@ -185,7 +185,8 @@
     "incorrect_apikey_message": "API Key or API Key ID were not correct",
     "correct_apikey_title": "API settings saved",
     "correct_apikey_message": "API Key and API Key ID validated",
-    "disabled_create_dataset_tooltip": "In order to enable, please configure Open Data Access first"
+    "disabled_create_dataset_tooltip": "In order to enable, please configure Open Data Access first",
+    "save_configuration_failed": "Error saving configuration"
   },
   "advisors": {
     "chat_forwards": "Forwarding",

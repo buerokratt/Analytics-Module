@@ -28,6 +28,14 @@ const APISetupDrawer = ({ onClose, isDrawerVisible }: Props) => {
     putSettings(d.apiKey, d.apiKeyId, d.orgId)
   }
 
+  const onSubmitError = (err: any) => {
+    toast.open({
+      type: 'error',
+      title: t('reports.save_configuration_failed'),
+      message: t('reports.check_input')
+    })
+  }
+
   useEffect(() => {
     if (!isDrawerVisible) reset()
   }, [isDrawerVisible])
@@ -80,7 +88,7 @@ const APISetupDrawer = ({ onClose, isDrawerVisible }: Props) => {
         </Track>
       )}
       {!isVerifyingSettings && (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
           <Section>
             <Section>
               <ol>

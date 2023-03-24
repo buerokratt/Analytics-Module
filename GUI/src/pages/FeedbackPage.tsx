@@ -23,11 +23,7 @@ const FeedbackPage: React.FC = () => {
   const [advisors, setAdvisors] = useState<any[]>([])
   const [currentMetric, setCurrentMetric] = useState('feedback.statuses')
   const randomColor = () => '#' + ((Math.random() * 0xffffff) << 0).toString(16)
-  const [currentConfigs, setConfigs] = useState<
-    MetricOptionsState & {
-      groupByPeriod: string
-    }
-  >()
+  const [currentConfigs, setConfigs] = useState<MetricOptionsState>()
   const chartKey = 'dateTime'
 
   const [feedbackMetrics, setFeedbackMetrics] = useState<Option[]>([
@@ -85,9 +81,7 @@ const FeedbackPage: React.FC = () => {
   }, [])
 
   const fetchChatsStatuses = async (
-    config: MetricOptionsState & {
-      groupByPeriod: string
-    },
+    config: MetricOptionsState,
   ) => {
     let chartData = {}
     const events = config?.options.filter((e) => e === 'answered' || e === 'client-left' || e === 'idle') ?? []
@@ -297,6 +291,7 @@ const FeedbackPage: React.FC = () => {
         dataKey={chartKey}
         startDate={currentConfigs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
         endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
+        groupByPeriod={currentConfigs?.groupByPeriod ?? 'day'}
       />
       {showNegativeChart && <ChatsTable dataSource={negativeFeedbackChats} />}
     </>

@@ -17,7 +17,7 @@ export const getTicks = (startDate: string, endDate: string, start: Date, end: D
   const current = start,
     velocity = Math.round(diff / (num - 1))
 
-  for (let i = 1; i < num - 1; i++) {
+  for (let i = 1; i < num; i++) {
     ticks.push(
       add(current, { days: inDays ? i * velocity : undefined, hours: inDays ? undefined : i * velocity }).getTime(),
     )
@@ -38,9 +38,9 @@ export const translateChartKeys = (obj: any, key: string) =>
       k === key
         ? acc
         : {
-            ...acc,
-            ...{ [t(`chart.${k}`)]: obj[k] },
-          },
+          ...acc,
+          ...{ [t(`chart.${k}`)]: obj[k] },
+        },
     {},
   )
 export const chartDateFormat = 'yyyy-MM-dd'

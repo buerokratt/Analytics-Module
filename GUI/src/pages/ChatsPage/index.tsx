@@ -12,7 +12,7 @@ import { chatOptions } from './options'
 const ChatsPage: React.FC = () => {
   const { t } = useTranslation()
   const [tableTitleKey, setTableTitleKey] = useState(chatOptions[0].labelKey)
-  const [configs, setConfigs] = useState<MetricOptionsState & { groupByPeriod: string }>()
+  const [configs, setConfigs] = useState<MetricOptionsState>()
   const [chartData, setChartData] = useState([])
 
   const [configsSubject] = useState(() => new Subject())
@@ -45,6 +45,7 @@ const ChatsPage: React.FC = () => {
         dataKey="dateTime"
         startDate={configs?.start ?? formatDate(new Date(), chartDateFormat)}
         endDate={configs?.end ?? formatDate(new Date(), chartDateFormat)}
+        groupByPeriod={configs?.groupByPeriod ?? 'day'}
       />
     </>
   )

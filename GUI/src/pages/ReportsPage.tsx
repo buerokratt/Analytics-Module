@@ -18,6 +18,7 @@ import { ODPSettings } from '../types/reports'
 import DatasetCreation from '../components/OpenData/DatasetCreation'
 import Popup from '../components/Popup'
 import { saveAs } from 'file-saver'
+import TooltipWrapper from '../components/TooltipWrapper'
 
 type ScheduledDataset = {
   datasetId: string
@@ -102,6 +103,8 @@ const ReportsPage = () => {
     fetchDatasets()
   }
 
+  const disabled = options?.options.length === 0 || apiSettings.odpKey === null
+
   return (
     <>
       <h1>{t('menu.reports')}</h1>
@@ -113,12 +116,17 @@ const ReportsPage = () => {
         />
         <Section>
           <Track gap={16}>
-            <Button
-              disabled={options?.options.length === 0 || apiSettings.odpKey === null}
-              onClick={() => setDatasetCreationVisible(true)}
+            <TooltipWrapper
+              enabled={disabled}
+              text='In order to enable, please configure Open Data Access first'
             >
-              {t('reports.create-new-dataset')}
-            </Button>
+              <Button
+                disabled={disabled}
+                onClick={() => setDatasetCreationVisible(true)}
+              >
+                {t('reports.create-new-dataset')}
+              </Button>
+            </TooltipWrapper>
             <Button
               disabled={options?.options.length === 0}
               appearance="secondary"

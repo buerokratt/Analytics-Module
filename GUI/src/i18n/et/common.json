@@ -184,7 +184,8 @@
     "receivedChats": "receivedChats",
     "forwardedChats": "forwardedChats",
     "forwardedExternally": "forwardedExternally",
-    "timeInterval": "timeInterval"
+    "timeInterval": "timeInterval",
+    "disabled_create_dataset_tooltip": "Lubamiseks konfigureerige esmalt avatud andmete juurdepääs"
   },
   "advisors": {
     "chat_forwards": "Suunamised",

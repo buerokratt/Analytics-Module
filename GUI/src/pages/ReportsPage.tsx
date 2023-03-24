@@ -118,7 +118,7 @@ const ReportsPage = () => {
           <Track gap={16}>
             <TooltipWrapper
               enabled={disabled}
-              text='In order to enable, please configure Open Data Access first'
+              text={t('reports.disabled_create_dataset_tooltip')}
             >
               <Button
                 disabled={disabled}

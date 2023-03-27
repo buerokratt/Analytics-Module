@@ -12,16 +12,18 @@ import { openSearchDashboard, overviewMetricPreferences, overviewMetrics } from 
 import { OverviewMetricPreference } from '../types/overview-metrics'
 import { reorderItem } from '../util/reorder-array'
 import OverviewLineChart from '../components/OverviewLineChart'
+import { useCookies } from 'react-cookie'
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([])
   const [chartData, setChartData] = useState([])
   const [drawerIsHidden, setDrawerIsHidden] = useState(true)
+  const [cookies, setCookie] = useCookies();
 
-  const { t } = useTranslation()
-  
+  const { t } = useTranslation()  
 
   useEffect(() => {
+    checkForCookie();
     fetchMetricPreferences().catch(console.error)
     fetchChartData().catch(console.error)
 
@@ -32,6 +34,12 @@ const OverviewPage: React.FC = () => {
   const fetchMetricPreferences = async () => {
     const result = await axios.get(overviewMetricPreferences(), { withCredentials: true })
     setMetricPreferences(result.data.response)
+  }
+
+  const checkForCookie = () => {
+    if (!(document.cookie.indexOf('test') > -1)) {
+      setCookie('test',1, {path: '/'});
+    }
   }
 
   const fetchChartData = async () => {

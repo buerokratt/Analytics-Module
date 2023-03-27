@@ -3,11 +3,14 @@ import { createRoot } from 'react-dom/client'
 import './i18n';
 import * as serviceWorker from './serviceWorker'
 import App from './App'
+import { CookiesProvider } from 'react-cookie';
 
 const root = createRoot(document.getElementById('root')!)
 root.render(
     <React.StrictMode>
-        <App />
+        <CookiesProvider>
+           <App />
+        </CookiesProvider>
     </React.StrictMode>
 )
 

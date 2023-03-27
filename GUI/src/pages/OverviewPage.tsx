@@ -11,15 +11,16 @@ import LineGraph from '../components/LineGraph'
 import { openSearchDashboard, overviewMetricPreferences, overviewMetrics } from '../resources/api-constants'
 import { OverviewMetricPreference } from '../types/overview-metrics'
 import { reorderItem } from '../util/reorder-array'
-import OverviewLineChart from '../components/OverviewLineChart'
 import { useCookies } from 'react-cookie'
+import { formatDate } from '../util/charts-utils'
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([])
-  const [chartData, setChartData] = useState([])
+  const [chartData, setChartData] = useState({})
   const [drawerIsHidden, setDrawerIsHidden] = useState(true)
   const [cookies, setCookie] = useCookies();
 
+  const chartKey = 'dateTime'
   const { t } = useTranslation()  
 
   useEffect(() => {
@@ -44,7 +45,25 @@ const OverviewPage: React.FC = () => {
 
   const fetchChartData = async () => {
     const result = await axios.get(overviewMetrics('chat-activity'))
-    setChartData(result.data.response)
+
+    const response = result.data.response.map((entry: any) => ({
+      ...translateChartKeys(entry),
+      dateTime: new Date(entry.created).getTime(),
+    }))
+
+    const chartData = {
+      chartData: response,
+      colors: [
+        {id: 'Chats started', color: `hsl(${0 * 20}, 80%, 45%)`},
+        {id: 'Left with an answer', color: `hsl(${1 * 20}, 80%, 45%)`},
+        {id: 'Left with no answer', color: `hsl(${2 * 20}, 80%, 45%)`},
+        {id: 'Hate speech', color: `hsl(${3 * 20}, 80%, 45%)`},
+        {id: 'Unspecified reason', color: `hsl(${4 * 20}, 80%, 45%)`},
+        {id: 'Answered in other channel', color: `hsl(${5 * 20}, 80%, 45%)`}
+      ],
+    }
+    setChartData(chartData);
+    console.log(result.data.response);
   }
 
   const updateMetricPreference = async (metric: OverviewMetricPreference) => {
@@ -134,14 +153,12 @@ const OverviewPage: React.FC = () => {
           </Track>
         }
       >
-        {chartData.length > 0 && (
-          <OverviewLineChart
-            data={chartData.map((entry: any) => ({
-              ...translateChartKeys(entry),
-              created: new Date(entry.created).toLocaleTimeString('default'),
-            }))}
-          />
-        )}
+       <LineGraph
+          dataKey={chartKey}
+          data={chartData}
+          startDate={formatDate(new Date(), 'yyyy-MM-dd')}
+          endDate={formatDate(new Date(), 'yyyy-MM-dd')}
+        />
       </Card>
 
       <Card header={<h3>{t('overview.openSearchDashboard')}</h3>}>

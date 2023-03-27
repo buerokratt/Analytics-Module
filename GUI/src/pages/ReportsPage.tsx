@@ -59,8 +59,8 @@ const ReportsPage = () => {
   const openDataOptions: Option[] = [
     {
       id: 'openDataMetrics',
-      labelKey: '',
       subOptions: odpQueries.map((oq) => ({ id: oq, labelKey: `reports.${oq}` })),
+      labelKey: '',
     },
   ]
 

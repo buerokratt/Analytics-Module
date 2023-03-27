@@ -42,11 +42,28 @@ const FeedbackPage: React.FC = () => {
         { id: 'to-contact', labelKey: 'feedback.status_options.to_contact', color: randomColor(), isSelected: true },
         { id: 'terminated', labelKey: 'feedback.status_options.terminated', color: randomColor(), isSelected: true },
       ],
+      unit: 'chats',
     },
-    { id: 'burokratt_chats', labelKey: 'feedback.burokratt_chats' },
-    { id: 'advisor_chats', labelKey: 'feedback.advisor_chats' },
-    { id: 'selected_advisor_chats', labelKey: 'feedback.selected_advisor_chats' },
-    { id: 'negative_feedback', labelKey: 'feedback.negative_feedback' },
+    {
+      id: 'burokratt_chats',
+      labelKey: 'feedback.burokratt_chats',
+      unit: 'chats',
+    },
+    {
+      id: 'advisor_chats',
+      labelKey: 'feedback.advisor_chats',
+      unit: 'chats',
+    },
+    {
+      id: 'selected_advisor_chats',
+      labelKey: 'feedback.selected_advisor_chats',
+      unit: 'chats',
+    },
+    {
+      id: 'negative_feedback',
+      labelKey: 'feedback.negative_feedback',
+      unit: 'feedback',
+    },
   ])
 
   const { t } = useTranslation()

@@ -34,11 +34,28 @@ const AdvisorsPage: React.FC = () => {
         { id: 'forwardedChats', labelKey: 'advisors.forwards.to_csa', color: '#ED7D31' },
         { id: 'forwardedExternally', labelKey: 'advisors.forwards.to_other', color: '#8BB4D5' },
       ],
+      unit: 'chats',
     },
-    { id: 'avg_pick_time', labelKey: 'advisors.avg_pick_time' },
-    { id: 'avg_present_csa', labelKey: 'advisors.avg_present_csa' },
-    { id: 'num_chats_csa', labelKey: 'advisors.num_chats_csa' },
-    { id: 'avg_chat_time_csa', labelKey: 'advisors.avg_chat_time_csa' },
+    {
+      id: 'avg_pick_time',
+      labelKey: 'advisors.avg_pick_time',
+      unit: 'seconds',
+    },
+    {
+      id: 'avg_present_csa',
+      labelKey: 'advisors.avg_present_csa',
+      unit: 'counselors',
+    },
+    {
+      id: 'num_chats_csa',
+      labelKey: 'advisors.num_chats_csa',
+      unit: 'chats',
+    },
+    {
+      id: 'avg_chat_time_csa',
+      labelKey: 'advisors.avg_chat_time_csa',
+      unit: 'seconds',
+    },
   ]
 
   const [configsSubject] = useState(() => new Subject())

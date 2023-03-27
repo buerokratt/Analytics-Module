@@ -13,7 +13,7 @@ import {
 } from '../resources/api-constants'
 import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types'
 import { Chat } from '../types/chat'
-import { formatDate, translateChartKeys } from '../util/charts-utils'
+import { chartDataKey, formatDate, translateChartKeys } from '../util/charts-utils'
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators'
 import { Subject } from 'rxjs'
 
@@ -28,7 +28,6 @@ const FeedbackPage: React.FC = () => {
       groupByPeriod: string
     }
   >()
-  const chartKey = 'dateTime'
 
   const [feedbackMetrics, setFeedbackMetrics] = useState<Option[]>([
     {
@@ -104,16 +103,16 @@ const FeedbackPage: React.FC = () => {
       const response = result.data.response
         .flat(1)
         .map((entry: any) => ({
-          ...translateChartKeys(entry, 'dateTime'),
-          dateTime: new Date(entry.dateTime).getTime(),
+          ...translateChartKeys(entry, chartDataKey),
+          [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
         }))
         .reduce((a: any, b: any) => {
-          const dateRow = a.find((i: any) => i['dateTime'] === b['dateTime'])
+          const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey])
           if (dateRow) {
             dateRow[b['Event']] = b['Count']
           } else {
             a.push({
-              dateTime: b['dateTime'],
+              [chartDataKey]: b[chartDataKey],
               [b['Event']]: b['Count'],
             })
           }
@@ -145,8 +144,8 @@ const FeedbackPage: React.FC = () => {
       })
 
       const response = result.data.response.map((entry: any) => ({
-        ...translateChartKeys(entry, 'dateTime'),
-        dateTime: new Date(entry.dateTime).getTime(),
+        ...translateChartKeys(entry, chartDataKey),
+        [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }))
 
       chartData = {
@@ -169,8 +168,8 @@ const FeedbackPage: React.FC = () => {
       })
 
       const response = result.data.response.map((entry: any) => ({
-        ...translateChartKeys(entry, 'dateTime'),
-        dateTime: new Date(entry.dateTime).getTime(),
+        ...translateChartKeys(entry, chartDataKey),
+        [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }))
 
       chartData = {
@@ -216,16 +215,16 @@ const FeedbackPage: React.FC = () => {
       const response = res
         .flat(1)
         .map((entry: any) => ({
-          ...translateChartKeys(entry, 'dateTime'),
-          dateTime: new Date(entry.dateTime).getTime(),
+          ...translateChartKeys(entry, chartDataKey),
+          [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
         }))
         .reduce((a: any, b: any) => {
-          const dateRow = a.find((i: any) => i['dateTime'] === b['dateTime'])
+          const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey])
           if (dateRow) {
             dateRow[b['Customer Support Display Name']] = b['Nps']
           } else {
             a.push({
-              dateTime: b['dateTime'],
+              [chartDataKey]: b[chartDataKey],
               [b['Customer Support Display Name']]: b['Nps'],
             })
           }
@@ -262,13 +261,13 @@ const FeedbackPage: React.FC = () => {
 
       const response = result.data.response.map((entry: any) => ({
         ...translateChartKeys(entry, 'created'),
-        dateTime: new Date(entry.created).getTime(),
+        [chartDataKey]: new Date(entry.created).getTime(),
       }))
 
       chartData = {
         chartData: response,
         colors: [
-          { id: 'dateTime', color: '#FFB511' },
+          { id: chartDataKey, color: '#FFB511' },
           { id: 'Ended', color: '#FFB511' },
         ],
       }
@@ -294,7 +293,6 @@ const FeedbackPage: React.FC = () => {
       <MetricsCharts
         title={currentMetric}
         data={chartData}
-        dataKey={chartKey}
         startDate={currentConfigs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
         endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
       />

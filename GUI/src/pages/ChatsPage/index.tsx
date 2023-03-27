@@ -27,7 +27,6 @@ const ChatsPage: React.FC = () => {
     }
   }, [])
 
-
   return (
     <>
       <h1>{t('menu.chats')}</h1>

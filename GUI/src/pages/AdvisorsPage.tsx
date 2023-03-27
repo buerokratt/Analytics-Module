@@ -4,7 +4,7 @@ import axios from 'axios'
 import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions'
 import MetricsCharts from '../components/MetricsCharts'
 import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types'
-import { formatDate, translateChartKeys } from '../util/charts-utils'
+import { chartDataKey, formatDate, translateChartKeys } from '../util/charts-utils'
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators'
 import { Subject } from 'rxjs'
 import {
@@ -24,7 +24,6 @@ const AdvisorsPage: React.FC = () => {
       groupByPeriod: string
     }
   >()
-  const chartKey = 'dateTime'
 
   const advisorsMetrics = [
     {
@@ -82,11 +81,11 @@ const AdvisorsPage: React.FC = () => {
       })
 
       const res = result.data.response.map((entry: any) => ({
-        ...translateChartKeys(entry, 'dateTime'),
-        dateTime: new Date(entry.dateTime).getTime(),
+        ...translateChartKeys(entry, chartDataKey),
+        [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }))
 
-      const requiredKeys = ['dateTime', ...config.options]
+      const requiredKeys = [chartDataKey, ...config.options]
 
       const response = res.map((item: any) => {
         const returnValue: any = {}
@@ -119,8 +118,8 @@ const AdvisorsPage: React.FC = () => {
       })
 
       const response = result.data.response.map((entry: any) => ({
-        ...translateChartKeys(entry, 'dateTime'),
-        dateTime: new Date(entry.dateTime).getTime(),
+        ...translateChartKeys(entry, chartDataKey),
+        [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }))
 
       chartData = {
@@ -143,8 +142,8 @@ const AdvisorsPage: React.FC = () => {
       })
 
       const response = result.data.response.map((entry: any) => ({
-        ...translateChartKeys(entry, 'dateTime'),
-        dateTime: new Date(entry.dateTime).getTime(),
+        ...translateChartKeys(entry, chartDataKey),
+        [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }))
 
       chartData = {
@@ -167,8 +166,8 @@ const AdvisorsPage: React.FC = () => {
       })
 
       const response = result.data.response.map((entry: any) => ({
-        ...translateChartKeys(entry, 'dateTime'),
-        dateTime: new Date(entry.dateTime).getTime(),
+        ...translateChartKeys(entry, chartDataKey),
+        [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }))
 
       chartData = {
@@ -191,13 +190,13 @@ const AdvisorsPage: React.FC = () => {
       })
 
       const res = result.data.response.map((entry: any) => ({
-        ...translateChartKeys(entry, 'dateTime'),
-        dateTime: new Date(entry.dateTime).getTime(),
+        ...translateChartKeys(entry, chartDataKey),
+        [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }))
 
       const response = res.map((e: any) => ({
         Average: e.Average,
-        dateTime: e.dateTime,
+        [chartDataKey]: e[chartDataKey],
         Interval: e.timeInterval.value,
       }))
 
@@ -226,7 +225,6 @@ const AdvisorsPage: React.FC = () => {
       <MetricsCharts
         title={currentMetric}
         data={chartData}
-        dataKey={chartKey}
         startDate={currentConfigs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
         endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
       />

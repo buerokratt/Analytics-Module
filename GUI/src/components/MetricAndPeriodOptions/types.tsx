@@ -3,6 +3,7 @@ export interface Option {
   labelKey: string
   additionalKey?: string
   subOptions?: SubOption[]
+  unit?: string
 }
 
 export interface SubOption {

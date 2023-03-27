@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { BarChart, XAxis, CartesianGrid, YAxis, Tooltip, Legend, Bar } from 'recharts'
-import { dateFormatter, formatDate, getColor, getTicks } from '../../util/charts-utils'
+import { BarChart, XAxis, CartesianGrid, YAxis, Tooltip, Legend, Bar, Label } from 'recharts'
+import { chartDataKey, dateFormatter, formatDate, getColor, getTicks, round } from '../../util/charts-utils'
 
 type Props = {
-  dataKey: string
   data: any
   startDate: string
   endDate: string
+  unit?: string
 }
 
-const BarGraph = ({ dataKey, startDate, endDate, data }: Props) => {
+const BarGraph = ({ startDate, endDate, data, unit }: Props) => {
   const [width, setWidth] = useState<number>(10)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -31,11 +31,11 @@ const BarGraph = ({ dataKey, startDate, endDate, data }: Props) => {
         width={width}
         height={width / 2.8}
         data={data.chartData}
-        margin={{ top: 20, right: 65, left: 10, bottom: 70 }}
+        margin={{ top: 20, right: 65, bottom: 70 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
-          dataKey={dataKey}
+          dataKey={chartDataKey}
           scale="time"
           tickFormatter={(value) => dateFormatter(startDate, endDate, value)}
           type="number"
@@ -47,17 +47,26 @@ const BarGraph = ({ dataKey, startDate, endDate, data }: Props) => {
           minTickGap={0}
           interval={0}
         />
-        <YAxis />
-        <Tooltip labelFormatter={(value) => `${formatDate(new Date(value), 'dd-MM-yyyy')}`} />
+        <YAxis>
+          <Label
+            dx={-20}
+            angle={270}
+            value={unit}
+          />
+        </YAxis>
+        <Tooltip
+          labelFormatter={(value) => `${formatDate(new Date(value), 'dd-MM-yyyy')}`}
+          formatter={(value) => `${(round(value))} ${unit}`}
+        />
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
         {(data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {
-            return k === `${dataKey}` ? null : (
+            return k === chartDataKey ? null : (
               <Bar
                 key={k}
                 dataKey={k}
                 type="monotone"
-                stackId={dataKey}
+                stackId={chartDataKey}
                 stroke={getColor(data, k)}
                 fill={getColor(data, k)}
               />

@@ -10,17 +10,17 @@ import axios from 'axios'
 import { getCsv } from '../../resources/api-constants'
 import { saveAs } from 'file-saver'
 import { ChartType } from '../../types/chart-type'
-import { formatDate } from '../../util/charts-utils'
+import { chartDataKey, formatDate } from '../../util/charts-utils'
 
 type Props = {
   title: any
   data: any
-  dataKey: string
   startDate: string
   endDate: string
+  unit?: string
 }
 
-const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
+const MetricsCharts = ({ title, data, startDate, endDate, unit }: Props) => {
   const { t } = useTranslation()
 
   const charts: ChartType[] = [
@@ -42,27 +42,24 @@ const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
   const buildChart = () => {
     if (selectedChart === 'pieChart') {
       return (
-        <PieGraph
-          dataKey={dataKey}
-          data={data}
-        />
+        <PieGraph data={data} />
       )
     } else if (selectedChart === 'lineChart') {
       return (
         <LineGraph
-          dataKey={dataKey}
           data={data}
           startDate={startDate}
           endDate={endDate}
+          unit={unit}
         />
       )
     } else {
       return (
         <BarGraph
-          dataKey={dataKey}
           data={data}
           startDate={startDate}
           endDate={endDate}
+          unit={unit}
         />
       )
     }
@@ -72,7 +69,7 @@ const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
     const res = await axios.post(
       getCsv(),
       {
-        data: data.map((p) => ({ ...p, dateTime: formatDate(new Date(p[dataKey]), 'yyyy-MM-dd hh:mm:ss a') })),
+        data: data.map((p) => ({ ...p, [chartDataKey]: formatDate(new Date(p[chartDataKey]), 'yyyy-MM-dd hh:mm:ss a') })),
         del: '',
         qul: '',
       },

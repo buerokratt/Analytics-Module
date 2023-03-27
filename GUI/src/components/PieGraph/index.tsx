@@ -1,16 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { PieChart, Cell, Pie, Tooltip, Legend } from 'recharts'
-import { getColor } from '../../util/charts-utils'
+import { chartDataKey, getColor } from '../../util/charts-utils'
 import ChartToolTip from '../ChartToolTip'
 import Track from '../Track'
 import './PieGraph.scss'
 
 type Props = {
-  dataKey: string
   data: any
 }
 
-const PieGraph = ({ dataKey, data }: Props) => {
+const PieGraph = ({ data }: Props) => {
   const [width, setWidth] = useState<number>(10)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -38,11 +37,11 @@ const PieGraph = ({ dataKey, data }: Props) => {
             cy="50%"
             outerRadius={200}
             fill="#8884d8"
-            dataKey={dataKey}
+            dataKey={chartDataKey}
           >
             {(data?.chartData?.length > 0 ?? false) &&
               Object.keys(data.chartData[0]).map((k, i) => {
-                return k === `${dataKey}` ? null : (
+                return k === chartDataKey ? null : (
                   <Cell
                     key={k}
                     type="monotone"
@@ -65,14 +64,16 @@ const PieGraph = ({ dataKey, data }: Props) => {
             Object.keys(data.chartData[0]).map((k, i) => {
               return (
                 <Track key={k}>
-                  {k === `${dataKey}` ? null : (
-                    <div
-                      className="legend_circle"
-                      style={{ backgroundColor: getColor(data, k) }}
-                      key={k}
-                    />
-                  )}
-                  {k === `${dataKey}` ? null : <label style={{ color: getColor(data, k) }}>{k}</label>}
+                  {k !== chartDataKey &&
+                    <>
+                      <div
+                        className="legend_circle"
+                        style={{ backgroundColor: getColor(data, k) }}
+                        key={k}
+                      />
+                      <label style={{ color: getColor(data, k) }}>{k}</label>
+                    </>
+                  }
                 </Track>
               )
             })}

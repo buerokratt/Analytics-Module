@@ -12,6 +12,7 @@ import { chatOptions } from './options'
 const ChatsPage: React.FC = () => {
   const { t } = useTranslation()
   const [tableTitleKey, setTableTitleKey] = useState(chatOptions[0].labelKey)
+  const [unit, setUnit] = useState(chatOptions[0].unit)
   const [configs, setConfigs] = useState<MetricOptionsState & { groupByPeriod: string }>()
   const [chartData, setChartData] = useState([])
 
@@ -26,6 +27,7 @@ const ChatsPage: React.FC = () => {
     }
   }, [])
 
+
   return (
     <>
       <h1>{t('menu.chats')}</h1>
@@ -35,16 +37,19 @@ const ChatsPage: React.FC = () => {
         onChange={(config) => {
           setConfigs(config)
           configsSubject.next(config)
-          const tableTitleKey = chatOptions.find((x) => x.id === config.metric)?.labelKey
-          if (tableTitleKey) setTableTitleKey(tableTitleKey)
+          const selectedOption = chatOptions.find((x) => x.id === config.metric)
+          if (!selectedOption)
+            return;
+          setTableTitleKey(selectedOption.labelKey)
+          setUnit(selectedOption.unit)
         }}
       />
       <MetricsCharts
         title={tableTitleKey}
         data={chartData}
-        dataKey="dateTime"
         startDate={configs?.start ?? formatDate(new Date(), chartDateFormat)}
         endDate={configs?.end ?? formatDate(new Date(), chartDateFormat)}
+        unit={unit}
       />
     </>
   )

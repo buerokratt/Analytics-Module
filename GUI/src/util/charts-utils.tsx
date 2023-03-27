@@ -38,9 +38,14 @@ export const translateChartKeys = (obj: any, key: string) =>
       k === key
         ? acc
         : {
-            ...acc,
-            ...{ [t(`chart.${k}`)]: obj[k] },
-          },
+          ...acc,
+          ...{ [t(`chart.${k}`)]: obj[k] },
+        },
     {},
   )
+
 export const chartDateFormat = 'yyyy-MM-dd'
+
+export const chartDataKey = 'dateTime'
+
+export const round = (value: any) => Math.round(Number(value) * 100) / 100

@@ -47,7 +47,6 @@ const BurokrattPage: React.FC = () => {
       <MetricsCharts
         title={tableTitleKey}
         data={chartData}
-        dataKey='dateTime'
         startDate={configs?.start ?? formatDate(new Date(), chartDateFormat)}
         endDate={configs?.end ?? formatDate(new Date(), chartDateFormat)}
       />

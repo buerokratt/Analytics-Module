@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions'
 import MetricsCharts from '../components/MetricsCharts'
@@ -20,11 +20,16 @@ import { Subject } from 'rxjs'
 const FeedbackPage: React.FC = () => {
   const [chartData, setChartData] = useState({})
   const [negativeFeedbackChats, setNegativeFeedbackChats] = useState<Chat[]>([])
-  const [advisors, setAdvisors] = useState<any[]>([])
+  const advisors = useRef<any[]>([])
+  const [advisorsList, setAdvisorsList] = useState<any[]>([])
   const [currentMetric, setCurrentMetric] = useState('feedback.statuses')
   const randomColor = () => '#' + ((Math.random() * 0xffffff) << 0).toString(16)
   const [currentConfigs, setConfigs] = useState<MetricOptionsState>()
   const chartKey = 'dateTime'
+
+  useEffect(() => {
+    setAdvisorsList(advisors.current);
+  }, [advisorsList])
 
   const [feedbackMetrics, setFeedbackMetrics] = useState<Option[]>([
     {
@@ -180,7 +185,7 @@ const FeedbackPage: React.FC = () => {
   const fetchNpsOnSelectedCSAChatsFeedback = async (config: any) => {
     let chartData = {}
     try {
-      const excluded_csas = advisors.map((e) => e.id).filter((e) => !config?.options.includes(e))
+      const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e))
       const result = await axios.post(getNpsOnSelectedCSAChatsFeedback(), {
         metric: config?.groupByPeriod ?? 'day',
         start_date: config?.start,
@@ -197,14 +202,22 @@ const FeedbackPage: React.FC = () => {
             id: e?.customerSupportId ?? '',
             labelKey: e?.customerSupportDisplayName ?? '',
             color: randomColor(),
+            isSelected: true
           }
         })
 
-      if (advisorsList.length > advisors.length) {
+      if (advisorsList.length > advisors.current.length) {
         const updatedMetrics = [...feedbackMetrics]
         updatedMetrics[3].subOptions = advisorsList
+        advisors.current = advisorsList
         setFeedbackMetrics(updatedMetrics)
-        setAdvisors(advisorsList)
+        setAdvisorsList(advisors.current)
+      } else if (advisors.current.length === 0) {
+        const updatedMetrics = [...feedbackMetrics]
+        updatedMetrics[3].subOptions = []
+        advisors.current = []
+        setFeedbackMetrics(updatedMetrics)
+        setAdvisorsList([]);
       }
 
       const response = res
@@ -226,11 +239,21 @@ const FeedbackPage: React.FC = () => {
           return a
         }, [])
 
+        const chartResponse = response.map((e:any) => {
+          const res = {...e}
+          advisorsList.forEach((i) => {
+             if (!(i.labelKey in e)){
+              res[i.labelKey] = 0
+             }
+          })
+          return res;
+        })
+
       chartData = {
-        chartData: response,
-        colors: feedbackMetrics[3].subOptions!.map(({ id, color }) => {
+        chartData: chartResponse,
+        colors: feedbackMetrics[3].subOptions!.map(({ labelKey, color }) => {
           return {
-            id,
+            id: labelKey,
             color,
           }
         }),

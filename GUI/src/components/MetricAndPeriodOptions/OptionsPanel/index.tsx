@@ -43,7 +43,7 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
 
   const subOptions = useMemo(
     () => metricOptions.find((x) => x.id === selection.metric)?.subOptions ?? [],
-    [selection.metric],
+    [metricOptions.find((x) => x.id === selection.metric)?.subOptions],
   )
 
   const setPeriod = (period: any): void => setSelection((selection) => ({ ...selection, period }))

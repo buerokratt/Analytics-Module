@@ -120,6 +120,8 @@
     "pieChart": "Pie Chart",
     "lineChart": "Line Chart",
     "avgWaitingTimeSeconds": "Average (Sec)",
+    "avgSec": "Average (Sec)",
+    "avgMin": "Average (Min)",
     "receivedChats": "receivedChats",
     "forwardedChats": "forwardedChats",
     "forwardedExternally": "forwardedExternally",

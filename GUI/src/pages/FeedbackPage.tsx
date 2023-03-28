@@ -119,8 +119,28 @@ const FeedbackPage: React.FC = () => {
           return a
         }, [])
 
+        const percentagesResponse = response.reduce(function(a:any,b:any) {
+          const res: any = {};
+          Object.keys(response[0]).forEach((e: string) => {
+            if (e != 'dateTime') {
+              res[e] = a[e] + b[e];
+            }
+          })
+          return res; 
+        }) 
+
+       console.log(percentagesResponse)
+       
+       for (const key in percentagesResponse) {
+        percentagesResponse[key] = parseFloat(((percentagesResponse[key] / Object.values(percentagesResponse).reduce<number>((a: any, b: any) => a + b, 0)) * 100).toFixed(1))
+       }
+       
+       console.log(percentagesResponse)
+
+
       chartData = {
         chartData: response,
+        percentagesData: percentagesResponse,
         colors: feedbackMetrics[0].subOptions!.map(({ id, color }) => {
           return {
             id,

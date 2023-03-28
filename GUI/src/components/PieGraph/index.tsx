@@ -56,12 +56,12 @@ const PieGraph = ({ dataKey, data }: Props) => {
         </PieChart>
         <Track
           direction="vertical"
-          flex={0}
+          flex={20}
           align="left"
           isFlex={true}
           isMultiline={true}
         >
-          {(data?.chartData?.length > 0 ?? false) &&
+          {(data?.chartData?.length > 0 ?? false) && (data?.percentagesData == undefined) &&
             Object.keys(data.chartData[0]).map((k, i) => {
               return (
                 <Track key={k}>
@@ -73,6 +73,22 @@ const PieGraph = ({ dataKey, data }: Props) => {
                     />
                   )}
                   {k === `${dataKey}` ? null : <label style={{ color: getColor(data, k) }}>{k}</label>}
+                </Track>
+              )
+            })}
+            {(data?.percentagesData != undefined) &&
+             Object.keys(data.percentagesData).map((k, i) => {
+               console.log(k);
+                return (
+                 <Track key={k}>
+                   {k === `${dataKey}` ? null : (
+                    <div
+                      className="legend_circle"
+                      style={{ backgroundColor: getColor(data, k) }}
+                      key={k}
+                    />
+                  )}
+                  {k === `${dataKey}` ? null : <label style={{ color: getColor(data, k), maxLines:1}}>{`${k}: ${data.percentagesData[k]} %`}</label>}
                 </Track>
               )
             })}

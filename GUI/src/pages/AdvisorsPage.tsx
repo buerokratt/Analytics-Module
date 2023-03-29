@@ -90,8 +90,27 @@ const AdvisorsPage: React.FC = () => {
         return returnValue
       })
 
+      const percentagesResponse = response.reduce(function (a: any, b: any) {
+        const res: any = {};
+        Object.keys(response[0]).forEach((e: string) => {
+          if (e != 'dateTime') {
+            res[e] = a[e] + b[e];
+          }
+        })
+        return res;
+      })
+
+      const percentages: any[] = [];
+      for (const key in percentagesResponse) {
+        const currentPercentage: any = {}
+        currentPercentage['name'] = key;
+        currentPercentage['value'] = parseFloat(((percentagesResponse[key] / Object.values(percentagesResponse).reduce<number>((a: any, b: any) => a + b, 0)) * 100).toFixed(1));
+        percentages.push(currentPercentage);
+      }
+
       chartData = {
         chartData: response,
+        percentagesData: percentages,
         colors: advisorsMetrics[0].subOptions!.map(({ id, color }) => {
           return {
             id,

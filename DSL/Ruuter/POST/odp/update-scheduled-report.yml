@@ -7,7 +7,7 @@ getKey:
 authenticate:
   call: http.post
   args:
-    url: https://avaandmed.eesti.ee/api/auth/key-login
+    url: http://open_data_service:8888/api/auth/key-login
     headers:
       X-API-KEY: ${settings.response.body[0].odpKey}
   result: apiToken
@@ -18,7 +18,7 @@ updateDataset:
   requestType: post
   args:
     request:
-      #url: https://avaandmed.eesti.ee/api/users/organizations/my-organizations/${settings.response.body[0].orgId}/datasets/${incoming.body.datasetId}
+      #url: http://open_data_service:8888/api/users/organizations/my-organizations/${settings.response.body[0].orgId}/datasets/${incoming.body.datasetId}
       body:
         nameEt: ${incoming.body.nameEt}
         nameEn: ${incoming.body.nameEn}

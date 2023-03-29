@@ -5,6 +5,6 @@ WITH active_per_hour AS
    WHERE created::date BETWEEN :start::date AND :end::date
    GROUP BY 1)
 SELECT date_trunc(:metric, created) AS date_time,
-       avg(active_csas)
+      ROUND(AVG(active_csas)::numeric, 1) as avg
 FROM active_per_hour
 GROUP BY date_time

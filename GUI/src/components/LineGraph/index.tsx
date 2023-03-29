@@ -35,7 +35,7 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
         margin={{ top: 20, right: 65, left: 10, bottom: 70 }}
       >
         <Tooltip
-          labelFormatter={(value) => `${formatDate(new Date(value), 'dd-MM-yyyy')}`}
+          labelFormatter={(value) => `${formatDate(new Date(value), startDate == endDate ? 'HH:mm' : 'dd-MM-yyyy')}`}
           formatter={(value) => `${(round(value))} ${unit}`}
         />
         <XAxis
@@ -61,7 +61,8 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
         </YAxis>
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
         <CartesianGrid stroke="#f5f5f5" />
-        {(data?.chartData?.length > 0 ?? false) &&
+        {
+          (data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {
             return k === chartDataKey ? null : (
               <Line
@@ -72,10 +73,11 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
                 fill={getColor(data, k)}
               />
             )
-          })}
+          })
+        }
         <Legend />
-      </LineChart>
-    </div>
+      </LineChart >
+    </div >
   )
 }
 

@@ -13,11 +13,11 @@ import { chatOptions } from './options';
 export const fetchData = (config: any) => {
     switch (config.metric) {
         case 'total':
-            return fetchChartDataWithSubOptions(getTotalChats(), config, chatOptions[0].subOptions!)
+            return fetchChartDataWithSubOptions(getTotalChats(), config, chatOptions[0].subOptions!, true)
         case 'cip':
-            return fetchChartDataWithSubOptions(getCipChats(), config, chatOptions[1].subOptions!)
+            return fetchChartDataWithSubOptions(getCipChats(), config, chatOptions[1].subOptions!, true)
         case 'avgWaitingTime':
-            return fetchChartDataWithSubOptions(getAvgChatWaitingTime(), config, chatOptions[2].subOptions!)
+            return fetchChartDataWithSubOptions(getAvgChatWaitingTime(), config, chatOptions[2].subOptions!, true)
         case 'totalMessages':
             return fetchChartData(getAvgMessagesInChats(), config, chatOptions[3].labelKey)
         case 'duration':

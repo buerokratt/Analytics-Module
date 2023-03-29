@@ -12,7 +12,7 @@ import { metricOptions } from './options'
 const BurokrattPage: React.FC = () => {
   const { t } = useTranslation()
   const [tableTitleKey, setTableTitleKey] = useState(metricOptions[0].labelKey)
-  const [configs, setConfigs] = useState<MetricOptionsState & { groupByPeriod: string }>()
+  const [configs, setConfigs] = useState<MetricOptionsState>()
   const [chartData, setChartData] = useState([])
 
   const [configsSubject] = useState(() => new Subject())
@@ -49,6 +49,7 @@ const BurokrattPage: React.FC = () => {
         data={chartData}
         startDate={configs?.start ?? formatDate(new Date(), chartDateFormat)}
         endDate={configs?.end ?? formatDate(new Date(), chartDateFormat)}
+        groupByPeriod={configs?.groupByPeriod ?? 'day'}
       />
     </>
   )

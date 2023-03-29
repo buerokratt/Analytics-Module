@@ -1,15 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { BarChart, XAxis, CartesianGrid, YAxis, Tooltip, Legend, Bar, Label } from 'recharts'
 import { chartDataKey, dateFormatter, formatDate, getColor, getTicks, round } from '../../util/charts-utils'
+import { GroupByPeriod } from '../MetricAndPeriodOptions/types'
 
 type Props = {
   data: any
   startDate: string
   endDate: string
   unit?: string
+  groupByPeriod: GroupByPeriod
 }
 
-const BarGraph = ({ startDate, endDate, data, unit }: Props) => {
+const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod }) => {
   const [width, setWidth] = useState<number>(10)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -22,7 +24,14 @@ const BarGraph = ({ startDate, endDate, data, unit }: Props) => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const domain = [new Date(startDate).getTime(), new Date(endDate).getTime()]
+  let minDate = new Date(startDate).getTime()
+  if (groupByPeriod === 'day') {
+    const millisecondInOneDay = 24 * 60 * 60 * 1000;
+    minDate = minDate - millisecondInOneDay;
+  }
+
+
+  const domain = [minDate, new Date(endDate).getTime()]
   const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5)
 
   return (
@@ -57,9 +66,11 @@ const BarGraph = ({ startDate, endDate, data, unit }: Props) => {
         <Tooltip
           labelFormatter={(value) => `${formatDate(new Date(value), 'dd-MM-yyyy')}`}
           formatter={(value) => `${(round(value))} ${unit}`}
+          cursor={false}
         />
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
-        {(data?.chartData?.length > 0 ?? false) &&
+        {
+          (data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {
             return k === chartDataKey ? null : (
               <Bar
@@ -71,10 +82,11 @@ const BarGraph = ({ startDate, endDate, data, unit }: Props) => {
                 fill={getColor(data, k)}
               />
             )
-          })}
+          })
+        }
         <Tooltip />
-      </BarChart>
-    </div>
+      </BarChart >
+    </div >
   )
 }
 

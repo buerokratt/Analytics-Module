@@ -119,28 +119,27 @@ const FeedbackPage: React.FC = () => {
           return a
         }, [])
 
-        const percentagesResponse = response.reduce(function(a:any,b:any) {
-          const res: any = {};
-          Object.keys(response[0]).forEach((e: string) => {
-            if (e != 'dateTime') {
-              res[e] = a[e] + b[e];
-            }
-          })
-          return res; 
-        }) 
+      const percentagesResponse = response.reduce(function (a: any, b: any) {
+        const res: any = {};
+        Object.keys(response[0]).forEach((e: string) => {
+          if (e != 'dateTime') {
+            res[e] = a[e] + b[e];
+          }
+        })
+        return res;
+      })
 
-       console.log(percentagesResponse)
-       
-       for (const key in percentagesResponse) {
-        percentagesResponse[key] = parseFloat(((percentagesResponse[key] / Object.values(percentagesResponse).reduce<number>((a: any, b: any) => a + b, 0)) * 100).toFixed(1))
-       }
-       
-       console.log(percentagesResponse)
-
+      const percentages: any[] = [];
+      for (const key in percentagesResponse) {
+        const currentPercentage: any = {}
+        currentPercentage['name'] = key;
+        currentPercentage['value'] = parseFloat(((percentagesResponse[key] / Object.values(percentagesResponse).reduce<number>((a: any, b: any) => a + b, 0)) * 100).toFixed(1));
+        percentages.push(currentPercentage);
+      }
 
       chartData = {
         chartData: response,
-        percentagesData: percentagesResponse,
+        percentagesData: percentages,
         colors: feedbackMetrics[0].subOptions!.map(({ id, color }) => {
           return {
             id,
@@ -259,15 +258,15 @@ const FeedbackPage: React.FC = () => {
           return a
         }, [])
 
-        const chartResponse = response.map((e:any) => {
-          const res = {...e}
-          advisorsList.forEach((i) => {
-             if (!(i.labelKey in e)){
-              res[i.labelKey] = 0
-             }
-          })
-          return res;
+      const chartResponse = response.map((e: any) => {
+        const res = { ...e }
+        advisorsList.forEach((i) => {
+          if (!(i.labelKey in e)) {
+            res[i.labelKey] = 0
+          }
         })
+        return res;
+      })
 
       chartData = {
         chartData: chartResponse,

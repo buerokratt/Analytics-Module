@@ -1,6 +1,7 @@
 export type Chat = {
-  id: string
-  comment?: string
+  baseId: string
+  feedback?: string
   created: string
   ended: string
+  rating?: string
 }

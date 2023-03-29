@@ -5,7 +5,8 @@ import { SubOption } from "../components/MetricAndPeriodOptions/types"
 export const fetchChartDataWithSubOptions = async (
     url: string,
     config: any,
-    subOptions: SubOption[]
+    subOptions: SubOption[],
+    isPercentage?: boolean
 ) => {
     try {
         const result = await axios.post(url,
@@ -15,7 +16,6 @@ export const fetchChartDataWithSubOptions = async (
                 period: config?.groupByPeriod ?? 'day',
                 options: config?.options.join(',') ?? ''
             })
-
         const chartData = result.data.response
             .reduce((acc: any, row: any, index: number) => {
                 row.forEach((obj: any) => {
@@ -34,7 +34,29 @@ export const fetchChartDataWithSubOptions = async (
             }, [])
 
         const colors = subOptions.map(x => ({ id: t(x.labelKey), color: x.color }))
-        return { chartData, colors }
+
+        if (isPercentage === true) {
+            const percentagesResponse = chartData.reduce(function (a: any, b: any) {
+                const res: any = {};
+                Object.keys(chartData[0]).forEach((e: string) => {
+                    if (e != 'dateTime') {
+                        res[e] = a[e] + b[e];
+                    }
+                })
+                return res;
+            })
+
+            const percentagesData: any[] = [];
+            for (const key in percentagesResponse) {
+                const currentPercentage: any = {}
+                currentPercentage['name'] = key;
+                currentPercentage['value'] = parseFloat(((percentagesResponse[key] / Object.values(percentagesResponse).reduce<number>((a: any, b: any) => a + b, 0)) * 100).toFixed(1));
+                percentagesData.push(currentPercentage);
+            }
+            return { chartData, percentagesData, colors }
+        } else {
+            return { chartData, colors }
+        }
     } catch (_) {
         return {}
     }

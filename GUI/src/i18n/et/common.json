@@ -112,7 +112,12 @@
     "avg": "Keskmine",
     "nps": "Nps",
     "id": "Id",
+    "baseId": "Id",
+    "rating": "Hinnang",
+    "feedback": "Tagasiside",
     "ended": "Ended",
+    "avgSec": "Average (Sec)",
+    "avgMin": "Average (Min)",
     "customerSupportId": "Customer Support Id",
     "customerSupportDisplayName": "Customer Support Display Name",
     "barChart": "Tulpdiagramm",
@@ -184,7 +189,9 @@
     "receivedChats": "receivedChats",
     "forwardedChats": "forwardedChats",
     "forwardedExternally": "forwardedExternally",
-    "timeInterval": "timeInterval"
+    "timeInterval": "timeInterval",
+    "disabled_create_dataset_tooltip": "Lubamiseks konfigureerige esmalt avatud andmete juurdepääs",
+    "save_configuration_failed": "Konfiguratsiooni salvestamine ebaõnnestus"
   },
   "advisors": {
     "chat_forwards": "Suunamised",

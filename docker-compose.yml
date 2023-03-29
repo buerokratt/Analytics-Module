@@ -19,7 +19,8 @@ services:
       - users_db
     environment:
       - sqlms.datasources.[0].name=byk
-      - sqlms.datasources.[0].jdbcUrl=jdbc:postgresql://users_db:5432/byk
+      # - sqlms.datasources.[0].jdbcUrl=jdbc:postgresql://users_db:5432/byk
+      - sqlms.datasources.[0].jdbcUrl=jdbc:postgresql://test.buerokratt.ee:5433/analytics6
       - sqlms.datasources.[0].username=byk
       - sqlms.datasources.[0].password=01234
       - logging.level.org.springframework.boot=INFO
@@ -42,7 +43,8 @@ services:
       - ./data:/var/lib/postgresql/data
     networks:
       - bykstack
-  gui_dev: # For development
+  gui_dev:
+    # For development
     container_name: gui_dev
     environment:
       - NODE_ENV=development
@@ -50,6 +52,8 @@ services:
       - REACT_APP_API_URL=http://localhost:8080
       - REACT_APP_BUEROKRATT_CHATBOT_URL=http://buerokratt-chat:8080
       - REACT_APP_OPENSEARCH_DASHBOARD_URL=https://opensearch.org/
+      - REACT_APP_OPENDATAPORT_URL=https://avaandmedtest.eesti.ee
+      # - REACT_APP_OPENDATAPORT_URL=https://avaandmed.eesti.ee
       - PORT=3001
     build:
       context: ./GUI
@@ -61,17 +65,28 @@ services:
       - ./GUI:/app
     networks:
       - bykstack
-  data_mapper: 
-     container_name: data_mapper 
-     image: datamapper-node
-     volumes:
+  data_mapper:
+    container_name: data_mapper
+    image: datamapper-node
+    volumes:
       - ./DSL/DMapper/hbs:/workspace/app/views/analytics
       - ./DSL/DMapper/js:/workspace/app/js/analytics
-     ports:
+    ports:
       - 3000:3000
-     networks:
+    networks:
       - bykstack
-     
+  open_data_service:
+    # Use this services as reverse proxy because Ruuter
+    # does not support environment variables inside DSL files
+    image: nginx
+    ports:
+      - 80:8888
+    volumes:
+      - ./open-portal-nginx-proxy.conf:/etc/nginx/nginx.conf:ro
+    environment:
+      - FORWARD_URL=https://avaandmedtest.eesti.ee # test environment
+      # - FORWARD_URL=https://avaandmed.eesti.ee # live environment
+
 networks:
   bykstack:
     name: bykstack

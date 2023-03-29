@@ -38,10 +38,10 @@ const ChatsTable = (props: Props) => {
 
   const chatColumns = useMemo(
     () => [
-      columnHelper.accessor('id', {
+      columnHelper.accessor('baseId', {
         header: 'ID',
       }),
-      columnHelper.accessor('comment', {
+      columnHelper.accessor('feedback', {
         header: t('feedback.comment') || '',
       }),
       columnHelper.accessor('created', {
@@ -52,10 +52,13 @@ const ChatsTable = (props: Props) => {
         header: t('feedback.endTime') || '',
         cell: dateTimeFormat,
       }),
+      columnHelper.accessor('rating', {
+        header: t('chart.rating') || '',
+      }),
       columnHelper.display({
         id: 'detail',
         cell: (props) => (
-          <a href={getLinkToChat(props.row.original?.id)}>
+          <a href={getLinkToChat(props.row.original?.baseId)}>
             <Button appearance="text">
               <Track>
                 <Icon icon={<MdOutlineRemoveRedEye color={'rgba(0,0,0,0.54)'} />} />
@@ -78,6 +81,7 @@ const ChatsTable = (props: Props) => {
         data={chats}
         columns={chatColumns}
         pagination={pagination}
+        sortable={true}
         setPagination={setPagination}
       />
     </Card>

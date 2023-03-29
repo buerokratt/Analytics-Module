@@ -1,3 +1,20 @@
 .additional-option-label {
-    width: 9.5rem;
+  width: 9.5rem;
+}
+
+.two-columns-container {
+  columns: 2;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex: 1;
+
+  div.track {
+    margin-right: 1rem;
+  }
 }

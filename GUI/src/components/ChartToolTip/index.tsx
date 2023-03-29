@@ -2,6 +2,7 @@ import React from 'react'
 import './ChartToolTip.scss'
 import { format } from 'date-fns'
 import { TooltipProps } from 'recharts'
+import { chartDataKey, round } from '../../util/charts-utils'
 
 const ChartToolTip = ({ active, payload, label }: TooltipProps<number, string>) => {
   if (active) {
@@ -10,9 +11,9 @@ const ChartToolTip = ({ active, payload, label }: TooltipProps<number, string>) 
       <div className="chart_tool_tip">
         {Object.keys(currData).map((key, k) => (
           <p key={k}>
-            {key === 'dateTime' || key === 'created'
-              ? format(new Date(currData.dateTime), 'yyyy-MM-dd')
-              : `${key}: ${currData[key]}`}
+            {key === chartDataKey || key === 'created'
+              ? format(new Date(currData[chartDataKey]), 'yyyy-MM-dd')
+              : `${key}: ${round(currData[key])}`}
           </p>
         ))}
       </div>

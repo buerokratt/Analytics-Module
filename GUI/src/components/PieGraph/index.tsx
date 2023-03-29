@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { PieChart, Cell, Pie, Tooltip, Legend } from 'recharts'
 import { getColor } from '../../util/charts-utils'
 import ChartToolTip from '../ChartToolTip'
+import PercentageToolTip from '../PercentageToolTip'
 import Track from '../Track'
 import './PieGraph.scss'
 
@@ -32,7 +33,7 @@ const PieGraph = ({ dataKey, data }: Props) => {
           data={data.chartData}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
-          <Pie
+          {(data?.chartData?.length > 0 ?? false) && (data?.percentagesData == undefined) && <Pie
             data={data.chartData}
             cx="50%"
             cy="50%"
@@ -51,17 +52,35 @@ const PieGraph = ({ dataKey, data }: Props) => {
                   />
                 )
               })}
-          </Pie>
-          <Tooltip content={<ChartToolTip />} />
+          </Pie>}
+          {(data?.percentagesData != undefined) && <Pie
+            data={data.percentagesData}
+            cx="50%"
+            cy="50%"
+            outerRadius={200}
+            fill="#8884d8"
+            dataKey="value"
+            nameKey="name"
+          >
+            {data.percentagesData.map((e: any, i: any) => {
+              return <Cell
+                key={`cell-${i}`}
+                type="monotone"
+                stroke={getColor(data, e['name'])}
+                fill={getColor(data, e['name'])}
+              />
+            })}
+          </Pie>}
+          <Tooltip content={data?.percentagesData != undefined ? <PercentageToolTip /> : <ChartToolTip />} />
         </PieChart>
         <Track
           direction="vertical"
-          flex={0}
+          flex={20}
           align="left"
           isFlex={true}
           isMultiline={true}
         >
-          {(data?.chartData?.length > 0 ?? false) &&
+          {(data?.chartData?.length > 0 ?? false) && (data?.percentagesData == undefined) &&
             Object.keys(data.chartData[0]).map((k, i) => {
               return (
                 <Track key={k}>
@@ -73,6 +92,21 @@ const PieGraph = ({ dataKey, data }: Props) => {
                     />
                   )}
                   {k === `${dataKey}` ? null : <label style={{ color: getColor(data, k) }}>{k}</label>}
+                </Track>
+              )
+            })}
+          {(data?.percentagesData != undefined) &&
+            data.percentagesData.map((e: any, i: any) => {
+              return (
+                <Track key={`track-${i}`}>
+                  {(
+                    <div
+                      className="legend_circle"
+                      style={{ backgroundColor: getColor(data, e["name"]) }}
+                      key={`circle-${i}`}
+                    />
+                  )}
+                  <label style={{ color: getColor(data, e["name"]), maxLines: 1 }}>{`${e["name"]}: ${e["value"]} %`}</label>
                 </Track>
               )
             })}

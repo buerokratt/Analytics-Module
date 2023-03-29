@@ -130,18 +130,6 @@
     "forwardedExternally": "forwardedExternally",
     "timeInterval": "timeInterval"
   },
-  "advisors": {
-    "chat_forwards": "Forwarding",
-    "forwards": {
-      "from_csa": "Number of conversations directed from the advisor",
-      "to_csa": "Counselor directed conversations",
-      "to_other": "Out-of-facility forwards"
-    },
-    "avg_pick_time": "Average response speed in the institution",
-    "avg_present_csa": "Average presence of counselors",
-    "num_chats_csa": "Number of conversations by adviser",
-    "avg_chat_time_csa": "Conversation time by advisor"
-  },
   "reports": {
     "get-chat-count-total": "Total chat count",
     "get-chat-count-no-csa": "Chat count only with Bürokratt",
@@ -201,6 +189,20 @@
     "incorrect_apikey_title": "Error validating key",
     "incorrect_apikey_message": "API Key or API Key ID were not correct",
     "correct_apikey_title": "API settings saved",
-    "correct_apikey_message": "API Key and API Key ID validated"
+    "correct_apikey_message": "API Key and API Key ID validated",
+    "disabled_create_dataset_tooltip": "In order to enable, please configure Open Data Access first",
+    "save_configuration_failed": "Error saving configuration"
+  },
+  "advisors": {
+    "chat_forwards": "Forwarding",
+    "forwards": {
+      "from_csa": "Number of conversations directed from the advisor",
+      "to_csa": "Counselor directed conversations",
+      "to_other": "Out-of-facility forwards"
+    },
+    "avg_pick_time": "Average response speed in the institution",
+    "avg_present_csa": "Average presence of counselors",
+    "num_chats_csa": "Number of conversations by adviser",
+    "avg_chat_time_csa": "Conversation time by advisor"
   }
 }

@@ -18,6 +18,7 @@ import { ODPSettings } from '../types/reports'
 import DatasetCreation from '../components/OpenData/DatasetCreation'
 import Popup from '../components/Popup'
 import { saveAs } from 'file-saver'
+import TooltipWrapper from '../components/TooltipWrapper'
 
 type ScheduledDataset = {
   datasetId: string
@@ -102,24 +103,30 @@ const ReportsPage = () => {
     fetchDatasets()
   }
 
+  const disabled = options?.options.length === 0 || apiSettings.odpKey === null
+
   return (
     <>
       <h1>{t('menu.reports')}</h1>
       <Card>
         <OptionsPanel
           metricOptions={openDataOptions}
-          onChange={(d) => {
-            setOptions(d)
-          }}
-        ></OptionsPanel>
+          onChange={(d) => setOptions(d)}
+          useColumns
+        />
         <Section>
           <Track gap={16}>
-            <Button
-              disabled={options?.options.length === 0 || apiSettings.odpKey === null}
-              onClick={() => setDatasetCreationVisible(true)}
+            <TooltipWrapper
+              enabled={disabled}
+              text={t('reports.disabled_create_dataset_tooltip')}
             >
-              {t('reports.create-new-dataset')}
-            </Button>
+              <Button
+                disabled={disabled}
+                onClick={() => setDatasetCreationVisible(true)}
+              >
+                {t('reports.create-new-dataset')}
+              </Button>
+            </TooltipWrapper>
             <Button
               disabled={options?.options.length === 0}
               appearance="secondary"
@@ -141,19 +148,17 @@ const ReportsPage = () => {
                   <p>{t('reports.interval_' + d.period)}</p>
                   <Button
                     appearance="text"
-                    onClick={() => {
-                      fetchDataset(d.datasetId)
-                    }}
+                    onClick={() => fetchDataset(d.datasetId)}
                   >
-                    <Icon icon={<MdEdit />} /> {t('global.edit')}
+                    <Icon icon={<MdEdit />} />
+                    {t('global.edit')}
                   </Button>
                   <Button
                     appearance="text"
-                    onClick={() => {
-                      deleteSchedule(d.datasetId)
-                    }}
+                    onClick={() => deleteSchedule(d.datasetId)}
                   >
-                    <Icon icon={<MdDelete />} /> {t('global.delete')}
+                    <Icon icon={<MdDelete />} />
+                    {t('global.delete')}
                   </Button>
                 </Track>
               </Track>

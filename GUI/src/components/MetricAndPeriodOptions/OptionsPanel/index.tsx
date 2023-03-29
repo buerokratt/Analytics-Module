@@ -23,6 +23,7 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
     start: formatDate(new Date(), dateFormat ?? 'EEE MMM dd yyyy'),
     end: formatDate(new Date(), dateFormat ?? 'EEE MMM dd yyyy'),
     options: [],
+    groupByPeriod: '',
   })
 
   useEffect(() => {
@@ -43,10 +44,10 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
 
   const subOptions = useMemo(
     () => metricOptions.find((x) => x.id === selection.metric)?.subOptions ?? [],
-    [selection.metric],
+    [metricOptions.find((x) => x.id === selection.metric)?.subOptions],
   )
 
-  const setPeriod = (period: string): void => setSelection((selection) => ({ ...selection, period }))
+  const setPeriod = (period: any): void => setSelection((selection) => ({ ...selection, period }))
 
   return (
     <Card>

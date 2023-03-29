@@ -21,8 +21,7 @@ WITH chats AS
    GROUP BY message.chat_base_id)
 SELECT date_time,
        ROUND(EXTRACT(epoch
-                     FROM COALESCE(AVG(chat_length), '0 seconds'::interval))) AS AVG,
-       COALESCE(AVG(chat_length), '0 seconds'::interval) AS time_interval
+                     FROM COALESCE(AVG(chat_length), '0 seconds'::interval)) / 60) AS avg_min
 FROM chat_lengths
 JOIN chats ON chats.base_id = chat_lengths.chat_base_id
 GROUP BY date_time

@@ -15,15 +15,12 @@ import {
   getCsaChatsTotal,
 } from '../resources/api-constants'
 
+
 const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation()
   const [chartData, setChartData] = useState({})
   const [currentMetric, setCurrentMetric] = useState('')
-  const [currentConfigs, setConfigs] = useState<
-    MetricOptionsState & {
-      groupByPeriod: string
-    }
-  >()
+  const [currentConfigs, setConfigs] = useState<MetricOptionsState>()
   const chartKey = 'dateTime'
 
   const advisorsMetrics = [
@@ -94,8 +91,27 @@ const AdvisorsPage: React.FC = () => {
         return returnValue
       })
 
+      const percentagesResponse = response.reduce(function (a: any, b: any) {
+        const res: any = {};
+        Object.keys(response[0]).forEach((e: string) => {
+          if (e != 'dateTime') {
+            res[e] = a[e] + b[e];
+          }
+        })
+        return res;
+      })
+
+      const percentages: any[] = [];
+      for (const key in percentagesResponse) {
+        const currentPercentage: any = {}
+        currentPercentage['name'] = key;
+        currentPercentage['value'] = parseFloat(((percentagesResponse[key] / Object.values(percentagesResponse).reduce<number>((a: any, b: any) => a + b, 0)) * 100).toFixed(1));
+        percentages.push(currentPercentage);
+      }
+
       chartData = {
         chartData: response,
+        percentagesData: percentages,
         colors: advisorsMetrics[0].subOptions!.map(({ id, color }) => {
           return {
             id,
@@ -125,7 +141,7 @@ const AdvisorsPage: React.FC = () => {
 
       chartData = {
         chartData: response,
-        colors: [{ id: 'Average (Sec)', color: '#FFB511' }],
+        colors: [{ id: 'Average (Min)', color: '#FFB511' }],
       }
     } catch (_) {
       //error
@@ -190,20 +206,14 @@ const AdvisorsPage: React.FC = () => {
         end_date: config?.end,
       })
 
-      const res = result.data.response.map((entry: any) => ({
+      const response = result.data.response.map((entry: any) => ({
         ...translateChartKeys(entry, 'dateTime'),
         dateTime: new Date(entry.dateTime).getTime(),
       }))
 
-      const response = res.map((e: any) => ({
-        Average: e.Average,
-        dateTime: e.dateTime,
-        Interval: e.timeInterval.value,
-      }))
-
       chartData = {
         chartData: response,
-        colors: [{ id: 'Average (Sec)', color: '#FFB511' }],
+        colors: [{ id: 'Average (Min)', color: '#FFB511' }],
       }
     } catch (_) {
       //error
@@ -229,6 +239,7 @@ const AdvisorsPage: React.FC = () => {
         dataKey={chartKey}
         startDate={currentConfigs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
         endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
+        groupByPeriod={currentConfigs?.groupByPeriod ?? 'day'}
       />
     </>
   )

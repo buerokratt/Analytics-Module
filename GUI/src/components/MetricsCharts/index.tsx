@@ -11,6 +11,7 @@ import { getCsv } from '../../resources/api-constants'
 import { saveAs } from 'file-saver'
 import { ChartType } from '../../types/chart-type'
 import { formatDate } from '../../util/charts-utils'
+import { GroupByPeriod } from '../MetricAndPeriodOptions/types'
 
 type Props = {
   title: any
@@ -18,9 +19,10 @@ type Props = {
   dataKey: string
   startDate: string
   endDate: string
+  groupByPeriod: GroupByPeriod
 }
 
-const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
+const MetricsCharts = ({ title, data, dataKey, startDate, endDate, groupByPeriod }: Props) => {
   const { t } = useTranslation()
 
   const charts: ChartType[] = [
@@ -63,6 +65,7 @@ const MetricsCharts = ({ title, data, dataKey, startDate, endDate }: Props) => {
           data={data}
           startDate={startDate}
           endDate={endDate}
+          groupByPeriod={groupByPeriod}
         />
       )
     }

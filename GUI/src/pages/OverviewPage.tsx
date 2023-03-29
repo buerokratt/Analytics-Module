@@ -153,7 +153,6 @@ const OverviewPage: React.FC = () => {
         }
       >
         <LineGraph
-          dataKey={chartKey}
           data={chartData}
           startDate={formatDate(new Date(), 'yyyy-MM-dd')}
           endDate={formatDate(new Date(), 'yyyy-MM-dd')}

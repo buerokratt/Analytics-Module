@@ -1,16 +1,16 @@
 import { format } from 'date-fns'
 import React, { useEffect, useRef, useState } from 'react'
-import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, Legend } from 'recharts'
-import { dateFormatter, formatDate, getColor, getTicks } from '../../util/charts-utils'
+import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, Legend, Label } from 'recharts'
+import { chartDataKey, dateFormatter, formatDate, getColor, getTicks, round } from '../../util/charts-utils'
 
 type Props = {
-  dataKey: string
   data: any
   startDate: string
   endDate: string
+  unit?: string
 }
 
-const LineGraph = ({ data, dataKey, startDate, endDate }: Props) => {
+const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
   const [width, setWidth] = useState<number>(10)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -34,9 +34,12 @@ const LineGraph = ({ data, dataKey, startDate, endDate }: Props) => {
         data={data.chartData}
         margin={{ top: 20, right: 65, left: 10, bottom: 70 }}
       >
-        <Tooltip labelFormatter={(value) => `${formatDate(new Date(value), startDate == endDate ? 'HH:mm': 'dd-MM-yyyy')}`} />
+        <Tooltip
+          labelFormatter={(value) => `${formatDate(new Date(value), startDate == endDate ? 'HH:mm' : 'dd-MM-yyyy')}`}
+          formatter={(value) => `${(round(value))} ${unit}`}
+        />
         <XAxis
-          dataKey={dataKey}
+          dataKey={chartDataKey}
           ticks={ticks}
           domain={domain}
           tickFormatter={(value) => dateFormatter(startDate, endDate, value)}
@@ -49,12 +52,19 @@ const LineGraph = ({ data, dataKey, startDate, endDate }: Props) => {
           minTickGap={0}
           interval={0}
         />
-        <YAxis />
+        <YAxis>
+          <Label
+            dx={-20}
+            angle={270}
+            value={unit}
+          />
+        </YAxis>
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
         <CartesianGrid stroke="#f5f5f5" />
-        {(data?.chartData?.length > 0 ?? false) &&
+        {
+          (data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {
-            return k === `${dataKey}` ? null : (
+            return k === chartDataKey ? null : (
               <Line
                 key={k}
                 dataKey={k}
@@ -63,10 +73,11 @@ const LineGraph = ({ data, dataKey, startDate, endDate }: Props) => {
                 fill={getColor(data, k)}
               />
             )
-          })}
+          })
+        }
         <Legend />
-      </LineChart>
-    </div>
+      </LineChart >
+    </div >
   )
 }
 

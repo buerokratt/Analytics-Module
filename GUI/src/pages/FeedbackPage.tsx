@@ -13,7 +13,7 @@ import {
 } from '../resources/api-constants'
 import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types'
 import { Chat } from '../types/chat'
-import { formatDate, translateChartKeys } from '../util/charts-utils'
+import { chartDataKey, formatDate, translateChartKeys } from '../util/charts-utils'
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators'
 import { Subject } from 'rxjs'
 
@@ -25,7 +25,6 @@ const FeedbackPage: React.FC = () => {
   const [currentMetric, setCurrentMetric] = useState('feedback.statuses')
   const randomColor = () => '#' + ((Math.random() * 0xffffff) << 0).toString(16)
   const [currentConfigs, setConfigs] = useState<MetricOptionsState>()
-  const chartKey = 'dateTime'
 
   useEffect(() => {
     setAdvisorsList(advisors.current);
@@ -44,11 +43,28 @@ const FeedbackPage: React.FC = () => {
         { id: 'to-contact', labelKey: 'feedback.status_options.to_contact', color: randomColor(), isSelected: true },
         { id: 'terminated', labelKey: 'feedback.status_options.terminated', color: randomColor(), isSelected: true },
       ],
+      unit: 'chats',
     },
-    { id: 'burokratt_chats', labelKey: 'feedback.burokratt_chats' },
-    { id: 'advisor_chats', labelKey: 'feedback.advisor_chats' },
-    { id: 'selected_advisor_chats', labelKey: 'feedback.selected_advisor_chats' },
-    { id: 'negative_feedback', labelKey: 'feedback.negative_feedback' },
+    {
+      id: 'burokratt_chats',
+      labelKey: 'feedback.burokratt_chats',
+      unit: 'chats',
+    },
+    {
+      id: 'advisor_chats',
+      labelKey: 'feedback.advisor_chats',
+      unit: 'chats',
+    },
+    {
+      id: 'selected_advisor_chats',
+      labelKey: 'feedback.selected_advisor_chats',
+      unit: 'chats',
+    },
+    {
+      id: 'negative_feedback',
+      labelKey: 'feedback.negative_feedback',
+      unit: 'feedback',
+    },
   ])
 
   const { t } = useTranslation()
@@ -103,16 +119,16 @@ const FeedbackPage: React.FC = () => {
       const response = result.data.response
         .flat(1)
         .map((entry: any) => ({
-          ...translateChartKeys(entry, 'dateTime'),
-          dateTime: new Date(entry.dateTime).getTime(),
+          ...translateChartKeys(entry, chartDataKey),
+          [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
         }))
         .reduce((a: any, b: any) => {
-          const dateRow = a.find((i: any) => i['dateTime'] === b['dateTime'])
+          const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey])
           if (dateRow) {
             dateRow[b['Event']] = b['Count']
           } else {
             a.push({
-              dateTime: b['dateTime'],
+              [chartDataKey]: b[chartDataKey],
               [b['Event']]: b['Count'],
             })
           }
@@ -163,8 +179,8 @@ const FeedbackPage: React.FC = () => {
       })
 
       const response = result.data.response.map((entry: any) => ({
-        ...translateChartKeys(entry, 'dateTime'),
-        dateTime: new Date(entry.dateTime).getTime(),
+        ...translateChartKeys(entry, chartDataKey),
+        [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }))
 
       chartData = {
@@ -187,8 +203,8 @@ const FeedbackPage: React.FC = () => {
       })
 
       const response = result.data.response.map((entry: any) => ({
-        ...translateChartKeys(entry, 'dateTime'),
-        dateTime: new Date(entry.dateTime).getTime(),
+        ...translateChartKeys(entry, chartDataKey),
+        [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }))
 
       chartData = {
@@ -242,16 +258,16 @@ const FeedbackPage: React.FC = () => {
       const response = res
         .flat(1)
         .map((entry: any) => ({
-          ...translateChartKeys(entry, 'dateTime'),
-          dateTime: new Date(entry.dateTime).getTime(),
+          ...translateChartKeys(entry, chartDataKey),
+          [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
         }))
         .reduce((a: any, b: any) => {
-          const dateRow = a.find((i: any) => i['dateTime'] === b['dateTime'])
+          const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey])
           if (dateRow) {
             dateRow[b['Customer Support Display Name']] = b['Nps']
           } else {
             a.push({
-              dateTime: b['dateTime'],
+              [chartDataKey]: b[chartDataKey],
               [b['Customer Support Display Name']]: b['Nps'],
             })
           }
@@ -317,13 +333,13 @@ const FeedbackPage: React.FC = () => {
 
       const response = result.data.response.map((entry: any) => ({
         ...translateChartKeys(entry, 'created'),
-        dateTime: new Date(entry.created).getTime(),
+        [chartDataKey]: new Date(entry.created).getTime(),
       }))
 
       chartData = {
         chartData: response,
         colors: [
-          { id: 'dateTime', color: '#FFB511' },
+          { id: chartDataKey, color: '#FFB511' },
           { id: 'Ended', color: '#FFB511' },
         ],
       }
@@ -349,7 +365,6 @@ const FeedbackPage: React.FC = () => {
       <MetricsCharts
         title={currentMetric}
         data={chartData}
-        dataKey={chartKey}
         startDate={currentConfigs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
         endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
         groupByPeriod={currentConfigs?.groupByPeriod ?? 'day'}

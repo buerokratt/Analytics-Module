@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { config, Subject } from 'rxjs'
+import { Subject } from 'rxjs'
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators'
 import OptionsPanel from '../../components/MetricAndPeriodOptions'
 import { MetricOptionsState } from '../../components/MetricAndPeriodOptions/types'
@@ -47,7 +47,6 @@ const BurokrattPage: React.FC = () => {
       <MetricsCharts
         title={tableTitleKey}
         data={chartData}
-        dataKey='dateTime'
         startDate={configs?.start ?? formatDate(new Date(), chartDateFormat)}
         endDate={configs?.end ?? formatDate(new Date(), chartDateFormat)}
         groupByPeriod={configs?.groupByPeriod ?? 'day'}

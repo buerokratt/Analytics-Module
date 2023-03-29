@@ -21,7 +21,7 @@ const OverviewPage: React.FC = () => {
   const [cookies, setCookie] = useCookies();
 
   const chartKey = 'dateTime'
-  const { t } = useTranslation()  
+  const { t } = useTranslation()
 
   useEffect(() => {
     checkForCookie();
@@ -39,7 +39,7 @@ const OverviewPage: React.FC = () => {
 
   const checkForCookie = () => {
     if (!(document.cookie.indexOf('test') > -1)) {
-      setCookie('test',1, {path: '/'});
+      setCookie('test', 1, { path: '/' });
     }
   }
 
@@ -54,16 +54,15 @@ const OverviewPage: React.FC = () => {
     const chartData = {
       chartData: response,
       colors: [
-        {id: 'Chats started', color: `hsl(${0 * 20}, 80%, 45%)`},
-        {id: 'Left with an answer', color: `hsl(${1 * 20}, 80%, 45%)`},
-        {id: 'Left with no answer', color: `hsl(${2 * 20}, 80%, 45%)`},
-        {id: 'Hate speech', color: `hsl(${3 * 20}, 80%, 45%)`},
-        {id: 'Unspecified reason', color: `hsl(${4 * 20}, 80%, 45%)`},
-        {id: 'Answered in other channel', color: `hsl(${5 * 20}, 80%, 45%)`}
+        { id: 'Chats started', color: `hsl(${0 * 20}, 80%, 45%)` },
+        { id: 'Left with an answer', color: `hsl(${1 * 20}, 80%, 45%)` },
+        { id: 'Left with no answer', color: `hsl(${2 * 20}, 80%, 45%)` },
+        { id: 'Hate speech', color: `hsl(${3 * 20}, 80%, 45%)` },
+        { id: 'Unspecified reason', color: `hsl(${4 * 20}, 80%, 45%)` },
+        { id: 'Answered in other channel', color: `hsl(${5 * 20}, 80%, 45%)` }
       ],
     }
     setChartData(chartData);
-    console.log(result.data.response);
   }
 
   const updateMetricPreference = async (metric: OverviewMetricPreference) => {
@@ -100,9 +99,9 @@ const OverviewPage: React.FC = () => {
         key === 'created'
           ? acc
           : {
-              ...acc,
-              ...{ [t(`chart.${key}`)]: obj[key] },
-            },
+            ...acc,
+            ...{ [t(`chart.${key}`)]: obj[key] },
+          },
       {},
     )
 
@@ -153,7 +152,7 @@ const OverviewPage: React.FC = () => {
           </Track>
         }
       >
-       <LineGraph
+        <LineGraph
           dataKey={chartKey}
           data={chartData}
           startDate={formatDate(new Date(), 'yyyy-MM-dd')}

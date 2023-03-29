@@ -15,6 +15,7 @@ import {
   getCsaChatsTotal,
 } from '../resources/api-constants'
 
+
 const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation()
   const [chartData, setChartData] = useState({})
@@ -140,7 +141,7 @@ const AdvisorsPage: React.FC = () => {
 
       chartData = {
         chartData: response,
-        colors: [{ id: 'Average (Sec)', color: '#FFB511' }],
+        colors: [{ id: 'Average (Min)', color: '#FFB511' }],
       }
     } catch (_) {
       //error
@@ -205,20 +206,14 @@ const AdvisorsPage: React.FC = () => {
         end_date: config?.end,
       })
 
-      const res = result.data.response.map((entry: any) => ({
+      const response = result.data.response.map((entry: any) => ({
         ...translateChartKeys(entry, 'dateTime'),
         dateTime: new Date(entry.dateTime).getTime(),
       }))
 
-      const response = res.map((e: any) => ({
-        Average: e.Average,
-        dateTime: e.dateTime,
-        Interval: e.timeInterval.value,
-      }))
-
       chartData = {
         chartData: response,
-        colors: [{ id: 'Average (Sec)', color: '#FFB511' }],
+        colors: [{ id: 'Average (Min)', color: '#FFB511' }],
       }
     } catch (_) {
       //error

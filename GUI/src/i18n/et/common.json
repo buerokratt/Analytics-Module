@@ -116,6 +116,8 @@
     "rating": "Hinnang",
     "feedback": "Tagasiside",
     "ended": "Ended",
+    "avgSec": "Average (Sec)",
+    "avgMin": "Average (Min)",
     "customerSupportId": "Customer Support Id",
     "customerSupportDisplayName": "Customer Support Display Name",
     "barChart": "Tulpdiagramm",

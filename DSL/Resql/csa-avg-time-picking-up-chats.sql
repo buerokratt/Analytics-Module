@@ -19,7 +19,7 @@ WITH botname AS (
     FROM chat
     WHERE created::date BETWEEN :start::date AND :end::date
 )
-SELECT date_time, COALESCE(
+SELECT date_time, ROUND(COALESCE(
         AVG(
             extract(
                 epoch
@@ -27,7 +27,7 @@ SELECT date_time, COALESCE(
             )
         ),
         0
-    ) AS avg_waiting_time_seconds
+    ) / 60) AS avg_min
 FROM customer_support_changes
 WHERE prev_support_id = ''
     AND customer_support_id NOT IN (

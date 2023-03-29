@@ -32,7 +32,7 @@ WITH chat_stats AS (
                 AND "event" = 'to-contact'
         ) AS to_contact
     FROM chat
-    WHERE created >= date_trunc('hour', NOW() - '1 day'::INTERVAL)
+    WHERE created >= date_trunc('hour', NOW())
 )
 SELECT timescale.created AS created,
     COUNT(DISTINCT base_id) AS metric_value,
@@ -55,7 +55,7 @@ FROM (
         SELECT date_trunc(
                 'hour',
                 generate_series(
-                    current_date - '1 day'::INTERVAL,
+                    current_date,
                     NOW(),
                     '1 hour'::INTERVAL
                 )

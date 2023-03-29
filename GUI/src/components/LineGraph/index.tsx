@@ -34,7 +34,7 @@ const LineGraph = ({ data, dataKey, startDate, endDate }: Props) => {
         data={data.chartData}
         margin={{ top: 20, right: 65, left: 10, bottom: 70 }}
       >
-        <Tooltip labelFormatter={(value) => `${formatDate(new Date(value), 'dd-MM-yyyy')}`} />
+        <Tooltip labelFormatter={(value) => `${formatDate(new Date(value), startDate == endDate ? 'HH:mm': 'dd-MM-yyyy')}`} />
         <XAxis
           dataKey={dataKey}
           ticks={ticks}

@@ -58,14 +58,14 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
         />
         <YAxis>
           <Label
-            dx={-20}
+            dx={-25}
             angle={270}
             value={unit}
           />
         </YAxis>
         <Tooltip
           labelFormatter={(value) => `${formatDate(new Date(value), 'dd-MM-yyyy')}`}
-          formatter={(value) => `${(round(value))} ${unit}`}
+          formatter={round}
           cursor={false}
         />
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />

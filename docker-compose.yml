@@ -42,7 +42,7 @@ services:
       - ./data:/var/lib/postgresql/data
     networks:
       - bykstack
-  gui_dev: # For development
+  gui_dev:
     container_name: gui_dev
     environment:
       - NODE_ENV=development
@@ -50,6 +50,7 @@ services:
       - REACT_APP_API_URL=http://localhost:8080
       - REACT_APP_BUEROKRATT_CHATBOT_URL=http://buerokratt-chat:8080
       - REACT_APP_OPENSEARCH_DASHBOARD_URL=https://opensearch.org/
+      - REACT_APP_OPENDATAPORT_URL=https://avaandmedtest.eesti.ee
       - PORT=3001
     build:
       context: ./GUI
@@ -61,17 +62,17 @@ services:
       - ./GUI:/app
     networks:
       - bykstack
-  data_mapper: 
-     container_name: data_mapper 
-     image: datamapper-node
-     volumes:
+  data_mapper:
+    container_name: data_mapper
+    image: datamapper-node
+    volumes:
       - ./DSL/DMapper/hbs:/workspace/app/views/analytics
       - ./DSL/DMapper/js:/workspace/app/js/analytics
-     ports:
+    ports:
       - 3000:3000
-     networks:
+    networks:
       - bykstack
-     
+
 networks:
   bykstack:
     name: bykstack

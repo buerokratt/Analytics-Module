@@ -10,7 +10,7 @@ SELECT
 FROM chat c
 JOIN customer_support_agent_activity AS csa
 ON c.customer_support_id = csa.id_code
-WHERE chat.created BETWEEN :start::date AND :end::date
+WHERE c.created BETWEEN :start::date AND :end::date
 AND (
     (
         csa.status = 'offline' 

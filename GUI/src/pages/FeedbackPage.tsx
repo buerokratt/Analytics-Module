@@ -25,6 +25,7 @@ const FeedbackPage: React.FC = () => {
   const [currentMetric, setCurrentMetric] = useState('feedback.statuses')
   const randomColor = () => '#' + ((Math.random() * 0xffffff) << 0).toString(16)
   const [currentConfigs, setConfigs] = useState<MetricOptionsState>()
+  const [unit, setUnit] = useState('')
 
   useEffect(() => {
     setAdvisorsList(advisors.current);
@@ -360,6 +361,10 @@ const FeedbackPage: React.FC = () => {
           setConfigs(config)
           configsSubject.next(config)
           setCurrentMetric(`feedback.${config.metric}`)
+
+          const selectedOption = feedbackMetrics.find((x) => x.id === config.metric)
+          if (!selectedOption) return;
+          setUnit(selectedOption.unit ?? '')
         }}
       />
       <MetricsCharts
@@ -368,6 +373,7 @@ const FeedbackPage: React.FC = () => {
         startDate={currentConfigs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
         endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
         groupByPeriod={currentConfigs?.groupByPeriod ?? 'day'}
+        unit={unit}
       />
       {showNegativeChart && <ChatsTable dataSource={negativeFeedbackChats} />}
     </>

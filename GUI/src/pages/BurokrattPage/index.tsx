@@ -14,6 +14,7 @@ const BurokrattPage: React.FC = () => {
   const [tableTitleKey, setTableTitleKey] = useState(metricOptions[0].labelKey)
   const [configs, setConfigs] = useState<MetricOptionsState>()
   const [chartData, setChartData] = useState([])
+  const [unit, setUnit] = useState(metricOptions[0].unit)
 
   const [configsSubject] = useState(() => new Subject())
   useEffect(() => {
@@ -38,9 +39,10 @@ const BurokrattPage: React.FC = () => {
         onChange={(config) => {
           setConfigs(config)
           configsSubject.next(config)
-          const tableTitleKey = metricOptions.find(x => x.id === config.metric)?.labelKey;
-          if (tableTitleKey)
-            setTableTitleKey(tableTitleKey)
+          const selectedOption = metricOptions.find((x) => x.id === config.metric)
+          if (!selectedOption) return;
+          setTableTitleKey(selectedOption.labelKey)
+          setUnit(selectedOption.unit)
         }}
         dateFormat={chartDateFormat}
       />
@@ -50,6 +52,7 @@ const BurokrattPage: React.FC = () => {
         startDate={configs?.start ?? formatDate(new Date(), chartDateFormat)}
         endDate={configs?.end ?? formatDate(new Date(), chartDateFormat)}
         groupByPeriod={configs?.groupByPeriod ?? 'day'}
+        unit={unit}
       />
     </>
   )

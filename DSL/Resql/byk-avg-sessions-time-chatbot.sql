@@ -1,8 +1,8 @@
 WITH closed_chats AS (
     SELECT
         chat_base_id,
-        MIN(m.created) AS start_time,
-        MAX(m.created) AS end_time
+        (MAX(m.created) - MIN(m.created)) AS duration,
+        MIN(chat.created) AS created
     FROM message m
     JOIN chat ON m.chat_base_id = chat.base_id
     WHERE chat.status IN ('ENDED', 'IDLE')
@@ -16,8 +16,8 @@ WITH closed_chats AS (
     GROUP BY chat_base_id
 )
 SELECT
-    DATE_TRUNC(:period, start_time) AS time,
-    AVG(EXTRACT(EPOCH FROM end_time - start_time)) AS avg_sesssion_time
+    DATE_TRUNC(:period, created) AS time,
+    ROUND(EXTRACT(epoch FROM COALESCE(AVG(duration), '0 minutes'::interval))/60) AS avg_sesssion_time
 FROM closed_chats
 GROUP BY time
 ORDER BY time

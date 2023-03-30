@@ -21,6 +21,7 @@ const AdvisorsPage: React.FC = () => {
   const [chartData, setChartData] = useState({})
   const [currentMetric, setCurrentMetric] = useState('')
   const [currentConfigs, setConfigs] = useState<MetricOptionsState>()
+  const [unit, setUnit] = useState('')
 
   const advisorsMetrics = [
     {
@@ -247,6 +248,9 @@ const AdvisorsPage: React.FC = () => {
           setConfigs(config)
           configsSubject.next(config)
           setCurrentMetric(`advisors.${config.metric}`)
+          const selectedOption = advisorsMetrics.find((x) => x.id === config.metric)
+          if (!selectedOption) return;
+          setUnit(selectedOption.unit)
         }}
       />
       <MetricsCharts
@@ -255,6 +259,7 @@ const AdvisorsPage: React.FC = () => {
         startDate={currentConfigs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
         endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
         groupByPeriod={currentConfigs?.groupByPeriod ?? 'day'}
+        unit={unit}
       />
     </>
   )

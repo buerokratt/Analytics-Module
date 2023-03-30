@@ -37,7 +37,7 @@ export const chatOptions: Option[] = [
   {
     id: 'duration',
     labelKey: 'chats.duration',
-    unit: 'seconds',
+    unit: 'minutes',
   },
   {
     id: 'idle',

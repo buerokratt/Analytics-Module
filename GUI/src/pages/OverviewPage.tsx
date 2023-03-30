@@ -20,7 +20,6 @@ const OverviewPage: React.FC = () => {
   const [drawerIsHidden, setDrawerIsHidden] = useState(true)
   const [cookies, setCookie] = useCookies();
 
-  const chartKey = 'dateTime'
   const { t } = useTranslation()
 
   useEffect(() => {

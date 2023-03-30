@@ -36,7 +36,8 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
       >
         <Tooltip
           labelFormatter={(value) => `${formatDate(new Date(value), startDate == endDate ? 'HH:mm' : 'dd-MM-yyyy')}`}
-          formatter={(value) => `${(round(value))} ${unit}`}
+          formatter={round}
+          cursor={false}
         />
         <XAxis
           dataKey={chartDataKey}
@@ -54,7 +55,7 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
         />
         <YAxis>
           <Label
-            dx={-20}
+            dx={-25}
             angle={270}
             value={unit}
           />

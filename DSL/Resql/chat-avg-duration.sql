@@ -11,7 +11,7 @@ WITH chat_durations AS (
 )
 SELECT 
     DATE_TRUNC(:period, created) AS time,
-    AVG(EXTRACT(epoch FROM duration)::integer) AS avg_duration
+    ROUND(EXTRACT(epoch FROM COALESCE(AVG(duration), '0 minutes'::interval))/60) AS avg_duration
 FROM chat_durations
 GROUP BY time
 ORDER BY time

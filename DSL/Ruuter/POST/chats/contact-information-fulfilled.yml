@@ -34,7 +34,7 @@ empty_outside_working_hours:
 outside_working_hours:
   call: http.post
   args:
-    url: http://resql:8082/chat-cif-outside-working-hours
+    url: "[#ANALYTICS_RESQL]/chat-cif-outside-working-hours"
     body:
       period: ${period}
       start: ${start}
@@ -58,7 +58,7 @@ empty_long_waiting_time:
 long_waiting_time:
   call: http.post
   args:
-    url: http://resql:8082/chat-cif-long-waiting-time
+    url: "[#ANALYTICS_RESQL]/chat-cif-long-waiting-time"
     body:
       period: ${period}
       start: ${start}
@@ -83,7 +83,7 @@ empty_all_csas_away:
 all_csas_away:
   call: http.post
   args:
-    url: http://resql:8082/chat-cif-all-csas-away
+    url: "[#ANALYTICS_RESQL]/chat-cif-all-csas-away"
     body:
       period: ${period}
       start: ${start}

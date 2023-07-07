@@ -23,7 +23,7 @@ missing_parameter:
 fetch:
   call: http.post
   args:
-    url: http://resql:8082/chat-idle-count
+    url: "[#ANALYTICS_RESQL]/chat-idle-count"
     body:
       period: ${period}
       start: ${start}

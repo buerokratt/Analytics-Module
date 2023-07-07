@@ -23,7 +23,7 @@ missing_parameter:
 byk-pct-correctly-understood:
   call: http.post
   args:
-    url: http://resql:8082/byk-pct-correctly-understood
+    url: "[#ANALYTICS_RESQL]/byk-pct-correctly-understood"
     body:
       period: ${period}
       start: ${start}

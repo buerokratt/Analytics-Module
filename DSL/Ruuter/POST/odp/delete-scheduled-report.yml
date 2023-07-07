@@ -1,7 +1,7 @@
 getJobDetails:
   call: http.post
   args:
-    url: http://resql:8082/get-scheduled-report
+    url: "[#ANALYTICS_RESQL]/get-scheduled-report"
     body:
       datasetId: ${incoming.body.datasetId}
   result: jobDetails
@@ -18,7 +18,7 @@ removeSchedule:
 deleteScheduledReport:
   call: http.post
   args:
-    url: http://resql:8082/delete-scheduled-report
+    url: "[#ANALYTICS_RESQL]/delete-scheduled-report"
     body:
       id: ${jobDetails.response.body[0].id}
   result: delete

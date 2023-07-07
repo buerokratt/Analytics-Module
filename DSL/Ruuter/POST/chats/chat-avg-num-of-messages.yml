@@ -23,7 +23,7 @@ missing_parameter:
 fetch:
   call: http.post
   args:
-    url: http://resql:8082/chat-avg-num-of-messages
+    url: "[#ANALYTICS_RESQL]/chat-avg-num-of-messages"
     body:
       period: ${period}
       start: ${start}

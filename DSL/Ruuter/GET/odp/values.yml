@@ -5,7 +5,7 @@ assign_vars:
 get_keywords:
   call: http.get
   args:
-    url: http://open_data_service:8888/api/keywords
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/keywords"
     query:
       lang: ${lang}
   result: keywordsResult
@@ -13,7 +13,7 @@ get_keywords:
 get_categories:
   call: http.get
   args:
-    url: http://open_data_service:8888/api/categories
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/categories"
     query:
       lang: ${lang}
   result: categoriesResult
@@ -21,7 +21,7 @@ get_categories:
 get_regions:
   call: http.get
   args:
-    url: http://open_data_service:8888/api/regions
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/regions"
     query:
       lang: ${lang}
   result: regionsResult
@@ -29,7 +29,7 @@ get_regions:
 get_licences:
   call: http.get
   args:
-    url: http://open_data_service:8888/api/licences
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/licences"
     query:
       lang: ${lang}
   result: licencesResult

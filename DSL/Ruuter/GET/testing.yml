@@ -1,7 +1,7 @@
 get_message:
   call: http.post
   args:
-    url: http://resql:8082/testing
+    url: "[#ANALYTICS_RESQL]/testing"
   result: the_message
 
 return_value:

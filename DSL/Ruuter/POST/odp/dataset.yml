@@ -1,13 +1,13 @@
 getKey:
   call: http.post
   args:
-    url: http://resql:8082/get-odp-settings
+    url: "[#ANALYTICS_RESQL]/get-odp-settings"
   result: settings
   
 authenticate:
   call: http.post
   args:
-    url: http://open_data_service:8888/api/auth/key-login
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/auth/key-login"
     headers:
       X-API-KEY: ${settings.response.body[0].odpKey}
   result: apiToken
@@ -15,7 +15,7 @@ authenticate:
 createDataset:
   call: http.post
   args:
-    url: http://open_data_service:8888/api/users/me/datasets # replace with organization url that contains org id
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/users/me/datasets" # replace with organization url that contains org id
     body:
       nameEt: ${incoming.body.nameEt}
       nameEn: ${incoming.body.nameEn}
@@ -53,7 +53,7 @@ setUpSchedule:
 saveJobInformation:
   call: http.post
   args:
-    url: http://resql:8082/add-scheduled-report
+    url: "[#ANALYTICS_RESQL]/add-scheduled-report"
     body:
       name: ${incoming.body.nameEt}
       period: ${incoming.body.updateIntervalUnit}

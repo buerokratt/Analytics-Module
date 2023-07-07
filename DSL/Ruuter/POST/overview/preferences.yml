@@ -20,7 +20,7 @@ extract_request_data:
 extract_token_data:
   call: http.post
   args:
-    url: http://ruuter:8080/mocks/mock-custom-jwt-userinfo # todo: replace with real TIM url
+    url: "[#ANALYTICS_PUBLIC_RUUTER]/mocks/mock-custom-jwt-userinfo" # todo: replace with real TIM url
     headers:
       cookie: ${cookie}
     body:
@@ -36,7 +36,7 @@ validate_role:
 update_metrics_preferences:
   call: http.post
   args:
-    url: http://resql:8082/update-overview-metric-preferences
+    url: "[#ANALYTICS_RESQL]/update-overview-metric-preferences"
     body:
       user_id_code: ${jwtResult.response.body.response.idCode}
       active: ${active}
@@ -47,7 +47,7 @@ update_metrics_preferences:
 get_metrics_preferences:
   call: http.post
   args:
-    url: http://resql:8082/overview-metric-preferences
+    url: "[#ANALYTICS_RESQL]/overview-metric-preferences"
     body:
       user_id_code: ${jwtResult.response.body.response.idCode}
   result: metrics

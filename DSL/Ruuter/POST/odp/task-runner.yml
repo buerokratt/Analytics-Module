@@ -1,7 +1,7 @@
 getJobDetails:
   call: http.post
   args:
-    url: http://resql:8082/get-scheduled-report
+    url: "[#ANALYTICS_RESQL]/get-scheduled-report"
     body:
       datasetId: ${incoming.params.datasetId}
   result: jobDetails

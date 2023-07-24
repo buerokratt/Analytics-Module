@@ -1,0 +1,552 @@
+openapi: 3.0.3
+info:
+  title: Analytics module API
+  version: 0.1.0
+  license:
+    name: MIT
+    url: 'https://opensource.org/licenses/MIT'
+  description: Component responsible for analytics in the Bürokratt network.
+servers:
+  - url: 'http://localhost:8080' #TODO: change to the right url
+tags:
+  - name: Analytics
+    description: Bürokratt's analytics module
+paths:
+  /intents:
+    get:
+      tags:
+        - Analytics
+      summary: Retrieve intents
+      parameters:
+        - name: start
+          in: query
+          description: Start of the range
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: end
+          in: query
+          description: End of the range
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: intent
+          in: query
+          description: The intent to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Required parameters were not provided
+    post:
+      tags:
+        - Analytics
+      summary: Create intent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start:
+                  type: string
+                  format: date-time
+                  description: Start of the range
+                end:
+                  type: string
+                  format: date-time
+                  description: End of the range
+                intent:
+                  type: string
+                  description: The intent to retrieve
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Required parameters were not provided
+  /dataset:
+    get:
+      tags:
+        - Analytics
+      summary: Retrieve dataset metadata
+      parameters:
+        - in: query
+          name: datasetId
+          schema:
+            type: string
+          required: true
+          description: The ID of the dataset to retrieve
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dataset'
+        '400':
+          description: Required parameters were not provided
+    post:
+      tags:
+        - Analytics
+      summary: Create a new dataset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Dataset'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatasetOutput'
+        '400':
+          description: Required parameters were not provided
+  /scheduled-reports:
+    get:
+      tags:
+        - Analytics
+      summary: Get all scheduled reports
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledReports'
+        '400':
+          description: Error occurred
+  /settings:
+    get:
+      tags:
+        - Analytics
+      summary: Get ODP settings
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ODPSettings'
+        '400':
+          description: Error occurred
+    post:
+      tags:
+        - Analytics
+      summary: Update ODP settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ODPSettings'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ODPSettings'
+        '400':
+          description: Error occurred
+  /values:
+    get:
+      tags:
+        - Analytics
+      summary: Get keywords, categories, regions, and licences values based on language
+      parameters:
+          - in: query
+            name: lang
+            schema:
+              type: string
+            description: The language parameter
+            required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ValuesData'
+        '400':
+          description: Error occurred
+  /metrics:
+    get:
+      tags:
+        - Analytics
+      summary: Retrieve data for a specific metric
+      parameters:
+        - in: query
+          name: metric
+          schema:
+            type: string
+            enum:
+              - total_chats_day
+              - total_chats_month
+              - total_chats_no_csa_day
+              - avg_chats_by_month
+              - avg_chats_by_week
+              - avg_chats_no_csa_by_month
+              - avg_chats_no_csa_by_week
+              - avg_waiting_time_day
+              - avg_waiting_time_week
+              - total_forwarded_chats_yesterday
+              - chat-activity
+          description: The metric parameter
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsData'
+        '400':
+          description: Error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Invalid metric requested"
+    post:
+      tags:
+        - Analytics
+      summary: Retrieve analytics metrics data
+      operationId: getMetricsData
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetricsDataInput'
+      responses:
+        '200':
+          description: Analytics metrics data
+          content:
+            text/csv:
+              schema:
+                type: string
+                description: Metrics data in CSV format
+        '400':
+          description: Bad request. The client request is invalid
+        '500':
+          description: Internal server error. An error occurred on the server
+  /preferences:
+    get:
+      tags:
+        - Analytics
+      summary: Retrieve user preferences based on cookie
+      operationId: getPreferences
+      parameters:
+        - in: header
+          name: cookie
+          schema:
+            type: string
+          required: true
+          description: The user's cookie
+      responses:
+        '200':
+          description: User's metrics preferences
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                description: The user's preferences in a JSON format
+        '401':
+          description: Unauthorized. The user's cookie is invalid or missing
+        '500':
+          description: Internal server error. An error occurred on the server
+    post:
+      tags:
+        - Analytics
+      summary: Update user preferences based on cookie and request body
+      operationId: updatePreferences
+      parameters:
+        - in: header
+          name: cookie
+          schema:
+            type: string
+          required: true
+          description: The user's cookie
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PreferencesUpdateBody'
+      responses:
+        '200':
+          description: User's updated metrics preferences
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                description: The updated user's preferences in a JSON format
+        '400':
+          description: Bad request. Required parameters are missing
+        '401':
+          description: Unauthorized. The user's cookie is invalid or missing
+        '500':
+          description: Internal server error. An error occurred on the server
+  /negative-feedback:
+    get:
+      tags:
+        - Analytics
+      summary: Fetch negative feedback based on user's cookie and request parameters
+      operationId: fetchNegativeFeedback
+      parameters:
+        - in: header
+          name: cookie
+          schema:
+            type: string
+          required: true
+          description: The user's cookie
+        - in: query
+          name: start
+          schema:
+            type: string
+            format: date-time
+          required: true
+          description: The start date
+        - in: query
+          name: end
+          schema:
+            type: string
+            format: date-time
+          required: true
+          description: The end date
+        - in: query
+          name: events
+          schema:
+            type: string
+          required: true
+          description: The events, comma-separated
+      responses:
+        '200':
+          description: Negative feedback
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                description: The fetched negative feedback in a JSON format
+        '401':
+          description: Unauthorized. The user's cookie is invalid or missing
+        '500':
+          description: Internal server error. An error occurred on the server
+  /testing:
+    get:
+      tags:
+        - Analytics
+      summary: Fetch test message from server
+      operationId: fetchTestMessage
+      responses:
+        '200':
+          description: Test message
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                description: The fetched test message in a JSON format
+        '500':
+          description: Internal server error. An error occurred on the server
+components:
+  schemas:
+    Dataset:
+      type: object
+      properties:
+        nameEt:
+          type: string
+          example: 'mock'
+        nameEn:
+          type: string
+          example: 'mock'
+        descriptionEt:
+          type: string
+          example: 'mock'
+        descriptionEn:
+          type: string
+          example: 'mock'
+        maintainer:
+          type: string
+          example: 'mock'
+        maintainerEmail:
+          type: string
+          example: 'mock'
+        regionIds:
+          type: array
+          items:
+            type: integer
+          example: [1]
+        keywordIds:
+          type: array
+          items:
+            type: integer
+          example: [12777]
+        categoryIds:
+          type: array
+          items:
+            type: integer
+          example: [13]
+        updateIntervalUnit:
+          type: string
+          example: 'day'
+        updateIntervalFrequency:
+          type: integer
+          example: 1
+        dataFrom:
+          type: string
+          format: date-time
+          example: '2023-02-16T14:51:33Z'
+        access:
+          type: string
+          example: 'public'
+        licenceId:
+          type: integer
+          example: 1
+    DatasetOutput:
+      type: object
+      properties:
+        jobId:
+          type: string
+          example: 'some-unique-id'
+        dataset_id:
+          type: string
+          example: 'datasetId'
+    ScheduledReports:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            format: int8
+            example: 1
+          name:
+            type: string
+            example: 'Report 1'
+          period:
+            type: string
+            example: 'daily'
+          metrics:
+            type: array
+            items:
+              type: string
+            example: [ 'metric1', 'metric2' ]
+          job_id:
+            type: string
+            example: 'job1'
+          dataset_id:
+            type: string
+            example: 'dataset1'
+          created:
+            type: string
+            format: date-time
+            example: '2023-07-21T17:32:28Z'
+          updated:
+            type: string
+            format: date-time
+            example: '2023-07-23T17:32:28Z'
+    ODPSettings:
+      type: object
+      properties:
+        keyId:
+          type: string
+          example: 'key1'
+        apiKey:
+          type: string
+          example: 'api1'
+        orgId:
+          type: string
+          example: 'org1'
+    ValuesData:
+      type: object
+      properties:
+        keywords:
+          type: array
+          items:
+            type: string
+          example: [ 'keyword1', 'keyword2' ]
+        categories:
+          type: array
+          items:
+            type: string
+          example: [ 'category1', 'category2' ]
+        regions:
+          type: array
+          items:
+            type: string
+          example: [ 'region1', 'region2' ]
+        licences:
+          type: array
+          items:
+            type: string
+          example: [ 'licence1', 'licence2' ]
+    MetricsData:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+          example: [ { "date": "2023-01-01", "value": 300 }, { "date": "2023-01-02", "value": 320 } ]
+    MetricsDataInput:
+      type: object
+      properties:
+        metrics:
+          type: array
+          items:
+            type: string
+          description: Array of metrics to fetch data for
+          example: [ 'get-chat-count-total', 'get-avg-waiting-time' ]
+        start:
+          type: string
+          format: date-time
+          description: Start of the time period for which to fetch data
+          example: '2023-07-01T00:00:00Z'
+        end:
+          type: string
+          format: date-time
+          description: End of the time period for which to fetch data
+          example: '2023-07-31T23:59:59Z'
+        period:
+          type: string
+          description: Period for the metrics data
+          example: 'month'
+    PreferencesUpdateBody:
+      type: object
+      properties:
+        active:
+          type: boolean
+          description: Active state
+        metric:
+          type: string
+          description: The metric
+        ordinality:
+          type: integer
+          description: The ordinality
+      required:
+        - active
+        - metric
+        - ordinality

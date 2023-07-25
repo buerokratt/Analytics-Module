@@ -35,6 +35,7 @@ paths:
       tags:
         - metrics
       summary: Retrieve intents
+      operationId: getIntents
       parameters:
         - name: start
           in: query
@@ -69,6 +70,7 @@ paths:
       tags:
         - metrics
       summary: Create intent
+      operationId: postIntents
       requestBody:
         required: true
         content:
@@ -101,6 +103,7 @@ paths:
       tags:
         - odp
       summary: Retrieve dataset metadata
+      operationId: getDataset
       parameters:
         - in: query
           name: datasetId
@@ -121,6 +124,7 @@ paths:
       tags:
         - odp
       summary: Create a new dataset
+      operationId: postDataset
       requestBody:
         content:
           application/json:
@@ -141,6 +145,7 @@ paths:
       tags:
         - odp
       summary: Get all scheduled reports
+      operationId: getScheduledReports
       responses:
         '200':
           description: Successful operation
@@ -155,6 +160,7 @@ paths:
       tags:
         - odp
       summary: Get ODP settings
+      operationId: getSettings
       responses:
         '200':
           description: Successful operation
@@ -168,6 +174,7 @@ paths:
       tags:
         - odp
       summary: Update ODP settings
+      operationId: postSettings
       requestBody:
         required: true
         content:
@@ -188,6 +195,7 @@ paths:
       tags:
         - odp
       summary: Get keywords, categories, regions, and licences values based on language
+      operationId: getValues
       parameters:
         - in: query
           name: lang
@@ -211,6 +219,7 @@ paths:
       tags:
         - overview
       summary: Retrieve data for a specific metric
+      operationId: getMetricsData
       parameters:
         - in: query
           name: metric
@@ -248,7 +257,7 @@ paths:
       tags:
         - overview
       summary: Retrieve analytics metrics data
-      operationId: getMetricsData
+      operationId: postMetricsData
       requestBody:
         required: true
         content:

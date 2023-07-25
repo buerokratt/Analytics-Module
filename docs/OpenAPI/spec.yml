@@ -9,13 +9,31 @@ info:
 servers:
   - url: 'http://localhost:8080' #TODO: change to the right url
 tags:
-  - name: Analytics
+  - name: analytics
     description: Bürokratt's analytics module
+  - name: metrics
+    description: endpoints related to metrics
+  - name: odp
+    description: endpoints related to odp
+  - name: overview
+    description: endpoints related to overview
+  - name: buerokratt
+    description: endpoints related to buerokratt
+  - name: chat
+    description: endpoints related to chat
+  - name: chats
+    description: endpoints related to chats
+  - name: csa
+    description: endpoints related to csa
+  - name: feedback
+    description: endpoints related to feedback
+  - name: mocks
+    description: endpoints related to mock
 paths:
   /intents:
     get:
       tags:
-        - Analytics
+        - metrics
       summary: Retrieve intents
       parameters:
         - name: start
@@ -49,7 +67,7 @@ paths:
           description: Required parameters were not provided
     post:
       tags:
-        - Analytics
+        - metrics
       summary: Create intent
       requestBody:
         required: true
@@ -81,7 +99,7 @@ paths:
   /dataset:
     get:
       tags:
-        - Analytics
+        - odp
       summary: Retrieve dataset metadata
       parameters:
         - in: query
@@ -101,7 +119,7 @@ paths:
           description: Required parameters were not provided
     post:
       tags:
-        - Analytics
+        - odp
       summary: Create a new dataset
       requestBody:
         content:
@@ -121,7 +139,7 @@ paths:
   /scheduled-reports:
     get:
       tags:
-        - Analytics
+        - odp
       summary: Get all scheduled reports
       responses:
         '200':
@@ -135,7 +153,7 @@ paths:
   /settings:
     get:
       tags:
-        - Analytics
+        - odp
       summary: Get ODP settings
       responses:
         '200':
@@ -148,7 +166,7 @@ paths:
           description: Error occurred
     post:
       tags:
-        - Analytics
+        - odp
       summary: Update ODP settings
       requestBody:
         required: true
@@ -168,7 +186,7 @@ paths:
   /values:
     get:
       tags:
-        - Analytics
+        - odp
       summary: Get keywords, categories, regions, and licences values based on language
       parameters:
         - in: query
@@ -191,7 +209,7 @@ paths:
   /metrics:
     get:
       tags:
-        - Analytics
+        - overview
       summary: Retrieve data for a specific metric
       parameters:
         - in: query
@@ -228,7 +246,7 @@ paths:
                 example: "Invalid metric requested"
     post:
       tags:
-        - Analytics
+        - overview
       summary: Retrieve analytics metrics data
       operationId: getMetricsData
       requestBody:
@@ -252,7 +270,7 @@ paths:
   /preferences:
     get:
       tags:
-        - Analytics
+        - overview
       summary: Retrieve user preferences based on cookie
       operationId: getPreferences
       parameters:
@@ -277,7 +295,7 @@ paths:
           description: Internal server error. An error occurred on the server
     post:
       tags:
-        - Analytics
+        - overview
       summary: Update user preferences based on cookie and request body
       operationId: updatePreferences
       parameters:
@@ -311,7 +329,7 @@ paths:
   /negative-feedback:
     get:
       tags:
-        - Analytics
+        - analytics
       summary: Fetch negative feedback based on user's cookie and request parameters
       operationId: fetchNegativeFeedback
       parameters:
@@ -357,7 +375,7 @@ paths:
   /testing:
     get:
       tags:
-        - Analytics
+        - analytics
       summary: Fetch test message from server
       operationId: fetchTestMessage
       responses:
@@ -374,7 +392,7 @@ paths:
   /byk-modified-intents:
     post:
       tags:
-        - Analytics
+        - buerokratt
       summary: Retrieve modified intents by period
       operationId: fetchModifiedIntents
       requestBody:
@@ -403,7 +421,7 @@ paths:
   /byk-new-intents:
     post:
       tags:
-        - Analytics
+        - buerokratt
       summary: Retrieve new intents by period
       operationId: fetchNewIntents
       requestBody:
@@ -432,7 +450,7 @@ paths:
   /byk-avg-response-speed:
     post:
       tags:
-        - Analytics
+        - buerokratt
       summary: Retrieve average response speed by period
       operationId: fetchAvgResponseSpeed
       requestBody:
@@ -459,7 +477,7 @@ paths:
   /byk-avg-sessions-time:
     post:
       tags:
-        - Analytics
+        - buerokratt
       summary: Retrieve average sessions time by period and options
       operationId: fetchAvgSessionsTime
       requestBody:
@@ -488,7 +506,7 @@ paths:
   /byk-intents:
     post:
       tags:
-        - Analytics
+        - buerokratt
       summary: Retrieve intents by period and options
       operationId: fetchIntents
       requestBody:
@@ -517,7 +535,7 @@ paths:
   /byk-pct-correctly-understood:
     post:
       tags:
-        - Analytics
+        - buerokratt
       summary: Retrieve percentage of correctly understood inputs by period
       operationId: fetchPctCorrectlyUnderstood
       requestBody:
@@ -544,7 +562,7 @@ paths:
   /status:
     post:
       tags:
-        - Analytics
+        - chat
       summary: Fetches status data for specified events and metric in a given period
       operationId: fetchStatus
       requestBody:
@@ -573,7 +591,7 @@ paths:
   /avg-median-waiting-time:
     post:
       tags:
-        - Analytics
+        - chats
       summary: Fetches average and median waiting time data for a given period
       operationId: fetchAvgMedianWaitingTime
       requestBody:
@@ -602,7 +620,7 @@ paths:
   /chat-avg-duration:
     post:
       tags:
-        - Analytics
+        - chats
       summary: Fetches average duration data for a chat within a given period
       operationId: fetchChatAverageDuration
       requestBody:
@@ -629,7 +647,7 @@ paths:
   /chat-avg-num-of-messages:
     post:
       tags:
-        - Analytics
+        - chats
       summary: Fetches average number of messages data for a chat within a given period
       operationId: fetchChatAverageNumberOfMessages
       requestBody:
@@ -656,7 +674,7 @@ paths:
   /chat-idle-count:
     post:
       tags:
-        - Analytics
+        - chats
       summary: Fetches idle chat count data within a given period
       operationId: fetchChatIdleCount
       requestBody:
@@ -683,7 +701,7 @@ paths:
   /chat-total-count:
     post:
       tags:
-        - Analytics
+        - chats
       summary: Fetches chat count data with options for chatbot-only and with-csa within a given period
       operationId: fetchChatTotalCount
       requestBody:
@@ -712,7 +730,7 @@ paths:
   /contact-information-fulfilled:
     post:
       tags:
-        - Analytics
+        - chats
       summary: Fetches data related to contact information fulfilment with different options within a given period
       operationId: fetchContactInfoFulfilled
       requestBody:
@@ -741,7 +759,7 @@ paths:
   /avg-chat-time:
     post:
       tags:
-        - Analytics
+        - csa
       summary: Fetches the average chat time based on the specified metric within a given date range
       operationId: fetchAvgChatTime
       requestBody:
@@ -768,7 +786,7 @@ paths:
   /avg-present-number:
     post:
       tags:
-        - Analytics
+        - csa
       summary: Fetches the average present number based on the specified metric within a given date range
       operationId: fetchAvgPresentNumber
       requestBody:
@@ -795,7 +813,7 @@ paths:
   /avg-time-picking-up-chat:
     post:
       tags:
-        - Analytics
+        - csa
       summary: Fetches the average time for picking up chats based on the specified metric within a given date range
       operationId: fetchAvgTimePickingUpChat
       requestBody:
@@ -822,7 +840,7 @@ paths:
   /chat_forwards:
     post:
       tags:
-        - Analytics
+        - csa
       summary: Fetches the number of chat forwards based on the specified metric within a given date range
       operationId: fetchChatForwards
       requestBody:
@@ -849,7 +867,7 @@ paths:
   /total-chats:
     post:
       tags:
-        - Analytics
+        - csa
       summary: Fetches the total number of chats based on the specified metric within a given date range
       operationId: fetchTotalChats
       requestBody:
@@ -873,10 +891,10 @@ paths:
                 type: string
         '500':
           description: Internal server error. An error occurred on the server.
-  /avg-feedback-tp-buerokratt-chats:
+  /avg-feedback-to-buerokratt-chats:
     post:
       tags:
-        - Analytics
+        - feedback
       summary: Fetches the average feedback to "Buerokratt" chats based on the specified metric within a given date range
       operationId: fetchAvgFeedbackBuerokrattChats
       requestBody:
@@ -903,7 +921,7 @@ paths:
   /chats-with-negative-feedback:
     post:
       tags:
-        - Analytics
+        - feedback
       summary: Fetches the chats with negative feedback based on specified events within a given date range
       operationId: fetchChatsWithNegativeFeedback
       requestBody:
@@ -930,7 +948,7 @@ paths:
   /csa-chats-feedback-nps:
     post:
       tags:
-        - Analytics
+        - feedback
       summary: Fetches the CSA chats feedback NPS (Net Promoter Score) based on a specified metric within a given date range
       operationId: fetchCsaChatsFeedbackNPS
       requestBody:
@@ -957,7 +975,7 @@ paths:
   /selected-csa-feedback-nps:
     post:
       tags:
-        - Analytics
+        - feedback
       summary: Fetches the selected CSA feedback NPS (Net Promoter Score) based on a specified metric within a given date range excluding specified CSAs
       operationId: fetchSelectedCsaFeedbackNPS
       requestBody:
@@ -984,7 +1002,7 @@ paths:
   /mock-custom-jwt-userinfo:
     post:
       tags:
-        - Analytics
+        - mocks
       summary: Mocks a custom JSON Web Token (JWT) user information response
       operationId: mockCustomJwtUserInfo
       responses:
@@ -999,7 +1017,7 @@ paths:
   /delete-scheduled-report:
     post:
       tags:
-        - Analytics
+        - odp
       summary: Deletes a scheduled report
       operationId: deleteScheduledReport
       requestBody:
@@ -1020,7 +1038,7 @@ paths:
   /delete-settings:
     post:
       tags:
-        - Analytics
+        - odp
       summary: Deletes a specified ODP key
       operationId: deleteOdpKey
       responses:
@@ -1035,7 +1053,7 @@ paths:
   /download:
     post:
       tags:
-        - Analytics
+        - odp
       summary: Download the metrics
       operationId: getMetrics
       requestBody:
@@ -1063,7 +1081,7 @@ paths:
   /task-runner:
     post:
       tags:
-        - Analytics
+        - odp
       summary: Run a task for given dataset
       operationId: runTask
       parameters:
@@ -1087,7 +1105,7 @@ paths:
   /update-scheduled-report:
     post:
       tags:
-        - Analytics
+        - odp
       summary: Update a scheduled report
       operationId: updateScheduledReport
       requestBody:
@@ -1110,7 +1128,7 @@ paths:
   /upload:
     post:
       tags:
-        - Analytics
+        - odp
       summary: Upload metrics
       operationId: uploadMetrics
       requestBody:
@@ -1134,7 +1152,7 @@ paths:
   /csv:
     post:
       tags:
-        - Analytics
+        - analytics
       summary: Generate CSV
       description: This endpoint generates a CSV file based on the provided data.
       requestBody:

@@ -7,7 +7,7 @@ info:
     url: 'https://opensource.org/licenses/MIT'
   description: Component responsible for analytics in the Bürokratt network.
 servers:
-  - url: 'http://localhost:8080' #TODO: change to the right url
+  - url: 'https://admin.play.buerokratt.ee/analytics'
 tags:
   - name: analytics
     description: Bürokratt's analytics module

@@ -1,6 +1,6 @@
 {
   "global": {
-    "title": "Analyticsi moodul",
+    "title": "Analüütika moodul",
     "resultCount": "Kuvan korraga",
     "edit": "Muuda",
     "delete": "Kustuta",
@@ -39,9 +39,9 @@
     "newIntents": "Uued treenitud teemad",
     "modifiedIntents": "Muudetud teemad",
     "avgChatIntents": "Keskmine tuvastatud teemade arv ühes vestluses",
-    "csa": "Keskmine aeg, Bürokratt + nõustaja",
-    "idle": "Keskmine aeg, ainult Bürokratt",
-    "closed": "Keskmine aeg Bürokratiga, kliendi lõpetatud"
+    "csa": "Keskmine aeg (min), Bürokratt + nõustaja",
+    "idle": "Keskmine aeg (min), ainult Bürokratt",
+    "closed": "Keskmine aeg (min) Bürokratiga, kliendi lõpetatud"
   },
   "overview": {
     "editView": "Muuda vaadet",
@@ -59,7 +59,7 @@
       "total_chats_day": "Vestluste arv: täna / eile",
       "total_forwarded_chats_yesterday": "Suunatud vestluse eile: sisesed / välised",
       "avg_waiting_time_day": "Keskmine ooteaeg: täna / eile",
-      "avg_waiting_time_week": "Keskmine ootaeg: nädal - eelmine"
+      "avg_waiting_time_week": "Keskmine ootaeg: nädal / eelmine"
     }
   },
   "feedback": {
@@ -88,17 +88,17 @@
   "chats": {
     "total": "Vestluste koguarv",
     "cip": "Kontakti jätmised",
-    "avgWaitingTime": "Vestluste keskmine aeg",
-    "totalMessages": "Keskmine ooteaia pikkus",
-    "duration": "Keskmine sonumite arv vestluses",
-    "idle": "Bürokrati Iöpetatud vestluste arv",
+    "avgWaitingTime": "Vestluste keskmine aeg (min)",
+    "totalMessages": "Keskmine ooteaja pikkus (min)",
+    "duration": "Keskmine sõnumite arv vestluses",
+    "idle": "Bürokrati lõpetatud vestluste arv",
     "onlyBYK": "Bürokrati vastatud",
-    "csaInvolved": "Nöustaja kaasatud",
+    "csaInvolved": "Nõustaja kaasatud",
     "outsideWorkingHours": "Tööpäeva väline aeg",
     "longWaitingTime": "Pikk ooteaeg",
     "allCsvAway": "Kõik nõustajad ära / hõivatud",
-    "medianWaitingTime": "Mediaan",
-    "averageWaitingTime": "Aritmeetiline keskmine"
+    "medianWaitingTime": "Mediaan (min)",
+    "averageWaitingTime": "Aritmeetiline keskmine (min)"
   },
   "chart": {
     "metricValue": "Alustatud vestlused",
@@ -107,19 +107,19 @@
     "hateSpeech": "Vihakõne",
     "terminated": "Määramata põhjus",
     "toContact": "Vastus muus kanalis",
-    "count": "Count",
+    "count": "Vestluseid",
     "event": "Sündmus",
     "avg": "Keskmine",
-    "nps": "Nps",
+    "nps": "NPS",
     "id": "Id",
     "baseId": "Id",
     "rating": "Hinnang",
     "feedback": "Tagasiside",
-    "ended": "Ended",
-    "avgSec": "Average (Sec)",
-    "avgMin": "Average (Min)",
-    "customerSupportId": "Customer Support Id",
-    "customerSupportDisplayName": "Customer Support Display Name",
+    "ended": "Lõppenud",
+    "avgSec": "Keskmine (sek)",
+    "avgMin": "Keskmine (min)",
+    "customerSupportId": "Nõustaja Id",
+    "customerSupportDisplayName": "Nõustaja nimi",
     "barChart": "Tulpdiagramm",
     "pieChart": "Sektordiagramm",
     "lineChart": "Joondiagramm"
@@ -127,9 +127,9 @@
   "reports": {
     "get-chat-count-total": "Vestluste koguarv",
     "get-chat-count-no-csa": "Vestluste arv Bürokratiga",
-    "get-avg-waiting-time": "Keskmine ooteaja pikkus",
+    "get-avg-waiting-time": "Keskmine ooteaja pikkus (min)",
     "get-avg-messages": "Keskmine sõnumite arv vestluses",
-    "get-avg-time": "Vestluse keskmine aeg",
+    "get-avg-time": "Vestluse keskmine aeg (min)",
     "get-avg-time-no-csa": "Vestluse keskmine aeg, ainult Bürokratiga",
     "get-avg-time-csa": "Vestluse keskmine aeg, kui nõustaja kaasatatud",
     "get-avg-session-length-client-left": "Keskmine sessiooni aeg Bürokratiga, kliendi lõpetatud",
@@ -197,12 +197,12 @@
     "chat_forwards": "Suunamised",
     "forwards": {
       "from_csa": "Nõustajalt suunatud vestluste arv",
-      "to_csa": "Nõustajale suunatud vestlused",
+      "to_csa": "Nõustajale suunatud vestluste arv",
       "to_other": "Suunamised asutusest välja"
     },
     "avg_pick_time": "Keskmine vastamise kiirus asutuses",
     "avg_present_csa": "Keskmine nõustajate kohalolu",
     "num_chats_csa": "Vestluste arv nõustaja lõikes",
-    "avg_chat_time_csa": "Vestluste aeg nõustaja lõikes"
+    "avg_chat_time_csa": "Vestluste aeg (min) nõustaja lõikes"
   }
 }

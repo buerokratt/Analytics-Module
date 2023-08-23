@@ -9,7 +9,7 @@ import path from 'path';
 export default defineConfig({
     envPrefix: 'REACT_APP_',
     plugins: [react(), tsconfigPaths(), svgr()],
-    base: '',
+    base: '/analytics',
     server: {
         watch: {
             usePolling: true,
@@ -26,7 +26,6 @@ export default defineConfig({
     resolve: {
         alias: {
             '~@fontsource': path.resolve(__dirname, 'node_modules/@fontsource'),
-            // '@exirain/header': path.resolve(__dirname, 'node_modules/@exirain/cvi-header'),
             '@': `${path.resolve(__dirname, './src')}`,
         },
     }

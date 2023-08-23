@@ -35,8 +35,6 @@ const Layout: FC = () => {
         return JSON.parse(cache);
     }
 
-    console.log(MainMenuItems)
-
   return (
     <div className="layout">
       {/*<MainNavigation />*/}

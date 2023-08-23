@@ -11,11 +11,12 @@ import useUserInfoStore from "./store/user/store";
 
 const App: React.FC = () => {
     const userInfoStore = useUserInfoStore();
-    const { data: userInfo } = useQuery<UserInfo>({
-        queryKey: ['cs-custom-jwt-userinfo'],
-        onSuccess: (data) => {
-            userInfoStore.setUserInfo(data)
-        },
+    const { data: userInfo } = useQuery<{
+        data: { custom_jwt_userinfo: UserInfo };
+    }>({
+        queryKey: ['cs-custom-jwt-userinfo', 'prod'],
+        onSuccess: (data: { data: { custom_jwt_userinfo: UserInfo } }) =>
+            userInfoStore.setUserInfo(data.data.custom_jwt_userinfo),
     });
 
   return (

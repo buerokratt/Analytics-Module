@@ -1,9 +1,7 @@
-const baseUrl = import.meta.env.REACT_APP_API_URL
-// const baseUrl = "http://localhost:8080"
-const chatsUrl = "http://buerokratt-chat:8080"
-// const chatsUrl = process.env.REACT_APP_BUEROKRATT_CHATBOT_URL
+const baseUrl = process.env.REACT_APP_API_URL
+const chatsUrl = process.env.REACT_APP_BUEROKRATT_CHATBOT_URL
 
-export const openSearchDashboard = "https://opensearch.org/"
+export const openSearchDashboard = process.env.REACT_APP_OPENSEARCH_DASHBOARD_URL
 
 export const getLinkToChat = (chatId: string) => `${chatsUrl}/vestlus/ajalugu?chat=${chatId}`
 

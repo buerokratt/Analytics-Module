@@ -4,7 +4,7 @@ services:
     container_name: ruuter
     image: ruuter
     environment:
-      - application.cors.allowedOrigins=http://localhost:3001,https://admin.dev.buerokratt.ee
+      - application.cors.allowedOrigins=http://localhost:3001
       - application.httpCodesAllowList=200,201,202,400,401,403,500
     volumes:
       - ./DSL/Ruuter:/DSL
@@ -45,9 +45,6 @@ services:
   gui_dev:
     container_name: gui_dev
     environment:
-      - csrf.enabled=false
-      - ALPINE_CORS_ENABLED=false
-      - gui_dev.cors.allowdOrigins=http://localhost:3001,http://localhost:3000,http://localhost:5173
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
       - REACT_APP_API_URL=http://localhost:8080

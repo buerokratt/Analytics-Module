@@ -5,10 +5,11 @@ ENV PORT=3001
 
 WORKDIR /app
 COPY ./package.json .
-RUN npm install
+COPY ./exirain-header-0.0.8.tgz .
+RUN npm install --legacy-peer-deps
 
 COPY . .
 
 EXPOSE ${PORT}
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]

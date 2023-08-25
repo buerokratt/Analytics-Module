@@ -4,7 +4,7 @@ services:
     container_name: ruuter
     image: ruuter
     environment:
-      - application.cors.allowedOrigins=http://localhost:3001,https://admin.dev.buerokratt.ee
+      - application.cors.allowedOrigins=http://localhost:3001
       - application.httpCodesAllowList=200,201,202,400,401,403,500
     volumes:
       - ./DSL/Ruuter:/DSL
@@ -12,59 +12,6 @@ services:
       - 8080:8080
     networks:
       - bykstack
-
-  ruuter-v1-private:
-    container_name: ruuter-v1-private
-    image: riaee/byk-chatbot-private-ruuter:05
-    environment:
-      - legacy-portal-integration.sessionCookieDomain=localhost
-      - logging.level.root=INFO
-      - ruuter.cors.allowedOrigins=http://171.22.247.37:5005,ws://localhost:3003,ws://localhost:3000,http://localhost:8080,http://localhost:8086,http://localhost:8085,http://localhost:8088,http://localhost:3001,http://localhost:3004,http://localhost:3000,http://localhost:3003,http://localhost:3004,https://localhost:3001,https://localhost:3001/,http://localhost:8088,https://localhost,http://admin.localhost,https://admin.localhost/,http://localhost/chat/,https://localhost/chat,http://localhost:8085,http://admin.localhost,https://admin.localhost/chat,https://admin.localhost/analytics,http://admin.localhost/training,http://admin.localhost/services,http://admin.localhost/api-doc
-      - headers.contentSecurityPolicy=
-      - maxRequestSizeBytes=10000000000
-      - incoming.request.external.validation.enabled=false
-      - incoming.request.external.validation.endpoint=
-      - verify.requested.method.type=false
-      - allowed.requested.method.types=POST,GET,OPTIONS
-      - default.requested.method.type=POST
-      - requested.method.type.error.http.response.code=200
-      - csrf.enabled=false
-      - csrf.tim_userinfo_url=
-      - csrf.ruuter_services_whitelist=
-      - ip-whitelist.routes[0].ips[0]=127.0.0.1
-      - ip-whitelist.routes[0].patterns[0]=/functions/*
-      - ip-whitelist.routes[1].ips[0]=127.0.0.1
-      - ip-whitelist.routes[1].patterns[0]=/get-location-coordinates
-      - ip-whitelist.routes[1].patterns[1]=/get-weather-data
-      - ip-whitelist.routes[1].patterns[2]=/get-weather-station-id
-      - ip-whitelist.routes[1].patterns[3]=/get-weather
-      - ip-whitelist.routes[1].patterns[4]=/param_string_length
-    volumes:
-      - ./setup/ruuter/server.xml:/usr/local/tomcat/conf/server.xml:ro
-      - ./setup/ruuter/private.urls.docker.json:/usr/local/tomcat/urls.env.json:ro
-      - ./setup/ruuter/cert.crt:/usr/local/tomcat/conf/cert.crt:ro
-      - ./setup/ruuter/key.key:/usr/local/tomcat/conf/key.key:ro
-      - ./DSL.Ruuter-v1.private:/usr/local/tomcat/configurations
-    ports:
-      - 8090:8080
-    restart: always
-    networks:
-      - bykstack
-
-  ruuter-v2-private:
-    container_name: ruuter-v2-private
-    image: riaee/byk:ruuterv2-07062023
-    environment:
-      - application.cors.allowedOrigins=http://171.22.247.37:5005,ws://localhost:3003,ws://localhost:3000,http://localhost:8080,http://localhost:8086,http://localhost:8085,http://localhost:8088,http://localhost:3001,http://localhost:3004,http://localhost:3000,http://localhost:3003,https://localhost:3001/,https//localhost,https://admin.localhost,https://localhost/,https://admin.play.burokratt.ee/,https://tim.localhost,https://tim.localhost/,https://admin.localhost,https://admin.localhost/chat,https://admin.localhost/analytics,https://admin.localhost/training,https://admin.localhost/services,https://admin.localhost/api-doc
-      - application.httpCodesAllowList=200,201,202,400,401,403,500
-      - server.port=8088
-    volumes:
-      - ./DSL.Ruuter.private/DSL:/DSL
-    ports:
-      - 8088:8088
-    networks:
-      - bykstack
-
   resql:
     container_name: resql
     image: resql
@@ -98,18 +45,16 @@ services:
   gui_dev:
     container_name: gui_dev
     environment:
-      - csrf.enabled=false
-      - ALPINE_CORS_ENABLED=false
-      - gui_dev.cors.allowdOrigins=http://localhost:3001,http://localhost:3000,http://localhost:5173
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
       - REACT_APP_API_URL=http://localhost:8080
-      - REACT_APP_MOCK_ENABLED=false
-      - REACT_APP_RUUTER_V1_PRIVATE_API_URL=http://localhost:8090
-        REACT_APP_RUUTER_V2_PRIVATE_API_URL=http://localhost:8088
       - REACT_APP_BUEROKRATT_CHATBOT_URL=http://buerokratt-chat:8080
       - REACT_APP_OPENSEARCH_DASHBOARD_URL=https://opensearch.org/
       - REACT_APP_OPENDATAPORT_URL=https://avaandmedtest.eesti.ee
+      - REACT_APP_RUUTER_V2_PRIVATE_API_URL=http://localhost:8080
+      - REACT_APP_RUUTER_V1_PRIVATE_API_URL=http://localhost:8080
+      - REACT_APP_AUTH_BASE_URL=http://localhost:8080
+      - REACT_APP_AUTH_PATH=/mock-response
       - PORT=3001
     build:
       context: ./GUI

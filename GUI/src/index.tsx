@@ -10,11 +10,19 @@ import {
 } from '@tanstack/react-query';
 
 import api from './components/services/api';
-import {loadEnv} from "vite";
-import {BrowserRouter} from "react-router-dom";
 import auth from "./components/services/auth";
+import apiDev from "./components/services/api-dev";
+import apiDevV2 from "./components/services/api-dev-v2";
 
 const defaultQueryFn: QueryFunction | undefined = async ({ queryKey }) => {
+    if (queryKey.includes('prod')) {
+        const { data } = await apiDev.get(queryKey[0] as string);
+        return data;
+    }
+    if (queryKey[1] === 'prod-2') {
+        const { data } = await apiDevV2.get(queryKey[0] as string);
+        return data?.response;
+    }
     if(queryKey[1] === 'auth') {
         const { data } = await auth.get(queryKey[0] as string);
         return data;

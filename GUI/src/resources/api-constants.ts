@@ -1,6 +1,6 @@
-const baseUrl = import.meta.env.REACT_APP_API_URL
-// const baseUrl = "http://localhost:8080"
-const chatsUrl = "http://buerokratt-chat:8080"
+// const baseUrl = process.env.REACT_APP_API_URL
+const baseUrl = 'http://localhost:8080'
+const chatsUrl = 'http://localhost:8080'
 // const chatsUrl = process.env.REACT_APP_BUEROKRATT_CHATBOT_URL
 
 export const openSearchDashboard = "https://opensearch.org/"

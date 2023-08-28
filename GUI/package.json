@@ -59,7 +59,7 @@
     "prettier": "prettier --write \"{,!(node_modules)/**/}*.{ts,tsx,js,json,css,less,scss}\"",
     "lint": "tsc --noEmit && eslint \"./src/**/*.{js,ts,tsx}\"",
     "format": "prettier --check .",
-    "dev": "vite --port 3001 --host"
+    "dev": "vite --host"
   },
   "eslintConfig": {
     "extends": "react-app"

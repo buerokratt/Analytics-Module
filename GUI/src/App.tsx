@@ -14,7 +14,7 @@ const App: React.FC = () => {
     const userInfoStore = useUserInfoStore();
         const { data: userInfo } = useQuery<UserInfo>({
         queryKey: [import.meta.env.REACT_APP_AUTH_PATH, 'auth'],
-        onSuccess: (data) => userInfoStore.setUserInfo(data.response),
+        onSuccess: (data) => userInfoStore.setUserInfo(data.response.body),
     });
 
   return (

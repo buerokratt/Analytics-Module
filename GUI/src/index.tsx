@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM, {createRoot} from 'react-dom/client'
 import './i18n';
-import * as serviceWorker from './serviceWorker'
 import App from './App'
 import { CookiesProvider } from 'react-cookie';
 import {
@@ -18,7 +17,6 @@ import auth from "./components/services/auth";
 const defaultQueryFn: QueryFunction | undefined = async ({ queryKey }) => {
     if(queryKey[1] === 'auth') {
         const { data } = await auth.get(queryKey[0] as string);
-        console.log(data)
         return data;
     }
 

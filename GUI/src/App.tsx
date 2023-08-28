@@ -6,16 +6,15 @@ import { ToastProvider } from './components/Toast/ToastContext'
 import RootComponent from './RootComponent'
 import { persistor, store as reducerStore} from './store/reducers/store'
 import {UserInfo} from "./types/userInfo";
-import {useQuery} from "@tanstack/react-query";
+import auth from "./components/services/auth"
 import useUserInfoStore from "./store/user/store";
+import { useQuery } from "@tanstack/react-query";
 
 const App: React.FC = () => {
     const userInfoStore = useUserInfoStore();
-    const { data: userInfo } = useQuery<UserInfo>({
-        queryKey: ['cs-custom-jwt-userinfo'],
-        onSuccess: (data) => {
-            userInfoStore.setUserInfo(data)
-        },
+        const { data: userInfo } = useQuery<UserInfo>({
+        queryKey: [import.meta.env.REACT_APP_AUTH_PATH, 'auth'],
+        onSuccess: (data) => userInfoStore.setUserInfo(data.response),
     });
 
   return (

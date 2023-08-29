@@ -1,9 +1,9 @@
-const baseUrl = process.env.REACT_APP_RUUTER_V2_ANALYTICS_API_URL
-const chatsUrl = process.env.REACT_APP_BUEROKRATT_CHATBOT_URL
+const baseUrl = import.meta.env.REACT_APP_RUUTER_V2_ANALYTICS_API_URL
+const chatsUrl = import.meta.env.REACT_APP_BUEROKRATT_CHATBOT_URL
 
 export const openSearchDashboard = "https://opensearch.org/"
 
-export const getLinkToChat = (chatId: string) => `${chatsUrl}/vestlus/ajalugu?chat=${chatId}`
+export const getLinkToChat = (chatId: string) => `${chatsUrl}/chat/history?chat=${chatId}`
 
 export const getOpenDataValues = (lang: string): string => baseUrl + '/odp/values?lang=' + lang
 

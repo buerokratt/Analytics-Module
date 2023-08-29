@@ -37,11 +37,13 @@ const Layout: FC = () => {
 
   return (
     <div className="layout">
-      {/*<MainNavigation />*/}
       <MainNavigation items={MainMenuItems}/>
       <div className="layout__wrapper">
         <Header
-        user={useUserInfoStore.getState()}/>
+            baseUrlV2={import.meta.env.REACT_APP_RUUTER_V2_PRIVATE_API_URL}
+            baseUrl={import.meta.env.REACT_APP_RUUTER_V1_PRIVATE_API_URL}
+            user={useUserInfoStore.getState()}
+        />
         <main className="layout__main">
           <Outlet />
         </main>

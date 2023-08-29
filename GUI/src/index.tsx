@@ -13,10 +13,15 @@ import api from './components/services/api';
 import auth from "./components/services/auth";
 import apiDev from "./components/services/api-dev";
 import apiDevV2 from "./components/services/api-dev-v2";
+import apiAn from './components/services/analytics-api';
 
 const defaultQueryFn: QueryFunction | undefined = async ({ queryKey }) => {
     if (queryKey.includes('prod')) {
         const { data } = await apiDev.get(queryKey[0] as string);
+        return data;
+    }
+    if (queryKey.includes('user-profile-settings')) {
+        const { data } = await apiAn.get(queryKey[0] as string);
         return data;
     }
     if (queryKey[1] === 'prod-2') {

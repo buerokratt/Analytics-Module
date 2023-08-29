@@ -15,7 +15,7 @@ const Layout: FC = () => {
     const [MainMenuItems, setMainMenuItems] = useState([])
 
     const  {data, isLoading, status}  = useQuery({
-        queryKey: [import.meta.env.REACT_APP_MENU_PATH,import.meta.env.REACT_APP_MENU_URL],
+        queryKey: [import.meta.env.REACT_APP_MENU_URL + import.meta.env.REACT_APP_MENU_PATH],
         onSuccess: (res: any) => {
             try {
                 setMainMenuItems(res);
@@ -42,6 +42,7 @@ const Layout: FC = () => {
         <Header
             baseUrlV2={import.meta.env.REACT_APP_RUUTER_V2_PRIVATE_API_URL}
             baseUrl={import.meta.env.REACT_APP_RUUTER_V1_PRIVATE_API_URL}
+            analticsUrl={import.meta.env.REACT_APP_RUUTER_V2_ANALYTICS_API_URL}
             user={useUserInfoStore.getState()}
         />
         <main className="layout__main">

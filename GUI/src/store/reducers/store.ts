@@ -33,8 +33,6 @@ const store = configureStore({reducer: persistedReducer,
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
         }),})
-console.log('trying to store:')
-console.log(store);
 const persistor = persistStore(store)
 
 export { store, persistor }

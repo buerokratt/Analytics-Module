@@ -33,7 +33,7 @@ jobs:
       - name: Docker Build
         run: | 
            cd GUI
-           docker image build --tag $DOCKER_TAG_CUSTOM --build-arg DOCKERFILE=Dockerfile.dev .
+           docker image build --tag $DOCKER_TAG_CUSTOM --file Dockerfile.dev .
 
       - name: Log in to GitHub container registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin

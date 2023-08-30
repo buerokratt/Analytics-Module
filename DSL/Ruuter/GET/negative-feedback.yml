@@ -14,7 +14,7 @@ extract_request_data:
 extract_cookie_data:
   call: http.post
   args:
-    url: "[#ANALYTICS_PUBLIC_RUUTER]:[#ANALYTICS_PUBLIC_RUUTER_PORT]:[#ANALYTICS_PUBLIC_RUUTER_PORT]/mocks/mock-custom-jwt-userinfo" # todo: replace with real TIM url
+    url: "[#ANALYTICS_PUBLIC_RUUTER]:[#ANALYTICS_PUBLIC_RUUTER_PORT]/mocks/mock-custom-jwt-userinfo" # todo: replace with real TIM url
     headers:
       cookie: ${cookie}
     body:
@@ -30,7 +30,7 @@ validate_role:
 get_negative_feedback:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]:[#ANALYTICS_RESQL_PORT]/negative-feedback"
+    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/negative-feedback"
     body:
       start: ${start}
       end: ${end}

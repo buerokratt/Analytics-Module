@@ -31,7 +31,7 @@ checkMetric:
 getTotalChatsDayResults:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]:[#ANALYTICS_RESQL_PORT]/overview-total-chats"
+    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-total-chats"
     body:
       group_period: 'day'
   result: results
@@ -40,7 +40,7 @@ getTotalChatsDayResults:
 getTotalChatsMonthResults:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]:[#ANALYTICS_RESQL_PORT]/overview-total-chats"
+    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-total-chats"
     body:
       group_period: 'month'
   result: results
@@ -49,7 +49,7 @@ getTotalChatsMonthResults:
 getTotalChatsNoCSAResults:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]:[#ANALYTICS_RESQL_PORT]/overview-total-chats-no-csa"
+    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-total-chats-no-csa"
     body:
       group_period: 'day'
   result: results
@@ -58,7 +58,7 @@ getTotalChatsNoCSAResults:
 getAvgChatsMonthResults:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]:[#ANALYTICS_RESQL_PORT]/overview-avg-chats"
+    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-avg-chats"
     body:
       group_period: 'month'
   result: results
@@ -67,7 +67,7 @@ getAvgChatsMonthResults:
 getAvgChatsWeekResults:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]:[#ANALYTICS_RESQL_PORT]/overview-avg-chats"
+    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-avg-chats"
     body:
       group_period: 'week'
   result: results
@@ -76,7 +76,7 @@ getAvgChatsWeekResults:
 getAvgChatsNoCSAMonthResult:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]:[#ANALYTICS_RESQL_PORT]/overview-avg-chats-no-csa"
+    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-avg-chats-no-csa"
     body:
       group_period: 'month'
   result: results
@@ -85,7 +85,7 @@ getAvgChatsNoCSAMonthResult:
 getAvgChatsNoCSAWeekResult:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]:[#ANALYTICS_RESQL_PORT]/overview-avg-chats-no-csa"
+    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-avg-chats-no-csa"
     body:
       group_period: 'week'
   result: results
@@ -94,7 +94,7 @@ getAvgChatsNoCSAWeekResult:
 getAvgWaitingTimeDayResult:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]:[#ANALYTICS_RESQL_PORT]/overview-avg-waiting-time"
+    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-avg-waiting-time"
     body:
       group_period: 'day'
   result: results
@@ -103,7 +103,7 @@ getAvgWaitingTimeDayResult:
 getAvgWaitingTimeWeekResult:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]:[#ANALYTICS_RESQL_PORT]/overview-avg-waiting-time"
+    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-avg-waiting-time"
     body:
       group_period: 'week'
   result: results
@@ -112,14 +112,14 @@ getAvgWaitingTimeWeekResult:
 getTotalForwardedChatsResult:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]:[#ANALYTICS_RESQL_PORT]/overview-total-forwarded-chats"
+    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-total-forwarded-chats"
   result: results
   next: respond
 
 getChatActivityResult:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]:[#ANALYTICS_RESQL_PORT]/overview-chat-activity-chart"
+    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-chat-activity-chart"
   result: results
   next: respond
 

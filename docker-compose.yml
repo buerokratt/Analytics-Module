@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 services:
   ruuter:
     container_name: ruuter
@@ -6,8 +6,11 @@ services:
     environment:
       - application.cors.allowedOrigins=http://localhost:3001
       - application.httpCodesAllowList=200,201,202,400,401,403,500
+      - application.logging.displayRequestContent=true
+      - application.logging.displayResponseContent=true
     volumes:
       - ./DSL/Ruuter:/DSL
+      - ./constants.ini:/app/constants.ini
     ports:
       - 8080:8080
     networks:
@@ -58,7 +61,7 @@ services:
       - REACT_APP_MENU_PATH=/chat/menu.json
       - REACT_APP_AUTH_BASE_URL=http://localhost:8080
       - REACT_APP_APP_PORT=3001
-      - REACT_APP_LOCAL=false
+      - REACT_APP_LOCAL=true
       - REACT_APP_AUTH_PATH=/mock-response
       - REACT_APP_BASE_API_PATH=/
       - PORT=3001

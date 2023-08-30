@@ -22,9 +22,10 @@ services:
       - users_db
     environment:
       - sqlms.datasources.[0].name=byk
-      - sqlms.datasources.[0].jdbcUrl=jdbc:postgresql://users_db:5432/byk
+      # - sqlms.datasources.[0].jdbcUrl=jdbc:postgresql://users_db:5432/byk //For LocalDb Use
+      - sqlms.datasources.[0].jdbcUrl=jdbc:postgresql://171.22.247.13:5433/byk?sslmode=require
       - sqlms.datasources.[0].username=byk
-      - sqlms.datasources.[0].password=01234
+      - sqlms.datasources.[0].password=2nH09n6Gly
       - logging.level.org.springframework.boot=INFO
     ports:
       - 8082:8082
@@ -56,7 +57,7 @@ services:
       - REACT_APP_OPENDATAPORT_URL=https://avaandmedtest.eesti.ee
       - REACT_APP_RUUTER_V2_PRIVATE_API_URL=http://localhost:8080
       - REACT_APP_RUUTER_V1_PRIVATE_API_URL=http://localhost:8080
-      - REACT_APP_RUUTER_V2_ANALYTICS_API_URL=http://localhost:8090
+      - REACT_APP_RUUTER_V2_ANALYTICS_API_URL=http://localhost:8080
       - REACT_APP_MENU_URL=https://admin.dev.buerokratt.ee
       - REACT_APP_MENU_PATH=/chat/menu.json
       - REACT_APP_AUTH_BASE_URL=http://localhost:8080

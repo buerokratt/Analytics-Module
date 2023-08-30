@@ -24,7 +24,7 @@ const App: React.FC = () => {
         loading={null}
         persistor={persistor}
       >
-        <BrowserRouter basename={'/analytics'}>
+        <BrowserRouter basename={'/'}>
           <ToastProvider>
             <RootComponent />
           </ToastProvider>

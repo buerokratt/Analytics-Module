@@ -20,7 +20,7 @@ extract_request_data:
 extract_token_data:
   call: http.post
   args:
-    url: "[#ANALYTICS_PUBLIC_RUUTER]:[#ANALYTICS_PUBLIC_RUUTER_PORT]/mocks/mock-custom-jwt-userinfo" # todo: replace with real TIM url
+    url: "[#ANALYTICS_RUUTER]:[#ANALYTICS_RUUTER_PORT]/mocks/mock-custom-jwt-userinfo" # todo: replace with real TIM url
     headers:
       cookie: ${cookie}
     body:

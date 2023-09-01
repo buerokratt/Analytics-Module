@@ -37,7 +37,7 @@ const Layout: FC = () => {
 
   return (
     <div className="layout">
-      <MainNavigation items={MainMenuItems}/>
+      <MainNavigation baseUrl={import.meta.env.REACT_APP_BUEROKRATT_CHATBOT_URL} items={MainMenuItems}/>
       <div className="layout__wrapper">
         <Header
             baseUrlV2={import.meta.env.REACT_APP_RUUTER_V2_PRIVATE_API_URL}

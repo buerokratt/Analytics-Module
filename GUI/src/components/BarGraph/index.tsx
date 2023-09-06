@@ -12,7 +12,7 @@ type Props = {
 };
 
 const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod }) => {
-  const [width, setWidth] = useState<number>(10);
+  const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,8 +36,8 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
   return (
     <div ref={ref}>
       <BarChart
-        width={width}
-        height={width / 3.8}
+        width={width ?? 0}
+        height={(width ?? 0) / 3.8}
         data={data.chartData}
         margin={{ top: 20, right: 65, bottom: 50 }}
       >

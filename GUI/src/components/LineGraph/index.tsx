@@ -11,7 +11,7 @@ type Props = {
 };
 
 const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
-  const [width, setWidth] = useState<number>(10);
+  const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,8 +29,8 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
   return (
     <div ref={ref}>
       <LineChart
-        width={width}
-        height={width / 3.8}
+        width={width ?? 0}
+        height={(width ?? 0) / 3.8}
         data={data.chartData}
         margin={{ top: 20, right: 65, left: 10, bottom: 70 }}
       >

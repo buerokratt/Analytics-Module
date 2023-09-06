@@ -11,7 +11,7 @@ type Props = {
 };
 
 const PieGraph = ({ data }: Props) => {
-  const [width, setWidth] = useState<number>(10);
+  const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,8 +27,8 @@ const PieGraph = ({ data }: Props) => {
     <div ref={ref}>
       <Track>
         <PieChart
-          width={width / 2}
-          height={width / 3.8}
+          width={(width ?? 0) / 2}
+          height={(width ?? 0) / 3.8}
           data={data.chartData}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >

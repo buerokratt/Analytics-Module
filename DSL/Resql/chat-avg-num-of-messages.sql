@@ -4,7 +4,7 @@ WITH counts AS (
         COUNT(*) as num_of_messages,
         MIN(created) as created
     FROM message
-    WHERE created BETWEEN :start::date AND :end::date
+    WHERE created::date BETWEEN :start::date AND :end::date
     GROUP BY chat_base_id
 )
 SELECT 

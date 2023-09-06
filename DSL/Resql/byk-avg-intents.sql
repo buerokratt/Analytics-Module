@@ -3,7 +3,7 @@ WITH chat_intent_counts AS (
         COUNT(intent) AS intent_count,
         MIN(created) AS created
     FROM message m
-    WHERE created BETWEEN :start::date AND :end::date
+    WHERE created::date BETWEEN :start::date AND :end::date
     AND intent IS NOT NULL
     GROUP BY chat_base_id
 )

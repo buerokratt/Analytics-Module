@@ -1,36 +1,36 @@
-import { format } from 'date-fns'
-import React, { useEffect, useRef, useState } from 'react'
-import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, Legend, Label } from 'recharts'
-import { chartDataKey, dateFormatter, formatDate, getColor, getTicks, round } from '../../util/charts-utils'
+import { format } from 'date-fns';
+import React, { useEffect, useRef, useState } from 'react';
+import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, Legend, Label } from 'recharts';
+import { chartDataKey, dateFormatter, formatDate, getColor, getTicks, round } from '../../util/charts-utils';
 
 type Props = {
-  data: any
-  startDate: string
-  endDate: string
-  unit?: string
-}
+  data: any;
+  startDate: string;
+  endDate: string;
+  unit?: string;
+};
 
 const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
-  const [width, setWidth] = useState<number>(10)
-  const ref = useRef<HTMLDivElement>(null)
+  const [width, setWidth] = useState<number>(10);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleResize = () => {
-      setWidth(ref.current?.clientWidth ?? 0)
-    }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+      setWidth(ref.current?.clientWidth ?? 0);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  const domain = [new Date(startDate).getTime(), new Date(endDate).getTime()]
-  const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5)
+  const domain = [new Date(startDate).getTime(), new Date(endDate).getTime()];
+  const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5);
 
   return (
     <div ref={ref}>
       <LineChart
         width={width}
-        height={width / 3.86}
+        height={width / 3.8}
         data={data.chartData}
         margin={{ top: 20, right: 65, left: 10, bottom: 70 }}
       >
@@ -62,8 +62,7 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
         </YAxis>
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
         <CartesianGrid stroke="#f5f5f5" />
-        {
-          (data?.chartData?.length > 0 ?? false) &&
+        {(data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {
             return k === chartDataKey ? null : (
               <Line
@@ -73,13 +72,12 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
                 stroke={getColor(data, k)}
                 fill={getColor(data, k)}
               />
-            )
-          })
-        }
+            );
+          })}
         <Legend />
-      </LineChart >
-    </div >
-  )
-}
+      </LineChart>
+    </div>
+  );
+};
 
-export default LineGraph
+export default LineGraph;

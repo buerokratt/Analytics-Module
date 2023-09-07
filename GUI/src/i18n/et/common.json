@@ -283,12 +283,12 @@
   },
   "units": {
     "chats": "vestlused",
-    "minutes": "minutit",
-    "messages": "sõnumeid",
-    "seconds": "sekundit",
-    "intents": "kavatsused",
+    "minutes": "minutid",
+    "messages": "sõnumid",
+    "seconds": "sekundid",
+    "intents": "teemad",
     "questions": "küsimused",
     "counselors": "nõustajad",
-    "feedback": "tagasisidet"
+    "feedback": "tagasiside"
   }
 }

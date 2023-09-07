@@ -18,6 +18,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 const FeedbackPage: React.FC = () => {
+  const { t } = useTranslation();
   const [chartData, setChartData] = useState({});
   const [negativeFeedbackChats, setNegativeFeedbackChats] = useState<Chat[]>([]);
   const advisors = useRef<any[]>([]);
@@ -79,31 +80,29 @@ const FeedbackPage: React.FC = () => {
           isSelected: true,
         },
       ],
-      unit: 'chats',
+      unit: t('units.chats') ?? 'chats',
     },
     {
       id: 'burokratt_chats',
       labelKey: 'feedback.burokratt_chats',
-      unit: 'chats',
+      unit: t('units.chats') ?? 'chats',
     },
     {
       id: 'advisor_chats',
       labelKey: 'feedback.advisor_chats',
-      unit: 'chats',
+      unit: t('units.chats') ?? 'chats',
     },
     {
       id: 'selected_advisor_chats',
       labelKey: 'feedback.selected_advisor_chats',
-      unit: 'chats',
+      unit: t('units.chats') ?? 'chats',
     },
     {
       id: 'negative_feedback',
       labelKey: 'feedback.negative_feedback',
-      unit: 'feedback',
+      unit: t('units.feedback') ?? 'feedback',
     },
   ]);
-
-  const { t } = useTranslation();
 
   const showNegativeChart = negativeFeedbackChats.length > 0 && currentConfigs?.metric === 'negative_feedback';
 

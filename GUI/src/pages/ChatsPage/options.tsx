@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { Option } from '../../components/MetricAndPeriodOptions';
 
 export const chatOptions: Option[] = [
@@ -8,7 +9,7 @@ export const chatOptions: Option[] = [
       { id: 'byk', labelKey: 'chats.onlyBYK', color: '#fdbf47' },
       { id: 'csa', labelKey: 'chats.csaInvolved', color: '#ed7d32' },
     ],
-    unit: 'chats',
+    unit: t('units.chats') ?? 'chats',
   },
   {
     id: 'cip',
@@ -18,7 +19,12 @@ export const chatOptions: Option[] = [
       { id: 'long-waiting-time', labelKey: 'chats.longWaitingTime', color: '#ed7d32' },
       { id: 'all-csas-away', labelKey: 'chats.allCsvAway', color: '#8ab4d5' },
     ],
-    unit: 'chats'
+    unit: t('units.chats') ?? 'chats',
+  },
+  {
+    id: 'avgConversationTime',
+    labelKey: 'chats.avgConversationTime',
+    unit: t('units.minutes') ?? 'minutes',
   },
   {
     id: 'avgWaitingTime',
@@ -27,21 +33,16 @@ export const chatOptions: Option[] = [
       { id: 'avg', labelKey: 'chats.averageWaitingTime', color: '#fdbf47' },
       { id: 'median', labelKey: 'chats.medianWaitingTime', color: '#ed7d32' },
     ],
-    unit: 'seconds',
+    unit: t('units.minutes') ?? 'minutes',
   },
   {
-    id: 'totalMessages',
-    labelKey: 'chats.totalMessages',
-    unit: 'messages',
-  },
-  {
-    id: 'duration',
-    labelKey: 'chats.duration',
-    unit: 'minutes',
+    id: 'avgNumOfMessages',
+    labelKey: 'chats.avgNumOfMessages',
+    unit: t('units.messages') ?? 'messages',
   },
   {
     id: 'idle',
     labelKey: 'chats.idle',
-    unit: 'chats',
+    unit: t('units.chats') ?? 'chats',
   },
-]
+];

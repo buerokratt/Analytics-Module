@@ -1,4 +1,5 @@
-import { Option } from '../../components/MetricAndPeriodOptions'
+import { t } from 'i18next';
+import { Option } from '../../components/MetricAndPeriodOptions';
 
 export const metricOptions: Option[] = [
   {
@@ -10,7 +11,7 @@ export const metricOptions: Option[] = [
       { id: 'modified', labelKey: 'burokratt.modifiedIntents', color: '#8ab4d5' },
       { id: 'avg', labelKey: 'burokratt.avgChatIntents', color: '#00ff00' },
     ],
-    unit: 'intents',
+    unit: t('units.intents') ?? 'intents',
   },
   {
     id: 'sessions',
@@ -20,16 +21,16 @@ export const metricOptions: Option[] = [
       { id: 'csa', labelKey: 'burokratt.csa', color: '#ed7d32' },
       { id: 'customer', labelKey: 'burokratt.closed', color: '#8ab4d5' },
     ],
-    unit: 'mintues',
+    unit: t('units.mintues') ?? 'mintues',
   },
   {
     id: 'averageResponseSpeed',
     labelKey: 'burokratt.averageResponseSpeed',
-    unit: 'seconds',
+    unit: t('units.seconds') ?? 'seconds',
   },
   {
     id: 'understoodQuestions',
     labelKey: 'burokratt.understoodQuestions',
-    unit: 'questions',
+    unit: t('units.questions') ?? 'questions',
   },
-]
+];

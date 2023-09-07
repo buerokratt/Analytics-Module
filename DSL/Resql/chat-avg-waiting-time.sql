@@ -10,7 +10,7 @@ WITH user_messages AS (
 )
 SELECT 
     DATE_TRUNC(:period, m.created) AS time, 
-    AVG(EXTRACT(epoch FROM (m.created - prev_message_time))::integer) AS average_waiting_time
+    AVG(EXTRACT(epoch FROM (m.created - prev_message_time))::integer / 60.0) AS average_waiting_time
 FROM user_messages m
 JOIN message byk
 ON m.chat_base_id = byk.chat_base_id

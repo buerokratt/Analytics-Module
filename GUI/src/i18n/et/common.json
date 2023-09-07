@@ -125,9 +125,9 @@
   "chats": {
     "total": "Vestluste koguarv",
     "cip": "Kontakti jätmised",
-    "avgWaitingTime": "Vestluste keskmine aeg (min)",
-    "totalMessages": "Keskmine ooteaja pikkus (min)",
-    "duration": "Keskmine sõnumite arv vestluses",
+    "avgConversationTime": "Vestluste keskmine aeg (min)",
+    "avgWaitingTime": "Keskmine ooteaja pikkus (min)",
+    "avgNumOfMessages": "Keskmine sõnumite arv vestluses",
     "idle": "Bürokrati lõpetatud vestluste arv",
     "onlyBYK": "Bürokrati vastatud",
     "csaInvolved": "Nõustaja kaasatud",
@@ -279,5 +279,15 @@
   "chat": {
     "unanswered": "Vastamata",
     "forwarded": "Suunatud"
+  },
+  "units": {
+    "chats": "vestlused",
+    "minutes": "minutit",
+    "messages": "sõnumeid",
+    "seconds": "sekundit",
+    "intents": "kavatsused",
+    "questions": "küsimused",
+    "counselors": "nõustajad",
+    "feedback": "tagasisidet"
   }
 }

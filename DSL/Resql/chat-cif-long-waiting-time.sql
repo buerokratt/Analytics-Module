@@ -22,7 +22,7 @@ SELECT
     DATE_TRUNC(:period, created) AS time, 
     COUNT(*) AS long_waiting_time
 FROM waiting_times
-WHERE created BETWEEN :start::date AND :end::date
+WHERE created::date BETWEEN :start::date AND :end::date
 AND waiting_time_seconds > :threshold_seconds
 GROUP BY time
 ORDER BY time

@@ -2,7 +2,7 @@ SELECT
     DATE_TRUNC(:period, created) AS time,
     COUNT(DISTINCT base_id) AS count
 FROM chat
-WHERE created BETWEEN :start::date AND :end::date
+WHERE created::date BETWEEN :start::date AND :end::date
 AND NOT EXISTS (
     SELECT 1
     FROM message

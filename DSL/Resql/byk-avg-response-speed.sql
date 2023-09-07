@@ -9,7 +9,7 @@ WITH chatbot_messages AS (
             AND m2.chat_base_id = m.chat_base_id
         ) AS previous_message_time
     FROM message m
-    WHERE created BETWEEN :start::date AND :end::date
+    WHERE created::date BETWEEN :start::date AND :end::date
     AND author_role = 'chatbot'
 )
 SELECT 

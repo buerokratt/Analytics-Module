@@ -1,46 +1,45 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { BarChart, XAxis, CartesianGrid, YAxis, Tooltip, Legend, Bar, Label } from 'recharts'
-import { chartDataKey, dateFormatter, formatDate, getColor, getTicks, round } from '../../util/charts-utils'
-import { GroupByPeriod } from '../MetricAndPeriodOptions/types'
+import React, { useEffect, useRef, useState } from 'react';
+import { BarChart, XAxis, CartesianGrid, YAxis, Tooltip, Legend, Bar, Label, ResponsiveContainer } from 'recharts';
+import { chartDataKey, dateFormatter, formatDate, getColor, getTicks, round } from '../../util/charts-utils';
+import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 
 type Props = {
-  data: any
-  startDate: string
-  endDate: string
-  unit?: string
-  groupByPeriod: GroupByPeriod
-}
+  data: any;
+  startDate: string;
+  endDate: string;
+  unit?: string;
+  groupByPeriod: GroupByPeriod;
+};
 
 const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod }) => {
-  const [width, setWidth] = useState<number>(10)
-  const ref = useRef<HTMLDivElement>(null)
+  const [width, setWidth] = useState<number | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleResize = () => {
-      setWidth(ref.current?.clientWidth ?? 0)
-    }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+      setWidth(ref.current?.clientWidth ?? 0);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  let minDate = new Date(startDate).getTime()
+  let minDate = new Date(startDate).getTime();
   if (groupByPeriod === 'day') {
     const millisecondInOneDay = 24 * 60 * 60 * 1000;
     minDate = minDate - millisecondInOneDay;
   }
 
-
-  const domain = [minDate, new Date(endDate).getTime()]
-  const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5)
+  const domain = [minDate, new Date(endDate).getTime()];
+  const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5);
 
   return (
     <div ref={ref}>
       <BarChart
-        width={width}
-        height={width / 2.8}
+        width={width ?? 0}
+        height={(width ?? 0) / 3.8}
         data={data.chartData}
-        margin={{ top: 20, right: 65, bottom: 70 }}
+        margin={{ top: 20, right: 65, bottom: 50 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
@@ -69,8 +68,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
           cursor={false}
         />
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
-        {
-          (data?.chartData?.length > 0 ?? false) &&
+        {(data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {
             return k === chartDataKey ? null : (
               <Bar
@@ -81,13 +79,12 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
                 stroke={getColor(data, k)}
                 fill={getColor(data, k)}
               />
-            )
-          })
-        }
+            );
+          })}
         <Tooltip />
-      </BarChart >
-    </div >
-  )
-}
+      </BarChart>
+    </div>
+  );
+};
 
-export default BarGraph
+export default BarGraph;

@@ -7,7 +7,7 @@ WITH config AS (
             AND deleted IS false
 			ORDER BY created DESC
 			LIMIT 1
-        )::date AS workingTimeStart,
+        )::timestamp AS workingTimeStart,
         (
             SELECT value
             FROM configuration
@@ -15,7 +15,7 @@ WITH config AS (
             AND deleted IS false
 			ORDER BY created DESC
 			LIMIT 1
-        )::date AS workingTimeEnd
+        )::timestamp AS workingTimeEnd
 )
 SELECT
     DATE_TRUNC(:period, chat.created) AS time,

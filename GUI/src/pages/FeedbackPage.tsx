@@ -37,18 +37,23 @@ const FeedbackPage: React.FC = () => {
       labelKey: 'feedback.statuses',
       subOptions: [
         {
-          id: 'ANSWERED',
-          labelKey: 'feedback.status_options.answered',
+          id: 'CLIENT_LEFT_WITH_ACCEPTED',
+          labelKey: 'feedback.status_options.client_left_with_accepted',
+          color: randomColor(),
+          isSelected: true,
+        },
+        {
+          id: 'CLIENT_LEFT_WITH_NO_RESOLUTION',
+          labelKey: 'feedback.status_options.client_left_with_no_resolution',
           color: randomColor(),
           isSelected: true,
         },
         {
           id: 'CLIENT_LEFT_FOR_UNKNOWN_REASONS',
-          labelKey: 'feedback.status_options.client_left',
+          labelKey: 'feedback.status_options.client_left_for_unknown_reasons',
           color: randomColor(),
           isSelected: true,
         },
-        { id: 'idle'.toUpperCase(), labelKey: 'feedback.status_options.idle', color: randomColor(), isSelected: true },
         {
           id: 'ACCEPTED',
           labelKey: 'feedback.status_options.accepted',
@@ -62,14 +67,14 @@ const FeedbackPage: React.FC = () => {
           isSelected: true,
         },
         {
-          id: 'RESPONSE_SENT_TO_CLIENT_EMAIL',
-          labelKey: 'feedback.status_options.to_contact',
+          id: 'OTHER',
+          labelKey: 'feedback.status_options.other',
           color: randomColor(),
           isSelected: true,
         },
         {
-          id: 'OTHER',
-          labelKey: 'feedback.status_options.terminated',
+          id: 'RESPONSE_SENT_TO_CLIENT_EMAIL',
+          labelKey: 'feedback.status_options.response_sent_to_client_email',
           color: randomColor(),
           isSelected: true,
         },
@@ -135,9 +140,19 @@ const FeedbackPage: React.FC = () => {
   const fetchChatsStatuses = async (config: MetricOptionsState) => {
     let chartData = {};
     const events =
-      config?.options.filter((e) => e === 'ANSWERED' || e === 'CLIENT_LEFT_FOR_UNKNOWN_REASONS' || e === 'idle') ?? [];
+      config?.options.filter(
+        (e) =>
+          e === 'CLIENT_LEFT_WITH_ACCEPTED' ||
+          e === 'CLIENT_LEFT_WITH_NO_RESOLUTION' ||
+          e === 'CLIENT_LEFT_FOR_UNKNOWN_REASONS'
+      ) ?? [];
     const csa_events =
-      config?.options.filter((e) => e !== 'ANSWERED' && e !== 'CLIENT_LEFT_FOR_UNKNOWN_REASONS' && e !== 'idle') ?? [];
+      config?.options.filter(
+        (e) =>
+          e !== 'CLIENT_LEFT_WITH_ACCEPTED' &&
+          e !== 'CLIENT_LEFT_WITH_NO_RESOLUTION' &&
+          e !== 'CLIENT_LEFT_FOR_UNKNOWN_REASONS'
+      ) ?? [];
     try {
       const result = await axios.post(getChatsStatuses(), {
         metric: config?.groupByPeriod ?? 'day',
@@ -156,11 +171,11 @@ const FeedbackPage: React.FC = () => {
         .reduce((a: any, b: any) => {
           const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
           if (dateRow) {
-            dateRow[b['Event']] = b['Count'];
+            dateRow[t(`feedback.plain_status_options.${b['Event'].toLowerCase()}`)] = t(b['Count']);
           } else {
             a.push({
               [chartDataKey]: b[chartDataKey],
-              [b['Event']]: b['Count'],
+              [t(`feedback.plain_status_options.${b['Event'].toLowerCase()}`)]: t(b['Count']),
             });
           }
           return a;
@@ -195,7 +210,7 @@ const FeedbackPage: React.FC = () => {
         percentagesData: percentages,
         colors: feedbackMetrics[0].subOptions!.map(({ id, color }) => {
           return {
-            id,
+            id: t(`feedback.plain_status_options.${id.toLowerCase()}`),
             color,
           };
         }),

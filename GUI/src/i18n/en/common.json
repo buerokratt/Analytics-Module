@@ -124,6 +124,7 @@
   },
   "chats": {
     "total": "Total number of chats",
+    "totalCount": "Total",
     "cip": "Contact information provided",
     "avgConversationTime": "Average conversation time (min)",
     "avgWaitingTime": "Average waiting time (min)",

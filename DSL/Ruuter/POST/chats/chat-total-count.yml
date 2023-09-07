@@ -69,5 +69,29 @@ assign_csa:
   assign: 
     csa_result: ${results.response.body}
 
+check_total:
+  switch:
+    - condition: ${options.includes('total')}
+      next: total    
+
+empty_total:
+  assign:
+    total_result: ${[]}
+  next: respond
+
+total:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/chat-count-with-csa-and-chatbot"
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: results
+
+assign_total:
+  assign: 
+    total_result: ${results.response.body}
+
 respond:
-  return: ${[byk_result, csa_result]}
+  return: ${[byk_result, csa_result, total_result]}

@@ -124,6 +124,7 @@
   },
   "chats": {
     "total": "Vestluste koguarv",
+    "totalCount": "Kokku",
     "cip": "Kontakti jätmised",
     "avgConversationTime": "Vestluste keskmine aeg (min)",
     "avgWaitingTime": "Keskmine ooteaja pikkus (min)",

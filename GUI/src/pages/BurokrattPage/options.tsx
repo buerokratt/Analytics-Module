@@ -21,7 +21,7 @@ export const metricOptions: Option[] = [
       { id: 'csa', labelKey: 'burokratt.csa', color: '#ed7d32' },
       { id: 'customer', labelKey: 'burokratt.closed', color: '#8ab4d5' },
     ],
-    unit: t('units.mintues') ?? 'mintues',
+    unit: t('units.minutes') ?? 'minutes',
   },
   {
     id: 'averageResponseSpeed',

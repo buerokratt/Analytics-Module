@@ -171,10 +171,10 @@
     "avgWaitingTimeSeconds": "Average (Sec)",
     "avgSec": "Average (Sec)",
     "avgMin": "Average (Min)",
-    "receivedChats": "receivedChats",
-    "forwardedChats": "forwardedChats",
-    "forwardedExternally": "forwardedExternally",
-    "timeInterval": "timeInterval"
+    "receivedChats": "Received Chats",
+    "forwardedChats": "Forwarded Chats",
+    "forwardedExternally": "Forwarded Externally",
+    "timeInterval": "Time Interval"
   },
   "reports": {
     "get-chat-count-total": "Total chat count",

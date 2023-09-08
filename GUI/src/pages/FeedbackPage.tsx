@@ -170,11 +170,11 @@ const FeedbackPage: React.FC = () => {
         .reduce((a: any, b: any) => {
           const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
           if (dateRow) {
-            dateRow[t(`feedback.plain_status_options.${b['Event'].toLowerCase()}`)] = t(b['Count']);
+            dateRow[t(`feedback.plain_status_options.${b[t('chart.event')].toLowerCase()}`)] = b[t('chart.count')];
           } else {
             a.push({
               [chartDataKey]: b[chartDataKey],
-              [t(`feedback.plain_status_options.${b['Event'].toLowerCase()}`)]: t(b['Count']),
+              [t(`feedback.plain_status_options.${b[t('chart.event')].toLowerCase()}`)]: b[t('chart.count')],
             });
           }
           return a;
@@ -315,11 +315,11 @@ const FeedbackPage: React.FC = () => {
         .reduce((a: any, b: any) => {
           const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
           if (dateRow) {
-            dateRow[b['Customer Support Display Name']] = b['Nps'];
+            dateRow[b[t('chart.customerSupportDisplayName')]] = b[t('chart.nps')];
           } else {
             a.push({
               [chartDataKey]: b[chartDataKey],
-              [b['Customer Support Display Name']]: b['Nps'],
+              [b[t('chart.customerSupportDisplayName')]]: b[t('chart.nps')],
             });
           }
           return a;

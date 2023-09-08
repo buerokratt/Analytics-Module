@@ -169,7 +169,11 @@
     "customerSupportDisplayName": "Nõustaja nimi",
     "barChart": "Tulpdiagramm",
     "pieChart": "Sektordiagramm",
-    "lineChart": "Joondiagramm"
+    "lineChart": "Joondiagramm",
+    "receivedChats": "Vastu võetud vestlused",
+    "forwardedChats": "Edastatud vestlused",
+    "forwardedExternally": "Edastatud väliselt",
+    "timeInterval": "Ajavahemik"
   },
   "reports": {
     "get-chat-count-total": "Vestluste koguarv",

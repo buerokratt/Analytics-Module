@@ -30,7 +30,7 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
     <div ref={ref}>
       <LineChart
         width={width ?? 0}
-        height={(width ?? 0) / 3.8}
+        height={(width ?? 0) / 3.76}
         data={data.chartData}
         margin={{ top: 20, right: 65, left: 10, bottom: 70 }}
       >

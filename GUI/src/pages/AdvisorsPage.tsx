@@ -103,7 +103,11 @@ const AdvisorsPage: React.FC = () => {
 
       const response = res.map((item: any) => {
         const returnValue: any = {};
-        requiredKeys.forEach((key: string) => (returnValue[key] = item[key]));
+        requiredKeys.forEach((key: string) =>
+          key != chartDataKey
+            ? (returnValue[t(`chart.${key}`)] = item[t(`chart.${key}`)])
+            : (returnValue[key] = item[key])
+        );
         return returnValue;
       });
 
@@ -136,11 +140,12 @@ const AdvisorsPage: React.FC = () => {
         percentagesData: percentages,
         colors: advisorsMetrics[0].subOptions!.map(({ id, color }) => {
           return {
-            id,
+            id: t(`chart.${id}`),
             color,
           };
         }),
       };
+      console.log(chartData);
     } catch (_) {
       //error
     }

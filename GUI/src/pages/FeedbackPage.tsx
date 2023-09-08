@@ -37,13 +37,48 @@ const FeedbackPage: React.FC = () => {
       id: 'statuses',
       labelKey: 'feedback.statuses',
       subOptions: [
-        { id: 'answered', labelKey: 'feedback.status_options.answered', color: randomColor(), isSelected: true },
-        { id: 'client-left', labelKey: 'feedback.status_options.client_left', color: randomColor(), isSelected: true },
-        { id: 'idle', labelKey: 'feedback.status_options.idle', color: randomColor(), isSelected: true },
-        { id: 'accepted', labelKey: 'feedback.status_options.accepted', color: randomColor(), isSelected: true },
-        { id: 'hate-speech', labelKey: 'feedback.status_options.hate_speech', color: randomColor(), isSelected: true },
-        { id: 'to-contact', labelKey: 'feedback.status_options.to_contact', color: randomColor(), isSelected: true },
-        { id: 'terminated', labelKey: 'feedback.status_options.terminated', color: randomColor(), isSelected: true },
+        {
+          id: 'CLIENT_LEFT_WITH_ACCEPTED',
+          labelKey: 'feedback.status_options.client_left_with_accepted',
+          color: randomColor(),
+          isSelected: true,
+        },
+        {
+          id: 'CLIENT_LEFT_WITH_NO_RESOLUTION',
+          labelKey: 'feedback.status_options.client_left_with_no_resolution',
+          color: randomColor(),
+          isSelected: true,
+        },
+        {
+          id: 'CLIENT_LEFT_FOR_UNKNOWN_REASONS',
+          labelKey: 'feedback.status_options.client_left_for_unknown_reasons',
+          color: randomColor(),
+          isSelected: true,
+        },
+        {
+          id: 'ACCEPTED',
+          labelKey: 'feedback.status_options.accepted',
+          color: randomColor(),
+          isSelected: true,
+        },
+        {
+          id: 'HATE_SPEECH',
+          labelKey: 'feedback.status_options.hate_speech',
+          color: randomColor(),
+          isSelected: true,
+        },
+        {
+          id: 'OTHER',
+          labelKey: 'feedback.status_options.other',
+          color: randomColor(),
+          isSelected: true,
+        },
+        {
+          id: 'RESPONSE_SENT_TO_CLIENT_EMAIL',
+          labelKey: 'feedback.status_options.response_sent_to_client_email',
+          color: randomColor(),
+          isSelected: true,
+        },
       ],
       unit: t('units.chats') ?? 'chats',
     },
@@ -103,8 +138,20 @@ const FeedbackPage: React.FC = () => {
 
   const fetchChatsStatuses = async (config: MetricOptionsState) => {
     let chartData = {};
-    const events = config?.options.filter((e) => e === 'answered' || e === 'client-left' || e === 'idle') ?? [];
-    const csa_events = config?.options.filter((e) => e !== 'answered' && e !== 'client-left' && e !== 'idle') ?? [];
+    const events =
+      config?.options.filter(
+        (e) =>
+          e === 'CLIENT_LEFT_WITH_ACCEPTED' ||
+          e === 'CLIENT_LEFT_WITH_NO_RESOLUTION' ||
+          e === 'CLIENT_LEFT_FOR_UNKNOWN_REASONS'
+      ) ?? [];
+    const csa_events =
+      config?.options.filter(
+        (e) =>
+          e !== 'CLIENT_LEFT_WITH_ACCEPTED' &&
+          e !== 'CLIENT_LEFT_WITH_NO_RESOLUTION' &&
+          e !== 'CLIENT_LEFT_FOR_UNKNOWN_REASONS'
+      ) ?? [];
     try {
       const result = await axios.post(getChatsStatuses(), {
         metric: config?.groupByPeriod ?? 'day',
@@ -123,11 +170,11 @@ const FeedbackPage: React.FC = () => {
         .reduce((a: any, b: any) => {
           const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
           if (dateRow) {
-            dateRow[b['Event']] = b['Count'];
+            dateRow[t(`feedback.plain_status_options.${b[t('chart.event')].toLowerCase()}`)] = b[t('chart.count')];
           } else {
             a.push({
               [chartDataKey]: b[chartDataKey],
-              [b['Event']]: b['Count'],
+              [t(`feedback.plain_status_options.${b[t('chart.event')].toLowerCase()}`)]: b[t('chart.count')],
             });
           }
           return a;
@@ -162,7 +209,7 @@ const FeedbackPage: React.FC = () => {
         percentagesData: percentages,
         colors: feedbackMetrics[0].subOptions!.map(({ id, color }) => {
           return {
-            id,
+            id: t(`feedback.plain_status_options.${id.toLowerCase()}`),
             color,
           };
         }),
@@ -268,11 +315,11 @@ const FeedbackPage: React.FC = () => {
         .reduce((a: any, b: any) => {
           const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
           if (dateRow) {
-            dateRow[b['Customer Support Display Name']] = b['Nps'];
+            dateRow[b[t('chart.customerSupportDisplayName')]] = b[t('chart.nps')];
           } else {
             a.push({
               [chartDataKey]: b[chartDataKey],
-              [b['Customer Support Display Name']]: b['Nps'],
+              [b[t('chart.customerSupportDisplayName')]]: b[t('chart.nps')],
             });
           }
           return a;

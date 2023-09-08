@@ -37,7 +37,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
     <div ref={ref}>
       <BarChart
         width={width ?? 0}
-        height={(width ?? 0) / 3.8}
+        height={(width ?? 0) / 3.76}
         data={data.chartData}
         barSize={20}
         margin={{ top: 20, right: 65, bottom: 50 }}

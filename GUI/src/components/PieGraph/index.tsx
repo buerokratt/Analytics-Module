@@ -28,7 +28,7 @@ const PieGraph = ({ data }: Props) => {
       <Track>
         <PieChart
           width={(width ?? 0) / 2}
-          height={(width ?? 0) / 3.8}
+          height={(width ?? 0) / 3.76}
           data={data.chartData}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >

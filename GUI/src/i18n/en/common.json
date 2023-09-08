@@ -111,7 +111,7 @@
       "client_left_for_unknown_reasons": "Bureaucrat - terminated for an unspecified reason",
       "accepted": "Advisor - accepted answer",
       "hate_speech": "Advisor - signs of hate speech",
-      "response_sent_to_client_email": "Advisor - sent to client email",
+      "response_sent_to_client_email": "Advisor - answered in another channel",
       "other": "Advisor - other reasons"
     },
     "plain_status_options": {
@@ -120,7 +120,7 @@
       "client_left_for_unknown_reasons": "terminated for an unspecified reason",
       "accepted": "accepted answer",
       "hate_speech": "signs of hate speech",
-      "response_sent_to_client_email": "sent to client email",
+      "response_sent_to_client_email": "answered in another channel",
       "other": "other reasons"
     },
     "csv": "CSV",

@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import React, { useEffect, useRef, useState } from 'react';
 import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, Legend, Label } from 'recharts';
 import { chartDataKey, dateFormatter, formatDate, getColor, getTicks, round } from '../../util/charts-utils';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   data: any;
@@ -13,6 +14,7 @@ type Props = {
 const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
   const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -25,6 +27,12 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
 
   const domain = [new Date(startDate).getTime(), new Date(endDate).getTime()];
   const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5);
+
+  interface CustomTooltipProps {
+    active?: boolean;
+    payload?: any[];
+    label?: string;
+  }
 
   return (
     <div ref={ref}>
@@ -69,6 +77,7 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
                 key={k}
                 dataKey={k}
                 type="monotone"
+                hide={k === t('chats.totalCount')}
                 stroke={getColor(data, k)}
                 fill={getColor(data, k)}
               />

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { BarChart, XAxis, CartesianGrid, YAxis, Tooltip, Legend, Bar, Label, ResponsiveContainer } from 'recharts';
 import { chartDataKey, dateFormatter, formatDate, getColor, getTicks, round } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   data: any;
@@ -14,6 +15,7 @@ type Props = {
 const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod }) => {
   const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -71,7 +73,18 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
         {(data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {
-            return k === chartDataKey ? null : (
+            return k === chartDataKey ? null : k === t('chats.totalCount') ? (
+              <Bar
+                key={k}
+                dataKey={k}
+                type="monotone"
+                barSize={0}
+                height={0}
+                legendType="none"
+                stroke={getColor(data, k)}
+                fill={getColor(data, k)}
+              />
+            ) : (
               <Bar
                 key={k}
                 dataKey={k}

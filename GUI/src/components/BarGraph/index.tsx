@@ -73,23 +73,16 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
         {(data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {
-            return k === chartDataKey ? null : k === t('chats.totalCount') ? (
+            const isCount = k === t('chats.totalCount');
+            return k === chartDataKey ? null : (
               <Bar
                 key={k}
                 dataKey={k}
                 type="monotone"
-                barSize={0}
-                height={0}
-                legendType="none"
-                stroke={getColor(data, k)}
-                fill={getColor(data, k)}
-              />
-            ) : (
-              <Bar
-                key={k}
-                dataKey={k}
-                type="monotone"
-                stackId={chartDataKey}
+                barSize={isCount ? 0 : undefined}
+                height={isCount ? 0 : undefined}
+                legendType={isCount ? 'none' : undefined}
+                stackId={isCount ? undefined : chartDataKey}
                 stroke={getColor(data, k)}
                 fill={getColor(data, k)}
               />

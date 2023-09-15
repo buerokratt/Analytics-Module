@@ -144,7 +144,7 @@
     "outsideWorkingHours": "Outside working hours",
     "longWaitingTime": "Long waiting time",
     "allCsvAway": "All CSAs away with red status",
-    "medianWaitingTime": "Median (min)",
+    "medianWaitingTime": "Median",
     "averageWaitingTime": "Arithmetic (min)"
   },
   "chart": {

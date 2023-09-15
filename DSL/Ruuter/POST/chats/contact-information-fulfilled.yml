@@ -94,5 +94,30 @@ assign_all_csas_away:
   assign: 
     all_csas_away_result: ${results.response.body}
 
+check_total:
+  switch:
+    - condition: ${options.includes('total')}
+      next: total    
+
+empty_total:
+  assign:
+    total_result: ${[]}
+  next: respond    
+
+total:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/chat-cif-total"
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+      threshold_seconds: ${10 * 60}
+  result: results
+
+assign_total:
+  assign: 
+    total_result: ${results.response.body}  
+
 respond:
-  return: ${[outside_working_hours_result, long_waiting_time_result, all_csas_away_result]}
+  return: ${[outside_working_hours_result, long_waiting_time_result, all_csas_away_result, total_result]}

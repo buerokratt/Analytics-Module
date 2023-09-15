@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { BarChart, XAxis, CartesianGrid, YAxis, Tooltip, Legend, Bar, Label, ResponsiveContainer } from 'recharts';
 import { chartDataKey, dateFormatter, formatDate, getColor, getTicks, round } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   data: any;
@@ -14,6 +15,7 @@ type Props = {
 const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod }) => {
   const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -56,7 +58,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
           minTickGap={0}
           interval={0}
         />
-        <YAxis>
+        <YAxis ticks={data.chartData && data.chartData.length > 0 ? undefined : [0]}>
           <Label
             dx={-25}
             angle={270}
@@ -71,12 +73,16 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
         {(data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {
+            const isCount = k === t('chats.totalCount');
             return k === chartDataKey ? null : (
               <Bar
                 key={k}
                 dataKey={k}
                 type="monotone"
-                stackId={chartDataKey}
+                barSize={isCount ? 0 : undefined}
+                height={isCount ? 0 : undefined}
+                legendType={isCount ? 'none' : undefined}
+                stackId={isCount ? undefined : chartDataKey}
                 stroke={getColor(data, k)}
                 fill={getColor(data, k)}
               />

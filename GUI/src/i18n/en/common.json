@@ -106,13 +106,22 @@
     "selected_advisor_chats": "Feedback to selected advisor",
     "negative_feedback": "Conversations with negative feedback",
     "status_options": {
-      "answered": "Bureaucrat - the client left with an answer",
-      "client_left": "Bureaucrat - the customer left without an answer",
-      "idle": "Bureaucrat - Terminated for an unspecified reason",
-      "accepted": "Advisor - Accepted answer",
+      "client_left_with_accepted": "Bureaucrat - the client left with an answer",
+      "client_left_with_no_resolution": "Bureaucrat - the customer left without an answer",
+      "client_left_for_unknown_reasons": "Bureaucrat - terminated for an unspecified reason",
+      "accepted": "Advisor - accepted answer",
       "hate_speech": "Advisor - signs of hate speech",
-      "to_contact": "Advisor - answered in another channel",
-      "terminated": "Advisor - other reasons"
+      "response_sent_to_client_email": "Advisor - answered in another channel",
+      "other": "Advisor - other reasons"
+    },
+    "plain_status_options": {
+      "client_left_with_accepted": "the client left with an answer",
+      "client_left_with_no_resolution": "the customer left without an answer",
+      "client_left_for_unknown_reasons": "terminated for an unspecified reason",
+      "accepted": "accepted answer",
+      "hate_speech": "signs of hate speech",
+      "response_sent_to_client_email": "answered in another channel",
+      "other": "other reasons"
     },
     "csv": "CSV",
     "startTime": "Start time",
@@ -124,18 +133,19 @@
   },
   "chats": {
     "total": "Total number of chats",
+    "totalCount": "Total",
     "cip": "Contact information provided",
-    "avgWaitingTime": "Average waiting time",
-    "totalMessages": "Average number of messages in a chat",
-    "duration": "Average duration of chats",
+    "avgConversationTime": "Average conversation time (min)",
+    "avgWaitingTime": "Average waiting time (min)",
+    "avgNumOfMessages": "Average number of messages in a chat",
     "idle": "Count of idle chats ended by Bürokratt",
     "onlyBYK": "Only Bürokratt involved",
     "csaInvolved": "CSA involved",
     "outsideWorkingHours": "Outside working hours",
     "longWaitingTime": "Long waiting time",
     "allCsvAway": "All CSAs away with red status",
-    "medianWaitingTime": "Median",
-    "averageWaitingTime": "Arithmetic"
+    "medianWaitingTime": "Median (min)",
+    "averageWaitingTime": "Arithmetic (min)"
   },
   "chart": {
     "metricValue": "Chats started",
@@ -144,6 +154,12 @@
     "hateSpeech": "Hate speech",
     "terminated": "Unspecified reason",
     "toContact": "Answered in other channel",
+    "clientLeftWithAccepted": "Client left with an answer",
+    "clientLeftWithNoResolution": "Customer left without an answer",
+    "clientLeftForUnknownReasons": "Terminated for an unspecified reason",
+    "accepted": "Accepted answer",
+    "responseSentToClientEmail": "Answered in other channel",
+    "other": "Other reasons",
     "count": "Count",
     "event": "Event",
     "avg": "Average",
@@ -161,10 +177,10 @@
     "avgWaitingTimeSeconds": "Average (Sec)",
     "avgSec": "Average (Sec)",
     "avgMin": "Average (Min)",
-    "receivedChats": "receivedChats",
-    "forwardedChats": "forwardedChats",
-    "forwardedExternally": "forwardedExternally",
-    "timeInterval": "timeInterval"
+    "receivedChats": "Received Chats",
+    "forwardedChats": "Forwarded Chats",
+    "forwardedExternally": "Forwarded Externally",
+    "timeInterval": "Time Interval"
   },
   "reports": {
     "get-chat-count-total": "Total chat count",
@@ -278,5 +294,15 @@
     "ROLE_CHATBOT_TRAINER": "Chatbot trainer",
     "ROLE_ANALYST": "Analyst",
     "ROLE_UNAUTHENTICATED": "Unauthenticated"
+  },
+  "units": {
+    "chats": "chats",
+    "minutes": "minutes",
+    "messages": "messages",
+    "seconds": "seconds",
+    "intents": "intents",
+    "questions": "questions",
+    "counselors": "counselors",
+    "feedback": "feedback"
   }
 }

@@ -106,13 +106,22 @@
     "selected_advisor_chats": "Tagasiside valitud nõustajale",
     "negative_feedback": "Negatiivse tagasisidega vestlused",
     "status_options": {
-      "answered": "Bürokratt - klient lahkus vastusega",
-      "client_left": "Bürokratt - klient lahkus vastuseta",
-      "idle": "Bürokratt - lõpetatud määramata põhjusel",
+      "client_left_with_accepted": "Bürokratt - klient lahkus vastusega",
+      "client_left_with_no_resolution": "Bürokratt - klient lahkus vastuseta",
+      "client_left_for_unknown_reasons": "Bürokratt - lõpetatud määramata põhjusel",
       "accepted": "Nõustaja - aksepteeritud vastus",
       "hate_speech": "Nõustaja - vihakõne tunnused",
-      "to_contact": "Nõustaja - vastatud teises kanalis",
-      "terminated": "Nõustaja - muud põhjused"
+      "response_sent_to_client_email": "Nõustaja - vastatud teises kanalis",
+      "other": "Nõustaja - muud põhjused"
+    },
+    "plain_status_options": {
+      "client_left_with_accepted": "klient lahkus vastusega",
+      "client_left_with_no_resolution": "klient lahkus vastuseta",
+      "client_left_for_unknown_reasons": "lõpetatud määramata põhjusel",
+      "accepted": "aksepteeritud vastus",
+      "hate_speech": "vihakõne tunnused",
+      "response_sent_to_client_email": "vastatud teises kanalis",
+      "other": "muud põhjused"
     },
     "csv": "CSV",
     "startTime": "Algusaeg",
@@ -124,10 +133,11 @@
   },
   "chats": {
     "total": "Vestluste koguarv",
+    "totalCount": "Kokku",
     "cip": "Kontakti jätmised",
-    "avgWaitingTime": "Vestluste keskmine aeg (min)",
-    "totalMessages": "Keskmine ooteaja pikkus (min)",
-    "duration": "Keskmine sõnumite arv vestluses",
+    "avgConversationTime": "Vestluste keskmine aeg (min)",
+    "avgWaitingTime": "Keskmine ooteaja pikkus (min)",
+    "avgNumOfMessages": "Keskmine sõnumite arv vestluses",
     "idle": "Bürokrati lõpetatud vestluste arv",
     "onlyBYK": "Bürokrati vastatud",
     "csaInvolved": "Nõustaja kaasatud",
@@ -144,6 +154,12 @@
     "hateSpeech": "Vihakõne",
     "terminated": "Määramata põhjus",
     "toContact": "Vastus muus kanalis",
+    "clientLeftWithAccepted": "Klient lahkus vastusega",
+    "clientLeftWithNoResolution": "Klient lahkus vastuseta",
+    "clientLeftForUnknownReasons": "Lõpetatud määramata põhjusel",
+    "accepted": "Aksepteeritud vastus",
+    "responseSentToClientEmail": "Vastus muus kanalis",
+    "other": "Muud põhjused",
     "count": "Vestluseid",
     "event": "Sündmus",
     "avg": "Keskmine",
@@ -159,7 +175,11 @@
     "customerSupportDisplayName": "Nõustaja nimi",
     "barChart": "Tulpdiagramm",
     "pieChart": "Sektordiagramm",
-    "lineChart": "Joondiagramm"
+    "lineChart": "Joondiagramm",
+    "receivedChats": "Vastu võetud vestlused",
+    "forwardedChats": "Edastatud vestlused",
+    "forwardedExternally": "Edastatud väliselt",
+    "timeInterval": "Ajavahemik"
   },
   "reports": {
     "get-chat-count-total": "Vestluste koguarv",
@@ -279,5 +299,15 @@
   "chat": {
     "unanswered": "Vastamata",
     "forwarded": "Suunatud"
+  },
+  "units": {
+    "chats": "vestlused",
+    "minutes": "minutid",
+    "messages": "sõnumid",
+    "seconds": "sekundid",
+    "intents": "teemad",
+    "questions": "küsimused",
+    "counselors": "nõustajad",
+    "feedback": "tagasiside"
   }
 }

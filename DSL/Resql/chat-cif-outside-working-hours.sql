@@ -7,7 +7,7 @@ WITH config AS (
             AND deleted IS false
 			ORDER BY created DESC
 			LIMIT 1
-        )::date AS workingTimeStart,
+        )::timestamp AS workingTimeStart,
         (
             SELECT value
             FROM configuration
@@ -15,7 +15,7 @@ WITH config AS (
             AND deleted IS false
 			ORDER BY created DESC
 			LIMIT 1
-        )::date AS workingTimeEnd
+        )::timestamp AS workingTimeEnd
 )
 SELECT
     DATE_TRUNC(:period, chat.created) AS time,
@@ -23,7 +23,7 @@ SELECT
 FROM chat  
 JOIN customer_support_agent_activity AS csa
 ON chat.customer_support_id = csa.id_code
-WHERE chat.created BETWEEN :start::date AND :end::date
+WHERE chat.created::date BETWEEN :start::date AND :end::date
 AND EXISTS (
     SELECT 1
     FROM message

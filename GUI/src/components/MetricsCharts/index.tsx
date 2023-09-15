@@ -1,29 +1,29 @@
-import { useTranslation } from 'react-i18next'
-import React, { useState } from 'react'
-import { MdOutlineDownload } from 'react-icons/md'
-import { Button, Card, FormSelect, Icon, Track } from '../../components'
-import BarGraph from '../BarGraph'
-import './MetricsCharts.scss'
-import LineGraph from '../LineGraph'
-import PieGraph from '../PieGraph'
-import axios from 'axios'
-import { getCsv } from '../../resources/api-constants'
-import { saveAs } from 'file-saver'
-import { ChartType } from '../../types/chart-type'
-import { chartDataKey, formatDate } from '../../util/charts-utils'
-import { GroupByPeriod } from '../MetricAndPeriodOptions/types'
+import { useTranslation } from 'react-i18next';
+import React, { useState } from 'react';
+import { MdOutlineDownload } from 'react-icons/md';
+import { Button, Card, FormSelect, Icon, Track } from '../../components';
+import BarGraph from '../BarGraph';
+import './MetricsCharts.scss';
+import LineGraph from '../LineGraph';
+import PieGraph from '../PieGraph';
+import axios from 'axios';
+import { getCsv } from '../../resources/api-constants';
+import { saveAs } from 'file-saver';
+import { ChartType } from '../../types/chart-type';
+import { chartDataKey, formatDate } from '../../util/charts-utils';
+import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 
 type Props = {
-  title: any
-  data: any
-  startDate: string
-  endDate: string
-  unit?: string
-  groupByPeriod: GroupByPeriod
-}
+  title: any;
+  data: any;
+  startDate: string;
+  endDate: string;
+  unit?: string;
+  groupByPeriod: GroupByPeriod;
+};
 
 const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }: Props) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   const charts: ChartType[] = [
     {
@@ -38,14 +38,12 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       label: t('chart.lineChart'),
       value: 'lineChart',
     },
-  ]
-  const [selectedChart, setSelectedChart] = useState<string>('barChart')
+  ];
+  const [selectedChart, setSelectedChart] = useState<string>('barChart');
 
   const buildChart = () => {
     if (selectedChart === 'pieChart') {
-      return (
-        <PieGraph data={data} />
-      )
+      return <PieGraph data={data} />;
     } else if (selectedChart === 'lineChart') {
       return (
         <LineGraph
@@ -54,7 +52,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
           endDate={endDate}
           unit={unit}
         />
-      )
+      );
     } else {
       return (
         <BarGraph
@@ -64,22 +62,25 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
           unit={unit}
           groupByPeriod={groupByPeriod}
         />
-      )
+      );
     }
-  }
+  };
 
   const downloadCSV = async (data: any[]) => {
     const res = await axios.post(
       getCsv(),
       {
-        data: data.map((p) => ({ ...p, [chartDataKey]: formatDate(new Date(p[chartDataKey]), 'yyyy-MM-dd hh:mm:ss a') })),
+        data: data.map((p) => ({
+          ...p,
+          [chartDataKey]: formatDate(new Date(p[chartDataKey]), 'yyyy-MM-dd hh:mm:ss a'),
+        })),
         del: '',
         qul: '',
       },
-      { responseType: 'blob' },
-    )
-    saveAs(res.data, 'metrics.csv')
-  }
+      { responseType: 'blob' }
+    );
+    saveAs(res.data, 'metrics.csv');
+  };
 
   return (
     <Card
@@ -93,7 +94,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
               appearance="text"
               style={{ marginRight: 15 }}
               onClick={() => {
-                downloadCSV(data.chartData)
+                downloadCSV(data.chartData);
               }}
             >
               <Icon
@@ -115,7 +116,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
     >
       {buildChart()}
     </Card>
-  )
-}
+  );
+};
 
-export default MetricsCharts
+export default MetricsCharts;

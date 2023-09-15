@@ -11,6 +11,7 @@
  * Navigate to Resql and build the image `docker build -t resql .`
  * Clone [Data Mapper](https://github.com/buerokratt/DataMapper)
  * Navigate to Data Mapper and build the image `docker build -t datamapper-node .`
+ * Running locally need to set ENV variable REACT_APP_LOCAL to true (default).
   
  * Navigate to current repo and run `docker compose up -d`
 

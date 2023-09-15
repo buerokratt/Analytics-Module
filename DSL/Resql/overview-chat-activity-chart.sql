@@ -5,52 +5,61 @@ WITH chat_stats AS (
             SELECT 1
             FROM message
             WHERE message.chat_base_id = chat.base_id
-                AND "event" = 'answered'
-        ) AS answered,
+                AND "event" = 'CLIENT_LEFT_WITH_ACCEPTED'
+        ) AS client_left_with_accepted,
         (
             SELECT 1
             FROM message
             WHERE message.chat_base_id = chat.base_id
-                AND "event" = 'client-left'
-        ) AS not_answered,
+                AND "event" = 'CLIENT_LEFT_WITH_NO_RESOLUTION'
+        ) AS client_left_with_no_resolution,
         (
             SELECT 1
             FROM message
             WHERE message.chat_base_id = chat.base_id
-                AND "event" = 'hate-speech'
+                AND "event" = 'HATE_SPEECH'
         ) AS hate_speech,
         (
             SELECT 1
             FROM message
             WHERE message.chat_base_id = chat.base_id
-                AND "event" = 'terminated'
-        ) AS TERMINATED,
+                AND "event" = 'ACCEPTED'
+        ) AS accepted,
         (
             SELECT 1
             FROM message
             WHERE message.chat_base_id = chat.base_id
-                AND "event" = 'to-contact'
-        ) AS to_contact
+                AND "event" = 'OTHER'
+        ) AS other,
+        (
+            SELECT 1
+            FROM message
+            WHERE message.chat_base_id = chat.base_id
+                AND "event" = 'RESPONSE_SENT_TO_CLIENT_EMAIL'
+        ) AS response_sent_to_client_email
     FROM chat
-    WHERE created >= date_trunc('hour', NOW())
+    WHERE created >= date_trunc('hour', CURRENT_DATE)
 )
 SELECT timescale.created AS created,
     COUNT(DISTINCT base_id) AS metric_value,
     COUNT(DISTINCT base_id) filter (
-        WHERE answered IS NOT NULL
-    ) AS answered,
+        WHERE client_left_with_accepted IS NOT NULL
+    ) AS client_left_with_accepted,
     COUNT(DISTINCT base_id) filter (
-        WHERE not_answered IS NOT NULL
-    ) AS not_answered,
+        WHERE client_left_with_no_resolution IS NOT NULL
+    ) AS client_left_with_no_resolution,
     COUNT(DISTINCT base_id) filter (
         WHERE hate_speech IS NOT NULL
     ) AS hate_speech,
     COUNT(DISTINCT base_id) filter (
-        WHERE TERMINATED IS NOT NULL
-    ) AS TERMINATED,
+        WHERE accepted IS NOT NULL
+    ) AS accepted,
     COUNT(DISTINCT base_id) filter (
-        WHERE to_contact IS NOT NULL
-    ) AS to_contact
+        WHERE other IS NOT NULL
+    ) AS other,
+    COUNT(DISTINCT base_id) filter (
+        WHERE response_sent_to_client_email IS NOT NULL
+    ) AS response_sent_to_client_email
 FROM (
         SELECT date_trunc(
                 'hour',

@@ -6,7 +6,7 @@ WITH user_messages AS (
         LAG(created) OVER (PARTITION BY chat_base_id, author_role ORDER BY created) AS prev_message_time
     FROM message
     WHERE author_role = 'end-user' 
-    AND created BETWEEN :start::date AND :end::date
+    AND created::date BETWEEN :start::date AND :end::date
 )
 SELECT 
     DATE_TRUNC(:period, m.created) AS time, 

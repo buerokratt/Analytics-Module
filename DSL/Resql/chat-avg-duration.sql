@@ -6,7 +6,7 @@ WITH chat_durations AS (
     FROM chat
     JOIN message ON chat.base_id = message.chat_base_id
     WHERE chat.status = 'ENDED'
-    AND chat.created BETWEEN :start::date AND :end::date
+    AND chat.created::date BETWEEN :start::date AND :end::date
     GROUP BY chat.base_id
 )
 SELECT 

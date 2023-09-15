@@ -61,7 +61,7 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
           minTickGap={0}
           interval={0}
         />
-        <YAxis>
+        <YAxis ticks={data.chartData && data.chartData.length > 0 ? undefined : [0]}>
           <Label
             dx={-25}
             angle={270}

@@ -1,54 +1,54 @@
-import axios from 'axios'
-import React, { useCallback, useEffect, useState } from 'react'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { useTranslation } from 'react-i18next'
-import { MdEdit } from 'react-icons/md'
-import { Button, Card, Drawer, Icon, Track } from '../components'
-import DraggableListItem from '../components/overview/DraggableListItem'
-import MainMetricsArea from '../components/overview/MainMetricsArea'
-import LineGraph from '../components/LineGraph'
-import { openSearchDashboard, overviewMetricPreferences, overviewMetrics } from '../resources/api-constants'
-import { OverviewMetricPreference } from '../types/overview-metrics'
-import { reorderItem } from '../util/reorder-array'
-import { useCookies } from 'react-cookie'
-import { formatDate } from '../util/charts-utils'
+import axios from 'axios';
+import React, { useCallback, useEffect, useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useTranslation } from 'react-i18next';
+import { MdEdit } from 'react-icons/md';
+import { Button, Card, Drawer, Icon, Track } from '../components';
+import DraggableListItem from '../components/overview/DraggableListItem';
+import MainMetricsArea from '../components/overview/MainMetricsArea';
+import LineGraph from '../components/LineGraph';
+import { openSearchDashboard, overviewMetricPreferences, overviewMetrics } from '../resources/api-constants';
+import { OverviewMetricPreference } from '../types/overview-metrics';
+import { reorderItem } from '../util/reorder-array';
+import { useCookies } from 'react-cookie';
+import { formatDate } from '../util/charts-utils';
 
 const OverviewPage: React.FC = () => {
-  const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([])
-  const [chartData, setChartData] = useState({})
-  const [drawerIsHidden, setDrawerIsHidden] = useState(true)
+  const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([]);
+  const [chartData, setChartData] = useState({});
+  const [drawerIsHidden, setDrawerIsHidden] = useState(true);
   const [cookies, setCookie] = useCookies();
 
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   useEffect(() => {
     checkForCookie();
-    fetchMetricPreferences().catch(console.error)
-    fetchChartData().catch(console.error)
+    fetchMetricPreferences().catch(console.error);
+    fetchChartData().catch(console.error);
 
-    const interval = setInterval(() => fetchChartData(), 30000)
-    return () => clearInterval(interval)
-  }, [])
+    const interval = setInterval(() => fetchChartData(), 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const fetchMetricPreferences = async () => {
-    const result = await axios.get(overviewMetricPreferences(), { withCredentials: true })
-    setMetricPreferences(result.data.response)
-  }
+    const result = await axios.get(overviewMetricPreferences(), { withCredentials: true });
+    setMetricPreferences(result.data.response);
+  };
 
   const checkForCookie = () => {
     if (!(document.cookie.indexOf('test') > -1)) {
       setCookie('test', 1, { path: '/' });
     }
-  }
+  };
 
   const fetchChartData = async () => {
-    const result = await axios.get(overviewMetrics('chat-activity'))
+    const result = await axios.get(overviewMetrics('chat-activity'));
 
     const response = result.data.response.map((entry: any) => ({
       ...translateChartKeys(entry),
       dateTime: new Date(entry.created).getTime(),
-    }))
+    }));
 
     const chartData = {
       chartData: response,
@@ -58,11 +58,11 @@ const OverviewPage: React.FC = () => {
         { id: 'Left with no answer', color: `hsl(${2 * 20}, 80%, 45%)` },
         { id: 'Hate speech', color: `hsl(${3 * 20}, 80%, 45%)` },
         { id: 'Unspecified reason', color: `hsl(${4 * 20}, 80%, 45%)` },
-        { id: 'Answered in other channel', color: `hsl(${5 * 20}, 80%, 45%)` }
+        { id: 'Answered in other channel', color: `hsl(${5 * 20}, 80%, 45%)` },
       ],
-    }
+    };
     setChartData(chartData);
-  }
+  };
 
   const updateMetricPreference = async (metric: OverviewMetricPreference) => {
     const result = await axios.post(
@@ -72,25 +72,25 @@ const OverviewPage: React.FC = () => {
         ordinality: metric.ordinality,
         active: metric.active,
       },
-      { withCredentials: true },
-    )
-    setMetricPreferences(result.data.response)
-  }
+      { withCredentials: true }
+    );
+    setMetricPreferences(result.data.response);
+  };
 
   const toggleMetricActive = (metric: OverviewMetricPreference) => {
-    setMetricPreferences((metrics) => metrics.map((m) => (m === metric ? { ...metric, active: !metric.active } : m)))
-    updateMetricPreference({ ...metric, active: !metric.active })
-  }
+    setMetricPreferences((metrics) => metrics.map((m) => (m === metric ? { ...metric, active: !metric.active } : m)));
+    updateMetricPreference({ ...metric, active: !metric.active });
+  };
 
   const saveReorderedMetric = useCallback((metric: OverviewMetricPreference, newIndex: number) => {
-    updateMetricPreference({ ...metric, ordinality: newIndex })
-  }, [])
+    updateMetricPreference({ ...metric, ordinality: newIndex });
+  }, []);
 
   const moveMetric = (metric: string, target: number) => {
     setMetricPreferences((metrics) =>
-      reorderItem<OverviewMetricPreference>(metrics, (m) => m.metric === metric, target),
-    )
-  }
+      reorderItem<OverviewMetricPreference>(metrics, (m) => m.metric === metric, target)
+    );
+  };
 
   const translateChartKeys = (obj: any) =>
     Object.keys(obj).reduce(
@@ -98,11 +98,11 @@ const OverviewPage: React.FC = () => {
         key === 'created'
           ? acc
           : {
-            ...acc,
-            ...{ [t(`chart.${key}`)]: obj[key] },
-          },
-      {},
-    )
+              ...acc,
+              ...{ [t(`chart.${key}`)]: obj[key] },
+            },
+      {}
+    );
 
   const renderList = (m: OverviewMetricPreference, i: number) => (
     <DraggableListItem
@@ -113,7 +113,7 @@ const OverviewPage: React.FC = () => {
       saveReorderedMetric={saveReorderedMetric}
       index={i}
     />
-  )
+  );
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -162,7 +162,7 @@ const OverviewPage: React.FC = () => {
         <Button onClick={() => window.open(openSearchDashboard)}>{t('overview.openSearch')}</Button>
       </Card>
     </DndProvider>
-  )
-}
+  );
+};
 
-export default OverviewPage
+export default OverviewPage;

@@ -28,12 +28,6 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
   const domain = [new Date(startDate).getTime(), new Date(endDate).getTime()];
   const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5);
 
-  interface CustomTooltipProps {
-    active?: boolean;
-    payload?: any[];
-    label?: string;
-  }
-
   return (
     <div ref={ref}>
       <LineChart
@@ -72,12 +66,15 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
         <CartesianGrid stroke="#f5f5f5" />
         {(data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {
+            const isCount = k === t('chats.totalCount');
             return k === chartDataKey ? null : (
               <Line
                 key={k}
                 dataKey={k}
                 type="monotone"
-                hide={k === t('chats.totalCount')}
+                strokeWidth={isCount ? 0 : undefined}
+                dot={isCount ? false : true}
+                activeDot={isCount ? false : true}
                 stroke={getColor(data, k)}
                 fill={getColor(data, k)}
               />

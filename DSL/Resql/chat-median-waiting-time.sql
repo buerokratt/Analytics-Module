@@ -9,7 +9,7 @@ WITH waiting_times AS (
     WHERE m1.author_role = 'end-user'
     AND m2.author_role = 'chatbot'
     AND m2.created > m1.created
-    AND m1.created BETWEEN :start::date AND :end::date
+    AND m1.created::date BETWEEN :start::date AND :end::date
 )
 SELECT 
     time, 

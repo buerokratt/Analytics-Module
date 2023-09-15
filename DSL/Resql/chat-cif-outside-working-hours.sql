@@ -23,7 +23,7 @@ SELECT
 FROM chat  
 JOIN customer_support_agent_activity AS csa
 ON chat.customer_support_id = csa.id_code
-WHERE chat.created BETWEEN :start::date AND :end::date
+WHERE chat.created::date BETWEEN :start::date AND :end::date
 AND EXISTS (
     SELECT 1
     FROM message

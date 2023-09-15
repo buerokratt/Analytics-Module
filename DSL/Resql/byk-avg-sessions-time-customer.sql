@@ -6,7 +6,7 @@ WITH closed_chats AS (
     FROM message m
     JOIN chat ON m.chat_base_id = chat.base_id
     WHERE m.event IN ('answered', 'client-left')
-    AND chat.created BETWEEN :start::date AND :end::date
+    AND chat.created::date BETWEEN :start::date AND :end::date
     GROUP BY chat_base_id
 )
 SELECT

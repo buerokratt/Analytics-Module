@@ -144,7 +144,7 @@
     "outsideWorkingHours": "Tööpäeva väline aeg",
     "longWaitingTime": "Pikk ooteaeg",
     "allCsvAway": "Kõik nõustajad ära / hõivatud",
-    "medianWaitingTime": "Mediaan",
+    "medianWaitingTime": "Mediaan (min)",
     "averageWaitingTime": "Aritmeetiline keskmine (min)"
   },
   "chart": {

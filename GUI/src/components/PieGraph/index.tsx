@@ -5,6 +5,7 @@ import ChartToolTip from '../ChartToolTip';
 import PercentageToolTip from '../PercentageToolTip';
 import Track from '../Track';
 import './PieGraph.scss';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   data: any;
@@ -13,6 +14,7 @@ type Props = {
 const PieGraph = ({ data }: Props) => {
   const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -43,7 +45,7 @@ const PieGraph = ({ data }: Props) => {
             >
               {(data?.chartData?.length > 0 ?? false) &&
                 Object.keys(data.chartData[0]).map((k, i) => {
-                  return k === chartDataKey ? null : (
+                  return k === chartDataKey || k === t('chats.totalCount') ? null : (
                     <Cell
                       key={k}
                       type="monotone"
@@ -56,7 +58,12 @@ const PieGraph = ({ data }: Props) => {
           )}
           {data?.percentagesData != undefined && (
             <Pie
-              data={data.percentagesData}
+              data={data.percentagesData.map((e: any) => {
+                if (e['name'] === t('chats.totalCount')) {
+                  return null;
+                }
+                return e;
+              })}
               cx="50%"
               cy="50%"
               outerRadius={170}
@@ -105,7 +112,9 @@ const PieGraph = ({ data }: Props) => {
             })}
           {data?.percentagesData != undefined &&
             data.percentagesData.map((e: any, i: any) => {
-              return (
+              return e['name'] === t('chats.totalCount') ? (
+                <></>
+              ) : (
                 <Track key={`track-${i}`}>
                   {
                     <div

@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import React, { useEffect, useRef, useState } from 'react';
 import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, Legend, Label } from 'recharts';
 import { chartDataKey, dateFormatter, formatDate, getColor, getTicks, round } from '../../util/charts-utils';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   data: any;
@@ -13,6 +14,7 @@ type Props = {
 const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
   const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -53,7 +55,7 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
           minTickGap={0}
           interval={0}
         />
-        <YAxis>
+        <YAxis ticks={data.chartData && data.chartData.length > 0 ? undefined : [0]}>
           <Label
             dx={-25}
             angle={270}
@@ -64,11 +66,15 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
         <CartesianGrid stroke="#f5f5f5" />
         {(data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {
+            const isCount = k === t('chats.totalCount');
             return k === chartDataKey ? null : (
               <Line
                 key={k}
                 dataKey={k}
                 type="monotone"
+                strokeWidth={isCount ? 0 : undefined}
+                dot={isCount ? false : true}
+                activeDot={isCount ? false : true}
                 stroke={getColor(data, k)}
                 fill={getColor(data, k)}
               />

@@ -15,6 +15,9 @@ services:
       - 8080:8080
     networks:
       - bykstack
+    cpus: '0.5'
+    mem_limit: '512M'
+
   resql:
     container_name: resql
     image: resql
@@ -33,19 +36,21 @@ services:
       - ./DSL/Resql:/workspace/app/templates/byk
     networks:
       - bykstack
-  users_db:
-    container_name: users_db
-    image: postgres:14.1
-    environment:
-      - POSTGRES_USER=byk
-      - POSTGRES_PASSWORD=01234
-      - POSTGRES_DB=byk
-    ports:
-      - 5433:5432
-    volumes:
-      - ./data:/var/lib/postgresql/data
-    networks:
-      - bykstack
+
+#  users_db:
+#    container_name: users_db
+#    image: postgres:14.1
+#    environment:
+#      - POSTGRES_USER=byk
+#      - POSTGRES_PASSWORD=01234
+#      - POSTGRES_DB=byk
+#    ports:
+#      - 5433:5432
+#    volumes:
+#      - ./data:/var/lib/postgresql/data
+#    networks:
+#      - bykstack
+
   gui_dev:
     container_name: gui_dev
     environment:
@@ -76,6 +81,9 @@ services:
       - ./GUI:/app
     networks:
       - bykstack
+    cpus: '0.5'
+    mem_limit: '4G'
+
   data_mapper:
     container_name: data_mapper
     image: datamapper-node
@@ -91,3 +99,5 @@ networks:
   bykstack:
     name: bykstack
     driver: bridge
+    driver_opts:                         
+       com.docker.network.driver.mtu: 1400

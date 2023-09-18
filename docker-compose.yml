@@ -21,8 +21,8 @@ services:
   resql:
     container_name: resql
     image: resql
-    depends_on:
-      - users_db
+#    depends_on:
+#      - users_db
     environment:
       - sqlms.datasources.[0].name=byk
       # - sqlms.datasources.[0].jdbcUrl=jdbc:postgresql://users_db:5432/byk //For LocalDb Use

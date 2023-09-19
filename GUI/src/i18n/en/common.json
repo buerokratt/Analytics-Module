@@ -148,6 +148,7 @@
     "averageWaitingTime": "Arithmetic (min)"
   },
   "chart": {
+    "csa": "Csa",
     "metricValue": "Chats started",
     "answered": "Left with an answer",
     "notAnswered": "Left with no answer",

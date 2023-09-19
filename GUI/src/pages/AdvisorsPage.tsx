@@ -36,7 +36,7 @@ const AdvisorsPage: React.FC = () => {
     {
       id: 'avg_pick_time',
       labelKey: 'advisors.avg_pick_time',
-      unit: t('units.seconds') ?? 'seconds',
+      unit: t('units.minutes') ?? 'minutes',
     },
     {
       id: 'avg_present_csa',
@@ -51,7 +51,7 @@ const AdvisorsPage: React.FC = () => {
     {
       id: 'avg_chat_time_csa',
       labelKey: 'advisors.avg_chat_time_csa',
-      unit: t('units.seconds') ?? 'seconds',
+      unit: t('units.minutes') ?? 'minutes',
     },
   ];
 

@@ -11,9 +11,9 @@ WITH botname AS (
   join "user" 
   on message.forwarded_from_csa = "user".id_code
   WHERE chat.created::date BETWEEN :start::date AND :end::date
-    AND message.forwarded_from_csa IS NOT null
-    AND message.forwarded_from_csa <> ''
-    AND fmessage.orwarded_from_csa <> 'null'
+    AND forwarded_from_csa IS NOT null
+    AND forwarded_from_csa <> ''
+    AND forwarded_from_csa <> 'null'
     AND chat.received_from <> (
       SELECT "value"
       FROM botname
@@ -27,9 +27,9 @@ WITH botname AS (
   join "user" 
   on message.forwarded_to_csa = "user".id_code
   WHERE chat.created::date BETWEEN :start::date AND :end::date
-    AND message.forwarded_to_csa IS NOT null
-    AND message.forwarded_to_csa <> ''
-    AND message.forwarded_to_csa <> 'null'
+    AND forwarded_to_csa IS NOT null
+    AND forwarded_to_csa <> ''
+    AND forwarded_to_csa <> 'null'
     AND chat.received_from <> (
       SELECT "value"
       FROM botname

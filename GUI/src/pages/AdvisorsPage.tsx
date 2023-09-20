@@ -145,7 +145,6 @@ const AdvisorsPage: React.FC = () => {
           };
         }),
       };
-      console.log(chartData);
     } catch (_) {
       //error
     }

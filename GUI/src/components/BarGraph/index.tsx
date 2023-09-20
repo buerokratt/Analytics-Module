@@ -66,23 +66,38 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
           />
         </YAxis>
         <Tooltip
-          labelFormatter={(value) => `${formatDate(new Date(value), 'dd-MM-yyyy')}`}
-          formatter={round}
+          labelFormatter={(value) => {
+            if (typeof value === 'number') {
+              return formatDate(new Date(value), 'dd-MM-yyyy');
+            } else if (typeof value === 'string') {
+              return value;
+            }
+            return '';
+          }}
+          formatter={(value) => {
+            if (typeof value === 'number') {
+              return round(value);
+            } else if (typeof value === 'string') {
+              return value;
+            }
+            return '';
+          }}
           cursor={false}
         />
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
         {(data?.chartData?.length > 0 ?? false) &&
           Object.keys(data.chartData[0]).map((k, i) => {
             const isCount = k === t('chats.totalCount');
+            const isString = typeof data.chartData[0][k] === 'string';
             return k === chartDataKey ? null : (
               <Bar
                 key={k}
                 dataKey={k}
                 type="monotone"
-                barSize={isCount ? 0 : undefined}
-                height={isCount ? 0 : undefined}
+                barSize={isCount || isString ? 0 : undefined}
+                height={isCount || isString ? 0 : undefined}
                 legendType={isCount ? 'none' : undefined}
-                stackId={isCount ? undefined : chartDataKey}
+                stackId={isCount || isString ? undefined : chartDataKey}
                 stroke={getColor(data, k)}
                 fill={getColor(data, k)}
               />

@@ -37,8 +37,22 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
         margin={{ top: 20, right: 65, left: 10, bottom: 70 }}
       >
         <Tooltip
-          labelFormatter={(value) => `${formatDate(new Date(value), startDate == endDate ? 'HH:mm' : 'dd-MM-yyyy')}`}
-          formatter={round}
+          labelFormatter={(value) => {
+            if (typeof value === 'number') {
+              return `${formatDate(new Date(value), startDate == endDate ? 'HH:mm' : 'dd-MM-yyyy')}`;
+            } else if (typeof value === 'string') {
+              return value;
+            }
+            return '';
+          }}
+          formatter={(value) => {
+            if (typeof value === 'number') {
+              return round(value);
+            } else if (typeof value === 'string') {
+              return value;
+            }
+            return '';
+          }}
           cursor={false}
         />
         <XAxis

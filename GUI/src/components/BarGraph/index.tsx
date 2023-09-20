@@ -66,8 +66,22 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
           />
         </YAxis>
         <Tooltip
-          labelFormatter={(value) => `${formatDate(new Date(value), 'dd-MM-yyyy')}`}
-          formatter={round}
+          labelFormatter={(value) => {
+            if (typeof value === 'number') {
+              return formatDate(new Date(value), 'dd-MM-yyyy');
+            } else if (typeof value === 'string') {
+              return value;
+            }
+            return '';
+          }}
+          formatter={(value) => {
+            if (typeof value === 'number') {
+              return round(value);
+            } else if (typeof value === 'string') {
+              return value;
+            }
+            return '';
+          }}
           cursor={false}
         />
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />

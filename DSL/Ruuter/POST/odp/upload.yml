@@ -22,19 +22,16 @@ get_metrics:
     period: ${incoming.body.period}
   result: metricDataCSV
 
+upload:
+ call: http.post
+ args:
+   url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${incoming.body.datasetId}/upload"
+   file:
+     name: "metrics.csv"
+     content: ${metricDataCSV}
+   headers:
+     Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
+ result: result
+
 return:
-  return: ${metricDataCSV}
-
-#upload:
-#  call: http.post
-#  args:
-#    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/${settings.response.body[0].orgId}/datasets/${incoming.body.datasetId}/upload"
-#    file:
-#      name: "metrics.csv"
-#        content: ${metricDataCSV}
-#    headers:
-#      Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
-#  result: result
-
-#return:
-#  return: ${result.response.body}
+ return: ${result.response.body}

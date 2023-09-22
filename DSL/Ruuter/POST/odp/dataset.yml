@@ -15,7 +15,7 @@ authenticate:
 createDataset:
   call: http.post
   args:
-    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets"
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets"
     body:
       nameEt: ${incoming.body.nameEt}
       nameEn: ${incoming.body.nameEn}

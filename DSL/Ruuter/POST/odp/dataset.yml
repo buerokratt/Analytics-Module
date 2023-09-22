@@ -17,20 +17,26 @@ createDataset:
   args:
     url: "[#ANALYTICS_OPEN_DATA_SERVICE]/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets"
     body:
-      nameEt: ${incoming.body.nameEt}
-      nameEn: ${incoming.body.nameEn}
-      descriptionEt: ${incoming.body.descriptionEt}
-      descriptionEn: ${incoming.body.descriptionEn}
-      maintainer: ${incoming.body.maintainer}
-      maintainerEmail: ${incoming.body.maintainerEmail}
-      regionIds: ${incoming.body.regionIds}
-      keywordIds: ${incoming.body.keywordIds}
-      categoryIds: ${incoming.body.categoryIds}
-      updateIntervalUnit: ${incoming.body.updateIntervalUnit}
-      updateIntervalFrequency: ${incoming.body.updateIntervalFrequency}
-      dataFrom: ${incoming.body.dataFrom}
-      access: ${incoming.body.access}
-      licenceId: ${incoming.body.licenceId}
+     updateIntervalFrequency: 1
+     dataFrom: "2023-09-22T10:39:16.900Z"
+     nameEt: "bbbbb"
+     nameEn: "bbbbb"
+     descriptionEt: "asdfgerg"
+     descriptionEn: "fawer"
+     keywordIds: [
+        12780
+     ]
+     categoryIds: [
+        21
+     ]
+     regionIds: [
+      1
+     ]
+     maintainer: "Valter"
+     maintainerEmail: "valteraro@gmail.com"
+     updateIntervalUnit: "day"
+     access: "public"
+     licenceId: 43
     headers:
       Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
   result: datasetCreation

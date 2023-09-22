@@ -13,7 +13,7 @@ authenticate:
   result: apiToken
 
 updateDataset:
-  call: http.put
+  call: http.post # This needs to be a put request
   args:
     url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/users/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${incoming.body.datasetId}"
     body:

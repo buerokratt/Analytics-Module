@@ -34,6 +34,10 @@ createDataset:
     headers:
       Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
   result: datasetCreation
+  next: return_res
+
+return_res:
+   return: ${datasetCreation}  
 
 check_schedule:
   switch:

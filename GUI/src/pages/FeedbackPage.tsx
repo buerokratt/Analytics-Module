@@ -423,14 +423,16 @@ const FeedbackPage: React.FC = () => {
           setUnit(selectedOption.unit ?? '');
         }}
       />
-      <MetricsCharts
-        title={currentMetric}
-        data={chartData}
-        startDate={currentConfigs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
-        endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
-        groupByPeriod={currentConfigs?.groupByPeriod ?? 'day'}
-        unit={unit}
-      />
+      {currentConfigs?.metric != 'negative_feedback' && (
+        <MetricsCharts
+          title={currentMetric}
+          data={chartData}
+          startDate={currentConfigs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
+          endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
+          groupByPeriod={currentConfigs?.groupByPeriod ?? 'day'}
+          unit={unit}
+        />
+      )}
       {showNegativeChart && <ChatsTable dataSource={negativeFeedbackChats} />}
     </>
   );

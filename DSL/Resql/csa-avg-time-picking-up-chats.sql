@@ -22,12 +22,10 @@ WITH botname AS (
 SELECT date_time, ROUND(COALESCE(
         AVG(
             extract(
-                epoch
-                FROM (updated - prev_updated)
+                epoch FROM (updated - prev_updated)
             )
-        ),
-        0
-    ) / 60) AS avg_min
+        ) / 60), 2
+    ) AS avg_min
 FROM customer_support_changes
 WHERE prev_support_id = ''
     AND customer_support_id NOT IN (
@@ -37,4 +35,4 @@ WHERE prev_support_id = ''
         ),
         ''
     )
-GROUP BY date_time
+GROUP BY date_time;

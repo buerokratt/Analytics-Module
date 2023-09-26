@@ -2,7 +2,9 @@ WITH n_chats AS
   (SELECT base_id,
           max(created) AS created
    FROM chat
-   WHERE feedback_rating IS NOT NULL
+   WHERE feedback_rating IS NOT null
+     AND feedback_rating <> ''
+     AND feedback_rating <> 'null'
      AND STATUS = 'ENDED'
      AND feedback_rating::int <= 5
      AND created::date BETWEEN :start::date AND :end::date

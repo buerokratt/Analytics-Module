@@ -38,7 +38,7 @@ const dataSetSchema = yup
     maintainerEmail: yup.string().email().required(),
     regionIds: yup.array().of(yup.number()).min(1).required(),
     keywordIds: yup.array().of(yup.number()).min(1).required(),
-    categories: yup.array().of(yup.object({id: yup.number().min(1).required()})),
+    categoryIds: yup.array().of(yup.object({id: yup.number().min(1).required()})),
     updateIntervalUnit: yup.string().oneOf(['day', 'week', 'month', 'quarter', 'year', 'never']).required(),
     dataFrom: yup.date().default(new Date()).required(),
     updateIntervalFrequency: yup.number().default(1),
@@ -185,13 +185,13 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
               }
             />
             <FormSelectMultiple
-              {...register('categories')}
+              {...register('categoryIds')}
               label={t('reports.categories')}
               options={odpValues!.categories.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('categories')?.map((v: any) => String(v.id))}
+              defaultValue={getValues('categoryIds')?.map((v: any) => String(v.id))}
               onSelectionChange={(e) =>
                 setValue(
-                  'categories',
+                  'categoryIds',
                   e!.map((v) => ({ id: Number(v.value) }))
                 )
               }

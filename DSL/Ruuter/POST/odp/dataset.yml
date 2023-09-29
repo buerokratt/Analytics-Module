@@ -78,7 +78,8 @@ upload:
  call: http.post
  args:
    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${incoming.body.datasetId}/upload"
-   file:
+   body: 
+    file:
      name: "metrics.csv"
      content: ${metricDataCSV}
    headers:

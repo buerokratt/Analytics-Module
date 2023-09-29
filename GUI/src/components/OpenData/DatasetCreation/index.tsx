@@ -38,7 +38,8 @@ const dataSetSchema = yup
     maintainerEmail: yup.string().email().required(),
     regionIds: yup.array().of(yup.number()).min(1).required(),
     keywordIds: yup.array().of(yup.number()).min(1).required(),
-    categoryIds: yup.array().of(yup.object({id: yup.number().min(1).required()})),
+    categoryIds: yup.array().of(yup.number()).min(1).required(),
+    // categoryIds: yup.array().of(yup.object({id: yup.number().min(1).required()})),
     updateIntervalUnit: yup.string().oneOf(['day', 'week', 'month', 'quarter', 'year', 'never']).required(),
     dataFrom: yup.date().default(new Date()).required(),
     updateIntervalFrequency: yup.number().default(1),
@@ -192,7 +193,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
               onSelectionChange={(e) =>
                 setValue(
                   'categoryIds',
-                  e!.map((v) => ({ id: Number(v.value) }))
+                  e!.map((v) => Number(v.value))
                 )
               }
             />

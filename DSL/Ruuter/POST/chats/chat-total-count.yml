@@ -53,7 +53,7 @@ check_csa:
 empty_csa:
   assign:
     csa_result: ${[]}
-  next: respond
+  next: check_total
 
 csa:
   call: http.post

@@ -7,7 +7,7 @@ WITH waiting_times AS (
     JOIN message m2
     ON m1.chat_base_id = m2.chat_base_id
     WHERE m1.author_role = 'end-user'
-    AND m2.author_role = 'chatbot'
+    AND m2.author_role = 'backoffice-user'
     AND m2.created > m1.created
     AND m1.created::date BETWEEN :start::date AND :end::date
 )

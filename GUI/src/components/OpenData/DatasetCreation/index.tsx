@@ -36,8 +36,8 @@ const dataSetSchema = yup
     descriptionEn: yup.string().required().max(1500),
     maintainer: yup.string().required().max(500),
     maintainerEmail: yup.string().email().required(),
-    regionIds: yup.array().of(yup.number()).min(1).required(),
-    keywordIds: yup.array().of(yup.number()).min(1).required(),
+    regionIds: yup.array().of(yup.object({ id: yup.number().min(1).required() })),
+    keywordIds: yup.array().of(yup.object({ id: yup.number().min(1).required() })),
     categoryIds: yup.array().of(yup.object({ id: yup.number().min(1).required() })),
     updateIntervalUnit: yup.string().oneOf(['day', 'week', 'month', 'quarter', 'year', 'never']).required(),
     dataFrom: yup.date().default(new Date()).required(),
@@ -66,12 +66,11 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
     if (loading) return
     setLoading(true)
 
-    console.log(data['categoryIds']);
-    console.log(data['licenceId']);
+    data['regionIds'] = data['regionIds'].map((e: any) => e.id);
+    data['keywordIds'] = data['keywordIds'].map((e: any) => e.id);
     data['categoryIds'] = data['categoryIds'].map((e: any) => e.id);
     data['licenceId'] = data['licenceId'].id;
-    console.log(data['categoryIds']);
-    console.log(data['licenceId']);
+
     try {
       if (existingDataset === true) {
         await axios.post(openDataDataset(), { ...data, metrics, start, end });
@@ -90,8 +89,6 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
       setLoading(false)
     }
   }
-
-  console.log(existingDataset)
 
   useEffect(() => {
     fetchValues()
@@ -183,11 +180,11 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
               {...register('keywordIds')}
               label={t('reports.keywords')}
               options={odpValues!.keywords.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('keywordIds')?.map((v: any) => String(v))}
+              defaultValue={getValues('keywordIds')?.map((v: any) => String(v.id))}
               onSelectionChange={(e) =>
                 setValue(
                   'keywordIds',
-                  e!.map((v) => Number(v.value))
+                  e!.map((v) => ({ id: Number(v.value) }))
                 )
               }
             />
@@ -212,11 +209,11 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
               {...register('regionIds')}
               label={t('reports.regions')}
               options={odpValues!.regions.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('regionIds')?.map((v: any) => String(v))}
+              defaultValue={getValues('regionIds')?.map((v: any) => String(v.id))}
               onSelectionChange={(e) =>
                 setValue(
                   'regionIds',
-                  e!.map((v) => Number(v.value))
+                  e!.map((v) => ({ id: Number(v.value) }))
                 )
               }
             />

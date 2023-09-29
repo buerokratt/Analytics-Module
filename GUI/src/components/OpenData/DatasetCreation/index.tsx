@@ -188,7 +188,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
               {...register('categories')}
               label={t('reports.categories')}
               options={odpValues!.categories.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('categories')?.map((v: any) => String(v))}
+              defaultValue={getValues('categories')?.map((v: any) => String(v.id))}
               onSelectionChange={(e) =>
                 setValue(
                   'categories',

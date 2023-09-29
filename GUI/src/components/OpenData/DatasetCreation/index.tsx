@@ -38,7 +38,9 @@ const dataSetSchema = yup
     maintainerEmail: yup.string().email().required(),
     regionIds: yup.array().of(yup.number()).min(1).required(),
     keywordIds: yup.array().of(yup.number()).min(1).required(),
-    categoryIds: yup.array().of(yup.number()).min(1).required(),
+    categories: yup.object({
+      ids: yup.array().of(yup.number()).min(1).required()
+    }),
     updateIntervalUnit: yup.string().oneOf(['day', 'week', 'month', 'quarter', 'year', 'never']).required(),
     dataFrom: yup.date().default(new Date()).required(),
     updateIntervalFrequency: yup.number().default(1),
@@ -180,19 +182,19 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
               onSelectionChange={(e) =>
                 setValue(
                   'keywordIds',
-                  e!.map((v) => Number(v.value)),
+                  e!.map((v) => Number(v.value))
                 )
               }
             />
             <FormSelectMultiple
-              {...register('categoryIds')}
+              {...register('categories.ids')}
               label={t('reports.categories')}
               options={odpValues!.categories.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('categoryIds')?.map((v: any) => String(v))}
+              defaultValue={getValues('categories.ids')?.map((v: any) => String(v))}
               onSelectionChange={(e) =>
                 setValue(
-                  'categoryIds',
-                  e!.map((v) => Number(v.value)),
+                  'categories.ids',
+                  e!.map((v) => Number(v.value))
                 )
               }
             />
@@ -209,7 +211,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
               onSelectionChange={(e) =>
                 setValue(
                   'regionIds',
-                  e!.map((v) => Number(v.value)),
+                  e!.map((v) => Number(v.value))
                 )
               }
             />
@@ -242,12 +244,15 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
             <FormSelect
               {...register('updateIntervalUnit')}
               label={t('reports.updateIntervalUnit')}
-              options={['day', 'week', 'month', 'quarter', 'year', 'never'].map((v) => ({ label: t('reports.interval_'+v), value: v }))}
+              options={['day', 'week', 'month', 'quarter', 'year', 'never'].map((v) => ({
+                label: t('reports.interval_' + v),
+                value: v,
+              }))}
               defaultValue={getValues('updateIntervalUnit')}
               onSelectionChange={(e) => {
-                const interval = e!.value as UpdateIntervalUnitType
-                setValue('updateIntervalUnit', interval)
-                setValue('cron_expression', getCronExpression(interval))
+                const interval = e!.value as UpdateIntervalUnitType;
+                setValue('updateIntervalUnit', interval);
+                setValue('cron_expression', getCronExpression(interval));
               }}
             />
             {watch('updateIntervalUnit') !== undefined && (
@@ -290,7 +295,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
       </form>
       <div id="popup-overlay-root"></div>
     </Card>
-  )
+  );
 }
 
 export default DatasetCreation

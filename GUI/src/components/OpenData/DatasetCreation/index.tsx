@@ -38,12 +38,12 @@ const dataSetSchema = yup
     maintainerEmail: yup.string().email().required(),
     regionIds: yup.array().of(yup.number()).min(1).required(),
     keywordIds: yup.array().of(yup.number()).min(1).required(),
-    categoryIds: yup.array().of(yup.object({id: yup.number().min(1).required()})),
+    categoryIds: yup.array().of(yup.object({ id: yup.number().min(1).required() })),
     updateIntervalUnit: yup.string().oneOf(['day', 'week', 'month', 'quarter', 'year', 'never']).required(),
     dataFrom: yup.date().default(new Date()).required(),
     updateIntervalFrequency: yup.number().default(1),
     access: yup.string().oneOf(['public', 'protected', 'private']).required(),
-    licence: yup.object({
+    licenceId: yup.object({
       id: yup.number().required(),
     }),
     cron_expression: yup.string(),
@@ -67,8 +67,11 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
     setLoading(true)
 
     console.log(data['categoryIds']);
+    console.log(data['licenceId']);
     data['categoryIds'] = data['categoryIds'].map((e: any) => e.id);
+    data['licenceId'] = data['licenceId'].id;
     console.log(data['categoryIds']);
+    console.log(data['licenceId']);
     try {
       if (existingDataset === true) {
         await axios.post(openDataDataset(), { ...data, metrics, start, end });
@@ -273,11 +276,11 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
               onSelectionChange={(e) => setValue('access', e!.value as AccessType)}
             />
             <FormSelect
-              {...register('licence.id')}
+              {...register('licenceId.id')}
               label={t('reports.licence')}
               options={odpValues!.licences.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('licence.id')}
-              onSelectionChange={(e) => setValue('licence.id', Number(e!.value))}
+              defaultValue={getValues('licenceId.id')}
+              onSelectionChange={(e) => setValue('licenceId.id', Number(e!.value))}
             />
           </Track>
           <Track

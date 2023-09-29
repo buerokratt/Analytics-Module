@@ -82,6 +82,8 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
     }
   }
 
+  console.log(existingDataset)
+
   useEffect(() => {
     fetchValues()
   }, [])

@@ -43,10 +43,12 @@ const dataSetSchema = yup
     dataFrom: yup.date().default(new Date()).required(),
     updateIntervalFrequency: yup.number().default(1),
     access: yup.string().oneOf(['public', 'protected', 'private']).required(),
-    licenceId: yup.number().required(),
+    licence: yup.object({
+      id: yup.number().required(),
+    }),
     cron_expression: yup.string(),
   })
-  .required()
+  .required();
 
 const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: DatasetCreationProps) => {
   const { register, handleSubmit, setValue, getValues, watch } = useForm({
@@ -264,11 +266,11 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
               onSelectionChange={(e) => setValue('access', e!.value as AccessType)}
             />
             <FormSelect
-              {...register('licenceId')}
+              {...register('licence.id')}
               label={t('reports.licence')}
               options={odpValues!.licences.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('licenceId')}
-              onSelectionChange={(e) => setValue('licenceId', Number(e!.value))}
+              defaultValue={getValues('licence.id')}
+              onSelectionChange={(e) => setValue('licence.id', Number(e!.value))}
             />
           </Track>
           <Track

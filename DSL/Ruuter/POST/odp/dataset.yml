@@ -38,7 +38,7 @@ createDataset:
 check_schedule:
   switch:
     - condition: ${incoming.body.updateIntervalUnit === 'never'}
-      next: uploadImmediately
+      next: return_data
 
 setUpSchedule:
   call: reflect.mock
@@ -63,6 +63,10 @@ saveJobInformation:
   result: scheduledReport
   next: return_post_schedule
 
+return_data:
+  return: ${datasetCreation.response.body.data.id}
+  next: end
+  
 uploadImmediately:
   template: odp/upload
   requestType: post

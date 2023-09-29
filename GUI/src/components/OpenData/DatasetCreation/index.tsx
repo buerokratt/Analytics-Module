@@ -68,10 +68,9 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
 
     data['regionIds'] = data['regions'].map((e: any) => e.id);
     data['keywordIds'] = data['keywords'].map((e: any) => e.id);
-    data['categoryIds'] = data['categorys'].map((e: any) => e.id);
+    data['categoryIds'] = data['categories'].map((e: any) => e.id);
     data['licenceId'] = data['licence'].id;
 
-    console.log(data)
     try {
       if (existingDataset === true) {
         await axios.post(openDataDataset(), { ...data, metrics, start, end });

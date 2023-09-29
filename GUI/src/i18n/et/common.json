@@ -148,6 +148,7 @@
     "averageWaitingTime": "Aritmeetiline keskmine (min)"
   },
   "chart": {
+    "csa": "Csa",
     "metricValue": "Alustatud vestlused",
     "answered": "Lahkus vastusega",
     "notAnswered": "Lahkus vastuseta",

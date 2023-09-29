@@ -70,7 +70,7 @@ get_metrics:
     metrics: ${incoming.body.metrics}
     start: ${incoming.body.start}
     end: ${incoming.body.end}
-    period: ${incoming.body.period}
+    period: ${incoming.body.updateIntervalUnit}
   result: metricDataCSV
   next: upload
 

@@ -99,7 +99,7 @@ upload:
 #   result: uploadResult
 
 return_post_upload:
-  return: ${result}
+  return: ${metricDataCSV}
   next: end
 
 return_post_schedule:

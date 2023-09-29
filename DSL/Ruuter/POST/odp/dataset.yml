@@ -77,7 +77,7 @@ get_metrics:
 upload:
  call: http.post
  args:
-   url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${incoming.body.datasetId}/upload"
+   url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${datasetCreation.response.body.data.id}/upload"
    body: 
     file:
      name: "metrics.csv"

@@ -22,6 +22,10 @@ get_metrics:
     period: ${incoming.body.period}
   result: metricDataCSV
 
+return_ss:
+  return: ${metricDataCSV}
+  next: end
+
 upload:
  call: http.post
  args:

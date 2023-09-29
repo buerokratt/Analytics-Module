@@ -38,8 +38,7 @@ const dataSetSchema = yup
     maintainerEmail: yup.string().email().required(),
     regionIds: yup.array().of(yup.number()).min(1).required(),
     keywordIds: yup.array().of(yup.number()).min(1).required(),
-    categoryIds: yup.array().of(yup.number()).min(1).required(),
-    // categoryIds: yup.array().of(yup.object({id: yup.number().min(1).required()})),
+    categoryIds: yup.array().of(yup.object({id: yup.number().min(1).required()})),
     updateIntervalUnit: yup.string().oneOf(['day', 'week', 'month', 'quarter', 'year', 'never']).required(),
     dataFrom: yup.date().default(new Date()).required(),
     updateIntervalFrequency: yup.number().default(1),
@@ -63,14 +62,16 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
 
   const { t } = useTranslation()
 
-  const onSubmit = async (d: any) => {
+  const onSubmit = async (data: any) => {
     if (loading) return
     setLoading(true)
+
+    console.log(data['categoryIds']);
     try {
       if (existingDataset === true) {
-        await axios.post(openDataDataset(), { ...d, metrics, start, end })
+        await axios.post(openDataDataset(), { ...data, metrics, start, end });
       } else {
-        await axios.post(editScheduledReport(), { ...d, datasetId: existingDataset.datasetId })
+        await axios.post(editScheduledReport(), { ...data, datasetId: existingDataset.datasetId });
       }
       toast.open({
         type: 'success',
@@ -193,7 +194,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
               onSelectionChange={(e) =>
                 setValue(
                   'categoryIds',
-                  e!.map((v) => Number(v.value))
+                  e!.map((v) => ({ id: Number(v.value) }))
                 )
               }
             />

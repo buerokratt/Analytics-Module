@@ -36,14 +36,14 @@ const dataSetSchema = yup
     descriptionEn: yup.string().required().max(1500),
     maintainer: yup.string().required().max(500),
     maintainerEmail: yup.string().email().required(),
-    regionIds: yup.array().of(yup.object({ id: yup.number().min(1).required() })),
-    keywordIds: yup.array().of(yup.object({ id: yup.number().min(1).required() })),
-    categoryIds: yup.array().of(yup.object({ id: yup.number().min(1).required() })),
+    regions: yup.array().of(yup.object({ id: yup.number().min(1).required() })),
+    keywords: yup.array().of(yup.object({ id: yup.number().min(1).required() })),
+    categories: yup.array().of(yup.object({ id: yup.number().min(1).required() })),
     updateIntervalUnit: yup.string().oneOf(['day', 'week', 'month', 'quarter', 'year', 'never']).required(),
     dataFrom: yup.date().default(new Date()).required(),
     updateIntervalFrequency: yup.number().default(1),
     access: yup.string().oneOf(['public', 'protected', 'private']).required(),
-    licenceId: yup.object({
+    licence: yup.object({
       id: yup.number().required(),
     }),
     cron_expression: yup.string(),
@@ -66,10 +66,10 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
     if (loading) return
     setLoading(true)
 
-    data['regionIds'] = data['regionIds'].map((e: any) => e.id);
-    data['keywordIds'] = data['keywordIds'].map((e: any) => e.id);
-    data['categoryIds'] = data['categoryIds'].map((e: any) => e.id);
-    data['licenceId'] = data['licenceId'].id;
+    data['regionIds'] = data['regions'].map((e: any) => e.id);
+    data['keywordIds'] = data['keywords'].map((e: any) => e.id);
+    data['categoryIds'] = data['categorys'].map((e: any) => e.id);
+    data['licenceId'] = data['licence'].id;
 
     try {
       if (existingDataset === true) {
@@ -177,25 +177,25 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
             isMultiline={true}
           >
             <FormSelectMultiple
-              {...register('keywordIds')}
+              {...register('keywords')}
               label={t('reports.keywords')}
               options={odpValues!.keywords.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('keywordIds')?.map((v: any) => String(v.id))}
+              defaultValue={getValues('keywords')?.map((v: any) => String(v.id))}
               onSelectionChange={(e) =>
                 setValue(
-                  'keywordIds',
+                  'keywords',
                   e!.map((v) => ({ id: Number(v.value) }))
                 )
               }
             />
             <FormSelectMultiple
-              {...register('categoryIds')}
+              {...register('categories')}
               label={t('reports.categories')}
               options={odpValues!.categories.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('categoryIds')?.map((v: any) => String(v.id))}
+              defaultValue={getValues('categories')?.map((v: any) => String(v.id))}
               onSelectionChange={(e) =>
                 setValue(
-                  'categoryIds',
+                  'categories',
                   e!.map((v) => ({ id: Number(v.value) }))
                 )
               }
@@ -206,13 +206,13 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
             isMultiline={true}
           >
             <FormSelectMultiple
-              {...register('regionIds')}
+              {...register('regions')}
               label={t('reports.regions')}
               options={odpValues!.regions.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('regionIds')?.map((v: any) => String(v.id))}
+              defaultValue={getValues('regions')?.map((v: any) => String(v.id))}
               onSelectionChange={(e) =>
                 setValue(
-                  'regionIds',
+                  'regions',
                   e!.map((v) => ({ id: Number(v.value) }))
                 )
               }
@@ -273,11 +273,11 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
               onSelectionChange={(e) => setValue('access', e!.value as AccessType)}
             />
             <FormSelect
-              {...register('licenceId.id')}
+              {...register('licence.id')}
               label={t('reports.licence')}
               options={odpValues!.licences.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('licenceId.id')}
-              onSelectionChange={(e) => setValue('licenceId.id', Number(e!.value))}
+              defaultValue={getValues('licence.id')}
+              onSelectionChange={(e) => setValue('licence.id', Number(e!.value))}
             />
           </Track>
           <Track

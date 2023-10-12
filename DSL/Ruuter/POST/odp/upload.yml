@@ -37,7 +37,13 @@ upload:
    headers:
      Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
  result: uploadResult
- next: return_result
+ next: check_upload_result
+
+check_upload_result:
+  switch:
+    - condition: ${200 <= uploadResult.response.statusCodeValue && uploadResult.response.statusCodeValue < 300}
+      next: publish
+  next: return_upload_fail 
 
 publish:
  call: http.put
@@ -46,6 +52,24 @@ publish:
    headers:
      Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
  result: publishResult
+ next: check_publish_result
 
-return_result:
- return: ${uploadResult}
+check_publish_result:
+  switch:
+    - condition: ${200 <= publishResult.response.statusCodeValue && publishResult.response.statusCodeValue < 300}
+      next: return_success
+  next: return_publish_fail 
+
+return_success:
+  return: "Dataset uploaded and published successfully"
+  next: end
+
+return_upload_fail:
+  status: 400
+  return: "Dataset upload failed"
+  next: end
+
+return_publish_fail:
+  status: 400
+  return: "Dataset publish failed"
+  next: end   

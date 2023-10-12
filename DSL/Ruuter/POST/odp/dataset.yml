@@ -73,6 +73,7 @@ uploadImmediately:
     period: ${incoming.body.updateIntervalUnit}
     datasetId: ${datasetCreation.response.body.data.id}
   result: uploadResult
+  next: return_post_upload
 
 return_post_upload:
   return: ${uploadResult}

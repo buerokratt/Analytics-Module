@@ -25,10 +25,12 @@ get_metrics:
 upload:
  call: http.post
  args:
+   contentType: formdata
    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${incoming.body.datasetId}/upload"
-   file:
-     name: "metrics.csv"
-     content: ${metricDataCSV}
+   body:
+     delimiter: ","
+     headerIndex: "1"
+     file:metrics.csv: ${metricDataCSV}
    headers:
      Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
  result: result

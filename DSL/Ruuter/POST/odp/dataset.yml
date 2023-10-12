@@ -38,7 +38,7 @@ createDataset:
 check_schedule:
   switch:
     - condition: ${incoming.body.updateIntervalUnit === 'never'}
-      next: get_metrics
+      next: uploadImmediately
 
 setUpSchedule:
   call: reflect.mock
@@ -63,43 +63,19 @@ saveJobInformation:
   result: scheduledReport
   next: return_post_schedule
 
-get_metrics:
-  template: odp/metrics
+uploadImmediately:
+  template: odp/upload
   requestType: post
   body:
     metrics: ${incoming.body.metrics}
     start: ${incoming.body.start}
     end: ${incoming.body.end}
     period: ${incoming.body.updateIntervalUnit}
-  result: metricDataCSV
-  next: upload
-
-upload:
- call: http.post
- args:
-   url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${datasetCreation.response.body.data.id}/upload"
-   body: 
-    file:
-     name: "metrics.csv"
-     content: ${metricDataCSV}
-   headers:
-     Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
- result: result  
- next: return_post_upload
-
-# uploadImmediately:
-#   template: odp/upload
-#   requestType: post
-#   body:
-#     metrics: ${incoming.body.metrics}
-#     start: ${incoming.body.start}
-#     end: ${incoming.body.end}
-#     period: ${incoming.body.updateIntervalUnit}
-#     datasetId: ${datasetCreation.response.body.data.id}
-#   result: uploadResult
+    datasetId: ${datasetCreation.response.body.data.id}
+  result: uploadResult
 
 return_post_upload:
-  return: ${metricDataCSV}
+  return: ${uploadResult.response.body}
   next: end
 
 return_post_schedule:

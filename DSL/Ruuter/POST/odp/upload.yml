@@ -37,7 +37,7 @@ upload:
    headers:
      Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
  result: uploadResult
- next: publish
+ next: return_result
 
 publish:
  call: http.put
@@ -47,5 +47,5 @@ publish:
      Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
  result: publishResult
 
-return:
- return: ${publishResult.response.body}
+return_result:
+ return: ${uploadResult}

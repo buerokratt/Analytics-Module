@@ -30,7 +30,7 @@ upload:
    body:
      delimiter: ","
      headerIndex: "1"
-     file:metrics.csv: ${metricDataCSV}
+     file:files:metrics.csv: ${metricDataCSV}
    headers:
      Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
  result: result

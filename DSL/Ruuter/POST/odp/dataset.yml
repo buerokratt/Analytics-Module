@@ -75,7 +75,7 @@ uploadImmediately:
   result: uploadResult
 
 return_post_upload:
-  return: ${uploadResult.response.body}
+  return: ${uploadResult}
   next: end
 
 return_post_schedule:

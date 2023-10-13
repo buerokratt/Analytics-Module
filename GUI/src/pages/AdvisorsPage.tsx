@@ -22,7 +22,7 @@ const AdvisorsPage: React.FC = () => {
   const [currentConfigs, setConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
 
-  const advisorsMetrics = [
+  const [advisorsMetrics, _] = useState<Option[]>([
     {
       id: 'chat_forwards',
       labelKey: 'advisors.chat_forwards',
@@ -53,7 +53,7 @@ const AdvisorsPage: React.FC = () => {
       labelKey: 'advisors.avg_chat_time_csa',
       unit: t('units.minutes') ?? 'minutes',
     },
-  ];
+  ]);
 
   const [configsSubject] = useState(() => new Subject());
   useEffect(() => {
@@ -253,13 +253,14 @@ const AdvisorsPage: React.FC = () => {
       <OptionsPanel
         metricOptions={advisorsMetrics}
         dateFormat="yyyy-MM-dd"
-        onChange={(config) => {
+        onChange={(config) => {  
           setConfigs(config);
           configsSubject.next(config);
           setCurrentMetric(`advisors.${config.metric}`);
+
           const selectedOption = advisorsMetrics.find((x) => x.id === config.metric);
           if (!selectedOption) return;
-          setUnit(selectedOption.unit);
+          setUnit(selectedOption?.unit ?? 'chats');
         }}
       />
       <MetricsCharts

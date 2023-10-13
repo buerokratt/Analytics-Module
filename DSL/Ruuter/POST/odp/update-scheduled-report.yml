@@ -12,31 +12,28 @@ authenticate:
       X-API-KEY: ${settings.response.body[0].odpKey}
   result: apiToken
 
-# this is a mock because it actually needs to be a PUT request and it needs to use variables in the URL
 updateDataset:
-  call: reflect.mock
-  requestType: post
+  call: http.put
   args:
-    request:
-      #url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/users/organizations/my-organizations/${settings.response.body[0].orgId}/datasets/${incoming.body.datasetId}"
-      body:
-        nameEt: ${incoming.body.nameEt}
-        nameEn: ${incoming.body.nameEn}
-        descriptionEt: ${incoming.body.descriptionEt}
-        descriptionEn: ${incoming.body.descriptionEn}
-        maintainer: ${incoming.body.maintainer}
-        maintainerEmail: ${incoming.body.maintainerEmail}
-        regionIds: ${incoming.body.regionIds}
-        keywordIds: ${incoming.body.keywordIds}
-        categoryIds: ${incoming.body.categoryIds}
-        updateIntervalUnit: ${incoming.body.updateIntervalUnit}
-        updateIntervalFrequency: ${incoming.body.updateIntervalFrequency}
-        dataFrom: ${incoming.body.dataFrom}
-        access: ${incoming.body.access}
-        licenceId: ${incoming.body.licenceId}
-      headers:
-        Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
-  result: datasetUpdate
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${incoming.body.datasetId}"
+    body:
+      nameEt: ${incoming.body.nameEt}
+      nameEn: ${incoming.body.nameEn}
+      descriptionEt: ${incoming.body.descriptionEt}
+      descriptionEn: ${incoming.body.descriptionEn}
+      maintainer: ${incoming.body.maintainer}
+      maintainerEmail: ${incoming.body.maintainerEmail}
+      regionIds: ${incoming.body.regionIds}
+      keywordIds: ${incoming.body.keywordIds}
+      categoryIds: ${incoming.body.categoryIds}
+      updateIntervalUnit: ${incoming.body.updateIntervalUnit}
+      updateIntervalFrequency: ${incoming.body.updateIntervalFrequency}
+      dataFrom: ${incoming.body.dataFrom}
+      access: ${incoming.body.access}
+      licenceId: ${incoming.body.licenceId}
+    headers:
+      Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
+  result: datasetUpdate  
 
 getJobDetails:
   call: http.post

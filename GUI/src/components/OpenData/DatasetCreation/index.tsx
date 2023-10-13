@@ -36,17 +36,19 @@ const dataSetSchema = yup
     descriptionEn: yup.string().required().max(1500),
     maintainer: yup.string().required().max(500),
     maintainerEmail: yup.string().email().required(),
-    regionIds: yup.array().of(yup.number()).min(1).required(),
-    keywordIds: yup.array().of(yup.number()).min(1).required(),
-    categoryIds: yup.array().of(yup.number()).min(1).required(),
+    regions: yup.array().of(yup.object({ id: yup.number().min(1).required() })),
+    keywords: yup.array().of(yup.object({ id: yup.number().min(1).required() })),
+    categories: yup.array().of(yup.object({ id: yup.number().min(1).required() })),
     updateIntervalUnit: yup.string().oneOf(['day', 'week', 'month', 'quarter', 'year', 'never']).required(),
     dataFrom: yup.date().default(new Date()).required(),
     updateIntervalFrequency: yup.number().default(1),
     access: yup.string().oneOf(['public', 'protected', 'private']).required(),
-    licenceId: yup.number().required(),
+    licence: yup.object({
+      id: yup.number().required(),
+    }),
     cron_expression: yup.string(),
   })
-  .required()
+  .required();
 
 const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: DatasetCreationProps) => {
   const { register, handleSubmit, setValue, getValues, watch } = useForm({
@@ -60,14 +62,20 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
 
   const { t } = useTranslation()
 
-  const onSubmit = async (d: any) => {
+  const onSubmit = async (data: any) => {
     if (loading) return
     setLoading(true)
+
+    data['regionIds'] = data['regions'].map((e: any) => e.id);
+    data['keywordIds'] = data['keywords'].map((e: any) => e.id);
+    data['categoryIds'] = data['categories'].map((e: any) => e.id);
+    data['licenceId'] = data['licence'].id;
+
     try {
       if (existingDataset === true) {
-        await axios.post(openDataDataset(), { ...d, metrics, start, end })
+        await axios.post(openDataDataset(), { ...data, metrics, start, end });
       } else {
-        await axios.post(editScheduledReport(), { ...d, datasetId: existingDataset.datasetId })
+        await axios.post(editScheduledReport(), { ...data, datasetId: existingDataset.datasetId });
       }
       toast.open({
         type: 'success',
@@ -169,26 +177,26 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
             isMultiline={true}
           >
             <FormSelectMultiple
-              {...register('keywordIds')}
+              {...register('keywords')}
               label={t('reports.keywords')}
               options={odpValues!.keywords.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('keywordIds')?.map((v: any) => String(v))}
+              defaultValue={getValues('keywords')?.map((v: any) => String(v.id))}
               onSelectionChange={(e) =>
                 setValue(
-                  'keywordIds',
-                  e!.map((v) => Number(v.value)),
+                  'keywords',
+                  e!.map((v) => ({ id: Number(v.value) }))
                 )
               }
             />
             <FormSelectMultiple
-              {...register('categoryIds')}
+              {...register('categories')}
               label={t('reports.categories')}
               options={odpValues!.categories.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('categoryIds')?.map((v: any) => String(v))}
+              defaultValue={getValues('categories')?.map((v: any) => String(v.id))}
               onSelectionChange={(e) =>
                 setValue(
-                  'categoryIds',
-                  e!.map((v) => Number(v.value)),
+                  'categories',
+                  e!.map((v) => ({ id: Number(v.value) }))
                 )
               }
             />
@@ -198,14 +206,14 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
             isMultiline={true}
           >
             <FormSelectMultiple
-              {...register('regionIds')}
+              {...register('regions')}
               label={t('reports.regions')}
               options={odpValues!.regions.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('regionIds')?.map((v: any) => String(v))}
+              defaultValue={getValues('regions')?.map((v: any) => String(v.id))}
               onSelectionChange={(e) =>
                 setValue(
-                  'regionIds',
-                  e!.map((v) => Number(v.value)),
+                  'regions',
+                  e!.map((v) => ({ id: Number(v.value) }))
                 )
               }
             />
@@ -238,12 +246,15 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
             <FormSelect
               {...register('updateIntervalUnit')}
               label={t('reports.updateIntervalUnit')}
-              options={['day', 'week', 'month', 'quarter', 'year', 'never'].map((v) => ({ label: t('reports.interval_'+v), value: v }))}
+              options={['day', 'week', 'month', 'quarter', 'year', 'never'].map((v) => ({
+                label: t('reports.interval_' + v),
+                value: v,
+              }))}
               defaultValue={getValues('updateIntervalUnit')}
               onSelectionChange={(e) => {
-                const interval = e!.value as UpdateIntervalUnitType
-                setValue('updateIntervalUnit', interval)
-                setValue('cron_expression', getCronExpression(interval))
+                const interval = e!.value as UpdateIntervalUnitType;
+                setValue('updateIntervalUnit', interval);
+                setValue('cron_expression', getCronExpression(interval));
               }}
             />
             {watch('updateIntervalUnit') !== undefined && (
@@ -262,11 +273,11 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
               onSelectionChange={(e) => setValue('access', e!.value as AccessType)}
             />
             <FormSelect
-              {...register('licenceId')}
+              {...register('licence.id')}
               label={t('reports.licence')}
               options={odpValues!.licences.map(({ id, name }) => ({ value: id, label: name }))}
-              defaultValue={getValues('licenceId')}
-              onSelectionChange={(e) => setValue('licenceId', Number(e!.value))}
+              defaultValue={getValues('licence.id')}
+              onSelectionChange={(e) => setValue('licence.id', Number(e!.value))}
             />
           </Track>
           <Track
@@ -286,7 +297,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
       </form>
       <div id="popup-overlay-root"></div>
     </Card>
-  )
+  );
 }
 
 export default DatasetCreation

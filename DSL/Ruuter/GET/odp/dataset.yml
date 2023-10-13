@@ -12,27 +12,13 @@ authenticate:
       X-API-KEY: ${settings.response.body[0].odpKey}
   result: apiToken
 
-
-  #url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organization/${settings.response.body[0].orgId}/datasets/${incoming.params.datasetId}"
 get_dataset_metadata:
-  call: reflect.mock
+  call: http.get
   args:
-    response:
-      nameEt: 'mock'
-      nameEn: 'mock'
-      descriptionEt: 'mock'
-      descriptionEn: 'mock'
-      maintainer: 'mock'
-      maintainerEmail: 'mock'
-      regionIds: [1]
-      keywordIds: [12777]
-      categoryIds: [13]
-      updateIntervalUnit: 'day'
-      updateIntervalFrequency: 1
-      dataFrom: 'Thu, 16 Feb 2023 14:51:33 GMT'
-      access: 'public'
-      licenceId: 1
-  result: dataset
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${incoming.params.datasetId}"
+    headers:
+      Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}  
+  result: dataset  
 
 return:
   return: ${dataset.response.body}

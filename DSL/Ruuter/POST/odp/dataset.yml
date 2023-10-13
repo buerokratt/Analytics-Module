@@ -15,7 +15,7 @@ authenticate:
 createDataset:
   call: http.post
   args:
-    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/users/me/datasets" # replace with organization url that contains org id
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets"
     body:
       nameEt: ${incoming.body.nameEt}
       nameEn: ${incoming.body.nameEn}
@@ -73,9 +73,10 @@ uploadImmediately:
     period: ${incoming.body.updateIntervalUnit}
     datasetId: ${datasetCreation.response.body.data.id}
   result: uploadResult
+  next: return_post_upload
 
 return_post_upload:
-  return: ${uploadResult.response.body}
+  return: ${uploadResult}
   next: end
 
 return_post_schedule:

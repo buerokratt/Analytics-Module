@@ -3,6 +3,7 @@ getKey:
   args:
     url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-odp-settings"
   result: settings
+  next: authenticate
   
 authenticate:
   call: http.post
@@ -11,6 +12,7 @@ authenticate:
     headers:
       X-API-KEY: ${settings.response.body[0].odpKey}
   result: apiToken
+  next: get_metrics
 
 get_metrics:
   template: odp/metrics
@@ -21,20 +23,53 @@ get_metrics:
     end: ${incoming.body.end}
     period: ${incoming.body.period}
   result: metricDataCSV
+  next: upload
 
-return:
-  return: ${metricDataCSV}
+upload:
+ call: http.post
+ args:
+   contentType: formdata
+   url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${incoming.body.datasetId}/upload"
+   body:
+     delimiter: ","
+     headerIndex: "1"
+     file:files:metrics.csv: ${metricDataCSV}
+   headers:
+     Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
+ result: uploadResult
+ next: check_upload_result
 
-#upload:
-#  call: http.post
-#  args:
-#    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/${settings.response.body[0].orgId}/datasets/${incoming.body.datasetId}/upload"
-#    file:
-#      name: "metrics.csv"
-#        content: ${metricDataCSV}
-#    headers:
-#      Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
-#  result: result
+check_upload_result:
+  switch:
+    - condition: ${200 <= uploadResult.response.statusCodeValue && uploadResult.response.statusCodeValue < 300}
+      next: publish
+  next: return_upload_fail 
 
-#return:
-#  return: ${result.response.body}
+publish:
+ call: http.put
+ args:
+   url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${incoming.body.datasetId}/publish"
+   headers:
+     Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
+ result: publishResult
+ next: check_publish_result
+
+check_publish_result:
+  switch:
+    - condition: ${200 <= publishResult.response.statusCodeValue && publishResult.response.statusCodeValue < 300}
+      next: return_success
+  next: return_publish_fail 
+
+return_success:
+  return: "Dataset uploaded and published successfully"
+  next: end
+
+return_upload_fail:
+  status: 400
+  return: "Dataset upload failed"
+  next: end
+
+return_publish_fail:
+  status: 400
+  return: "Dataset publish failed"
+  next: end   

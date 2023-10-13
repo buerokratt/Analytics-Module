@@ -90,7 +90,7 @@ const ReportsPage = () => {
 
   const fetchDataset = async (datasetId: string) => {
     const result = await axios.get(getOpenDataDataset(datasetId))
-    setDatasetCreationVisible({ ...result.data.response, datasetId })
+    setDatasetCreationVisible({ ...result.data.response.data, datasetId })
   }
 
   const deleteSettings = async () => {

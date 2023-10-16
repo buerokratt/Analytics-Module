@@ -24,7 +24,7 @@ const App: React.FC = () => {
         loading={null}
         persistor={persistor}
       >
-        <BrowserRouter basename={import.meta.env.BASE_URL}>
+        <BrowserRouter basename={'/'}>
           <ToastProvider>
             <RootComponent />
           </ToastProvider>

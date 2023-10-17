@@ -52,14 +52,12 @@
     "yup": "^1.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject",
+    "dev": "vite --port 3001",
+    "build": "tsc && vite build",
     "preview": "vite preview",
-    "prettier": "prettier --write \"{,!(node_modules)/**/}*.{ts,tsx,js,json,css,less,scss}\"",
     "lint": "tsc --noEmit && eslint \"./src/**/*.{js,ts,tsx}\"",
-    "format": "prettier --check .",
-    "dev": "vite --host"
+    "prettier": "prettier --write \"{,!(node_modules)/**/}*.{ts,tsx,js,json,css,less,scss}\"",
+    "format": "prettier --check ."
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -8,6 +8,7 @@ import {
 } from '@exirain/header/src/index';
 import './Layout.scss'
 import {useQuery} from "@tanstack/react-query";
+import {array} from "yup";
 
 const Layout: FC = () => {
     const CACHE_NAME = 'mainmenu-cache';
@@ -37,7 +38,7 @@ const Layout: FC = () => {
 
   return (
     <div className="layout">
-      <MainNavigation baseUrl={import.meta.env.REACT_APP_BUEROKRATT_CHATBOT_URL} items={MainMenuItems}/>
+      <MainNavigation serviceId={import.meta.env.REACT_APP_SERVICE_ID.split(',')} items={MainMenuItems}/>
       <div className="layout__wrapper">
         <Header
             baseUrlV2={import.meta.env.REACT_APP_RUUTER_V2_PRIVATE_API_URL}

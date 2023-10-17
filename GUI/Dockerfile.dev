@@ -1,14 +1,17 @@
 FROM node:alpine AS development
 
 ENV NODE_ENV development
-ENV PORT=3001
+ENV PORT=3010
 
 WORKDIR /app
 COPY ./package.json .
-RUN npm install --legacy-peer-deps
+COPY ./exirain-header-0.0.21.tgz .
 
+RUN npm install --legacy-peer-deps
 COPY . .
+RUN ./node_modules/.bin/vite build --mode=development
 
 EXPOSE ${PORT}
 
 CMD ["npm", "run", "dev"]
+

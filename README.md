@@ -11,11 +11,14 @@
  * Navigate to Resql and build the image `docker build -t resql .`
  * Clone [Data Mapper](https://github.com/buerokratt/DataMapper)
  * Navigate to Data Mapper and build the image `docker build -t datamapper-node .`
- * Running locally need to set ENV variable REACT_APP_LOCAL to true (default).
+ * Clone [TIM](https://github.com/buerokratt/TIM)
+ * Go to src -> main -> resources -> application.properties & modify security.allowlist.jwt value to `security.allowlist.jwt=resql,tim,tim-postgresql,ruuter,data_mapper,gui_dev,127.0.0.1,::1`
+* Navigate to TIM and build the image `docker build -t tim .`
+* Running locally need to set ENV variable REACT_APP_LOCAL to true (default).
   
- * Navigate to current repo and run `docker compose up -d`
+* Navigate to current repo and run `docker compose up -d`
 
- * Go to https://localhost:3001
+* Go to https://localhost:3001
  
  ### Database setup
  * For setting up the database initially, run 

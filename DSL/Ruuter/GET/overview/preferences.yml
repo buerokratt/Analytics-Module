@@ -30,6 +30,7 @@ get_metrics_preferences:
     body:
       user_id_code: ${authority_result.idCode}
   result: metrics
+  next: return_value
 
 return_value:
   return: ${metrics.response.body}
@@ -38,3 +39,4 @@ return_value:
 return_unauthorized:
   status: 401
   return: "unauthorized"
+  next: end

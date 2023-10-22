@@ -11,19 +11,16 @@ import LineGraph from '../components/LineGraph';
 import { openSearchDashboard, overviewMetricPreferences, overviewMetrics } from '../resources/api-constants';
 import { OverviewMetricPreference } from '../types/overview-metrics';
 import { reorderItem } from '../util/reorder-array';
-import { useCookies } from 'react-cookie';
 import { formatDate } from '../util/charts-utils';
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([]);
   const [chartData, setChartData] = useState({});
   const [drawerIsHidden, setDrawerIsHidden] = useState(true);
-  const [cookies, setCookie] = useCookies();
 
   const { t } = useTranslation();
 
   useEffect(() => {
-    checkForCookie();
     fetchMetricPreferences().catch(console.error);
     fetchChartData().catch(console.error);
 
@@ -36,11 +33,6 @@ const OverviewPage: React.FC = () => {
     setMetricPreferences(result.data.response);
   };
 
-  const checkForCookie = () => {
-    if (!(document.cookie.indexOf('test') > -1)) {
-      setCookie('test', 1, { path: '/' });
-    }
-  };
 
   const fetchChartData = async () => {
     const result = await axios.get(overviewMetrics('chat-activity'));

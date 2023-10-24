@@ -11,11 +11,14 @@
  * Navigate to Resql and build the image `docker build -t resql .`
  * Clone [Data Mapper](https://github.com/buerokratt/DataMapper)
  * Navigate to Data Mapper and build the image `docker build -t datamapper-node .`
- * Running locally need to set ENV variable REACT_APP_LOCAL to true (default).
+ * Clone [TIM](https://github.com/buerokratt/TIM)
+ * Go to src -> main -> resources -> application.properties & modify security.allowlist.jwt value to `security.allowlist.jwt=resql,tim,tim-postgresql,ruuter,data_mapper,gui_dev,127.0.0.1,::1`
+* Navigate to TIM and build the image `docker build -t tim .`
+* Running locally need to set ENV variable REACT_APP_LOCAL to true (default).
   
- * Navigate to current repo and run `docker compose up -d`
+* Navigate to current repo and run `docker compose up -d`
 
- * Go to https://localhost:3001
+* Go to https://localhost:3001
  
  ### Database setup
  * For setting up the database initially, run 
@@ -61,4 +64,15 @@ That line must be updated when header version or location changes.
 Current solution uses the module from packed file. This means that when building docker image, a line to the docker script needs to be added for copying the file.
 ``` 
 COPY ./exirain-header-0.0.21.tgz .
+```
+
+### TIM
+
+- if you are running `Locally` then you need to curl the login request or run it on postman first to create and store the cookie in TIM and then on the browser create the cookie manully in the browser with name `customJwtCookie` and the value return from the curl
+the curl request is as follows:
+```
+curl -X POST -H "Content-Type: application/json" -d '{
+  "login": "EE30303039914",
+  "password": ""
+}' http://localhost:8080/login-user
 ```

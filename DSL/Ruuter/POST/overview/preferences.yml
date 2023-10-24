@@ -16,41 +16,42 @@ extract_request_data:
     active: ${incoming.body.active}
     metric: ${incoming.body.metric}
     ordinality: ${incoming.body.ordinality}
+  next: check_if_authorized
 
-extract_token_data:
-  call: http.post
-  args:
-    url: "[#ANALYTICS_RUUTER]:[#ANALYTICS_RUUTER_PORT]/mocks/mock-custom-jwt-userinfo" # todo: replace with real TIM url
-    headers:
-      cookie: ${cookie}
-    body:
-      cookieName: 'customJwtCookie' # todo: replace with real TIM cookie's name
-  result: jwtResult
+check_if_authorized:
+  template: templates/check-user-authority
+  requestType: post
+  headers:
+    cookie: ${cookie}
+  result: authority_result
+  next: check_authority_result
 
-validate_role:
+check_authority_result:
   switch:
-    - condition: ${jwtResult.response.body.response.authorities.includes("ROLE_ANALYST")}
+    - condition: ${authority_result !== "false"}
       next: update_metrics_preferences
-  next: return_unauthorized
+  next: return_unauthorized     
 
 update_metrics_preferences:
   call: http.post
   args:
     url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/update-overview-metric-preferences"
     body:
-      user_id_code: ${jwtResult.response.body.response.idCode}
+      user_id_code: ${authority_result.idCode}
       active: ${active}
       metric: ${metric}
       ordinality: ${ordinality}
   result: result
+  next: get_metrics_preferences
 
 get_metrics_preferences:
   call: http.post
   args:
     url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-metric-preferences"
     body:
-      user_id_code: ${jwtResult.response.body.response.idCode}
+      user_id_code: ${authority_result.idCode}
   result: metrics
+  next: return_value
 
 return_value:
   return: ${metrics.response.body}
@@ -64,3 +65,4 @@ return_unauthorized:
 return_incorrect_request:
   status: 400
   return: 'missing parameters'
+  next: end

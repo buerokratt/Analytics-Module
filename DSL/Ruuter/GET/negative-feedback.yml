@@ -10,22 +10,21 @@ extract_request_data:
     start: ${incoming.params.start}
     end: ${incoming.params.end}
     events: ${incoming.params.events}
+  next: check_if_authorized
 
-extract_cookie_data:
-  call: http.post
-  args:
-    url: "[#ANALYTICS_RUUTER]:[#ANALYTICS_RUUTER_PORT]/mocks/mock-custom-jwt-userinfo" # todo: replace with real TIM url
-    headers:
-      cookie: ${cookie}
-    body:
-      cookieName: 'customJwtCookie' # todo: replace with real TIM cookie's name
-  result: jwtResult
+check_if_authorized:
+  template: templates/check-user-authority
+  requestType: post
+  headers:
+    cookie: ${cookie}
+  result: authority_result
+  next: check_authority_result
 
-validate_role:
+check_authority_result:
   switch:
-    - condition: ${jwtResult.response.body.response.authorities.includes("ROLE_ANALYST")}
+    - condition: ${authority_result !== "false"}
       next: get_negative_feedback
-  next: return_unauthorized
+  next: return_unauthorized 
 
 get_negative_feedback:
   call: http.post

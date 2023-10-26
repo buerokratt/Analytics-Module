@@ -11,12 +11,23 @@ import useUserInfoStore from "./store/user/store";
 import { useQuery } from "@tanstack/react-query";
 
 const App: React.FC = () => {
+
     const userInfoStore = useUserInfoStore();
+
+    if(import.meta.env.REACT_APP_LOCAL === 'true') {
+
+        const { data } = useQuery<UserInfo>({
+            queryKey: ['cs-custom-jwt-userinfo', 'prod'],
+            onSuccess: (res: any) => userInfoStore.setUserInfo(res)
+        })
+    } else {
         const { data: userInfo } = useQuery<UserInfo>({
-        queryKey: [import.meta.env.REACT_APP_AUTH_PATH, 'auth'],
+            queryKey: [import.meta.env.REACT_APP_AUTH_PATH, 'auth'],
             onSuccess: (data: { data: { custom_jwt_userinfo: UserInfo } }) =>
                 userInfoStore.setUserInfo(data.data.custom_jwt_userinfo),
-    });
+        });
+    }
+
 
   return (
     <Provider store={reducerStore}>

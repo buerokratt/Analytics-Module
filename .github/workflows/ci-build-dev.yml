@@ -1,4 +1,4 @@
-name: Build and publish Training-Module in dev
+name: Build and publish Analytics-Module in dev
 
 on:
   push:

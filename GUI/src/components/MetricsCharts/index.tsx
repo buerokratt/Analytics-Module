@@ -67,10 +67,20 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
   };
 
   const downloadCSV = async (data: any[]) => {
+    const modifiedData: any[] = data.map((item) => {
+      const modifiedItem: any = { ...item };
+      getKeys(data).forEach((propertyName: any) => {
+        if (!(propertyName in modifiedItem)) {
+          modifiedItem[propertyName] = 0;
+        }
+      });
+      return modifiedItem;
+    });
+
     const res = await axios.post(
       getCsv(),
       {
-        data: data.map((p) => ({
+        data: modifiedData.map((p) => ({
           ...p,
           [chartDataKey]: formatDate(new Date(p[chartDataKey]), 'yyyy-MM-dd hh:mm:ss a'),
         })),

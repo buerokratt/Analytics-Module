@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PieChart, Cell, Pie, Tooltip, Legend } from 'recharts';
-import { chartDataKey, getColor } from '../../util/charts-utils';
+import { chartDataKey, getColor, getKeys } from '../../util/charts-utils';
 import ChartToolTip from '../ChartToolTip';
 import PercentageToolTip from '../PercentageToolTip';
 import Track from '../Track';
@@ -44,7 +44,7 @@ const PieGraph = ({ data }: Props) => {
               dataKey={chartDataKey}
             >
               {(data?.chartData?.length > 0 ?? false) &&
-                Object.keys(data.chartData[0]).map((k, i) => {
+                getKeys(data.chartData).map((k, i) => {
                   return k === chartDataKey || k === t('chats.totalCount') ? null : (
                     <Cell
                       key={k}
@@ -94,7 +94,7 @@ const PieGraph = ({ data }: Props) => {
         >
           {(data?.chartData?.length > 0 ?? false) &&
             data?.percentagesData == undefined &&
-            Object.keys(data.chartData[0]).map((k, i) => {
+            getKeys(data.chartData).map((k, i) => {
               return (
                 <Track key={k}>
                   {k !== chartDataKey && (

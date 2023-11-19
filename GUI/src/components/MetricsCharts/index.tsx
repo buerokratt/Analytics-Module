@@ -10,7 +10,7 @@ import axios from 'axios';
 import { getCsv } from '../../resources/api-constants';
 import { saveAs } from 'file-saver';
 import { ChartType } from '../../types/chart-type';
-import { chartDataKey, formatDate } from '../../util/charts-utils';
+import { chartDataKey, formatDate, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 
 type Props = {

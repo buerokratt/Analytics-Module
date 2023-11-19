@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BarChart, XAxis, CartesianGrid, YAxis, Tooltip, Legend, Bar, Label, ResponsiveContainer } from 'recharts';
-import { chartDataKey, dateFormatter, formatDate, getColor, getTicks, round } from '../../util/charts-utils';
+import { chartDataKey, dateFormatter, formatDate, getColor, getKeys, getTicks, round } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { useTranslation } from 'react-i18next';
 
@@ -86,7 +86,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
         />
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
         {(data?.chartData?.length > 0 ?? false) &&
-          Object.keys(data.chartData[0]).map((k, i) => {
+          getKeys(data.chartData).map((k, i) => {
             const isCount = k === t('chats.totalCount');
             const isString = typeof data.chartData[0][k] === 'string';
             return k === chartDataKey ? null : (

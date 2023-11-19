@@ -1,10 +1,10 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { MdDelete, MdEdit } from 'react-icons/md'
-import { Button, Card, Dialog, Drawer, Icon, Section, Track } from '../components'
-import OptionsPanel from '../components/MetricAndPeriodOptions'
-import { Option, OnChangeCallback } from '../components/MetricAndPeriodOptions'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { MdDelete, MdEdit } from 'react-icons/md';
+import { Button, Card, Dialog, Drawer, Icon, Section, Track } from '../components';
+import OptionsPanel from '../components/MetricAndPeriodOptions';
+import { Option, OnChangeCallback } from '../components/MetricAndPeriodOptions';
 import {
   deleteOpenDataSettings,
   deleteScheduledReport,
@@ -12,35 +12,35 @@ import {
   getOpenDataDataset,
   openDataSettings,
   scheduledReports,
-} from '../resources/api-constants'
-import APISetupDrawer from '../components/OpenData/APISetupDrawer'
-import { ODPSettings } from '../types/reports'
-import DatasetCreation from '../components/OpenData/DatasetCreation'
-import Popup from '../components/Popup'
-import { saveAs } from 'file-saver'
-import TooltipWrapper from '../components/TooltipWrapper'
+} from '../resources/api-constants';
+import APISetupDrawer from '../components/OpenData/APISetupDrawer';
+import { ODPSettings } from '../types/reports';
+import DatasetCreation from '../components/OpenData/DatasetCreation';
+import Popup from '../components/Popup';
+import { saveAs } from 'file-saver';
+import TooltipWrapper from '../components/TooltipWrapper';
 
 type ScheduledDataset = {
-  datasetId: string
-  name: string
-  id: number
-  period: string
-}
+  datasetId: string;
+  name: string;
+  id: number;
+  period: string;
+};
 
 const ReportsPage = () => {
-  const { t } = useTranslation()
-  const [options, setOptions] = useState<OnChangeCallback>()
-  const [apiSetupDrawerVisible, setApiSetupDrawerVisible] = useState(false)
-  const [datasetCreationVisible, setDatasetCreationVisible] = useState<boolean | any>(false)
-  const [apiSettings, setApiSettings] = useState<ODPSettings>({ odpKey: null, orgId: null })
-  const [datasets, setDatasets] = useState<ScheduledDataset[]>([])
+  const { t } = useTranslation();
+  const [options, setOptions] = useState<OnChangeCallback>();
+  const [apiSetupDrawerVisible, setApiSetupDrawerVisible] = useState(false);
+  const [datasetCreationVisible, setDatasetCreationVisible] = useState<boolean | any>(false);
+  const [apiSettings, setApiSettings] = useState<ODPSettings>({ odpKey: null, orgId: null });
+  const [datasets, setDatasets] = useState<ScheduledDataset[]>([]);
 
-  const [isSettingsConfirmationVisible, setIsSettingsConfirmationVisible] = useState(false)
+  const [isSettingsConfirmationVisible, setIsSettingsConfirmationVisible] = useState(false);
 
   useEffect(() => {
-    fetchSettings()
-    fetchDatasets()
-  }, [])
+    fetchSettings();
+    fetchDatasets();
+  }, []);
 
   const odpQueries = [
     'get-chat-count-total',
@@ -55,15 +55,14 @@ const ReportsPage = () => {
     'get-avg-session-length-no-csa',
     'get-avg-response-time',
     'get-pct-correctly-understood',
-  ]
-
-  const openDataOptions: Option[] = [
+  ];
+  const [openDataOptions, _] = useState<Option[]>([
     {
       id: 'openDataMetrics',
       subOptions: odpQueries.map((oq) => ({ id: oq, labelKey: `reports.${oq}` })),
       labelKey: '',
     },
-  ]
+  ]);
 
   const getCSVFile = async () => {
     const result = await axios.post(
@@ -73,37 +72,37 @@ const ReportsPage = () => {
         end: options?.end,
         metrics: options?.options,
       },
-      { responseType: 'blob' },
-    )
-    saveAs(result.data, 'metrics.csv')
-  }
+      { responseType: 'blob' }
+    );
+    saveAs(result.data, 'metrics.csv');
+  };
 
   const fetchSettings = async () => {
-    const result = await axios.get(openDataSettings())
-    setApiSettings(result.data.response)
-  }
+    const result = await axios.get(openDataSettings());
+    setApiSettings(result.data.response);
+  };
 
   const fetchDatasets = async () => {
-    const result = await axios.get(scheduledReports())
-    setDatasets(result.data.response)
-  }
+    const result = await axios.get(scheduledReports());
+    setDatasets(result.data.response);
+  };
 
   const fetchDataset = async (datasetId: string) => {
-    const result = await axios.get(getOpenDataDataset(datasetId))
-    setDatasetCreationVisible({ ...result.data.response.data, datasetId })
-  }
+    const result = await axios.get(getOpenDataDataset(datasetId));
+    setDatasetCreationVisible({ ...result.data.response.data, datasetId });
+  };
 
   const deleteSettings = async () => {
-    setApiSettings({ odpKey: null, orgId: null })
-    await axios.post(deleteOpenDataSettings())
-  }
+    setApiSettings({ odpKey: null, orgId: null });
+    await axios.post(deleteOpenDataSettings());
+  };
 
   const deleteSchedule = async (datasetId: string) => {
-    await axios.post(deleteScheduledReport(), { datasetId })
-    fetchDatasets()
-  }
+    await axios.post(deleteScheduledReport(), { datasetId });
+    fetchDatasets();
+  };
 
-  const disabled = options?.options.length === 0 || apiSettings.odpKey === null
+  const disabled = options?.options.length === 0 || apiSettings.odpKey === null;
 
   return (
     <>
@@ -195,8 +194,8 @@ const ReportsPage = () => {
             <>
               <Button
                 onClick={() => {
-                  setIsSettingsConfirmationVisible(false)
-                  deleteSettings()
+                  setIsSettingsConfirmationVisible(false);
+                  deleteSettings();
                 }}
               >
                 {t('global.delete')}
@@ -222,15 +221,15 @@ const ReportsPage = () => {
         <APISetupDrawer
           isDrawerVisible={apiSetupDrawerVisible}
           onClose={(settings) => {
-            setApiSettings(settings)
-            setApiSetupDrawerVisible(false)
+            setApiSettings(settings);
+            setApiSetupDrawerVisible(false);
           }}
         />
       </Drawer>
       {datasetCreationVisible && (
         <Popup
           onClose={() => {
-            setDatasetCreationVisible(false)
+            setDatasetCreationVisible(false);
           }}
           title={t('reports.create-new-dataset')}
         >
@@ -240,14 +239,14 @@ const ReportsPage = () => {
             end={options!.end}
             existingDataset={datasetCreationVisible}
             onClose={() => {
-              setDatasetCreationVisible(false)
-              fetchDatasets()
+              setDatasetCreationVisible(false);
+              fetchDatasets();
             }}
           />
         </Popup>
       )}
     </>
-  )
-}
+  );
+};
 
-export default ReportsPage
+export default ReportsPage;

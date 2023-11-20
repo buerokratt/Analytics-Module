@@ -10,7 +10,7 @@ import axios from 'axios';
 import { getCsv } from '../../resources/api-constants';
 import { saveAs } from 'file-saver';
 import { ChartType } from '../../types/chart-type';
-import { chartDataKey, formatDate } from '../../util/charts-utils';
+import { chartDataKey, formatDate, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 
 type Props = {
@@ -67,10 +67,20 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
   };
 
   const downloadCSV = async (data: any[]) => {
+    const modifiedData: any[] = data.map((item) => {
+      const modifiedItem: any = { ...item };
+      getKeys(data).forEach((propertyName: any) => {
+        if (!(propertyName in modifiedItem)) {
+          modifiedItem[propertyName] = 0;
+        }
+      });
+      return modifiedItem;
+    });
+
     const res = await axios.post(
       getCsv(),
       {
-        data: data.map((p) => ({
+        data: modifiedData.map((p) => ({
           ...p,
           [chartDataKey]: formatDate(new Date(p[chartDataKey]), 'yyyy-MM-dd hh:mm:ss a'),
         })),

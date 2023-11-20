@@ -1,7 +1,7 @@
 import React, {FC, useState} from 'react'
 import { Outlet } from 'react-router-dom'
 
-import useUserInfoStore from '../../store/user/store';
+import useStore from '../../store/user/store';
 import {
     Header,
     MainNavigation
@@ -41,10 +41,7 @@ const Layout: FC = () => {
       <MainNavigation serviceId={import.meta.env.REACT_APP_SERVICE_ID.split(',')} items={MainMenuItems}/>
       <div className="layout__wrapper">
         <Header
-            baseUrlV2={import.meta.env.REACT_APP_RUUTER_V2_PRIVATE_API_URL}
-            baseUrl={import.meta.env.REACT_APP_RUUTER_V1_PRIVATE_API_URL}
-            analticsUrl={import.meta.env.REACT_APP_RUUTER_V2_ANALYTICS_API_URL}
-            user={useUserInfoStore.getState()}
+            user={useStore.getState().userInfo}
         />
         <main className="layout__main">
           <Outlet />

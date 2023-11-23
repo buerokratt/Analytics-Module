@@ -33,11 +33,10 @@ const OverviewPage: React.FC = () => {
     setMetricPreferences(result.data.response);
   };
 
-
   const fetchChartData = async () => {
     const result = await axios.get(overviewMetrics('chat-activity'));
 
-    const response = result.data.response.map((entry: any) => ({
+    const response = result.data.response['chat-activity'].map((entry: any) => ({
       ...translateChartKeys(entry),
       dateTime: new Date(entry.created).getTime(),
     }));

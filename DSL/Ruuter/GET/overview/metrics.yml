@@ -1,32 +1,83 @@
 extract_request_data:
   assign:
-    requestedMetric: ${incoming.params.metric}
+    requestedMetric: ${incoming.params.metrics}
+    res1: null
+    res2: null
+    res3: null
+    res4: null
+    res5: null
+    res6: null
+    res7: null
+    res8: null
+    res9: null
+    res10: null
+    res11: null
 
-checkMetric:
+check1:
   switch:
-    - condition: ${requestedMetric === 'total_chats_day'}
+    - condition: ${requestedMetric.includes('total_chats_day')}
       next: getTotalChatsDayResults
-    - condition: ${requestedMetric === 'total_chats_month'}
+  next: check2
+
+check2:
+  switch:
+    - condition: ${requestedMetric.includes('total_chats_month')}
       next: getTotalChatsMonthResults
-    - condition: ${requestedMetric === 'total_chats_no_csa_day'}
+  next: check3 
+
+check3:
+  switch:
+    - condition: ${requestedMetric.includes('total_chats_no_csa_day')}
       next: getTotalChatsNoCSAResults
-    - condition: ${requestedMetric === 'avg_chats_by_month'}
+  next: check4
+
+check4:
+  switch:
+    - condition: ${requestedMetric.includes('avg_chats_by_month')}
       next: getAvgChatsMonthResults
-    - condition: ${requestedMetric === 'avg_chats_by_week'}
+  next: check5  
+
+check5:
+  switch:
+    - condition: ${requestedMetric.includes('avg_chats_by_week')}
       next: getAvgChatsWeekResults
-    - condition: ${requestedMetric === 'avg_chats_no_csa_by_month'}
+  next: check6 
+
+check6:
+  switch:
+    - condition: ${requestedMetric.includes('avg_chats_no_csa_by_month')}
       next: getAvgChatsNoCSAMonthResult
-    - condition: ${requestedMetric === 'avg_chats_no_csa_by_week'}
+  next: check7  
+
+check7:
+  switch:
+    - condition: ${requestedMetric.includes('avg_chats_no_csa_by_week')}
       next: getAvgChatsNoCSAWeekResult
-    - condition: ${requestedMetric === 'avg_waiting_time_day'}
+  next: check8 
+
+check8:
+  switch:
+    - condition: ${requestedMetric.includes('avg_waiting_time_day')}
       next: getAvgWaitingTimeDayResult
-    - condition: ${requestedMetric === 'avg_waiting_time_week'}
+  next: check9 
+
+check9:
+  switch:
+    - condition: ${requestedMetric.includes('avg_waiting_time_week')}
       next: getAvgWaitingTimeWeekResult
-    - condition: ${requestedMetric === 'total_forwarded_chats_yesterday'}
+  next: check10  
+
+check10:
+  switch:
+    - condition: ${requestedMetric.includes('total_forwarded_chats_yesterday')}
       next: getTotalForwardedChatsResult
-    - condition: ${requestedMetric === 'chat-activity'}
+  next: check11 
+
+check11:
+  switch:
+    - condition: ${requestedMetric.includes('chat-activity')}
       next: getChatActivityResult
-  next: invalidMetric
+  next: assignResponse        
 
 getTotalChatsDayResults:
   call: http.post
@@ -34,8 +85,8 @@ getTotalChatsDayResults:
     url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-total-chats"
     body:
       group_period: 'day'
-  result: results
-  next: respond
+  result: res1
+  next: check2
 
 getTotalChatsMonthResults:
   call: http.post
@@ -43,8 +94,8 @@ getTotalChatsMonthResults:
     url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-total-chats"
     body:
       group_period: 'month'
-  result: results
-  next: respond
+  result: res2
+  next: check3
 
 getTotalChatsNoCSAResults:
   call: http.post
@@ -52,8 +103,8 @@ getTotalChatsNoCSAResults:
     url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-total-chats-no-csa"
     body:
       group_period: 'day'
-  result: results
-  next: respond
+  result: res3
+  next: check4
 
 getAvgChatsMonthResults:
   call: http.post
@@ -61,8 +112,8 @@ getAvgChatsMonthResults:
     url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-avg-chats"
     body:
       group_period: 'month'
-  result: results
-  next: respond
+  result: res4
+  next: check5
 
 getAvgChatsWeekResults:
   call: http.post
@@ -70,8 +121,8 @@ getAvgChatsWeekResults:
     url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-avg-chats"
     body:
       group_period: 'week'
-  result: results
-  next: respond
+  result: res5
+  next: check6
 
 getAvgChatsNoCSAMonthResult:
   call: http.post
@@ -79,8 +130,8 @@ getAvgChatsNoCSAMonthResult:
     url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-avg-chats-no-csa"
     body:
       group_period: 'month'
-  result: results
-  next: respond
+  result: res6
+  next: check7
 
 getAvgChatsNoCSAWeekResult:
   call: http.post
@@ -88,8 +139,8 @@ getAvgChatsNoCSAWeekResult:
     url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-avg-chats-no-csa"
     body:
       group_period: 'week'
-  result: results
-  next: respond
+  result: res7
+  next: check8
 
 getAvgWaitingTimeDayResult:
   call: http.post
@@ -97,8 +148,8 @@ getAvgWaitingTimeDayResult:
     url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-avg-waiting-time"
     body:
       group_period: 'day'
-  result: results
-  next: respond
+  result: res8
+  next: check9
 
 getAvgWaitingTimeWeekResult:
   call: http.post
@@ -106,27 +157,40 @@ getAvgWaitingTimeWeekResult:
     url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-avg-waiting-time"
     body:
       group_period: 'week'
-  result: results
-  next: respond
+  result: res9
+  next: check10
 
 getTotalForwardedChatsResult:
   call: http.post
   args:
     url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-total-forwarded-chats"
-  result: results
-  next: respond
+  result: res10
+  next: check11
 
 getChatActivityResult:
   call: http.post
   args:
     url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-chat-activity-chart"
-  result: results
-  next: respond
+  result: res11
+  next: assignResponse
+
+assignResponse:
+  assign:
+    metrics: {
+       total_chats_day: '${res1 === null ? "null" : res1.response.body}',
+       total_chats_month: '${res2 === null ? "null" : res2.response.body}',
+       total_chats_no_csa_day: '${res3 === null ? "null" : res3.response.body}',
+       avg_chats_by_month: '${res4 === null ? "null" : res4.response.body}',
+       avg_chats_by_week: '${res5 === null ? "null" : res5.response.body}',
+       avg_chats_no_csa_by_month: '${res6 === null ? "null" : res6.response.body}',
+       avg_chats_no_csa_by_week: '${res7 === null ? "null" : res7.response.body}',
+       avg_waiting_time_day: '${res8 === null ? "null" : res8.response.body}',
+       avg_waiting_time_week: '${res9 === null ? "null" : res9.response.body}',
+       total_forwarded_chats_yesterday: '${res10 === null ? "null" : res10.response.body}',
+       chat-activity: '${res11 === null ? "null" : res11.response.body}'
+    }
+  next: respond  
 
 respond:
-  return: ${results.response.body}
+  return: '${metrics}'
   next: end
-
-invalidMetric:
-  status: 400
-  return: 'invalid metric requested'

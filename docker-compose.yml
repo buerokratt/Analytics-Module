@@ -15,14 +15,14 @@ services:
       - 8080:8080
     networks:
       - bykstack
-    cpus: '0.5'
-    mem_limit: '512M'
+    cpus: "0.5"
+    mem_limit: "512M"
 
   resql:
     container_name: resql
     image: resql
-#    depends_on:
-#      - users_db
+    #    depends_on:
+    #      - users_db
     environment:
       - sqlms.datasources.[0].name=byk
       # - sqlms.datasources.[0].jdbcUrl=jdbc:postgresql://users_db:5432/byk //For LocalDb Use
@@ -37,19 +37,19 @@ services:
     networks:
       - bykstack
 
-#  users_db:
-#    container_name: users_db
-#    image: postgres:14.1
-#    environment:
-#      - POSTGRES_USER=byk
-#      - POSTGRES_PASSWORD=01234
-#      - POSTGRES_DB=byk
-#    ports:
-#      - 5433:5432
-#    volumes:
-#      - ./data:/var/lib/postgresql/data
-#    networks:
-#      - bykstack
+  #  users_db:
+  #    container_name: users_db
+  #    image: postgres:14.1
+  #    environment:
+  #      - POSTGRES_USER=byk
+  #      - POSTGRES_PASSWORD=01234
+  #      - POSTGRES_DB=byk
+  #    ports:
+  #      - 5433:5432
+  #    volumes:
+  #      - ./data:/var/lib/postgresql/data
+  #    networks:
+  #      - bykstack
 
   gui_dev:
     container_name: gui_dev
@@ -81,8 +81,8 @@ services:
       - ./GUI:/app
     networks:
       - bykstack
-    cpus: '0.5'
-    mem_limit: '4G'
+    cpus: "0.5"
+    mem_limit: "4G"
 
   data_mapper:
     container_name: data_mapper
@@ -100,6 +100,8 @@ services:
     image: tim
     depends_on:
       - tim-postgresql
+    environment:
+      - SECURITY_ALLOWLIST_JWT=resql,tim,tim-postgresql,ruuter,data_mapper,gui_dev,127.0.0.1,::1
     ports:
       - 8085:8085
     networks:
@@ -122,11 +124,11 @@ services:
     ports:
       - 9876:5432
     networks:
-      - bykstack    
+      - bykstack
 
 networks:
   bykstack:
     name: bykstack
     driver: bridge
-    driver_opts:                         
-       com.docker.network.driver.mtu: 1400
+    driver_opts:
+      com.docker.network.driver.mtu: 1400

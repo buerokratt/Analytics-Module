@@ -27,8 +27,8 @@ export const overviewMetricPreferences = (): string => {
   return baseUrl + '/overview/preferences'
 }
 
-export const overviewMetrics = (metric: string): string => {
-  return baseUrl + `/overview/metrics?metric=${metric}`
+export const overviewMetrics = (metrics: string): string => {
+  return baseUrl + `/overview/metrics?metrics=${metrics}`
 }
 
 export const geBykAvgResponseTime = (): string => {

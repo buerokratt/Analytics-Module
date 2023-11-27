@@ -82,7 +82,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       {
         data: modifiedData.map((p) => ({
           ...p,
-          [chartDataKey]: formatDate(new Date(p[chartDataKey]), 'yyyy-MM-dd hh:mm:ss a'),
+          [chartDataKey]: formatDate(new Date(p[chartDataKey]), 'dd.MM.yyyy'),
         })),
         del: '',
         qul: '',

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
 import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions';
 import MetricsCharts from '../components/MetricsCharts';
 import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types';
@@ -14,6 +13,7 @@ import {
   getCsaAvgChatTime,
   getCsaChatsTotal,
 } from '../resources/api-constants';
+import { request, Methods } from '../util/axios-client';
 
 const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -88,13 +88,17 @@ const AdvisorsPage: React.FC = () => {
   const fetchChatsForwards = async (config: any) => {
     let chartData = {};
     try {
-      const result = await axios.post(getChatForwards(), {
-        metric: config?.groupByPeriod ?? 'day',
-        start_date: config?.start,
-        end_date: config?.end,
+      const result: any = await request({
+        url: getChatForwards(),
+        method: Methods.post,
+        data: {
+          metric: config?.groupByPeriod ?? 'day',
+          start_date: config?.start,
+          end_date: config?.end,
+        },
       });
 
-      const res = result.data.response.map((entry: any) => ({
+      const res = result.response.map((entry: any) => ({
         ...translateChartKeys(entry, chartDataKey),
         [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }));
@@ -154,13 +158,17 @@ const AdvisorsPage: React.FC = () => {
   const fetchAverageChatPickUpTime = async (config: any) => {
     let chartData = {};
     try {
-      const result = await axios.post(getAvgPickTime(), {
-        metric: config?.groupByPeriod ?? 'day',
-        start_date: config?.start,
-        end_date: config?.end,
+      const result: any = await request({
+        url: getAvgPickTime(),
+        method: Methods.post,
+        data: {
+          metric: config?.groupByPeriod ?? 'day',
+          start_date: config?.start,
+          end_date: config?.end,
+        },
       });
 
-      const response = result.data.response.map((entry: any) => ({
+      const response = result.response.map((entry: any) => ({
         ...translateChartKeys(entry, chartDataKey),
         [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }));
@@ -178,13 +186,17 @@ const AdvisorsPage: React.FC = () => {
   const fetchAveragePresentCsas = async (config: any) => {
     let chartData = {};
     try {
-      const result = await axios.post(getAvgCsaPresent(), {
-        metric: config?.groupByPeriod ?? 'day',
-        start_date: config?.start,
-        end_date: config?.end,
+      const result: any = await request({
+        url: getAvgCsaPresent(),
+        method: Methods.post,
+        data: {
+          metric: config?.groupByPeriod ?? 'day',
+          start_date: config?.start,
+          end_date: config?.end,
+        },
       });
 
-      const response = result.data.response.map((entry: any) => ({
+      const response = result.response.map((entry: any) => ({
         ...translateChartKeys(entry, chartDataKey),
         [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }));
@@ -202,13 +214,17 @@ const AdvisorsPage: React.FC = () => {
   const fetchTotalCsaChats = async (config: any) => {
     let chartData = {};
     try {
-      const result = await axios.post(getCsaChatsTotal(), {
-        metric: config?.groupByPeriod ?? 'day',
-        start_date: config?.start,
-        end_date: config?.end,
+      const result: any = await request({
+        url: getCsaChatsTotal(),
+        method: Methods.post,
+        data: {
+          metric: config?.groupByPeriod ?? 'day',
+          start_date: config?.start,
+          end_date: config?.end,
+        },
       });
 
-      const response = result.data.response.map((entry: any) => ({
+      const response = result.response.map((entry: any) => ({
         ...translateChartKeys(entry, chartDataKey),
         [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }));
@@ -226,13 +242,17 @@ const AdvisorsPage: React.FC = () => {
   const fetchAverageCsaChatTime = async (config: any) => {
     let chartData = {};
     try {
-      const result = await axios.post(getCsaAvgChatTime(), {
-        metric: config?.groupByPeriod ?? 'day',
-        start_date: config?.start,
-        end_date: config?.end,
+      const result: any = await request({
+        url: getCsaAvgChatTime(),
+        method: Methods.post,
+        data: {
+          metric: config?.groupByPeriod ?? 'day',
+          start_date: config?.start,
+          end_date: config?.end,
+        },
       });
 
-      const response = result.data.response.map((entry: any) => ({
+      const response = result.response.map((entry: any) => ({
         ...translateChartKeys(entry, chartDataKey),
         [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }));
@@ -253,7 +273,7 @@ const AdvisorsPage: React.FC = () => {
       <OptionsPanel
         metricOptions={advisorsMetrics}
         dateFormat="yyyy-MM-dd"
-        onChange={(config) => {  
+        onChange={(config) => {
           setConfigs(config);
           configsSubject.next(config);
           setCurrentMetric(`advisors.${config.metric}`);

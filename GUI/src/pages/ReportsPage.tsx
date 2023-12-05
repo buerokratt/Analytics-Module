@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import { Button, Card, Dialog, Drawer, Icon, Section, Track } from '../components';
@@ -19,6 +18,7 @@ import DatasetCreation from '../components/OpenData/DatasetCreation';
 import Popup from '../components/Popup';
 import { saveAs } from 'file-saver';
 import TooltipWrapper from '../components/TooltipWrapper';
+import { request, Methods } from '../util/axios-client';
 
 type ScheduledDataset = {
   datasetId: string;
@@ -65,40 +65,39 @@ const ReportsPage = () => {
   ]);
 
   const getCSVFile = async () => {
-    const result = await axios.post(
-      downloadOpenDataCSV(),
-      {
-        start: options?.start,
-        end: options?.end,
-        metrics: options?.options,
-      },
-      { responseType: 'blob' }
-    );
+    const result: any = await request({
+      url: downloadOpenDataCSV(),
+      method: Methods.post,
+      data: { start: options?.start, end: options?.end, metrics: options?.options },
+      withCredentials: true,
+      responseType: 'blob',
+    });
     saveAs(result.data, 'metrics.csv');
   };
 
   const fetchSettings = async () => {
-    const result = await axios.get(openDataSettings());
-    setApiSettings(result.data.response);
+    const result: any = await request({ url: openDataSettings() });
+    setApiSettings(result.response);
   };
 
   const fetchDatasets = async () => {
-    const result = await axios.get(scheduledReports());
-    setDatasets(result.data.response);
+    const result: any = await request({ url: scheduledReports() });
+    setDatasets(result.response);
   };
 
   const fetchDataset = async (datasetId: string) => {
-    const result = await axios.get(getOpenDataDataset(datasetId));
-    setDatasetCreationVisible({ ...result.data.response.data, datasetId });
+    console.log('fetchDataset', datasetId);
+    const result: any = await request({ url: getOpenDataDataset(datasetId) });
+    setDatasetCreationVisible({ ...result.response.data, datasetId });
   };
 
   const deleteSettings = async () => {
     setApiSettings({ odpKey: null, orgId: null });
-    await axios.post(deleteOpenDataSettings());
+    await request({ url: deleteOpenDataSettings(), method: Methods.post });
   };
 
   const deleteSchedule = async (datasetId: string) => {
-    await axios.post(deleteScheduledReport(), { datasetId });
+    await request({ url: deleteScheduledReport(), method: Methods.post, data: { datasetId } });
     fetchDatasets();
   };
 
@@ -137,7 +136,11 @@ const ReportsPage = () => {
         </Section>
       </Card>
 
-      {datasets.length > 0 && (
+      {datasets.length === 0 ? (
+        <Card header={<h3>{t('reports.no_datasets')}</h3>}>
+          <p>{t('reports.no_datasets_description')}</p>
+        </Card>
+      ) : (
         <Card header={<h3>{t('reports.created_datasets')}</h3>}>
           {datasets.map((d) => (
             <Section key={d.id}>

@@ -1,32 +1,32 @@
-import { yupResolver } from '@hookform/resolvers/yup'
-import axios from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
-import { CgSpinner } from 'react-icons/cg'
-import * as yup from 'yup'
-import i18n from '../../../i18n'
-import { editScheduledReport, getOpenDataValues, openDataDataset } from '../../../resources/api-constants'
-import { ODPValues } from '../../../types/reports'
-import Button from '../../Button'
-import Card from '../../Card'
-import { FormDatepicker, FormInput, FormSelect, FormTextarea } from '../../FormElements'
-import FormSelectMultiple from '../../FormElements/FormSelectMultiple'
-import { ToastContext } from '../../Toast/ToastContext'
-import Track from '../../Track'
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { CgSpinner } from 'react-icons/cg';
+import * as yup from 'yup';
+import i18n from '../../../i18n';
+import { editScheduledReport, getOpenDataValues, openDataDataset } from '../../../resources/api-constants';
+import { ODPValues } from '../../../types/reports';
+import Button from '../../Button';
+import Card from '../../Card';
+import { FormDatepicker, FormInput, FormSelect, FormTextarea } from '../../FormElements';
+import FormSelectMultiple from '../../FormElements/FormSelectMultiple';
+import { ToastContext } from '../../Toast/ToastContext';
+import Track from '../../Track';
 
-import './styles.scss'
+import './styles.scss';
+import { request, Methods } from '../../../util/axios-client';
 
-type AccessType = NonNullable<'public' | 'protected' | 'private' | undefined>
-type UpdateIntervalUnitType = NonNullable<'day' | 'week' | 'month' | 'quarter' | 'year' | 'never' | undefined>
+type AccessType = NonNullable<'public' | 'protected' | 'private' | undefined>;
+type UpdateIntervalUnitType = NonNullable<'day' | 'week' | 'month' | 'quarter' | 'year' | 'never' | undefined>;
 
 type DatasetCreationProps = {
-  metrics: string[]
-  start: string
-  end: string
-  existingDataset: boolean | any
-  onClose: () => void
-}
+  metrics: string[];
+  start: string;
+  end: string;
+  existingDataset: boolean | any;
+  onClose: () => void;
+};
 
 const dataSetSchema = yup
   .object({
@@ -55,16 +55,16 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
     reValidateMode: 'onChange',
     defaultValues: dataSetSchema.cast(typeof existingDataset === 'boolean' ? {} : existingDataset, { assert: false }),
     resolver: yupResolver(dataSetSchema),
-  })
-  const [odpValues, setOdpValues] = useState<ODPValues>()
-  const [loading, setLoading] = useState(false)
-  const toast = useContext(ToastContext)
+  });
+  const [odpValues, setOdpValues] = useState<ODPValues>();
+  const [loading, setLoading] = useState(false);
+  const toast = useContext(ToastContext);
 
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   const onSubmit = async (data: any) => {
-    if (loading) return
-    setLoading(true)
+    if (loading) return;
+    setLoading(true);
 
     data['regionIds'] = data['regions'].map((e: any) => e.id);
     data['keywordIds'] = data['keywords'].map((e: any) => e.id);
@@ -73,33 +73,37 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
 
     try {
       if (existingDataset === true) {
-        await axios.post(openDataDataset(), { ...data, metrics, start, end });
+        await request({ url: openDataDataset(), method: Methods.post, data: { ...data, metrics, start, end } });
       } else {
-        await axios.post(editScheduledReport(), { ...data, datasetId: existingDataset.datasetId });
+        await request({
+          url: editScheduledReport(),
+          method: Methods.post,
+          data: { ...data, datasetId: existingDataset.datasetId },
+        });
       }
       toast.open({
         type: 'success',
         title: t('reports.dataset_saved'),
         message: t('reports.dataset_saved_message'),
-      })
-      onClose()
+      });
+      onClose();
     } catch {
-      toast.open({ type: 'error', title: t('reports.save_dataset_failed'), message: t('reports.check_input') })
+      toast.open({ type: 'error', title: t('reports.save_dataset_failed'), message: t('reports.check_input') });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchValues()
-  }, [])
+    fetchValues();
+  }, []);
 
   const fetchValues = async () => {
-    const lang = i18n.language
-    const result = await axios.get(getOpenDataValues(lang))
-    const [keywords, categories, regions, licences] = result.data.response
-    setOdpValues({ keywords, categories, regions, licences })
-  }
+    const lang = i18n.language;
+    const result: any = await request({ url: getOpenDataValues(lang), method: Methods.post });
+    const [keywords, categories, regions, licences] = result.response;
+    setOdpValues({ keywords, categories, regions, licences });
+  };
 
   if (!odpValues)
     return (
@@ -112,24 +116,24 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
           size="32"
         />
       </Track>
-    )
+    );
 
   const getCronExpression = (interval: UpdateIntervalUnitType): string => {
     switch (interval) {
       case 'day':
-        return '0 0 * * *'
+        return '0 0 * * *';
       case 'week':
-        return '0 0 * * 1'
+        return '0 0 * * 1';
       case 'month':
-        return '0 0 1 * *'
+        return '0 0 1 * *';
       case 'quarter':
-        return '0 0 1 */3 *'
+        return '0 0 1 */3 *';
       case 'year':
-        return '0 0 1 1 *'
+        return '0 0 1 1 *';
       default:
-        return ''
+        return '';
     }
-  }
+  };
 
   return (
     <Card>
@@ -298,6 +302,6 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
       <div id="popup-overlay-root"></div>
     </Card>
   );
-}
+};
 
-export default DatasetCreation
+export default DatasetCreation;

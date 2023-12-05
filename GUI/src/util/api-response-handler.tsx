@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { t } from 'i18next';
 import { SubOption } from '../components/MetricAndPeriodOptions/types';
 import { chartDataKey } from './charts-utils';
+import { request, Methods } from './axios-client';
 
 export const fetchChartDataWithSubOptions = async (
   url: string,
@@ -10,14 +10,18 @@ export const fetchChartDataWithSubOptions = async (
   isPercentage?: boolean
 ) => {
   try {
-    const result = await axios.post(url, {
-      start_date: config?.start,
-      end_date: config?.end,
-      period: config?.groupByPeriod ?? 'day',
-      options: config?.options.join(',') ?? '',
+    const result: any = await request({
+      url,
+      method: Methods.post,
+      data: {
+        start_date: config?.start,
+        end_date: config?.end,
+        period: config?.groupByPeriod ?? 'day',
+        options: config?.options.join(',') ?? '',
+      },
     });
 
-    const chartData = result.data.response.reduce((acc: any, row: any, index: number) => {
+    const chartData = result.response.reduce((acc: any, row: any, index: number) => {
       row.forEach((obj: any) => {
         const { time, ...value } = obj;
         const newObj = {
@@ -68,13 +72,17 @@ export const fetchChartDataWithSubOptions = async (
 
 export const fetchChartData = async (url: string, config: any, resultId: string, resultColor = '#fdbf47') => {
   try {
-    const result = await axios.post(url, {
-      start_date: config?.start,
-      end_date: config?.end,
-      period: config?.groupByPeriod ?? 'day',
+    const result: any = await request({
+      url,
+      method: Methods.post,
+      data: {
+        start_date: config?.start,
+        end_date: config?.end,
+        period: config?.groupByPeriod ?? 'day',
+      },
     });
 
-    const response = result.data.response.map((entry: any) => {
+    const response = result.response.map((entry: any) => {
       const { time, ...value } = entry;
 
       return {

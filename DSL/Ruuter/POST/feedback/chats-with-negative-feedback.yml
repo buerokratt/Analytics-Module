@@ -7,7 +7,7 @@ check_for_required_parameters:
 post_step:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/feedback-chats-with-negative-feedback"
+    url: "[#ANALYTICS_RESQL]/feedback-chats-with-negative-feedback"
     body:
       events: ${incoming.body.events}
       start: ${incoming.body.start_date}

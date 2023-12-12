@@ -29,7 +29,7 @@ check_authority_result:
 get_negative_feedback:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/negative-feedback"
+    url: "[#ANALYTICS_RESQL]/negative-feedback"
     body:
       start: ${start}
       end: ${end}

@@ -34,7 +34,7 @@ empty_option1:
 fetch_option1:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/byk-intents-count"
+    url: "[#ANALYTICS_RESQL]/byk-intents-count"
     body:
       period: ${period}
       start: ${start}
@@ -58,7 +58,7 @@ empty_option2:
 fetch_option2:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/byk-new-intents"
+    url: "[#ANALYTICS_RESQL]/byk-new-intents"
     body:
       period: ${period}
       start: ${start}
@@ -82,7 +82,7 @@ empty_option3:
 fetch_option3:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/byk-modified-intents"
+    url: "[#ANALYTICS_RESQL]/byk-modified-intents"
     body:
       period: ${period}
       start: ${start}
@@ -106,7 +106,7 @@ empty_option4:
 fetch_option4:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/byk-avg-intents"
+    url: "[#ANALYTICS_RESQL]/byk-avg-intents"
     body:
       period: ${period}
       start: ${start}

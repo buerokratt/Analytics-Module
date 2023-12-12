@@ -35,7 +35,7 @@ check_authority_result:
 update_metrics_preferences:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/update-overview-metric-preferences"
+    url: "[#ANALYTICS_RESQL]/update-overview-metric-preferences"
     body:
       user_id_code: ${authority_result.idCode}
       active: ${active}
@@ -47,7 +47,7 @@ update_metrics_preferences:
 get_metrics_preferences:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-metric-preferences"
+    url: "[#ANALYTICS_RESQL]/overview-metric-preferences"
     body:
       user_id_code: ${authority_result.idCode}
   result: metrics

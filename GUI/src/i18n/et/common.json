@@ -43,7 +43,8 @@
     "today": "Täna",
     "forward": "Suuna",
     "chosen": "Valitud",
-    "read": "Loetud"
+    "read": "Loetud",
+    "dateTime": "Kuupäev"
   },
   "mainMenu": {
     "closeMenu": "Sulge menüü"

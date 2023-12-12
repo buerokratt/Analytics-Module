@@ -7,7 +7,7 @@ check_for_required_parameters:
 post_step:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/csa-chats-count"
+    url: "[#ANALYTICS_RESQL]/csa-chats-count"
     body:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}

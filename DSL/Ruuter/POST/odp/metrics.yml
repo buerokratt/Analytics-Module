@@ -5,7 +5,7 @@ set_variables:
 get-timescale:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-period-times"
+    url: "[#ANALYTICS_RESQL]/get-period-times"
     body:
       start: ${incoming.body.start}
       end: ${incoming.body.end}
@@ -25,7 +25,7 @@ empty-get-chat-count-total:
 get-chat-count-total:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-chat-count-total"
+    url: "[#ANALYTICS_RESQL]/get-chat-count-total"
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -44,7 +44,7 @@ empty-get-chat-count-no-csa:
 get-chat-count-no-csa:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-chat-count-no-csa"
+    url: "[#ANALYTICS_RESQL]/get-chat-count-no-csa"
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -63,7 +63,7 @@ empty-get-avg-waiting-time:
 get-avg-waiting-time:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-avg-waiting-time"
+    url: "[#ANALYTICS_RESQL]/get-avg-waiting-time"
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -82,7 +82,7 @@ empty-get-avg-messages:
 get-avg-messages:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-avg-messages"
+    url: "[#ANALYTICS_RESQL]/get-avg-messages"
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -101,7 +101,7 @@ empty-get-avg-time:
 get-avg-time:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-avg-time"
+    url: "[#ANALYTICS_RESQL]/get-avg-time"
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -120,7 +120,7 @@ empty-get-avg-time-no-csa:
 get-avg-time-no-csa:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-avg-time-no-csa"
+    url: "[#ANALYTICS_RESQL]/get-avg-time-no-csa"
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -139,7 +139,7 @@ empty-get-avg-time-csa:
 get-avg-time-csa:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-avg-time-csa"
+    url: "[#ANALYTICS_RESQL]/get-avg-time-csa"
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -158,7 +158,7 @@ empty-get-avg-session-length-client-left:
 get-avg-session-length-client-left:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-avg-session-length-client-left"
+    url: "[#ANALYTICS_RESQL]/get-avg-session-length-client-left"
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -177,7 +177,7 @@ empty-get-avg-session-length-csa:
 get-avg-session-length-csa:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-avg-session-length-csa"
+    url: "[#ANALYTICS_RESQL]/get-avg-session-length-csa"
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -196,7 +196,7 @@ empty-get-avg-session-length-no-csa:
 get-avg-session-length-no-csa:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-avg-session-length-no-csa"
+    url: "[#ANALYTICS_RESQL]/get-avg-session-length-no-csa"
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -215,7 +215,7 @@ empty-get-avg-response-time:
 get-avg-response-time:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-avg-response-time"
+    url: "[#ANALYTICS_RESQL]/get-avg-response-time"
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -234,7 +234,7 @@ empty-get-pct-correctly-understood:
 get-pct-correctly-understood:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-pct-correctly-understood"
+    url: "[#ANALYTICS_RESQL]/get-pct-correctly-understood"
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -248,7 +248,7 @@ gather_responses:
 convert_data:
   call: http.post
   args:
-    url: "[#ANALYTICS_DMAPPER]:[#ANALYTICS_DMAPPER_PORT]/hbs/analytics/array-to-object"
+    url: "[#ANALYTICS_DMAPPER]/hbs/analytics/array-to-object"
     headers:
       type: 'json'
     body:

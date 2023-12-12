@@ -1,7 +1,7 @@
 deleteOdpKey:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/delete-odp-settings"
+    url: "[#ANALYTICS_RESQL]/delete-odp-settings"
   result: delete
 
 return:

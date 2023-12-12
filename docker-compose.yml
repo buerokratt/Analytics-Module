@@ -86,7 +86,7 @@ services:
 
   data_mapper:
     container_name: data_mapper
-    image: datamapper-node
+    image: data-mapper
     volumes:
       - ./DSL/DMapper/hbs:/workspace/app/views/analytics
       - ./DSL/DMapper/js:/workspace/app/js/analytics

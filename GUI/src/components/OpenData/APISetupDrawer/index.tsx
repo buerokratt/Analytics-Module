@@ -1,16 +1,15 @@
-import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { CgSpinner } from 'react-icons/cg';
 import { openDataSettings } from '../../../resources/api-constants';
 import { ODPSettings } from '../../../types/reports';
 import Button from '../../Button';
-import Drawer from '../../Drawer';
 import { FormInput } from '../../FormElements';
 import Section from '../../Section';
 import { ToastContext } from '../../Toast/ToastContext';
 import Track from '../../Track';
+import { request, Methods } from '../../../util/axios-client';
 
 type Props = {
   onClose: (settings: ODPSettings) => void;
@@ -42,8 +41,12 @@ const APISetupDrawer = ({ onClose, isDrawerVisible }: Props) => {
 
   const putSettings = async (apiKey: string, keyId: string, orgId: string) => {
     try {
-      const result = await axios.post(openDataSettings(), { apiKey, keyId, orgId });
-      if (!result.data.response) {
+      const result: any = await request({
+        url: openDataSettings(),
+        method: Methods.post,
+        data: { apiKey, keyId, orgId },
+      });
+      if (!result.response) {
         toast.open({
           type: 'error',
           title: t('reports.incorrect_apikey_title'),
@@ -55,7 +58,7 @@ const APISetupDrawer = ({ onClose, isDrawerVisible }: Props) => {
           title: t('reports.correct_apikey_title'),
           message: t('reports.correct_apikey_message'),
         });
-        onClose(result.data.response);
+        onClose(result.response);
       }
     } catch {
       toast.open({

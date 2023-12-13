@@ -1,10 +1,10 @@
-import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { overviewMetrics } from '../../../resources/api-constants';
 import { OverviewMetricData, OverviewMetricPreference } from '../../../types/overview-metrics';
 import { reorderItem } from '../../../util/reorder-array';
 import DraggableCard from '../DraggableCard';
 import './styles.scss';
+import { request } from '../../../util/axios-client';
 
 type Props = {
   metricPreferences: OverviewMetricPreference[];
@@ -38,8 +38,8 @@ const MainMetricsArea = ({ metricPreferences, saveReorderedMetric }: Props) => {
       return;
     }
 
-    const metricsResponse = await axios.get(overviewMetrics(metricsToFetch.map((e) => e.metric).join(',')));
-    const results = metricsResponse.data.response;
+    const metricsResponse: any = await request({ url: overviewMetrics(metricsToFetch.map((e) => e.metric).join(',')) });
+    const results = metricsResponse.response;
 
     setMetrics(
       metricsToFetch.map((e) => {

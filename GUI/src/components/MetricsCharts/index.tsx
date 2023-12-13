@@ -1,17 +1,17 @@
 import { useTranslation } from 'react-i18next';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { MdOutlineDownload } from 'react-icons/md';
 import { Button, Card, FormSelect, Icon, Track } from '../../components';
 import BarGraph from '../BarGraph';
 import './MetricsCharts.scss';
 import LineGraph from '../LineGraph';
 import PieGraph from '../PieGraph';
-import axios from 'axios';
 import { getCsv } from '../../resources/api-constants';
 import { saveAs } from 'file-saver';
 import { ChartType } from '../../types/chart-type';
 import { chartDataKey, formatDate, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
+import { request, Methods } from '../../util/axios-client';
 
 type Props = {
   title: any;
@@ -77,9 +77,10 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       return modifiedItem;
     });
 
-    const res = await axios.post(
-      getCsv(),
-      {
+    const res: any = await request({
+      url: getCsv(),
+      method: Methods.post,
+      data: {
         data: modifiedData.map((p) => {
           const { [chartDataKey]: originalKey, ...rest } = p;
           return {
@@ -90,9 +91,9 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
         del: '',
         qul: '',
       },
-      { responseType: 'blob' }
-    );
-    saveAs(res.data, 'metrics.csv');
+      responseType: 'blob',
+    });
+    saveAs(res, 'metrics.csv');
   };
 
   return (

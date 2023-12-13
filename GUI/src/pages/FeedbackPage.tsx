@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
 import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions';
 import MetricsCharts from '../components/MetricsCharts';
 import ChatsTable from '../components/ChatsTable';
@@ -16,6 +15,7 @@ import { Chat } from '../types/chat';
 import { chartDataKey, formatDate, translateChartKeys } from '../util/charts-utils';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { request, Methods } from '../util/axios-client';
 
 const FeedbackPage: React.FC = () => {
   const { t } = useTranslation();
@@ -153,15 +153,19 @@ const FeedbackPage: React.FC = () => {
           e !== 'CLIENT_LEFT_FOR_UNKNOWN_REASONS'
       ) ?? [];
     try {
-      const result = await axios.post(getChatsStatuses(), {
-        metric: config?.groupByPeriod ?? 'day',
-        start_date: config?.start,
-        end_date: config?.end,
-        events: events?.length > 0 ? events : null,
-        csa_events: csa_events?.length > 0 ? csa_events : null,
+      const result: any = await request({
+        url: getChatsStatuses(),
+        method: Methods.post,
+        data: {
+          metric: config?.groupByPeriod ?? 'day',
+          start_date: config?.start,
+          end_date: config?.end,
+          events: events?.length > 0 ? events : null,
+          csa_events: csa_events?.length > 0 ? csa_events : null,
+        },
       });
 
-      const response = result.data.response
+      const response = result.response
         .flat(1)
         .map((entry: any) => ({
           ...translateChartKeys(entry, chartDataKey),
@@ -223,13 +227,17 @@ const FeedbackPage: React.FC = () => {
   const fetchAverageFeedbackOnBuerokrattChats = async (config: any) => {
     let chartData = {};
     try {
-      const result = await axios.post(getAverageFeedbackOnBuerokrattChats(), {
-        metric: config?.groupByPeriod ?? 'day',
-        start_date: config?.start,
-        end_date: config?.end,
+      const result: any = await request({
+        url: getAverageFeedbackOnBuerokrattChats(),
+        method: Methods.post,
+        data: {
+          metric: config?.groupByPeriod ?? 'day',
+          start_date: config?.start,
+          end_date: config?.end,
+        },
       });
 
-      const response = result.data.response.map((entry: any) => ({
+      const response = result.response.map((entry: any) => ({
         ...translateChartKeys(entry, chartDataKey),
         [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }));
@@ -247,13 +255,17 @@ const FeedbackPage: React.FC = () => {
   const fetchNpsOnCSAChatsFeedback = async (config: any) => {
     let chartData = {};
     try {
-      const result = await axios.post(getNpsOnCSAChatsFeedback(), {
-        metric: config?.groupByPeriod ?? 'day',
-        start_date: config?.start,
-        end_date: config?.end,
+      const result: any = await request({
+        url: getNpsOnCSAChatsFeedback(),
+        method: Methods.post,
+        data: {
+          metric: config?.groupByPeriod ?? 'day',
+          start_date: config?.start,
+          end_date: config?.end,
+        },
       });
 
-      const response = result.data.response.map((entry: any) => ({
+      const response = result.response.map((entry: any) => ({
         ...translateChartKeys(entry, chartDataKey),
         [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
       }));
@@ -272,14 +284,18 @@ const FeedbackPage: React.FC = () => {
     let chartData = {};
     try {
       const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
-      const result = await axios.post(getNpsOnSelectedCSAChatsFeedback(), {
-        metric: config?.groupByPeriod ?? 'day',
-        start_date: config?.start,
-        end_date: config?.end,
-        excluded_csas: excluded_csas.length ?? 0 > 0 ? excluded_csas : [''],
+      const result: any = await request({
+        url: getNpsOnSelectedCSAChatsFeedback(),
+        method: Methods.post,
+        data: {
+          metric: config?.groupByPeriod ?? 'day',
+          start_date: config?.start,
+          end_date: config?.end,
+          excluded_csas: excluded_csas.length ?? 0 > 0 ? excluded_csas : [''],
+        },
       });
 
-      const res = result.data.response;
+      const res = result.response;
 
       const advisorsList = Array.from(new Set(res.map((advisor: any) => advisor.customerSupportId)))
         .map((id: any) => res.find((e: any) => e.customerSupportId == id))
@@ -378,17 +394,18 @@ const FeedbackPage: React.FC = () => {
   const fetchChatsWithNegativeFeedback = async (config: any) => {
     let chartData = {};
     try {
-      const result = await axios.post(
-        getNegativeFeedbackChats(),
-        {
+      const result: any = await request({
+        url: getNegativeFeedbackChats(),
+        method: Methods.post,
+        data: {
           events: '',
           start_date: config?.start,
           end_date: config?.end,
         },
-        { withCredentials: true }
-      );
+        withCredentials: true,
+      });
 
-      const response = result.data.response.map((entry: any) => ({
+      const response = result.response.map((entry: any) => ({
         ...translateChartKeys(entry, 'created'),
         [chartDataKey]: new Date(entry.created).getTime(),
       }));

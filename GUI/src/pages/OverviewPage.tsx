@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -12,6 +11,7 @@ import { openSearchDashboard, overviewMetricPreferences, overviewMetrics } from 
 import { OverviewMetricPreference } from '../types/overview-metrics';
 import { reorderItem } from '../util/reorder-array';
 import { formatDate } from '../util/charts-utils';
+import { request, Methods } from '../util/axios-client';
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([]);
@@ -29,14 +29,15 @@ const OverviewPage: React.FC = () => {
   }, []);
 
   const fetchMetricPreferences = async () => {
-    const result = await axios.get(overviewMetricPreferences(), { withCredentials: true });
-    setMetricPreferences(result.data.response);
+    const result: any = await request({ url: overviewMetricPreferences(), withCredentials: true });
+
+    setMetricPreferences(result.response);
   };
 
   const fetchChartData = async () => {
-    const result = await axios.get(overviewMetrics('chat-activity'));
+    const result: any = await request({ url: overviewMetrics('chat-activity') });
 
-    const response = result.data.response['chat-activity'].map((entry: any) => ({
+    const response = result.response['chat-activity'].map((entry: any) => ({
       ...translateChartKeys(entry),
       dateTime: new Date(entry.created).getTime(),
     }));
@@ -56,16 +57,16 @@ const OverviewPage: React.FC = () => {
   };
 
   const updateMetricPreference = async (metric: OverviewMetricPreference) => {
-    const result = await axios.post(
-      overviewMetricPreferences(),
-      {
+    const result: any = await request({
+      url: overviewMetricPreferences(),
+      method: Methods.post,
+      data: {
         metric: metric.metric,
         ordinality: metric.ordinality,
         active: metric.active,
       },
-      { withCredentials: true }
-    );
-    setMetricPreferences(result.data.response);
+    });
+    setMetricPreferences(result.response);
   };
 
   const toggleMetricActive = (metric: OverviewMetricPreference) => {

@@ -24,7 +24,7 @@ check_for_csa_events:
 call_all_chats:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/status-all-chats"
+    url: "[#ANALYTICS_RESQL]/status-all-chats"
     body:
       events: ${incoming.body.events}
       metric: ${incoming.body.metric}
@@ -36,7 +36,7 @@ call_all_chats:
 call_csa_chats:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/status-csa-chats"
+    url: "[#ANALYTICS_RESQL]/status-csa-chats"
     body:
       events: ${incoming.body.csa_events}
       metric: ${incoming.body.metric}

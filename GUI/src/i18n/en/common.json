@@ -43,7 +43,8 @@
     "today": "Today",
     "forward": "Forward",
     "chosen": "Chosen",
-    "read": "Read"
+    "read": "Read",
+    "dateTime": "Date"
   },
   "mainMenu": {
     "closeMenu": "Close menu"

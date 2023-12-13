@@ -81,10 +81,13 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       url: getCsv(),
       method: Methods.post,
       data: {
-        data: modifiedData.map((p) => ({
-          ...p,
-          [chartDataKey]: formatDate(new Date(p[chartDataKey]), 'dd.MM.yyyy'),
-        })),
+        data: modifiedData.map((p) => {
+          const { [chartDataKey]: originalKey, ...rest } = p;
+          return {
+            [t(`global.${chartDataKey}`)]: formatDate(new Date(originalKey), 'dd.MM.yyyy'),
+            ...rest,
+          };
+        }),
         del: '',
         qul: '',
       },

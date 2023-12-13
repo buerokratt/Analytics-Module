@@ -17,7 +17,7 @@ check_for_request_data:
 get_intents:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-intents"
+    url: "[#ANALYTICS_RESQL]/get-intents"
   result: results
 
 return_value:

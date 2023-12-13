@@ -26,7 +26,7 @@ check_authority_result:
 get_metrics_preferences:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/overview-metric-preferences"
+    url: "[#ANALYTICS_RESQL]/overview-metric-preferences"
     body:
       user_id_code: ${authority_result.idCode}
   result: metrics

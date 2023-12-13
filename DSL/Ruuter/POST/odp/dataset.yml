@@ -1,7 +1,7 @@
 getKey:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/get-odp-settings"
+    url: "[#ANALYTICS_RESQL]/get-odp-settings"
   result: settings
   
 authenticate:
@@ -53,7 +53,7 @@ setUpSchedule:
 saveJobInformation:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]:[#ANALYTICS_RESQL_PORT]/add-scheduled-report"
+    url: "[#ANALYTICS_RESQL]/add-scheduled-report"
     body:
       name: ${incoming.body.nameEt}
       period: ${incoming.body.updateIntervalUnit}

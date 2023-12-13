@@ -54,16 +54,13 @@ app.post('/hbs/*', (req, res) => {
 to enable handlebars templates to receive a body and return a json
 * When Building a handlebars template make sure to add `layout:false` so that hbs response in the data-mapper will discard the html layout and only return the body data
 
-### Use external header component.
+### Use external components.
 
-The external header component and its version is defined in the package.json file located inside GUI folder.
-That line must be updated when header version or location changes.
+Currently, Header and Main Navigation used as external components, they are defined as dependency in package.json
 ```  
- "@exirain/header": "file:exirain-header-0.0.28.tgz"
-```
-Current solution uses the module from packed file. This means that when building docker image, a line to the docker script needs to be added for copying the file.
-``` 
-COPY ./exirain-header-0.0.28.tgz .
+ "@buerokrat-ria/header": "^0.0.1"
+ "@buerokrat-ria/menu": "^0.0.1"
+ "@buerokrat-ria/styles": "^0.0.1"
 ```
 
 ### TIM

@@ -54,9 +54,10 @@ app.post('/hbs/*', (req, res) => {
 to enable handlebars templates to receive a body and return a json
 * When Building a handlebars template make sure to add `layout:false` so that hbs response in the data-mapper will discard the html layout and only return the body data
 
-### Use external components.
+### Use external components(Header and Main Navigation).
 
 Currently, Header and Main Navigation used as external components, they are defined as dependency in package.json
+
 ```  
  "@buerokrat-ria/header": "^0.0.1"
  "@buerokrat-ria/menu": "^0.0.1"

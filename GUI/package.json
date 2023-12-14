@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@exirain/header": "exirain-header-0.0.28.tgz",
+    "@buerokratt-ria/menu": "^0.0.1",
     "@buerokratt-ria/header": "^0.0.1",
     "@buerokratt-ria/styles": "^0.0.1",
     "react-idle-timer": "^5.7.2",

@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@exirain/header": "exirain-header-0.0.28.tgz",
-    "@buerokratt-ria/header": "^0.0.1",
+    "@buerokratt-ria/menu": "^0.0.3",
+    "@buerokratt-ria/header": "^0.0.3",
     "@buerokratt-ria/styles": "^0.0.1",
     "react-idle-timer": "^5.7.2",
     "@fontsource/roboto": "^4.5.8",

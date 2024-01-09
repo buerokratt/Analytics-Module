@@ -60,8 +60,7 @@ services:
       - REACT_APP_BUEROKRATT_CHATBOT_URL=http://buerokratt-chat:8080
       - REACT_APP_OPENSEARCH_DASHBOARD_URL=https://opensearch.org/
       - REACT_APP_OPENDATAPORT_URL=https://avaandmeddev.eesti.ee
-      - REACT_APP_RUUTER_V2_PRIVATE_API_URL=http://localhost:8080
-      - REACT_APP_RUUTER_V1_PRIVATE_API_URL=http://localhost:8080
+      - REACT_APP_RUUTER_API_URL=http://localhost:8080
       - REACT_APP_RUUTER_V2_ANALYTICS_API_URL=http://localhost:8080
       - REACT_APP_MENU_URL=https://admin.dev.buerokratt.ee
       - REACT_APP_MENU_PATH=/chat/menu.json

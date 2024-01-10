@@ -70,6 +70,7 @@ services:
       - REACT_APP_AUTH_PATH=/mock-response
       - REACT_APP_BASE_API_PATH=/
       - PORT=3001
+      - REACT_APP_RUUTER_PRIVATE_API_URL=http://localhost:8080
     build:
       context: ./GUI
       dockerfile: Dockerfile.dev

@@ -11,7 +11,7 @@ import Button from '../../Button';
 import Card from '../../Card';
 import { FormDatepicker, FormInput, FormSelect, FormTextarea } from '../../FormElements';
 import FormSelectMultiple from '../../FormElements/FormSelectMultiple';
-import { ToastContext } from '../../Toast/ToastContext';
+import { ToastContext } from '../../context/ToastContext';
 import Track from '../../Track';
 
 import './styles.scss';

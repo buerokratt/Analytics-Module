@@ -27,12 +27,12 @@ const defaultQueryFn: QueryFunction | undefined = async ({ queryKey }) => {
             return data?.response;
         }
     }
-    if (queryKey.includes('user-profile-settings')) {
+    if (queryKey.includes('profile-settings')) {
         const { data } = await apiAn.get(queryKey[0] as string);
         return data;
     }
     if (queryKey.includes('prod')) {
-        if (queryKey.includes('cs-get-all-active-chats')) {
+        if (queryKey.includes('active-chats')) {
             const { data } = await apiDev.get('sse/'+ (queryKey[0] as string), {
                 headers: {
                     "Accept": 'text/event-stream'

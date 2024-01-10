@@ -13,6 +13,7 @@ import {
   SwitchBox,
 } from './FormElements'
 import Tooltip from './Tooltip'
+import Toast from './Toast'
 import Card from './Card'
 import Label from './Label'
 import Popover from './Popover'
@@ -22,6 +23,7 @@ import Dialog from './Dialog'
 import Section from './Section'
 
 export {
+  Toast,
   Layout,
   Button,
   Icon,

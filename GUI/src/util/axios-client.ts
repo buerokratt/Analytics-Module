@@ -18,18 +18,18 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
   (axiosResponse) => {
-    env.DEBUG_ENABLED && console.log(axiosResponse);
+    env.DEBUG_ENABLED; // && console.log(axiosResponse);
     return axiosResponse;
   },
   (error: AxiosError) => {
-    env.DEBUG_ENABLED && console.log(error);
+    env.DEBUG_ENABLED; // && console.log(error);
     return Promise.reject(error);
   }
 );
 
 axiosInstance.interceptors.request.use(
   (axiosRequest) => {
-    env.DEBUG_ENABLED && console.log(axiosRequest);
+    env.DEBUG_ENABLED; // && console.log(axiosRequest);
     return axiosRequest;
   },
   (error: AxiosError) => {

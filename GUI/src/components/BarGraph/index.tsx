@@ -57,7 +57,6 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
           dy={26}
           minTickGap={0}
           interval={0}
-          key={new Date().toISOString()}
         />
         <YAxis ticks={data.chartData && data.chartData.length > 0 ? undefined : [0]}>
           <Label

@@ -25,7 +25,7 @@ export const getTicks = (startDate: string, endDate: string, start: Date, end: D
 
   ticks.push(endUtc.getTime());
 
-  return ticks;
+  return Array.from(new Set(ticks));
 };
 
 export const formatDate = (value: Date, dateFormat?: string) => format(value, dateFormat ?? 'dd-MM-yyyy');

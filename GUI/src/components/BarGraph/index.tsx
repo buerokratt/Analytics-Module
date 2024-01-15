@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { BarChart, XAxis, CartesianGrid, YAxis, Tooltip, Legend, Bar, Label, ResponsiveContainer } from 'recharts';
+import { BarChart, CartesianGrid, YAxis, Tooltip, Legend, Bar, Label, XAxis } from 'recharts';
 import { chartDataKey, dateFormatter, formatDate, getColor, getKeys, getTicks, round } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { useTranslation } from 'react-i18next';
@@ -57,6 +57,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
           dy={26}
           minTickGap={0}
           interval={0}
+          key={new Date().toISOString()}
         />
         <YAxis ticks={data.chartData && data.chartData.length > 0 ? undefined : [0]}>
           <Label

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions';
 import MetricsCharts from '../components/MetricsCharts';
@@ -21,8 +21,10 @@ const AdvisorsPage: React.FC = () => {
   const [currentMetric, setCurrentMetric] = useState('');
   const [currentConfigs, setConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
-
-  const [advisorsMetrics, _] = useState<Option[]>([
+  const randomColor = () => '#' + ((Math.random() * 0xffffff) << 0).toString(16);
+  const advisors = useRef<any[]>([]);
+  const [advisorsList, setAdvisorsList] = useState<any[]>([]);
+  const [advisorsMetrics, setAdvisorsMetrics] = useState<Option[]>([
     {
       id: 'chat_forwards',
       labelKey: 'advisors.chat_forwards',
@@ -54,6 +56,10 @@ const AdvisorsPage: React.FC = () => {
       unit: t('units.minutes') ?? 'minutes',
     },
   ]);
+
+  useEffect(() => {
+    setAdvisorsList(advisors.current);
+  }, [advisorsList]);
 
   const [configsSubject] = useState(() => new Subject());
   useEffect(() => {
@@ -214,6 +220,7 @@ const AdvisorsPage: React.FC = () => {
   const fetchTotalCsaChats = async (config: any) => {
     let chartData = {};
     try {
+      const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
       const result: any = await request({
         url: getCsaChatsTotal(),
         method: Methods.post,
@@ -221,17 +228,101 @@ const AdvisorsPage: React.FC = () => {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
           end_date: config?.end,
+          excluded_csas: excluded_csas.length ?? 0 > 0 ? excluded_csas : [''],
         },
       });
 
-      const response = result.response.map((entry: any) => ({
-        ...translateChartKeys(entry, chartDataKey),
-        [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
-      }));
+      const res = result.response;
+
+      const advisorsList = Array.from(new Set(res.map((advisor: any) => advisor.customerSupportId)))
+        .map((id: any) => res.find((e: any) => e.customerSupportId == id))
+        .map((e) => {
+          return {
+            id: e?.customerSupportId ?? '',
+            labelKey: e?.customerSupportDisplayName ?? '',
+            color: randomColor(),
+            isSelected: true,
+          };
+        });
+
+      console.log(advisorsList);
+
+      if (advisorsList.length > advisors.current.length) {
+        const updatedMetrics = [...advisorsMetrics];
+        updatedMetrics[3].subOptions = advisorsList;
+        advisors.current = advisorsList;
+        setAdvisorsMetrics(updatedMetrics);
+        setAdvisorsList(advisors.current);
+      } else if (advisors.current.length === 0) {
+        const updatedMetrics = [...advisorsMetrics];
+        updatedMetrics[3].subOptions = [];
+        advisors.current = [];
+        setAdvisorsMetrics(updatedMetrics);
+        setAdvisorsList([]);
+      }
+
+      const response = res
+        .flat(1)
+        .map((entry: any) => ({
+          ...translateChartKeys(entry, chartDataKey),
+          [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
+        }))
+        .reduce((a: any, b: any) => {
+          const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
+          if (dateRow) {
+            dateRow[b[t('chart.customerSupportDisplayName')]] = b[t('chart.count')];
+          } else {
+            a.push({
+              [chartDataKey]: b[chartDataKey],
+              [b[t('chart.customerSupportDisplayName')]]: b[t('chart.count')],
+            });
+          }
+          return a;
+        }, []);
+
+      const chartResponse = response.map((e: any) => {
+        const res = { ...e };
+        advisorsList.forEach((i) => {
+          if (!(i.labelKey in e)) {
+            res[i.labelKey] = 0;
+          }
+        });
+        return res;
+      });
+
+      const percentagesResponse = chartResponse.reduce(function (a: any, b: any) {
+        const res: any = {};
+        Object.keys(chartResponse[0]).forEach((e: string) => {
+          if (e != 'dateTime') {
+            res[e] = a[e] + b[e];
+          }
+        });
+        return res;
+      });
+
+      const percentages: any[] = [];
+      for (const key in percentagesResponse) {
+        const currentPercentage: any = {};
+        currentPercentage['name'] = key;
+        currentPercentage['value'] = parseFloat(
+          (
+            (percentagesResponse[key] /
+              Object.values(percentagesResponse).reduce<number>((a: any, b: any) => a + b, 0)) *
+            100
+          ).toFixed(1)
+        );
+        percentages.push(currentPercentage);
+      }
 
       chartData = {
-        chartData: response,
-        colors: [{ id: 'count', color: '#FFB511' }],
+        chartData: chartResponse,
+        percentagesData: percentages,
+        colors: advisorsMetrics[3].subOptions!.map(({ labelKey, color }) => {
+          return {
+            id: labelKey,
+            color,
+          };
+        }),
       };
     } catch (_) {
       //error

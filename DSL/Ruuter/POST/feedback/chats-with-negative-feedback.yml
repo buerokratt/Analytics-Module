@@ -1,6 +1,6 @@
 check_for_required_parameters:
   switch:
-    - condition: ${incoming.body == null || incoming.body.events == null || incoming.body.start_date == null || incoming.body.end_date == null}
+    - condition: ${incoming.body == null || incoming.body.start_date == null || incoming.body.end_date == null}
       next: return_incorrect_request
   next: post_step
 
@@ -9,7 +9,6 @@ post_step:
   args:
     url: "[#ANALYTICS_RESQL]/feedback-chats-with-negative-feedback"
     body:
-      events: ${incoming.body.events}
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
   result: result

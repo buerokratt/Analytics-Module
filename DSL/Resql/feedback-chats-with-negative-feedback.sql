@@ -8,11 +8,6 @@ WITH n_chats AS
      AND STATUS = 'ENDED'
      AND feedback_rating::int <= 5
      AND created::date BETWEEN :start::date AND :end::date
-     AND EXISTS
-       (SELECT 1
-        FROM message
-        WHERE message.chat_base_id = chat.base_id
-          AND message.event IN (:events))
    GROUP BY base_id
    ORDER BY created DESC)
 SELECT n_chats.base_id,

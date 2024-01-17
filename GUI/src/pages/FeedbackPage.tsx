@@ -398,7 +398,6 @@ const FeedbackPage: React.FC = () => {
         url: getNegativeFeedbackChats(),
         method: Methods.post,
         data: {
-          events: '',
           start_date: config?.start,
           end_date: config?.end,
         },
@@ -417,7 +416,8 @@ const FeedbackPage: React.FC = () => {
           { id: 'Ended', color: '#FFB511' },
         ],
       };
-      setNegativeFeedbackChats(result.data.response);
+
+      setNegativeFeedbackChats(result.response);
     } catch (_) {
       //error
     }

@@ -73,7 +73,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
 
     try {
       if (existingDataset === true) {
-        await request({ url: openDataDataset(), method: Methods.post, data: { ...data, metrics, start, end } });
+        await request({ url: openDataDataset(), method: Methods.get, data: { ...data, metrics, start, end } });
       } else {
         await request({
           url: editScheduledReport(),

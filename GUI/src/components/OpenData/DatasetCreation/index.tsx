@@ -73,7 +73,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
 
     try {
       if (existingDataset === true) {
-        await request({ url: openDataDataset(), method: Methods.get, data: { ...data, metrics, start, end } });
+        await request({ url: openDataDataset(), method: Methods.post, data: { ...data, metrics, start, end } });
       } else {
         await request({
           url: editScheduledReport(),
@@ -100,7 +100,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
 
   const fetchValues = async () => {
     const lang = i18n.language;
-    const result: any = await request({ url: getOpenDataValues(lang), method: Methods.post });
+    const result: any = await request({ url: getOpenDataValues(lang), method: Methods.get });
     const [keywords, categories, regions, licences] = result.response;
     setOdpValues({ keywords, categories, regions, licences });
   };

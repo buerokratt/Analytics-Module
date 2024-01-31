@@ -95,6 +95,16 @@ services:
     networks:
       - bykstack
 
+  cron_manager:
+    container_name: cron-manager
+    image: cron-manager
+    volumes:
+      - ./DSL/CronManager:/DSL
+    ports:
+      - 9010:8080
+    networks:
+      - bykstack
+
   tim:
     container_name: tim
     image: tim

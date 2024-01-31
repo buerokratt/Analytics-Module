@@ -1,22 +1,23 @@
-import React, { FC, SelectHTMLAttributes, useEffect, useId, useState } from 'react'
-import { useMultipleSelection, useSelect } from 'downshift'
-import clsx from 'clsx'
-import { useTranslation } from 'react-i18next'
-import { MdArrowDropDown } from 'react-icons/md'
+import React, { FC, SelectHTMLAttributes, useEffect, useId, useState } from 'react';
+import { useMultipleSelection, useSelect } from 'downshift';
+import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
+import { MdArrowDropDown } from 'react-icons/md';
 
-import { Button, Icon } from '../..'
-import './FormSelect.scss'
+import { Button, Icon } from '../..';
+import './FormSelect.scss';
 
 type FormSelectMultipleProps = SelectHTMLAttributes<HTMLSelectElement> & {
-  label: string
-  name: string
-  defaultValue?: string[]
+  label: string;
+  name: string;
+  placeholder?: string;
+  defaultValue?: string[];
   options: {
-    label: string
-    value: string
-  }[]
-  onSelectionChange?: (selection: { label: string; value: string }[]) => void
-}
+    label: string;
+    value: string;
+  }[];
+  onSelectionChange?: (selection: { label: string; value: string }[]) => void;
+};
 
 const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
   label,
@@ -26,15 +27,15 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
   defaultValue,
   onSelectionChange,
 }) => {
-  const id = useId()
-  const { t } = useTranslation()
+  const id = useId();
+  const { t } = useTranslation();
   const { isOpen, getToggleButtonProps, getLabelProps, getMenuProps, getItemProps } = useSelect({
     id,
     items: options,
     selectedItem: null,
     defaultHighlightedIndex: 0,
     stateReducer: (_, actionAndChanges) => {
-      const { changes, type } = actionAndChanges
+      const { changes, type } = actionAndChanges;
       switch (type) {
         case useSelect.stateChangeTypes.ToggleButtonKeyDownEnter:
         case useSelect.stateChangeTypes.ToggleButtonKeyDownSpaceButton:
@@ -42,9 +43,9 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
           return {
             ...changes,
             isOpen: true, // keep the menu open after selection.
-          }
+          };
       }
-      return changes
+      return changes;
     },
     onStateChange: ({ type, selectedItem }) => {
       switch (type) {
@@ -52,38 +53,38 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
         case useSelect.stateChangeTypes.ToggleButtonKeyDownSpaceButton:
         case useSelect.stateChangeTypes.ItemClick:
           if (selectedItem) {
-            const existingItem = selectedItems.find((o) => o.value === selectedItem.value)
+            const existingItem = selectedItems.find((o) => o.value === selectedItem.value);
             if (existingItem) {
-              removeSelectedItem(existingItem)
+              removeSelectedItem(existingItem);
             } else {
-              addSelectedItem(selectedItem)
+              addSelectedItem(selectedItem);
             }
           }
-          break
+          break;
         default:
-          break
+          break;
       }
     },
-  })
+  });
   const { addSelectedItem, removeSelectedItem, selectedItems, getDropdownProps, setSelectedItems } =
     useMultipleSelection<{
-      label: string
-      value: string
-    }>()
-  const [selectedStateItems, setSelectedStateItems] = useState<{ label: string; value: string }[]>()
+      label: string;
+      value: string;
+    }>();
+  const [selectedStateItems, setSelectedStateItems] = useState<{ label: string; value: string }[]>();
 
   useEffect(() => {
-    if (onSelectionChange) onSelectionChange(selectedItems)
-  }, [selectedItems])
+    if (onSelectionChange) onSelectionChange(selectedItems);
+  }, [selectedItems]);
 
   useEffect(() => {
-    setSelectedItems(options.filter((o) => defaultValue?.includes(String(o.value))))
-    setSelectedStateItems(options.filter((o) => defaultValue?.includes(String(o.value))))
-  }, [])
+    setSelectedItems(options.filter((o) => defaultValue?.includes(String(o.value))));
+    setSelectedStateItems(options.filter((o) => defaultValue?.includes(String(o.value))));
+  }, []);
 
-  const selectClasses = clsx('select', disabled && 'select--disabled')
+  const selectClasses = clsx('select', disabled && 'select--disabled');
 
-  const placeholderValue = placeholder || t('global.choose')
+  const placeholderValue = placeholder || t('global.choose');
 
   return (
     <div className={selectClasses}>
@@ -127,7 +128,7 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default FormSelectMultiple
+export default FormSelectMultiple;

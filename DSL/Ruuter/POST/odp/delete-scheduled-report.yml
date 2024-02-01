@@ -6,15 +6,6 @@ getJobDetails:
       datasetId: ${incoming.body.datasetId}
   result: jobDetails
 
-removeSchedule:
-  call: reflect.mock
-  args:
-    request:
-      jobId: ${jobDetails.response.body[0].job_id}
-    response:
-      success: ${true}
-  result: scheduler
-
 removeCronjobIfExists:
   call: http.post
   args:
@@ -28,7 +19,7 @@ deleteScheduledReport:
   args:
     url: "[#ANALYTICS_RESQL]/delete-scheduled-report"
     body:
-      id: ${jobDetails.response.body[0].id}
+      id: ${incoming.body.datasetId}
   result: delete
 
 return:

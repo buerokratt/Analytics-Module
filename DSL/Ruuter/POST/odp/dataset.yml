@@ -48,7 +48,6 @@ saveJobInformation:
       name: ${incoming.body.nameEt}
       period: ${incoming.body.updateIntervalUnit}
       metrics: ${incoming.body.metrics}
-      job_id: ${scheduler.response.body.jobId}
       dataset_id: ${datasetCreation.response.body.data.id}
       start_date: ${incoming.body.start}
       end_date: ${incoming.body.end}

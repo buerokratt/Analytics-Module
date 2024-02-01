@@ -7,6 +7,18 @@ saveFile:
       content: ${incoming.body.yaml}
   result: fileResult
 
+check-if-cron-is-changed:
+  switch:
+    - condition: ${incoming.body.location.includes('CronManager')}
+      next: refereshCronManagerIfChanged
+  next: return_result  
+
+refereshCronManagerIfChanged:
+  call: http.post
+  args:
+    url: "[#CRON_MANAGER]/reload/CronManager"
+  result: cronResult
+
 return_result:
   reloadDsl: true
   return: "Saved Successfully"

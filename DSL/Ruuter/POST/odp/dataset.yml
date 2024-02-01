@@ -83,7 +83,7 @@ return_post_upload:
   next: end
 
 return_post_schedule:
-  return: ${scheduledReport.response.body}
+  return: ${scheduledReport.response.body[0]}
   next: end
 
   

@@ -64,5 +64,5 @@ saveJobInformation:
   result: scheduledReport
 
 return_post_schedule:
-  return: ${scheduledReport.response.body}
+  return: ${scheduledReport.response.body[0]}
   next: end

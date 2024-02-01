@@ -1,5 +1,6 @@
 /data
 /tim-db
+/DSL/CronManager/
 .DS_Store
 .vscode
 .env

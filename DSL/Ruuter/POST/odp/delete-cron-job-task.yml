@@ -1,0 +1,12 @@
+deleteFile:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_DMAPPER]/file-manager/delete"
+    body:
+      file_path: ${incoming.body.location}
+  result: fileResult
+
+return_result:
+  reloadDsl: true
+  return: "Cronjon task deleted Successfully"
+  next: end

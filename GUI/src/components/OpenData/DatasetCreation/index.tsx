@@ -5,7 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { CgSpinner } from 'react-icons/cg';
 import * as yup from 'yup';
 import i18n from '../../../i18n';
-import { editScheduledReport, getOpenDataValues, openDataDataset } from '../../../resources/api-constants';
+import {
+  deleteCronJobTask,
+  editScheduledReport,
+  getOpenDataValues,
+  openDataDataset,
+  saveJsonToYaml,
+  uploadScheduledReport,
+} from '../../../resources/api-constants';
 import { ODPValues } from '../../../types/reports';
 import Button from '../../Button';
 import Card from '../../Card';
@@ -13,6 +20,7 @@ import { FormDatepicker, FormInput, FormSelect, FormTextarea } from '../../FormE
 import FormSelectMultiple from '../../FormElements/FormSelectMultiple';
 import { ToastContext } from '../../context/ToastContext';
 import Track from '../../Track';
+import { stringify } from 'yaml';
 
 import './styles.scss';
 import { request, Methods } from '../../../util/axios-client';
@@ -72,15 +80,17 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
     data['licenceId'] = data['licence'].id;
 
     try {
+      let res: any;
       if (existingDataset === true) {
-        await request({ url: openDataDataset(), method: Methods.post, data: { ...data, metrics, start, end } });
+        res = await request({ url: openDataDataset(), method: Methods.post, data: { ...data, metrics, start, end } });
       } else {
-        await request({
+        res = await request({
           url: editScheduledReport(),
           method: Methods.post,
-          data: { ...data, datasetId: existingDataset.datasetId },
+          data: { ...data, datasetId: existingDataset.datasetId, start, end },
         });
       }
+      checkForCronJob(res);
       toast.open({
         type: 'success',
         title: t('reports.dataset_saved'),
@@ -117,6 +127,31 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
         />
       </Track>
     );
+
+  const checkForCronJob = async (data: any) => {
+    const steps = new Map();
+    steps.set('upload_job', {
+      trigger: getCronExpression(data.period),
+      type: 'http',
+      method: 'POST',
+      url: uploadScheduledReport(data.datasetId),
+    });
+
+    const yaml = stringify(steps);
+    if (data.period === 'never') {
+      await request({
+        url: deleteCronJobTask(),
+        method: Methods.post,
+        data: { location: `/CronManager/${data.datasetId}.yml` },
+      });
+    } else {
+      await request({
+        url: saveJsonToYaml(),
+        method: Methods.post,
+        data: { yaml: yaml, location: `/CronManager/${data.datasetId}.yml` },
+      });
+    }
+  };
 
   const getCronExpression = (interval: UpdateIntervalUnitType): string => {
     switch (interval) {

@@ -16,8 +16,12 @@ export const getOpenDataDataset = (datasetId: string): string => baseUrl + '/odp
 export const scheduledReports = (): string => baseUrl + '/odp/scheduled-reports'
 export const editScheduledReport = (): string => baseUrl + '/odp/update-scheduled-report'
 export const deleteScheduledReport = (): string => baseUrl + '/odp/delete-scheduled-report'
+export const uploadScheduledReport = (datasetId: string): string => baseUrl + '/odp/upload-scheduled-report?datasetId=' + datasetId
+export const deleteCronJobTask = (): string => baseUrl + '/odp/delete-cron-job-task'
 
 export const downloadOpenDataCSV = (): string => baseUrl + '/odp/download'
+
+export const saveJsonToYaml = (): string => baseUrl + '/saveJsonToYml'
 
 export const getTesting = (): string => {
   return baseUrl + '/testing'

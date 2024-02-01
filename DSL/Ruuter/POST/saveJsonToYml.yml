@@ -1,0 +1,13 @@
+saveFile:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_DMAPPER]/file-manager/create"
+    body:
+      file_path: ${incoming.body.location}
+      content: ${incoming.body.yaml}
+  result: fileResult
+
+return_result:
+  reloadDsl: true
+  return: "Saved Successfully"
+  next: end

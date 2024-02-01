@@ -40,16 +40,6 @@ check_schedule:
     - condition: ${incoming.body.updateIntervalUnit === 'never'}
       next: uploadImmediately
 
-setUpSchedule:
-  call: reflect.mock
-  args:
-    request:
-      cron: ${incoming.body.cron_expression}
-      task: ${"odp/task-runner?datasetId=" + datasetCreation.response.body.data.id}
-    response:
-      jobId: 'some-unique-id'
-  result: scheduler
-
 saveJobInformation:
   call: http.post
   args:
@@ -60,6 +50,8 @@ saveJobInformation:
       metrics: ${incoming.body.metrics}
       job_id: ${scheduler.response.body.jobId}
       dataset_id: ${datasetCreation.response.body.data.id}
+      start_date: ${incoming.body.start}
+      end_date: ${incoming.body.end}
   result: scheduledReport
   next: return_post_schedule
 

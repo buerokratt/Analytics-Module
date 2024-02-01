@@ -50,16 +50,6 @@ removePreviousSchedule:
   requestType: post
   result: removePrevious
 
-setUpSchedule:
-  call: reflect.mock
-  args:
-    request:
-      cron: ${incoming.body.cron_expression}
-      task: ${"odp/task-runner?datasetId=" + ${incoming.body.datasetId}}
-    response:
-      jobId: 'some-unique-id'
-  result: scheduler
-
 saveJobInformation:
   call: http.post
   args:
@@ -70,6 +60,8 @@ saveJobInformation:
       metrics: ${jobDetails.response.body[0].metrics}
       job_id: ${scheduler.response.body.jobId}
       dataset_id: ${incoming.body.datasetId}
+      start_date: ${incoming.body.start}
+      end_date: ${incoming.body.end}
   result: scheduledReport
 
 return_post_schedule:

@@ -88,8 +88,12 @@ services:
     container_name: data_mapper
     image: data-mapper
     volumes:
+      - ./DSL:/data
       - ./DSL/DMapper/hbs:/workspace/app/views/analytics
       - ./DSL/DMapper/js:/workspace/app/js/analytics
+    environment:
+      - PORT=3000
+      - CONTENT_FOLDER=/data
     ports:
       - 3000:3000
     networks:

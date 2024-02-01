@@ -15,6 +15,14 @@ removeSchedule:
       success: ${true}
   result: scheduler
 
+removeCronjobIfExists:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_DMAPPER]/file-manager/delete"
+    body:
+      file_path: "/CronManager/${incoming.body.datasetId}.yml"
+  result: fileResult
+
 deleteScheduledReport:
   call: http.post
   args:
@@ -24,4 +32,5 @@ deleteScheduledReport:
   result: delete
 
 return:
-  return: ${true}
+  reloadDsl: true
+  return: "Scheduled report deleted successfully"

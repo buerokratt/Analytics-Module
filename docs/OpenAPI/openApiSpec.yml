@@ -1087,7 +1087,7 @@ paths:
               example: "attachment;filename=metrics.csv"
         '400':
           description: Invalid input
-  /task-runner:
+  /upload-scheduled-report:
     post:
       tags:
         - odp

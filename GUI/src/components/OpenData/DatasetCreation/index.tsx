@@ -90,7 +90,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
           data: { ...data, datasetId: existingDataset.datasetId, start, end },
         });
       }
-      checkForCronJob(res);
+      checkForCronJob(res.response);
       toast.open({
         type: 'success',
         title: t('reports.dataset_saved'),

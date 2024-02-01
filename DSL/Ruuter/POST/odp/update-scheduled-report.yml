@@ -72,7 +72,7 @@ check-for-interval:
 delete-schedule:
   call: http.post
   args:
-    url: "[#ANALYTICS_RUUTER]/delete-scheduled-report"
+    url: "[#ANALYTICS_RUUTER]/odp/delete-scheduled-report"
     body:
       datasetId: ${incoming.body.datasetId}
   result: delete_res

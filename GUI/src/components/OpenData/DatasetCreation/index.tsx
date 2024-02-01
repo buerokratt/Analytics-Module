@@ -138,7 +138,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
     });
 
     const yaml = stringify(steps);
-    if (data.period === 'never') {
+    if (data.period === undefined) {
       await request({
         url: deleteCronJobTask(),
         method: Methods.post,

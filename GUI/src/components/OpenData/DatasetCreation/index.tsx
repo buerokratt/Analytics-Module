@@ -156,15 +156,15 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
   const getCronExpression = (interval: UpdateIntervalUnitType): string => {
     switch (interval) {
       case 'day':
-        return '0 0 * * *';
+        return '0 0 * * * ?';
       case 'week':
-        return '0 0 * * 1';
+        return '0 0 * * 1 ?';
       case 'month':
-        return '0 0 1 * *';
+        return '0 0 1 * * ?';
       case 'quarter':
-        return '0 0 1 */3 *';
+        return '0 0 1 */3 * ?';
       case 'year':
-        return '0 0 1 1 *';
+        return '0 0 1 1 * ?';
       default:
         return '';
     }

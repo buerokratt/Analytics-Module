@@ -63,6 +63,21 @@ saveJobInformation:
       end_date: ${incoming.body.end}
   result: scheduledReport
 
+check-for-interval:
+  switch:
+    - condition: ${incoming.body.updateIntervalUnit === 'never'}
+      next: delete-schedule
+  next: return_post_schedule
+
+delete-schedule:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RUUTER]/delete-scheduled-report"
+    body:
+      datasetId: ${incoming.body.datasetId}
+  result: delete_res
+  next: return_post_schedule
+
 return_post_schedule:
   return: ${scheduledReport.response.body[0]}
   next: end

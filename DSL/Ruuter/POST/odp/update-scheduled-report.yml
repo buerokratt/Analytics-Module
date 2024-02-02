@@ -15,7 +15,7 @@ authenticate:
 updateDataset:
   call: http.put
   args:
-    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${incoming.body.datasetId}"
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/${settings.response.body[0].odpOrgId}/datasets/${incoming.body.datasetId}"
     body:
       nameEt: ${incoming.body.nameEt}
       nameEn: ${incoming.body.nameEn}

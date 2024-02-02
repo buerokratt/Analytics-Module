@@ -104,6 +104,8 @@ services:
     image: cron-manager
     volumes:
       - ./DSL/CronManager:/DSL
+    environment:
+      - application.allowedOrigins=http://localhost:8080
     ports:
       - 9010:8080
     networks:

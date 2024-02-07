@@ -22,6 +22,12 @@ deleteScheduledReport:
       id: ${incoming.body.datasetId}
   result: delete
 
+refereshCronManagerIfChanged:
+  call: http.post
+  args:
+    url: "[#CRON_MANAGER]/reload/CronManager"
+  result: cronResult
+
 return:
   reloadDsl: true
   return: "Scheduled report deleted successfully"

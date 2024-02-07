@@ -67,7 +67,7 @@ check-for-interval:
   switch:
     - condition: ${incoming.body.updateIntervalUnit === 'never'}
       next: delete-schedule
-  next: return_post_schedule
+  next: refereshCronManagerIfChanged
 
 delete-schedule:
   call: http.post
@@ -76,6 +76,13 @@ delete-schedule:
     body:
       datasetId: ${incoming.body.datasetId}
   result: delete_res
+  next: refereshCronManagerIfChanged
+
+refereshCronManagerIfChanged:
+  call: http.post
+  args:
+    url: "[#CRON_MANAGER]/reload/CronManager"
+  result: cronResult 
   next: return_post_schedule
 
 return_post_schedule:

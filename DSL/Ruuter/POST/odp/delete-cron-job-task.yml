@@ -6,6 +6,12 @@ deleteFile:
       file_path: ${incoming.body.location}
   result: fileResult
 
+refereshCronManagerIfChanged:
+  call: http.post
+  args:
+    url: "[#CRON_MANAGER]/reload/CronManager"
+  result: cronResult
+
 return_result:
   reloadDsl: true
   return: "Cronjon task deleted Successfully"

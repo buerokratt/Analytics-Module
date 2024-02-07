@@ -110,6 +110,8 @@ services:
       - 9010:8080
     networks:
       - bykstack
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   tim:
     container_name: tim

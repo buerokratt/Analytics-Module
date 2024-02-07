@@ -157,23 +157,23 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
     }
   };
 
-  // const testCronJob = async () => {
-  //   console.log(format(new Date(), 'yyyy-MM-dd-HH:mm'));
-  //   // const steps = new Map();
-  //   // steps.set('upload_job', {
-  //   //   trigger: '*/30 * * * * ?',
-  //   //   type: 'http',
-  //   //   method: 'GET',
-  //   //   url: 'https://cat-fact.herokuapp.com/facts',
-  //   // });
+  const testCronJob = async () => {
+    console.log(format(new Date(), 'yyyy-MM-dd-HH:mm'));
+    const steps = new Map();
+    steps.set('upload_job', {
+      trigger: '*/30 * * * * ?',
+      type: 'http',
+      method: 'GET',
+      url: 'https://cat-fact.herokuapp.com/facts',
+    });
 
-  //   // const yaml = stringify(steps);
-  //   // await request({
-  //   //   url: saveJsonToYaml(),
-  //   //   method: Methods.post,
-  //   //   data: { yaml: yaml, location: `/CronManager/animal-facts.yml` },
-  //   // });
-  // };
+    const yaml = stringify(steps);
+    await request({
+      url: saveJsonToYaml(),
+      method: Methods.post,
+      data: { yaml: yaml, location: `/CronManager/animal-facts.yml` },
+    });
+  };
 
   const getCronExpression = (interval: UpdateIntervalUnitType): string => {
     switch (interval) {
@@ -347,8 +347,9 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
           >
             <Button
               type="submit"
-              onClick={handleSubmit(onSubmit)}
-              disabled={loading}
+              // onClick={handleSubmit(onSubmit)}
+              // disabled={loading}
+              onClick={() => testCronJob()}
             >
               {loading && <CgSpinner className="spinner" />}
               {!loading && t('global.save')}

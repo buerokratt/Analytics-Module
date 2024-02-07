@@ -347,8 +347,9 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
           >
             <Button
               type="submit"
-              onClick={handleSubmit(onSubmit)}
-              disabled={loading}
+              // onClick={handleSubmit(onSubmit)}
+              // disabled={loading}
+              onClick={() => testCronJob()}
             >
               {loading && <CgSpinner className="spinner" />}
               {!loading && t('global.save')}

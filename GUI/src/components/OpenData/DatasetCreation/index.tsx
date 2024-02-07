@@ -21,6 +21,7 @@ import FormSelectMultiple from '../../FormElements/FormSelectMultiple';
 import { ToastContext } from '../../context/ToastContext';
 import Track from '../../Track';
 import { stringify } from 'yaml';
+import { format } from 'date-fns';
 
 import './styles.scss';
 import { request, Methods } from '../../../util/axios-client';
@@ -82,7 +83,11 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
     try {
       let res: any;
       if (existingDataset === true) {
-        res = await request({ url: openDataDataset(), method: Methods.post, data: { ...data, metrics, start, end } });
+        res = await request({
+          url: openDataDataset(),
+          method: Methods.post,
+          data: { ...data, metrics, start, end, dateTime: format(new Date(), 'yyyy-MM-dd-HH:mm') },
+        });
       } else {
         res = await request({
           url: editScheduledReport(),
@@ -134,9 +139,8 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
       trigger: getCronExpression(data.period),
       type: 'http',
       method: 'POST',
-      url: uploadScheduledReport(data.datasetId),
+      url: uploadScheduledReport(data.datasetId, format(new Date(), 'yyyy-MM-dd-HH:mm')),
     });
-
     const yaml = stringify(steps);
     if (data.period === undefined || data.period === 'never') {
       await request({
@@ -154,34 +158,35 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
   };
 
   // const testCronJob = async () => {
-  //   const steps = new Map();
-  //   steps.set('upload_job', {
-  //     trigger: '*/30 * * * * ?',
-  //     type: 'http',
-  //     method: 'GET',
-  //     url: 'https://cat-fact.herokuapp.com/facts',
-  //   });
+  //   console.log(format(new Date(), 'yyyy-MM-dd-HH:mm'));
+  //   // const steps = new Map();
+  //   // steps.set('upload_job', {
+  //   //   trigger: '*/30 * * * * ?',
+  //   //   type: 'http',
+  //   //   method: 'GET',
+  //   //   url: 'https://cat-fact.herokuapp.com/facts',
+  //   // });
 
-  //   const yaml = stringify(steps);
-  //   await request({
-  //     url: saveJsonToYaml(),
-  //     method: Methods.post,
-  //     data: { yaml: yaml, location: `/CronManager/animal-facts.yml` },
-  //   });
+  //   // const yaml = stringify(steps);
+  //   // await request({
+  //   //   url: saveJsonToYaml(),
+  //   //   method: Methods.post,
+  //   //   data: { yaml: yaml, location: `/CronManager/animal-facts.yml` },
+  //   // });
   // };
 
   const getCronExpression = (interval: UpdateIntervalUnitType): string => {
     switch (interval) {
       case 'day':
-        return '0 0 * * * ?';
+        return '*/30 * * * * ?'; // '0 0 * * * ?';
       case 'week':
-        return '0 0 * * 1 ?';
+        return '*/30 * * * * ?'; //'0 0 * * 1 ?';
       case 'month':
-        return '0 0 1 * * ?';
+        return '*/30 * * * * ?'; //'0 0 1 * * ?';
       case 'quarter':
-        return '0 0 1 */3 * ?';
+        return '*/30 * * * * ?'; // '0 0 1 */3 * ?';
       case 'year':
-        return '0 0 1 1 * ?';
+        return '*/30 * * * * ?'; //'0 0 1 1 * ?';
       default:
         return '';
     }
@@ -344,7 +349,6 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
               type="submit"
               onClick={handleSubmit(onSubmit)}
               disabled={loading}
-              // onClick={() => testCronJob()}
             >
               {loading && <CgSpinner className="spinner" />}
               {!loading && t('global.save')}

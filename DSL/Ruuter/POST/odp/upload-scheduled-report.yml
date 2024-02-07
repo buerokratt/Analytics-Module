@@ -15,6 +15,7 @@ uploadImmediately:
     end: ${jobDetails.response.endDate}
     period: ${jobDetails.response.period}
     datasetId: ${incoming.params.datasetId}
+    dateTime: ${incoming.params.dateTime}
   result: uploadResult
 
 return_result:

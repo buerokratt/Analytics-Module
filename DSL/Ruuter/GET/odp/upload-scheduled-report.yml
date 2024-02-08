@@ -6,20 +6,24 @@ getJobDetails:
       datasetId: ${incoming.params.datasetId}
   result: jobDetails
 
-uploadImmediately:
-  call: http.post
-  args:
-    url: "[#ANALYTICS_RUUTER]/odp/upload"
-    body:
-      metrics: ${jobDetails.response.metrics}
-      start: ${jobDetails.response.startDate}
-      end: ${jobDetails.response.endDate}
-      period: ${jobDetails.response.period}
-      datasetId: ${incoming.params.datasetId}
-      dateTime: ${incoming.params.dateTime}
-  result: uploadResult
-
 return_result:
-  return: "Dataset uploaded successfully"
+  return: ${jobDetails.response.body}
   next: end
+
+# uploadImmediately:
+#   call: http.post
+#   args:
+#     url: "[#ANALYTICS_RUUTER]/odp/upload"
+#     body:
+#       metrics: ${jobDetails.response.metrics}
+#       start: ${jobDetails.response.startDate}
+#       end: ${jobDetails.response.endDate}
+#       period: ${jobDetails.response.period}
+#       datasetId: ${incoming.params.datasetId}
+#       dateTime: ${incoming.params.dateTime}
+#   result: uploadResult
+
+# return_result:
+#   return: "Dataset uploaded successfully"
+#   next: end
 

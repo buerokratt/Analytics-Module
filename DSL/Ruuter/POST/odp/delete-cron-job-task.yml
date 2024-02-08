@@ -6,7 +6,7 @@ deleteFile:
       file_path: ${incoming.body.location}
   result: fileResult
 
-refereshCronManagerIfChanged:
+refreshCronManagerIfChanged:
   call: http.post
   args:
     url: "[#CRON_MANAGER]/reload/CronManager"

@@ -10,10 +10,10 @@ saveFile:
 check-if-cron-is-changed:
   switch:
     - condition: ${incoming.body.location.includes('CronManager')}
-      next: refereshCronManagerIfChanged
+      next: refreshCronManagerIfChanged
   next: return_result  
 
-refereshCronManagerIfChanged:
+refreshCronManagerIfChanged:
   call: http.post
   args:
     url: "[#CRON_MANAGER]/reload/CronManager"

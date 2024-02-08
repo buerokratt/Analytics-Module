@@ -22,7 +22,7 @@ deleteScheduledReport:
       id: ${incoming.body.datasetId}
   result: delete
 
-refereshCronManagerIfChanged:
+refreshCronManagerIfChanged:
   call: http.post
   args:
     url: "[#CRON_MANAGER]/reload/CronManager"

@@ -1,5 +1,6 @@
 /data
 /tim-db
+/DSL/CronManager/
 .DS_Store
 .vscode
 .env
@@ -12,3 +13,4 @@
 **/build
 **/.eslintcache
 **/npm-debug.log*
+**/package-lock.json

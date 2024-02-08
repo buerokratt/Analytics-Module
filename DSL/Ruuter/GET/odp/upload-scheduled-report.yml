@@ -1,0 +1,28 @@
+getJobDetails:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]/get-scheduled-report"
+    body:
+      datasetId: ${incoming.params.datasetId}
+  result: jobDetails
+
+assign_details:
+  assign:
+    details: ${jobDetails.response.body[0]}
+
+uploadImmediately:
+  template: odp/upload
+  requestType: post
+  body:
+    metrics: ${details.metrics}
+    start: ${details.startDate}
+    end: ${details.endDate}
+    period: ${details.period}
+    datasetId: ${incoming.params.datasetId}
+    dateTime: ${incoming.params.dateTime}
+  result: uploadResult
+
+return_result:
+  return: "Dataset uploaded successfully"
+  next: end
+

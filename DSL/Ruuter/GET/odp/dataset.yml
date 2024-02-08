@@ -15,7 +15,7 @@ authenticate:
 get_dataset_metadata:
   call: http.get
   args:
-    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${incoming.params.datasetId}"
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/${settings.response.body[0].odpOrgId}/datasets/${incoming.params.datasetId}"
     headers:
       Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}  
   result: dataset  

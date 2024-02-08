@@ -1,5 +1,6 @@
 const baseUrl = import.meta.env.REACT_APP_RUUTER_V2_ANALYTICS_API_URL
 const chatsUrl = import.meta.env.REACT_APP_BUEROKRATT_CHATBOT_URL
+const ruuterUrl = import.meta.env.REACT_APP_DOCKER_RUUTER;
 
 export const openSearchDashboard = "https://opensearch.org/"
 
@@ -16,8 +17,12 @@ export const getOpenDataDataset = (datasetId: string): string => baseUrl + '/odp
 export const scheduledReports = (): string => baseUrl + '/odp/scheduled-reports'
 export const editScheduledReport = (): string => baseUrl + '/odp/update-scheduled-report'
 export const deleteScheduledReport = (): string => baseUrl + '/odp/delete-scheduled-report'
+export const uploadScheduledReport = (datasetId: string, dateTime: string): string => ruuterUrl + '/odp/upload-scheduled-report?datasetId=' + datasetId + '&dateTime=' + dateTime
+export const deleteCronJobTask = (): string => baseUrl + '/odp/delete-cron-job-task'
 
 export const downloadOpenDataCSV = (): string => baseUrl + '/odp/download'
+
+export const saveJsonToYaml = (): string => baseUrl + '/saveJsonToYml'
 
 export const getTesting = (): string => {
   return baseUrl + '/testing'

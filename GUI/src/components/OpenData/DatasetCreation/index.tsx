@@ -5,7 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { CgSpinner } from 'react-icons/cg';
 import * as yup from 'yup';
 import i18n from '../../../i18n';
-import { editScheduledReport, getOpenDataValues, openDataDataset } from '../../../resources/api-constants';
+import {
+  deleteCronJobTask,
+  editScheduledReport,
+  getOpenDataValues,
+  openDataDataset,
+  saveJsonToYaml,
+  uploadScheduledReport,
+} from '../../../resources/api-constants';
 import { ODPValues } from '../../../types/reports';
 import Button from '../../Button';
 import Card from '../../Card';
@@ -13,6 +20,8 @@ import { FormDatepicker, FormInput, FormSelect, FormTextarea } from '../../FormE
 import FormSelectMultiple from '../../FormElements/FormSelectMultiple';
 import { ToastContext } from '../../context/ToastContext';
 import Track from '../../Track';
+import { stringify } from 'yaml';
+import { format } from 'date-fns';
 
 import './styles.scss';
 import { request, Methods } from '../../../util/axios-client';
@@ -72,15 +81,21 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
     data['licenceId'] = data['licence'].id;
 
     try {
+      let res: any;
       if (existingDataset === true) {
-        await request({ url: openDataDataset(), method: Methods.post, data: { ...data, metrics, start, end } });
+        res = await request({
+          url: openDataDataset(),
+          method: Methods.post,
+          data: { ...data, metrics, start, end, dateTime: format(new Date(), 'yyyy-MM-dd-HH:mm') },
+        });
       } else {
-        await request({
+        res = await request({
           url: editScheduledReport(),
           method: Methods.post,
-          data: { ...data, datasetId: existingDataset.datasetId },
+          data: { ...data, datasetId: existingDataset.datasetId, start, end },
         });
       }
+      checkForCronJob(res.response);
       toast.open({
         type: 'success',
         title: t('reports.dataset_saved'),
@@ -100,7 +115,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
 
   const fetchValues = async () => {
     const lang = i18n.language;
-    const result: any = await request({ url: getOpenDataValues(lang), method: Methods.post });
+    const result: any = await request({ url: getOpenDataValues(lang), method: Methods.get });
     const [keywords, categories, regions, licences] = result.response;
     setOdpValues({ keywords, categories, regions, licences });
   };
@@ -118,18 +133,42 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
       </Track>
     );
 
+  const checkForCronJob = async (data: any) => {
+    const steps = new Map();
+    steps.set('upload_job', {
+      trigger: getCronExpression(data.period),
+      type: 'http',
+      method: 'GET',
+      url: uploadScheduledReport(data.datasetId, format(new Date(), 'yyyy-MM-dd-HH:mm')),
+    });
+    const yaml = stringify(steps);
+    if (data.period === undefined || data.period === 'never') {
+      await request({
+        url: deleteCronJobTask(),
+        method: Methods.post,
+        data: { location: `/CronManager/${data.datasetId}.yml` },
+      });
+    } else {
+      await request({
+        url: saveJsonToYaml(),
+        method: Methods.post,
+        data: { yaml: yaml, location: `/CronManager/${data.datasetId}.yml` },
+      });
+    }
+  };
+
   const getCronExpression = (interval: UpdateIntervalUnitType): string => {
     switch (interval) {
       case 'day':
-        return '0 0 * * *';
+        return '0 0 * * * ?';
       case 'week':
-        return '0 0 * * 1';
+        return '0 0 * * 1 ?';
       case 'month':
-        return '0 0 1 * *';
+        return '0 0 1 * * ?';
       case 'quarter':
-        return '0 0 1 */3 *';
+        return '0 0 1 */3 * ?';
       case 'year':
-        return '0 0 1 1 *';
+        return '0 0 1 1 * ?';
       default:
         return '';
     }

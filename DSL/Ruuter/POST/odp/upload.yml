@@ -29,11 +29,11 @@ upload:
  call: http.post
  args:
    contentType: formdata
-   url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${incoming.body.datasetId}/upload"
+   url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/${settings.response.body[0].odpOrgId}/datasets/${incoming.body.datasetId}/upload"
    body:
      delimiter: ","
      headerIndex: "1"
-     file:files:metrics.csv: ${metricDataCSV}
+     file:files:metrics-${incoming.body.dateTime}.csv: ${metricDataCSV}
    headers:
      Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
  result: uploadResult
@@ -48,7 +48,7 @@ check_upload_result:
 publish:
  call: http.put
  args:
-   url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${incoming.body.datasetId}/publish"
+   url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/${settings.response.body[0].odpOrgId}/datasets/${incoming.body.datasetId}/publish"
    headers:
      Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
  result: publishResult

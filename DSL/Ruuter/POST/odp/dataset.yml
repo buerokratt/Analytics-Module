@@ -15,7 +15,7 @@ authenticate:
 createDataset:
   call: http.post
   args:
-    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets"
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/${settings.response.body[0].odpOrgId}/datasets"
     body:
       nameEt: ${incoming.body.nameEt}
       nameEn: ${incoming.body.nameEn}
@@ -40,16 +40,6 @@ check_schedule:
     - condition: ${incoming.body.updateIntervalUnit === 'never'}
       next: uploadImmediately
 
-setUpSchedule:
-  call: reflect.mock
-  args:
-    request:
-      cron: ${incoming.body.cron_expression}
-      task: ${"odp/task-runner?datasetId=" + datasetCreation.response.body.data.id}
-    response:
-      jobId: 'some-unique-id'
-  result: scheduler
-
 saveJobInformation:
   call: http.post
   args:
@@ -58,10 +48,24 @@ saveJobInformation:
       name: ${incoming.body.nameEt}
       period: ${incoming.body.updateIntervalUnit}
       metrics: ${incoming.body.metrics}
-      job_id: ${scheduler.response.body.jobId}
       dataset_id: ${datasetCreation.response.body.data.id}
+      start_date: ${incoming.body.start}
+      end_date: ${incoming.body.end}
   result: scheduledReport
-  next: return_post_schedule
+  next: uploadIntialScheduleReport
+
+uploadIntialScheduleReport:
+  template: odp/upload
+  requestType: post
+  body:
+    metrics: ${incoming.body.metrics}
+    start: ${incoming.body.start}
+    end: ${incoming.body.end}
+    period: ${incoming.body.updateIntervalUnit}
+    datasetId: ${datasetCreation.response.body.data.id}
+    dateTime: ${incoming.body.dateTime}
+  result: uploadResult
+  next: return_post_schedule  
 
 uploadImmediately:
   template: odp/upload
@@ -72,6 +76,7 @@ uploadImmediately:
     end: ${incoming.body.end}
     period: ${incoming.body.updateIntervalUnit}
     datasetId: ${datasetCreation.response.body.data.id}
+    dateTime: ${incoming.body.dateTime}
   result: uploadResult
   next: return_post_upload
 
@@ -80,7 +85,7 @@ return_post_upload:
   next: end
 
 return_post_schedule:
-  return: ${scheduledReport.response.body}
+  return: ${scheduledReport.response.body[0]}
   next: end
 
   

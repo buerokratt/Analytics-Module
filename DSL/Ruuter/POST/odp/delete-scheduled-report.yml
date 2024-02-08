@@ -6,22 +6,28 @@ getJobDetails:
       datasetId: ${incoming.body.datasetId}
   result: jobDetails
 
-removeSchedule:
-  call: reflect.mock
+removeCronjobIfExists:
+  call: http.post
   args:
-    request:
-      jobId: ${jobDetails.response.body[0].job_id}
-    response:
-      success: ${true}
-  result: scheduler
+    url: "[#ANALYTICS_DMAPPER]/file-manager/delete"
+    body:
+      file_path: "/CronManager/${incoming.body.datasetId}.yml"
+  result: fileResult
 
 deleteScheduledReport:
   call: http.post
   args:
     url: "[#ANALYTICS_RESQL]/delete-scheduled-report"
     body:
-      id: ${jobDetails.response.body[0].id}
+      id: ${incoming.body.datasetId}
   result: delete
 
+refreshCronManagerIfChanged:
+  call: http.post
+  args:
+    url: "[#CRON_MANAGER]/reload/CronManager"
+  result: cronResult
+
 return:
-  return: ${true}
+  reloadDsl: true
+  return: "Scheduled report deleted successfully"

@@ -1,0 +1,18 @@
+deleteFile:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_DMAPPER]/file-manager/delete"
+    body:
+      file_path: ${incoming.body.location}
+  result: fileResult
+
+refreshCronManagerIfChanged:
+  call: http.post
+  args:
+    url: "[#CRON_MANAGER]/reload/CronManager"
+  result: cronResult
+
+return_result:
+  reloadDsl: true
+  return: "Cronjon task deleted Successfully"
+  next: end

@@ -15,7 +15,7 @@ authenticate:
 updateDataset:
   call: http.put
   args:
-    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/[#OPEN_DATA_PORTAL_ORGANIZATION_ID]/datasets/${incoming.body.datasetId}"
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/${settings.response.body[0].odpOrgId}/datasets/${incoming.body.datasetId}"
     body:
       nameEt: ${incoming.body.nameEt}
       nameEn: ${incoming.body.nameEn}
@@ -50,16 +50,6 @@ removePreviousSchedule:
   requestType: post
   result: removePrevious
 
-setUpSchedule:
-  call: reflect.mock
-  args:
-    request:
-      cron: ${incoming.body.cron_expression}
-      task: ${"odp/task-runner?datasetId=" + ${incoming.body.datasetId}}
-    response:
-      jobId: 'some-unique-id'
-  result: scheduler
-
 saveJobInformation:
   call: http.post
   args:
@@ -68,10 +58,33 @@ saveJobInformation:
       name: ${incoming.body.nameEt}
       period: ${incoming.body.updateIntervalUnit}
       metrics: ${jobDetails.response.body[0].metrics}
-      job_id: ${scheduler.response.body.jobId}
       dataset_id: ${incoming.body.datasetId}
+      start_date: ${incoming.body.start}
+      end_date: ${incoming.body.end}
   result: scheduledReport
 
+check-for-interval:
+  switch:
+    - condition: ${incoming.body.updateIntervalUnit === 'never'}
+      next: delete-schedule
+  next: refreshCronManagerIfChanged
+
+delete-schedule:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RUUTER]/odp/delete-scheduled-report"
+    body:
+      datasetId: ${incoming.body.datasetId}
+  result: delete_res
+  next: refreshCronManagerIfChanged
+
+refreshCronManagerIfChanged:
+  call: http.post
+  args:
+    url: "[#CRON_MANAGER]/reload/CronManager"
+  result: cronResult 
+  next: return_post_schedule
+
 return_post_schedule:
-  return: ${scheduledReport.response.body}
+  return: ${scheduledReport.response.body[0]}
   next: end

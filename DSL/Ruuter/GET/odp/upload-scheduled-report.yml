@@ -11,17 +11,17 @@ assign_details:
     details: ${jobDetails.response.body[0]}
 
 uploadImmediately:
-  call: http.post
-  args:
-    url: "[#ANALYTICS_RUUTER]/odp/upload"
-    body:
-      metrics: ${details.metrics}
-      start: ${details.startDate}
-      end: ${details.endDate}
-      period: ${details.period}
-      datasetId: ${incoming.params.datasetId}
-      dateTime: ${incoming.params.dateTime}
+  template: odp/upload
+  requestType: post
+  body:
+    metrics: ${details.metrics}
+    start: ${details.startDate}
+    end: ${details.endDate}
+    period: ${details.period}
+    datasetId: ${incoming.params.datasetId}
+    dateTime: ${incoming.params.dateTime}
   result: uploadResult
+  next: return_post_upload
 
 return_result:
   return: "Dataset uploaded successfully"

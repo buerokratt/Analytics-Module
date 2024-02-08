@@ -21,7 +21,6 @@ uploadImmediately:
     datasetId: ${incoming.params.datasetId}
     dateTime: ${incoming.params.dateTime}
   result: uploadResult
-  next: return_post_upload
 
 return_result:
   return: "Dataset uploaded successfully"

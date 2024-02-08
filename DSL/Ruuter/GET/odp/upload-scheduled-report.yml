@@ -4,18 +4,19 @@ getJobDetails:
     url: "[#ANALYTICS_RESQL]/get-scheduled-report"
     body:
       datasetId: ${incoming.params.datasetId}
-  result: jobDetails
+  result: jobDetailst
 
 uploadImmediately:
-  template: upload
-  requestType: post
-  body:
-    metrics: ${jobDetails.response.metrics}
-    start: ${jobDetails.response.startDate}
-    end: ${jobDetails.response.endDate}
-    period: ${jobDetails.response.period}
-    datasetId: ${incoming.params.datasetId}
-    dateTime: ${incoming.params.dateTime}
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RUUTER]/odp/upload"
+    body:
+      metrics: ${jobDetails.response.metrics}
+      start: ${jobDetails.response.startDate}
+      end: ${jobDetails.response.endDate}
+      period: ${jobDetails.response.period}
+      datasetId: ${incoming.params.datasetId}
+      dateTime: ${incoming.params.dateTime}
   result: uploadResult
 
 return_result:

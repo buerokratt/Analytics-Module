@@ -138,7 +138,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
     steps.set('upload_job', {
       trigger: getCronExpression(data.period),
       type: 'http',
-      method: 'POST',
+      method: 'GET',
       url: uploadScheduledReport(data.datasetId, format(new Date(), 'yyyy-MM-dd-HH:mm')),
     });
     const yaml = stringify(steps);

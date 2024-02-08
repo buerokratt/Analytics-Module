@@ -6,19 +6,23 @@ getJobDetails:
       datasetId: ${incoming.params.datasetId}
   result: jobDetails
 
-uploadImmediately:
-  template: odp/upload
-  requestType: post
-  body:
-    metrics: ${jobDetails.response.metrics}
-    start: ${jobDetails.response.startDate}
-    end: ${jobDetails.response.endDate}
-    period: ${jobDetails.response.period}
-    datasetId: ${incoming.params.datasetId}
-    dateTime: ${incoming.params.dateTime}
-  result: uploadResult
-
 return_result:
-  return: "Dataset uploaded successfully"
+  return: ${incoming.params.dateTime + " " + incoming.params.datasetId}
   next: end
+
+# uploadImmediately:
+#   template: odp/upload
+#   requestType: post
+#   body:
+#     metrics: ${jobDetails.response.metrics}
+#     start: ${jobDetails.response.startDate}
+#     end: ${jobDetails.response.endDate}
+#     period: ${jobDetails.response.period}
+#     datasetId: ${incoming.params.datasetId}
+#     dateTime: ${incoming.params.dateTime}
+#   result: uploadResult
+
+# return_result:
+#   return: "Dataset uploaded successfully"
+#   next: end
 

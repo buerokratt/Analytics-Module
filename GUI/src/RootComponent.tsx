@@ -18,7 +18,7 @@ const RootComponent: React.FC = () => {
         <Route path={"/"} element={<Navigate to="/overview" />} />
         <Route path={ROUTES.OVERVIEW_ROUTE} element={<OverviewPage />} />
         <Route path={ROUTES.CHATS_ROUTE} element={<ChatsPage />} />
-        <Route path={ROUTES.BUROKRATT_ROUTE} element={<BurokrattPage />} />
+        {/* <Route path={ROUTES.BUROKRATT_ROUTE} element={<BurokrattPage />} /> TODO: Add it in release 2.1 or later */}
         <Route path={ROUTES.FEEDBACK_ROUTE} element={<FeedbackPage />} />
         <Route path={ROUTES.ADVISORS_ROUTE} element={<AdvisorsPage />} />
         <Route path={ROUTES.REPORTS_ROUTE} element={<ReportsPage />} />

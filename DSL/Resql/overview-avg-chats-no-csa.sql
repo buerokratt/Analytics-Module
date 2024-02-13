@@ -27,7 +27,7 @@ WITH chats AS (
     GROUP BY 2
 )
 SELECT date_trunc(:group_period, timescale.created) AS created,
-    AVG(COALESCE(num_chats, 0)) as metric_value
+    ROUND(AVG(COALESCE(num_chats, 0))) as metric_value
 FROM (
         SELECT date_trunc(
                 'day',

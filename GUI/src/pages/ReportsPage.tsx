@@ -69,10 +69,10 @@ const ReportsPage = () => {
       url: downloadOpenDataCSV(),
       method: Methods.post,
       data: { start: options?.start, end: options?.end, metrics: options?.options },
-      withCredentials: true,
       responseType: 'blob',
     });
-    saveAs(result.data, 'metrics.csv');
+    console.log(result);
+    saveAs(result, 'metrics.csv');
   };
 
   const fetchSettings = async () => {

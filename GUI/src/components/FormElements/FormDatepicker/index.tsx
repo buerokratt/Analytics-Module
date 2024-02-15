@@ -8,6 +8,7 @@ import { MdChevronRight, MdChevronLeft, MdOutlineToday, MdOutlineSchedule } from
 import { Icon } from '../../../components';
 import 'react-datepicker/dist/react-datepicker.css';
 import './FormDatepicker.scss';
+import i18next from 'i18next';
 
 registerLocale('et-EE', et);
 
@@ -57,7 +58,7 @@ const FormDatepicker = forwardRef<any, FormDatepickerProps>((
         <ReactDatePicker
           selected={new Date(value)}
           dateFormat={format}
-          locale='et-EE'
+          locale={i18next.language === 'et' ? "et-EE" : "en"}
           placeholderText={placeholder}
           previousMonthButtonLabel={<MdChevronLeft />}
           nextMonthButtonLabel={<MdChevronRight />}

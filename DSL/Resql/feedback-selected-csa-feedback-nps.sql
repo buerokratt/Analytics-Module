@@ -39,8 +39,8 @@ SELECT date_trunc(:metric, created) AS date_time,
     customer_support_id,
     TRIM(customer_support_display_name) AS customer_support_display_name,
     coalesce(CAST(((
-       SUM(CASE WHEN NULLIF(feedback_rating, '')::int BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 -
-       SUM(CASE WHEN NULLIF(feedback_rating, '')::int BETWEEN 0 AND 6 THEN 1 ELSE 0 END)
+       SUM(CASE WHEN feedback_rating BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 -
+       SUM(CASE WHEN feedback_rating BETWEEN 0 AND 6 THEN 1 ELSE 0 END)
 ) / COUNT(base_id) * 100) AS int), 0) AS nps
 FROM chat_csas
 GROUP BY date_time, customer_support_id, customer_support_display_name 

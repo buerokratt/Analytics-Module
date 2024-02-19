@@ -17,4 +17,5 @@ FROM n_chats
 LEFT JOIN chat ON n_chats.base_id = chat.base_id
 AND n_chats.created = chat.created
 WHERE chat.feedback_rating IS NOT NULL
+AND chat.ended IS NOT NULL
 ORDER BY created DESC

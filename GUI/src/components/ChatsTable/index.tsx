@@ -34,7 +34,7 @@ const ChatsTable = (props: Props) => {
   }, [props.dataSource])
 
   const dateTimeFormat = (props: CellContext<Chat, string>) =>
-    formatDate(new Date(props.getValue()), 'd. MMM yyyy HH:ii:ss')
+    formatDate(new Date(props.getValue()), 'd. MMM yyyy HH:mm:ss')
 
   const chatColumns = useMemo(
     () => [

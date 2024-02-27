@@ -13,7 +13,7 @@ ON c.customer_support_id = csa.id_code
 WHERE c.created::date BETWEEN :start::date AND :end::date
 AND (
     (
-        csa.status = 'offline' 
+        csa.status != 'online' or csa.status != 'idle'
         AND csa.created::date BETWEEN c.created::date AND c.ended::date
     )
     OR (

@@ -63,7 +63,7 @@ long_waiting_time:
       period: ${period}
       start: ${start}
       end: ${end}
-      threshold_seconds: ${10 * 60}
+      threshold_seconds: ${5 * 60}
   result: results
 
 assign_long_waiting_time:
@@ -78,7 +78,7 @@ check_all_csas_away:
 empty_all_csas_away:
   assign:
     all_csas_away_result: ${[]}
-  next: respond
+  next: check_total
 
 all_csas_away:
   call: http.post
@@ -97,12 +97,12 @@ assign_all_csas_away:
 check_total:
   switch:
     - condition: ${options.includes('total')}
-      next: total    
+      next: total
 
 empty_total:
   assign:
     total_result: ${[]}
-  next: respond    
+  next: respond
 
 total:
   call: http.post
@@ -112,7 +112,6 @@ total:
       period: ${period}
       start: ${start}
       end: ${end}
-      threshold_seconds: ${10 * 60}
   result: results
 
 assign_total:

@@ -25,7 +25,7 @@ const ChatsPage: React.FC = () => {
     return () => {
       subscription.unsubscribe()
     }
-  }, [])
+  }, []);
 
   return (
     <>

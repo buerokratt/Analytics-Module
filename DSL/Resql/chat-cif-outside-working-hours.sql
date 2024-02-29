@@ -1,39 +1,32 @@
-WITH config AS (
-    SELECT 
-        (
-            SELECT value
-            FROM configuration
-            WHERE key = 'organizationWorkingTimeStartISO'
-            AND deleted IS false
-			ORDER BY created DESC
-			LIMIT 1
-        )::timestamp AS workingTimeStart,
-        (
-            SELECT value
-            FROM configuration
-            WHERE key = 'organizationWorkingTimeEndISO'
-            AND deleted IS false
-			ORDER BY created DESC
-			LIMIT 1
-        )::timestamp AS workingTimeEnd
+WITH workingTimeStart AS (
+  SELECT value::timestamp AS time
+  FROM configuration
+  WHERE key = 'organizationWorkingTimeStartISO'
+  AND deleted IS false
+  ORDER BY created DESC
+  LIMIT 1
+),
+workingTimeEnd AS (
+  SELECT value::timestamp AS time
+  FROM configuration
+  WHERE key = 'organizationWorkingTimeEndISO'
+  AND deleted IS false
+  ORDER BY created DESC
+  LIMIT 1
 )
 SELECT
-    DATE_TRUNC(:period, chat.created) AS time,
-    COUNT(DISTINCT base_id) AS chat_count
-FROM chat  
-JOIN customer_support_agent_activity AS csa
-ON chat.customer_support_id = csa.id_code
-WHERE chat.created::date BETWEEN :start::date AND :end::date
-AND EXISTS (
-    SELECT 1
-    FROM message
-    WHERE message.chat_base_id = chat.base_id
-    AND message.event = 'contact-information-fulfilled'
-    AND (
-		EXTRACT(HOUR FROM message.created)
-		NOT BETWEEN EXTRACT(HOUR FROM (SELECT workingTimeStart FROM config)) 
-		AND EXTRACT(HOUR FROM (SELECT workingTimeEnd FROM config))
-	)
-)
+  DATE_TRUNC(:period, c.created) AS time,
+  COUNT(DISTINCT c.base_id) AS chat_count
+FROM chat c
+JOIN message m ON c.base_id = m.chat_base_id 
+WHERE m.event = 'contact-information-fulfilled'
+  AND c.created::date BETWEEN :start::date AND :end::date
+  AND (
+    EXTRACT(HOUR FROM m.created)
+    NOT BETWEEN
+    EXTRACT(HOUR FROM (SELECT time FROM workingTimeStart)) 
+		AND
+    EXTRACT(HOUR FROM (SELECT time FROM workingTimeEnd))
+  )
 GROUP BY time
-ORDER BY time
+ORDER BY time;

@@ -14,7 +14,6 @@ type Props = {
 const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
   const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
-  const { t } = useTranslation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -80,15 +79,11 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
         <CartesianGrid stroke="#f5f5f5" />
         {(data?.chartData?.length > 0 ?? false) &&
           getKeys(data.chartData).map((k, i) => {
-            const isCount = k === t('chats.totalCount');
             return k === chartDataKey ? null : (
               <Line
                 key={k}
                 dataKey={k}
                 type="monotone"
-                strokeWidth={isCount ? 0 : undefined}
-                dot={isCount ? false : true}
-                activeDot={isCount ? false : true}
                 stroke={getColor(data, k)}
                 fill={getColor(data, k)}
               />

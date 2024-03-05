@@ -28,7 +28,7 @@ AND 0 < (
   SELECT 1
   FROM message m
   WHERE m.chat_base_id = w.chat_base_id
-  AND m.event = 'contact-information-fulfilled'
+  AND (m.event = 'contact-information-fulfilled' OR m.event = 'unavailable-contact-information-fulfilled')
   LIMIT 1
 )
 GROUP BY time

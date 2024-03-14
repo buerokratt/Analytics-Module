@@ -9,7 +9,7 @@ WHERE m.event LIKE '%contact-information-fulfilled'
     SELECT COUNT(DISTINCT csa.id_code)
     FROM customer_support_agent_activity csa
     WHERE (csa.status = 'online' OR csa.status = 'idle')
-    AND csa.created::date BETWEEN c.started::date AND m.created::date
+    AND csa.created::date BETWEEN c.created::date AND c.ended::date
   )
 GROUP BY time
 ORDER BY time;

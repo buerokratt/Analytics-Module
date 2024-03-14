@@ -27,8 +27,13 @@ AND waiting_time_seconds > :threshold_seconds
 AND 0 < (
   SELECT 1
   FROM message m
+  JOIN chat c ON m.chat_base_id = c.base_id
   WHERE m.chat_base_id = w.chat_base_id
-  AND m.event LIKE '%contact-information-fulfilled'
+  AND (
+    m.event LIKE '%contact-information-fulfilled'  OR
+    (c.end_user_email <> '' AND c.end_user_email IS NOT NULL) OR
+    (c.end_user_phone <> '' AND c.end_user_phone IS NOT NULL)
+  )
   LIMIT 1
 )
 GROUP BY time

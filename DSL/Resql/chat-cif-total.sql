@@ -3,7 +3,7 @@ SELECT
   COUNT(DISTINCT c.base_id) AS chat_count
 FROM chat c
 JOIN message m ON c.base_id = m.chat_base_id 
-WHERE (m.event = 'contact-information-fulfilled' OR m.event = 'unavailable-contact-information-fulfilled')
+WHERE m.event LIKE '%contact-information-fulfilled'
   AND c.created::date BETWEEN :start::date AND :end::date
 GROUP BY time
 ORDER BY time;

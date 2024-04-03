@@ -154,6 +154,9 @@ WHERE c.created::date BETWEEN :start::date AND :end::date
     (c.end_user_phone IS NOT NULL AND c.end_user_phone <> '')
   )
   AND (
+    m.event <> 'contact-information' AND m.author_role <> 'backoffice-user'
+  )
+  AND (
     EXTRACT(HOUR FROM m.created) BETWEEN (SELECT time FROM workingTimeStart) AND (SELECT time FROM workingTimeEnd)
     OR (EXTRACT(DOW FROM m.created) = 0 AND EXTRACT(HOUR FROM m.created) BETWEEN (SELECT time FROM sundayWorkingTimeStart) AND (SELECT time FROM sundayWorkingTimeEnd))
     OR (EXTRACT(DOW FROM m.created) = 1 AND EXTRACT(HOUR FROM m.created) BETWEEN (SELECT time FROM mondayWorkingTimeStart) AND (SELECT time FROM mondayWorkingTimeEnd))

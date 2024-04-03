@@ -12,14 +12,14 @@ const Layout: FC = () => {
 
   const [MainMenuItems, setMainMenuItems] = useState([]);
 
-  const { data, isLoading, status } = useQuery({
+  useQuery({
     queryKey: [import.meta.env.REACT_APP_MENU_URL + import.meta.env.REACT_APP_MENU_PATH],
     onSuccess: (res: any) => {
       try {
         setMainMenuItems(res);
         localStorage.setItem(CACHE_NAME, JSON.stringify(res));
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     },
     onError: (error: any) => {

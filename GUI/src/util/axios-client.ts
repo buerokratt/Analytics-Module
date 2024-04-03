@@ -18,22 +18,18 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
   (axiosResponse) => {
-    env.DEBUG_ENABLED; // && console.log(axiosResponse);
     return axiosResponse;
   },
   (error: AxiosError) => {
-    env.DEBUG_ENABLED; // && console.log(error);
     return Promise.reject(error);
   }
 );
 
 axiosInstance.interceptors.request.use(
   (axiosRequest) => {
-    env.DEBUG_ENABLED; // && console.log(axiosRequest);
     return axiosRequest;
   },
   (error: AxiosError) => {
-    env.DEBUG_ENABLED && console.log(error);
     if (error.response?.status === 401) {
       //TODO: handle unauthorized requests
     }

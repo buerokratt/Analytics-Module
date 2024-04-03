@@ -154,7 +154,11 @@ WHERE c.created::date BETWEEN :start::date AND :end::date
     (c.end_user_phone IS NOT NULL AND c.end_user_phone <> '')
   )
   AND (
-    m.event <> 'contact-information' AND m.author_role <> 'backoffice-user'
+    c.base_id NOT IN (
+      SELECT DISTINCT m.chat_base_id
+      FROM message m
+      WHERE m.event = 'contact-information' AND m.author_role = 'backoffice-user'
+    )
   )
   AND (
     EXTRACT(HOUR FROM m.created) BETWEEN (SELECT time FROM workingTimeStart) AND (SELECT time FROM workingTimeEnd)

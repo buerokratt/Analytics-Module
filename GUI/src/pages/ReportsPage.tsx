@@ -71,7 +71,6 @@ const ReportsPage = () => {
       data: { start: options?.start, end: options?.end, metrics: options?.options },
       responseType: 'blob',
     });
-    console.log(result);
     saveAs(result, 'metrics.csv');
   };
 
@@ -86,7 +85,6 @@ const ReportsPage = () => {
   };
 
   const fetchDataset = async (datasetId: string) => {
-    console.log('fetchDataset', datasetId);
     const result: any = await request({ url: getOpenDataDataset(datasetId) });
     setDatasetCreationVisible({ ...result.response.data, datasetId });
   };

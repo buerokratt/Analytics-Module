@@ -1,0 +1,9 @@
+[
+  {{#each (mergeChatCountArrays arr1 arr2 arr3)}}
+    {
+      "time": "{{this.time}}",
+      "chatCount": {{this.chatCount}}
+    }
+    {{#unless @last}},{{/unless}}
+  {{/each}}
+]

@@ -142,9 +142,9 @@ get_total:
     headers:
       type: 'json'
     body:
-      array1: ${all_csas_away_for_total_results.response.body}
-      array2: ${outside_working_hours_for_total_results.response.body}
-      array3: ${long_waiting_time_for_total_results.response.body}
+      arr1: ${outside_working_hours_for_total_results.response.body}
+      arr2: ${long_waiting_time_for_total_results.response.body}
+      arr3: ${all_csas_away_for_total_results.response.body}
   result: merged_total_result
 
 assign_total:

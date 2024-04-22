@@ -41,7 +41,6 @@
     "react-idle-timer": "^5.7.2",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.6.2",
-    "react-scripts": "^5.0.1",
     "react-textarea-autosize": "^8.4.0",
     "recharts": "^2.10.4",
     "redux-persist": "^6.0.0",

@@ -97,26 +97,59 @@ assign_all_csas_away:
 check_total:
   switch:
     - condition: ${options.includes('total')}
-      next: total
+      next: outside_working_hours_for_total
 
 empty_total:
   assign:
     total_result: ${[]}
   next: respond
 
-total:
+outside_working_hours_for_total:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/chat-cif-total"
+    url: "[#ANALYTICS_RESQL]/chat-cif-outside-working-hours"
     body:
       period: ${period}
       start: ${start}
       end: ${end}
-  result: results
+  result: outside_working_hours_for_total_results
+
+long_waiting_time_for_total:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]/chat-cif-long-waiting-time"
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+      threshold_seconds: ${5 * 60}
+  result: long_waiting_time_for_total_results
+
+all_csas_away_for_total:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]/chat-cif-all-csas-away"
+    body:
+      period: ${period}
+      start: ${start}
+      end: ${end}
+  result: all_csas_away_for_total_results
+
+get_total:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_DMAPPER]/hbs/analytics/merge-arrays"
+    headers:
+      type: 'json'
+    body:
+      array1: ${all_csas_away_for_total_results.response.body}
+      array2: ${outside_working_hours_for_total_results.response.body}
+      array3: ${long_waiting_time_for_total_results.response.body}
+  result: merged_total_result
 
 assign_total:
   assign: 
-    total_result: ${results.response.body}  
+    total_result: ${merged_total_result.response.body}  
 
 respond:
   return: ${[outside_working_hours_result, long_waiting_time_result, all_csas_away_result, total_result]}

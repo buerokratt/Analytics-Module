@@ -76,7 +76,7 @@ jobs:
       
         # Runs Snyk Container (Container and SCA) analysis and uploads result to Snyk.
       - name: Snyk Container monitor
-        run: snyk container monitor analytics-gui --file=Dockerfile.dev
+        run: snyk container monitor analytics-gui
 
         # Push the Snyk Code results into GitHub Code Scanning tab
       - name: Upload result to GitHub Code Scanning

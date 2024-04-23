@@ -1,4 +1,4 @@
-FROM node:alpine3.19 AS development
+FROM node:alpine AS development
 
 ENV NODE_ENV development
 ENV PORT=3010

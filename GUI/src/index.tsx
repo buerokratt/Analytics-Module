@@ -15,10 +15,6 @@ import apiDev from "./components/services/api-dev";
 import apiDevV2 from "./components/services/api-dev-v2";
 import apiAn from './components/services/analytics-api';
 import apigeneric from './components/services/apigeneric';
-import { mockApi } from './components/services/mock-apis';
-import * as mocks from './mocks/mockHandlers';
-
-mocks
 
 const defaultQueryFn: QueryFunction | undefined = async ({ queryKey }) => {
     if (import.meta.env.REACT_APP_LOCAL === 'true') {

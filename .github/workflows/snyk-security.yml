@@ -61,6 +61,10 @@ jobs:
       # - name: Snyk Code test
       #   run: snyk code test --sarif > snyk-code.sarif
 
+        # Install Dependencies
+      - name: Install Dependencies
+        run:  npm install --legacy-peer-deps  
+
         # Runs Snyk Open Source (SCA) analysis and uploads result to Snyk.
       - name: Snyk Open Source monitor
         run: snyk monitor --all-projects -d || true

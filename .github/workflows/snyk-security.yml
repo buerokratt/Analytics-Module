@@ -63,7 +63,7 @@ jobs:
 
         # Install Dependencies
       - name: Install Dependencies
-        run:  npm install --legacy-peer-deps  
+        run:  cd GUI/ && npm install --legacy-peer-deps  
 
         # Runs Snyk Open Source (SCA) analysis and uploads result to Snyk.
       - name: Snyk Open Source monitor

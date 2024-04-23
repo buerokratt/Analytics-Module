@@ -58,8 +58,8 @@ jobs:
 
         # Runs Snyk Code (SAST) analysis and uploads result into GitHub.
         # Use || true to not fail the pipeline
-      # - name: Snyk Code test
-      #   run: snyk code test --sarif > snyk-code.sarif
+      - name: Snyk Code test
+        run: snyk code test --sarif > snyk-code.sarif
 
         # Install Dependencies
       - name: Install Dependencies
@@ -67,7 +67,7 @@ jobs:
 
         # Runs Snyk Open Source (SCA) analysis and uploads result to Snyk.
       - name: Snyk Open Source monitor
-        run: snyk monitor --all-projects -d || true
+        run: snyk monitor --all-projects
 
         # Runs Snyk Infrastructure as Code (IaC) analysis and uploads result to Snyk.
         # Use || true to not fail the pipeline.
@@ -75,15 +75,15 @@ jobs:
       #   run: snyk iac test --report || true
 
         # Build the docker image for testing
-      # - name: Build a Docker image
-      #   run: cd GUI/ && docker build -f Dockerfile.dev -t analytics-gui .
+      - name: Build a Docker image
+        run: cd GUI/ && docker build -f Dockerfile.dev -t analytics-gui .
       
       #   # Runs Snyk Container (Container and SCA) analysis and uploads result to Snyk.
-      # - name: Snyk Container monitor
-      #   run: snyk container monitor analytics-gui
+      - name: Snyk Container monitor
+        run: snyk container monitor analytics-gui
 
         # Push the Snyk Code results into GitHub Code Scanning tab
-      # - name: Upload result to GitHub Code Scanning
-      #   uses: github/codeql-action/upload-sarif@v2
-      #   with:
-      #     sarif_file: snyk-code.sarif
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk-code.sarif

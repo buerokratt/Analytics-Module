@@ -5,7 +5,9 @@ on:
     branches: ["dev"]
   pull_request:
     branches: ["dev"]
-
+  schedule:
+    - cron: '15 10 * * *'
+    
 permissions:
   contents: read
 
@@ -49,11 +51,6 @@ jobs:
         # Runs Snyk Open Source (SCA) analysis and uploads result to Snyk.
       - name: Snyk Open Source monitor
         run: snyk monitor --all-projects
-
-        # Runs Snyk Infrastructure as Code (IaC) analysis and uploads result to Snyk.
-        # Use || true to not fail the pipeline.
-      # - name: Snyk IaC test and report
-      #   run: snyk iac test --report || true
 
         # Build the docker image for testing
       - name: Build a Docker image

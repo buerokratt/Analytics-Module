@@ -10,24 +10,13 @@ import useStore from './store/user/store';
 import { useQuery } from '@tanstack/react-query';
 
 const App: React.FC = () => {
-  if (import.meta.env.REACT_APP_LOCAL === 'true') {
-    useQuery<{
-      data: { custom_jwt_userinfo: UserInfo };
-    }>({
-      queryKey: ['userinfo', 'prod'],
-      onSuccess: (res: any) => {
-        return useStore.getState().setUserInfo(res.data);
-      },
-    });
-  } else {
-    const { data: userInfo } = useQuery<UserInfo>({
-      queryKey: [import.meta.env.REACT_APP_AUTH_PATH, 'auth'],
-      onSuccess: (res: { response: UserInfo }) => {
-        localStorage.setItem('exp', res.response.JWTExpirationTimestamp);
-        return useStore.getState().setUserInfo(res.response);
-      },
-    });
-  }
+  useQuery<UserInfo>({
+    queryKey: [import.meta.env.REACT_APP_AUTH_PATH, 'auth'],
+    onSuccess: (res: { response: UserInfo }) => {
+      localStorage.setItem('exp', res.response.JWTExpirationTimestamp);
+      return useStore.getState().setUserInfo(res.response);
+    },
+  });
 
   return (
     <Provider store={reducerStore}>

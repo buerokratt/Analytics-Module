@@ -12,9 +12,6 @@ import {
 import api from './components/services/api';
 import auth from "./components/services/auth";
 import apiAn from './components/services/analytics-api';
-import * as mocks from './mocks/mockHandlers';
-
-mocks
 
 const defaultQueryFn: QueryFunction | undefined = async ({ queryKey }) => {
     if (queryKey.includes('profile-settings')) {

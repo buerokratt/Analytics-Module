@@ -1,3 +1,12 @@
+declaration:
+  call: declare
+  allowlist:
+    body:
+      - field: location
+        type: string
+      - field: yaml
+        type: string
+
 saveFile:
   call: http.post
   args:

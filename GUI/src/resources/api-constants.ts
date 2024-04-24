@@ -37,19 +37,19 @@ export const overviewMetrics = (metrics: string): string => {
 }
 
 export const geBykAvgResponseTime = (): string => {
-  return baseUrl + '/buerokratt/byk-avg-response-speed'
+  return baseUrl + '/bots/avg-response-speed'
 }
 
 export const getBykAvgSessionTime = (): string => {
-  return baseUrl + '/buerokratt/byk-avg-sessions-time'
+  return baseUrl + '/bots/avg-sessions-time'
 }
 
 export const getBykIntents = (): string => {
-  return baseUrl + '/buerokratt/byk-intents'
+  return baseUrl + '/bots/intents'
 }
 
 export const getBykPercentOfCorrecltyUnderstood = (): string => {
-  return baseUrl + '/buerokratt/byk-pct-correctly-understood'
+  return baseUrl + '/bots/pct-correctly-understood'
 }
 
 export const getCsv = (): string => {
@@ -59,52 +59,52 @@ export const getCsv = (): string => {
 // Feedback
 
 export const getChatsStatuses = (): string => {
-  return baseUrl + '/chat/status'
+  return baseUrl + '/chats/status'
 }
 
 export const getAverageFeedbackOnBuerokrattChats = (): string => {
-  return baseUrl + '/feedback/avg-feedback-to-buerokratt-chats'
+  return baseUrl + '/feedbacks/avg'
 }
 
 export const getNpsOnCSAChatsFeedback = (): string => {
-  return baseUrl + '/feedback/csa-chats-feedback-nps'
+  return baseUrl + '/feedbacks/nps'
 }
 
 export const getNpsOnSelectedCSAChatsFeedback = (): string => {
-  return baseUrl + '/feedback/selected-csa-feedback-nps'
+  return baseUrl + '/feedbacks/agents/nps'
 }
 
 export const getNegativeFeedbackChats = (): string => {
-  return baseUrl + '/feedback/chats-with-negative-feedback'
+  return baseUrl + '/feedbacks/negative'
 }
 
 // Advisors
 
 export const getChatForwards = (): string => {
-  return baseUrl + '/csa/chat_forwards'
+  return baseUrl + '/agents/chats/forwards'
 }
 
 export const getAvgPickTime = (): string => {
-  return baseUrl + '/csa/avg-time-picking-up-chat'
+  return baseUrl + '/agents/chats/avg-time-picking-up'
 }
 
 export const getAvgCsaPresent = (): string => {
-  return baseUrl + '/csa/avg-present-number'
+  return baseUrl + '/agents/avg-active'
 }
 
 export const getCsaChatsTotal = (): string => {
-  return baseUrl + '/csa/total-chats'
+  return baseUrl + '/agents/chats/total'
 }
 
 export const getCsaAvgChatTime = (): string => {
-  return baseUrl + '/csa/avg-chat-time'
+  return baseUrl + '/agents/chats/avg-time'
 }
 
 
 // Chats
 
 export const getTotalChats = (): string => {
-  return baseUrl + '/chats/chat-total-count'
+  return baseUrl + '/chats/total-count'
 }
 
 export const getCipChats = (): string => {
@@ -116,13 +116,13 @@ export const getAvgChatWaitingTime = (): string => {
 }
 
 export const getAvgMessagesInChats = (): string => {
-  return baseUrl + '/chats/chat-avg-num-of-messages'
+  return baseUrl + '/chats/avg-num-of-messages'
 }
 
 export const getDurationChats = (): string => {
-  return baseUrl + '/chats/chat-avg-duration'
+  return baseUrl + '/chats/avg-duration'
 }
 
 export const getIdleChats = (): string => {
-  return baseUrl + '/chats/chat-idle-count'
+  return baseUrl + '/chats/idle-count'
 }

@@ -1,3 +1,12 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'PREFERENCES'"
+  method: get
+  accepts: json
+  returns: json
+  namespace: analytics
+
 check_for_cookie:
   switch:
     - condition: ${incoming.headers.cookie == null || incoming.headers.cookie == ""}

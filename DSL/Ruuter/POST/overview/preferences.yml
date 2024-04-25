@@ -1,3 +1,23 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'PREFERENCES'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    body:
+      - field: active
+        type: string
+        description: "Body field 'active'"
+      - field: metric
+        type: string
+        description: "Body field 'metric'"
+      - field: ordinality
+        type: string
+        description: "Body field 'ordinality'"
+
 check_for_cookie:
   switch:
     - condition: ${incoming.headers.cookie == null || incoming.headers.cookie == ""}

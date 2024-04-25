@@ -1,3 +1,23 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'SETTINGS'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    body:
+      - field: apiKey
+        type: string
+        description: "Body field 'apiKey'"
+      - field: keyId
+        type: string
+        description: "Body field 'keyId'"
+      - field: orgId
+        type: string
+        description: "Body field 'orgId'"
+
 assign:
   assign:
     keyId: ${incoming.body.keyId}

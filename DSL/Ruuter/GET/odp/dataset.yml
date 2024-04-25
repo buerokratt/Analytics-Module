@@ -1,3 +1,17 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'DATASET'"
+  method: get
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    params:
+      - field: datasetId
+        type: string
+        description: "Parameter 'datasetId'"
+
 getKey:
   call: http.post
   args:

@@ -1,11 +1,19 @@
 declaration:
   call: declare
+  version: 0.1
+  description: "Decription placeholder for 'SAVEJSONTOYML'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
   allowlist:
     body:
       - field: location
         type: string
+        description: "Body field 'location'"
       - field: yaml
         type: string
+        description: "Body field 'yaml'"
 
 saveFile:
   call: http.post

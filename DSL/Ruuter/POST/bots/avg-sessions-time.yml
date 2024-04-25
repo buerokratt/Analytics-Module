@@ -1,3 +1,26 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'AVG-SESSIONS-TIME'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    body:
+      - field: end_date
+        type: string
+        description: "Body field 'end_date'"
+      - field: options
+        type: string
+        description: "Body field 'options'"
+      - field: period
+        type: string
+        description: "Body field 'period'"
+      - field: start_date
+        type: string
+        description: "Body field 'start_date'"
+
 check_for_body:
   switch:
     - condition: ${incoming.body == null}

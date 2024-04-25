@@ -1,3 +1,23 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'DOWNLOAD'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    body:
+      - field: end
+        type: string
+        description: "Body field 'end'"
+      - field: metrics
+        type: string
+        description: "Body field 'metrics'"
+      - field: start
+        type: string
+        description: "Body field 'start'"
+
 get_metrics:
   template: odp/metrics
   requestType: post

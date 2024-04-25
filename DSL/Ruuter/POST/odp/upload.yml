@@ -1,3 +1,32 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'UPLOAD'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    body:
+      - field: datasetId
+        type: string
+        description: "Body field 'datasetId'"
+      - field: dateTime
+        type: string
+        description: "Body field 'dateTime'"
+      - field: end
+        type: string
+        description: "Body field 'end'"
+      - field: metrics
+        type: string
+        description: "Body field 'metrics'"
+      - field: period
+        type: string
+        description: "Body field 'period'"
+      - field: start
+        type: string
+        description: "Body field 'start'"
+
 getKey:
   call: http.post
   args:

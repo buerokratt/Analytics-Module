@@ -1,3 +1,65 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'UPDATE-SCHEDULED-REPORT'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    body:
+      - field: access
+        type: string
+        description: "Body field 'access'"
+      - field: categoryIds
+        type: string
+        description: "Body field 'categoryIds'"
+      - field: dataFrom
+        type: string
+        description: "Body field 'dataFrom'"
+      - field: datasetId
+        type: string
+        description: "Body field 'datasetId'"
+      - field: descriptionEn
+        type: string
+        description: "Body field 'descriptionEn'"
+      - field: descriptionEt
+        type: string
+        description: "Body field 'descriptionEt'"
+      - field: end
+        type: string
+        description: "Body field 'end'"
+      - field: keywordIds
+        type: string
+        description: "Body field 'keywordIds'"
+      - field: licenceId
+        type: string
+        description: "Body field 'licenceId'"
+      - field: maintainer
+        type: string
+        description: "Body field 'maintainer'"
+      - field: maintainerEmail
+        type: string
+        description: "Body field 'maintainerEmail'"
+      - field: nameEn
+        type: string
+        description: "Body field 'nameEn'"
+      - field: nameEt
+        type: string
+        description: "Body field 'nameEt'"
+      - field: regionIds
+        type: string
+        description: "Body field 'regionIds'"
+      - field: start
+        type: string
+        description: "Body field 'start'"
+      - field: updateIntervalFrequency
+        type: string
+        description: "Body field 'updateIntervalFrequency'"
+      - field: updateIntervalUnit
+        type: string
+        description: "Body field 'updateIntervalUnit'"
+
 getKey:
   call: http.post
   args:

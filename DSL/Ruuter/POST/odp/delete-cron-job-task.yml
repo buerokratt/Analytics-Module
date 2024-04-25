@@ -1,3 +1,17 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'DELETE-CRON-JOB-TASK'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    body:
+      - field: location
+        type: string
+        description: "Body field 'location'"
+
 deleteFile:
   call: http.post
   args:

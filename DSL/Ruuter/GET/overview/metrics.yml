@@ -1,3 +1,17 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'METRICS'"
+  method: get
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    params:
+      - field: metrics
+        type: string
+        description: "Parameter 'metrics'"
+
 extract_request_data:
   assign:
     requestedMetric: ${incoming.params.metrics}

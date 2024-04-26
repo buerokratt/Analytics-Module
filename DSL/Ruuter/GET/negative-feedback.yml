@@ -17,6 +17,10 @@ declaration:
       - field: start
         type: string
         description: "Parameter 'start'"
+    headers:
+      - field: cookie
+        type: string
+        description: "Cookie field"
 
 check_for_cookie:
   switch:

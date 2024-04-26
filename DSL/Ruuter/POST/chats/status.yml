@@ -9,7 +9,7 @@ declaration:
   allowlist:
     body:
       - field: csa_events
-        type: string
+        type: array
         description: "Body field 'csa_events'"
       - field: end_date
         type: string

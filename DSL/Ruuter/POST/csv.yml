@@ -4,7 +4,7 @@ declaration:
   description: "Decription placeholder for 'CSV'"
   method: post
   accepts: json
-  returns: data/application
+  returns: data
   namespace: analytics
   allowlist:
     body:

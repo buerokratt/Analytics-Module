@@ -12,7 +12,7 @@ declaration:
         type: string
         description: "Body field 'access'"
       - field: categoryIds
-        type: string
+        type: array
         description: "Body field 'categoryIds'"
       - field: dataFrom
         type: string
@@ -30,7 +30,7 @@ declaration:
         type: string
         description: "Body field 'end'"
       - field: keywordIds
-        type: string
+        type: array
         description: "Body field 'keywordIds'"
       - field: licenceId
         type: string
@@ -48,13 +48,13 @@ declaration:
         type: string
         description: "Body field 'nameEt'"
       - field: regionIds
-        type: string
+        type: array
         description: "Body field 'regionIds'"
       - field: start
         type: string
         description: "Body field 'start'"
       - field: updateIntervalFrequency
-        type: string
+        type: number
         description: "Body field 'updateIntervalFrequency'"
       - field: updateIntervalUnit
         type: string

@@ -9,13 +9,13 @@ declaration:
   allowlist:
     body:
       - field: active
-        type: string
+        type: boolean
         description: "Body field 'active'"
       - field: metric
         type: string
         description: "Body field 'metric'"
       - field: ordinality
-        type: string
+        type: number
         description: "Body field 'ordinality'"
     headers:
       - field: cookie

@@ -15,7 +15,7 @@ declaration:
         type: string
         description: "Body field 'end_date'"
       - field: events
-        type: string
+        type: array
         description: "Body field 'events'"
       - field: metric
         type: string

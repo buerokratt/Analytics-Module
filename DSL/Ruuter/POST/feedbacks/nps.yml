@@ -1,3 +1,23 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'NPS'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    body:
+      - field: end_date
+        type: string
+        description: "Body field 'end_date'"
+      - field: metric
+        type: string
+        description: "Body field 'metric'"
+      - field: start_date
+        type: string
+        description: "Body field 'start_date'"
+
 check_for_required_parameters:
   switch:
     - condition: ${incoming.body == null || incoming.body.metric == null || incoming.body.start_date == null || incoming.body.end_date == null}

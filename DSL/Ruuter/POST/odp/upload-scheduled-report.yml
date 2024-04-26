@@ -1,3 +1,20 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'UPLOAD-SCHEDULED-REPORT'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    params:
+      - field: datasetId
+        type: string
+        description: "Parameter 'datasetId'"
+      - field: dateTime
+        type: string
+        description: "Parameter 'dateTime'"
+
 getJobDetails:
   call: http.post
   args:

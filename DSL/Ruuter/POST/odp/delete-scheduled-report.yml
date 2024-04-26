@@ -1,3 +1,17 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'DELETE-SCHEDULED-REPORT'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    body:
+      - field: datasetId
+        type: string
+        description: "Body field 'datasetId'"
+
 getJobDetails:
   call: http.post
   args:

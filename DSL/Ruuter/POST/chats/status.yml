@@ -1,3 +1,29 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'STATUS'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    body:
+      - field: csa_events
+        type: array
+        description: "Body field 'csa_events'"
+      - field: end_date
+        type: string
+        description: "Body field 'end_date'"
+      - field: events
+        type: array
+        description: "Body field 'events'"
+      - field: metric
+        type: string
+        description: "Body field 'metric'"
+      - field: start_date
+        type: string
+        description: "Body field 'start_date'"
+
 assign_step:
   assign:
     result: null

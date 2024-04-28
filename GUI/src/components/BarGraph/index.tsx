@@ -85,7 +85,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
           cursor={false}
         />
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
-        {(data?.chartData?.length > 0 ?? false) &&
+        {data?.chartData?.length > 0 &&
           getKeys(data.chartData).map((k, i) => {
             const isCount = k === t('chats.totalCount');
             const isString = typeof data.chartData[0][k] === 'string';

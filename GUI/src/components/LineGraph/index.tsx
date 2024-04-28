@@ -1,8 +1,6 @@
-import { format } from 'date-fns';
 import React, { useEffect, useRef, useState } from 'react';
 import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, Legend, Label } from 'recharts';
 import { chartDataKey, dateFormatter, formatDate, getColor, getKeys, getTicks, round } from '../../util/charts-utils';
-import { useTranslation } from 'react-i18next';
 
 type Props = {
   data: any;
@@ -77,7 +75,7 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
         </YAxis>
         <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
         <CartesianGrid stroke="#f5f5f5" />
-        {(data?.chartData?.length > 0 ?? false) &&
+        {data?.chartData?.length > 0 &&
           getKeys(data.chartData).map((k, i) => {
             return k === chartDataKey ? null : (
               <Line

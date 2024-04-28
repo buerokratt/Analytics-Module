@@ -291,7 +291,7 @@ const FeedbackPage: React.FC = () => {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
           end_date: config?.end,
-          excluded_csas: excluded_csas.length ?? 0 > 0 ? excluded_csas : [''],
+          excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
         },
       });
 

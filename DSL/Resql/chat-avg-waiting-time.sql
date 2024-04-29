@@ -18,5 +18,5 @@ average_waiting_time AS (
   AND byk.author_role = 'backoffice-user'
   GROUP BY time
 )
-SELECT * FROM average_waiting_time
+SELECT time, average_waiting_time FROM average_waiting_time
 ORDER BY time ASC;

@@ -144,7 +144,7 @@ const DataTable: FC<DataTableProps> = ({
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} style={{ width: (header.column.columnDef as CustomColumnDef).meta?.size }}>
+                  <th key={header.id} style={{ width: (header.column.columnDef as CustomColumnDef)?.meta?.size }}>
                     {header?.isPlaceholder ? null : (
                         <Track gap={8}>
                           {sortable && header.column.getCanSort() && (

@@ -29,4 +29,4 @@ csa_chats AS (
 SELECT COALESCE(chatbot_chats.time, csa_chats.time) AS time, COALESCE(chatbot_chats.count, 0) + COALESCE(csa_chats.count, 0) AS sum_count
 FROM chatbot_chats
 FULL JOIN csa_chats ON chatbot_chats.time = csa_chats.time
-ORDER BY time;
+ORDER BY time ASC;

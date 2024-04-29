@@ -31,10 +31,10 @@ axiosInstance.interceptors.request.use(
   },
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      //TODO: handle unauthorized requests
+      // Handle unauthorized requests
     }
     if (error.response?.status === 403) {
-      //TODO: handle unauthorized requests
+      // Handle unauthorized requests
     }
     return Promise.reject(error);
   }

@@ -19,4 +19,4 @@ average_waiting_time AS (
   GROUP BY time
 )
 SELECT * FROM average_waiting_time
-ORDER BY time;
+ORDER BY time ASC;

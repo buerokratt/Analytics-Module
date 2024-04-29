@@ -1,6 +1,5 @@
 import React from 'react'
 import './PercentageToolTip.scss'
-import { format } from 'date-fns'
 import { TooltipProps } from 'recharts'
 
 const PercentageToolTip = ({ active, payload, label }: TooltipProps<number, string>) => {

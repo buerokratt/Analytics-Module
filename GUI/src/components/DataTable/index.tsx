@@ -126,7 +126,7 @@ const DataTable: FC<DataTableProps> = ({
     const lastShownPage = Math.min(table.getPageCount(), current + pagesShown);
 
     pages.push(current);
-    for (; pages.length < Math.min(pagesShown, table.getPageCount());) {
+    while (pages.length < Math.min(pagesShown, table.getPageCount())) {
       if (pages[0] > 0) pages.unshift(pages[0] - 1);
       if (pages[pages.length - 1] + 1 < lastShownPage) {
         pages.push(pages[pages.length - 1] + 1);
@@ -145,8 +145,7 @@ const DataTable: FC<DataTableProps> = ({
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} style={{ width: (header.column.columnDef as CustomColumnDef).meta?.size }}>
-                    {header.isPlaceholder ? null : (
-                      <>
+                    {header?.isPlaceholder ? null : (
                         <Track gap={8}>
                           {sortable && header.column.getCanSort() && (
                             <button onClick={header.column.getToggleSortingHandler()}>
@@ -163,7 +162,6 @@ const DataTable: FC<DataTableProps> = ({
                             <Filter column={header.column} table={table} />
                           )}
                         </Track>
-                      </>
                     )}
                   </th>
                 ))}
@@ -189,7 +187,7 @@ const DataTable: FC<DataTableProps> = ({
               <button className="previous" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
                 <MdOutlineWest />
               </button>
-              <nav role="navigation" aria-label={t('global.paginationNavigation') || ''}>
+              <nav role="navigation" aria-label={t('global.paginationNavigation') ?? ''}>
                 <ul className="links">
                 {getPages().map((page, i) => {
                     if (

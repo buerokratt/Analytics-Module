@@ -25,7 +25,7 @@ const FeedbackPage: React.FC = () => {
   const [advisorsList, setAdvisorsList] = useState<any[]>([]);
   const [currentMetric, setCurrentMetric] = useState('feedback.statuses');
   const randomColor = () => '#' + ((Math.random() * 0xffffff) << 0).toString(16);
-  const [currentConfigs, setConfigs] = useState<MetricOptionsState>();
+  const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
 
   useEffect(() => {
@@ -431,7 +431,7 @@ const FeedbackPage: React.FC = () => {
         metricOptions={feedbackMetrics}
         dateFormat="yyyy-MM-dd"
         onChange={(config) => {
-          setConfigs(config);
+          setCurrentConfigs(config);
           configsSubject.next(config);
           setCurrentMetric(`feedback.${config.metric}`);
 

@@ -15,7 +15,7 @@ export const fetchData = (config: any) => {
         case 'sessions':
             return fetchChartDataWithSubOptions(getBykAvgSessionTime(), config, metricOptions[1].subOptions!, true)
         case 'averageResponseSpeed':
-            return fetchChartData(geBykAvgResponseTime(), config, metricOptions[2].labelKey!)
+            return fetchChartData(geBykAvgResponseTime(), config, metricOptions[2].labelKey)
         case 'understoodQuestions':
             return fetchChartData(getBykPercentOfCorrecltyUnderstood(), config, metricOptions[3].labelKey)
         default:

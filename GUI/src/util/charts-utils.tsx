@@ -12,7 +12,8 @@ export const getTicks = (startDate: string, endDate: string, start: Date, end: D
   const diff = inDays
     ? differenceInCalendarDays(end, start)
     : differenceInHours(new Date(`${startDate} 24:00:00`), new Date(`${endDate} 00:00:00`));
-  const num = inDays ? (diff <= 30 ? diff : skip) : diff;
+  const inDaysDiff = diff <= 30 ? diff : skip;
+  const num = inDays ? inDaysDiff : diff;
 
   const startUtc = new Date(start.getTime() + start.getTimezoneOffset() * 60000);
   const endUtc = new Date(end.getTime() + end.getTimezoneOffset() * 60000);

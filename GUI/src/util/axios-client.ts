@@ -21,7 +21,7 @@ axiosInstance.interceptors.response.use(
     return axiosResponse;
   },
   (error: AxiosError) => {
-    return Promise.reject(error);
+    return Promise.reject(new Error(error.message));
   }
 );
 
@@ -36,7 +36,7 @@ axiosInstance.interceptors.request.use(
     if (error.response?.status === 403) {
       // Handle unauthorized requests
     }
-    return Promise.reject(error);
+    return Promise.reject(new Error(error.message));
   }
 );
 

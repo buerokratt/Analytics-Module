@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import { Button, Card, Dialog, Drawer, Icon, Section, Track } from '../components';
-import OptionsPanel from '../components/MetricAndPeriodOptions';
-import { Option, OnChangeCallback } from '../components/MetricAndPeriodOptions';
+import OptionsPanel, { Option, OnChangeCallback } from '../components/MetricAndPeriodOptions';
 import {
   deleteOpenDataSettings,
   deleteScheduledReport,
@@ -56,13 +55,13 @@ const ReportsPage = () => {
     'get-avg-response-time',
     'get-pct-correctly-understood',
   ];
-  const [openDataOptions, _] = useState<Option[]>([
+  const openDataOptions: Option[] = [
     {
       id: 'openDataMetrics',
       subOptions: odpQueries.map((oq) => ({ id: oq, labelKey: `reports.${oq}` })),
       labelKey: '',
     },
-  ]);
+  ];
 
   const getCSVFile = async () => {
     const result: any = await request({

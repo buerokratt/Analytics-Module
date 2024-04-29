@@ -17,7 +17,7 @@ mockApi.interceptors.response.use(
     if (error.response?.status === 401) {
       // Handle unauthorized requests
     }
-    return Promise.reject(error);
+    return Promise.reject(new Error(error.message));
   }
 );
 

@@ -7,10 +7,11 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://bit.ly/CRA-PWA
 
+let regex = /^127(?:\.(?:25[0-5]|2[0-4]\d|[01]?\d\d?)){3}$/
 const isLocalhost = Boolean(
     window.location.hostname === 'localhost' ||
         window.location.hostname === '[::1]' ||
-        window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+        regex.exec(window.location.hostname)
 )
 
 type Config = {
@@ -51,12 +52,12 @@ function registerValidSW(swUrl: string, config?: Config) {
                     if (installingWorker.state === 'installed') {
                         if (navigator.serviceWorker.controller) {
                             console.log('New content is available and will be used when all ' + 'tabs for this page are closed. See https://bit.ly/CRA-PWA.')
-                            if (config && config.onUpdate) {
+                            if (config?.onUpdate) {
                                 config.onUpdate(registration)
                             }
                         } else {
                             console.log('Content is cached for offline use.')
-                            if (config && config.onSuccess) {
+                            if (config?.onSuccess) {
                                 config.onSuccess(registration)
                             }
                         }

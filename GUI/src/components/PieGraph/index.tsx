@@ -110,25 +110,24 @@ const PieGraph = ({ data }: Props) => {
                 </Track>
               );
             })}
-          {data?.percentagesData != undefined &&
-            data.percentagesData.map((e: any, i: any) => {
-              return e['name'] === t('chats.totalCount') ? (
-                <></>
-              ) : (
-                <Track key={`track-${i}`}>
-                  {
-                    <div
-                      className="legend_circle"
-                      style={{ backgroundColor: getColor(data, e['name']) }}
-                      key={`circle-${i}`}
-                    />
-                  }
-                  <label
-                    style={{ color: getColor(data, e['name']), maxLines: 1 }}
-                  >{`${e['name']}: ${e['value']} %`}</label>
-                </Track>
-              );
-            })}
+          {data?.percentagesData.map((e: any, i: any) => {
+            return e['name'] === t('chats.totalCount') ? (
+              <></>
+            ) : (
+              <Track key={`track-${e['name']}`}>
+                {
+                  <div
+                    className="legend_circle"
+                    style={{ backgroundColor: getColor(data, e['name']) }}
+                    key={`circle-${e['name']}`}
+                  />
+                }
+                <label
+                  style={{ color: getColor(data, e['name']), maxLines: 1 }}
+                >{`${e['name']}: ${e['value']} %`}</label>
+              </Track>
+            );
+          })}
         </Track>
       </Track>
     </div>

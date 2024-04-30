@@ -2,7 +2,7 @@ step_1:
   call: reflect.mock
   args:
     response:
-        data:
+        response:
           firstName: OK
           lastName: TESTNUMBER
           idCode: EE30303039914

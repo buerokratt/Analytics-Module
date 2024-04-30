@@ -21,7 +21,8 @@ const AdvisorsPage: React.FC = () => {
   const [currentMetric, setCurrentMetric] = useState('');
   const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
-  const randomColor = () => '#' + ((Math.random() * 0xffffff) << 0).toString(16);
+  let random = () => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
+  const randomColor = () => '#' + ((random() * 0xffffff) << 0).toString(16);
   const advisors = useRef<any[]>([]);
   const [advisorsList, setAdvisorsList] = useState<any[]>([]);
   const [advisorsMetrics, setAdvisorsMetrics] = useState<Option[]>([

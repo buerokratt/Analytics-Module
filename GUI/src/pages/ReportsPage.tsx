@@ -134,7 +134,7 @@ const ReportsPage = () => {
       </Card>
 
       {datasets.length === 0 ? (
-        <Card header={<h3>{t('reports.no_datasets')}</h3>}>
+        <Card header={<h3>{t('reports.created_datasets')}</h3>}>
           <p>{t('reports.no_datasets_description')}</p>
         </Card>
       ) : (

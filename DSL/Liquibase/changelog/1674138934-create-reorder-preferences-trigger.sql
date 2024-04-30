@@ -3,7 +3,7 @@
 CREATE OR REPLACE FUNCTION reorder_metric_preferences() RETURNS TRIGGER AS 
 $$
 DECLARE
-    ORDINALITY VARCHAR := 'ordinality';
+    ORDINALITY VARCHAR2(150) := 'ordinality';
 BEGIN 
 
 IF new.ORDINALITY < old.ORDINALITY THEN

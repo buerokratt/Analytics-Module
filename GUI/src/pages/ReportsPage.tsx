@@ -30,7 +30,7 @@ const ReportsPage = () => {
   const { t } = useTranslation();
   const [options, setOptions] = useState<OnChangeCallback>();
   const [apiSetupDrawerVisible, setApiSetupDrawerVisible] = useState(false);
-  const [datasetCreationVisible, setDatasetCreationVisible] = useState<boolean | any>(false);
+  const [datasetCreationVisible, setDatasetCreationVisible] = useState<any>(false);
   const [apiSettings, setApiSettings] = useState<ODPSettings>({ odpKey: null, orgId: null });
   const [datasets, setDatasets] = useState<ScheduledDataset[]>([]);
 

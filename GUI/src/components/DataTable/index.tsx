@@ -58,13 +58,17 @@ declare module '@tanstack/table-core' {
   }
 }
 
+type CustomColumnDef = ColumnDef<any> & ColumnMeta;
+
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
     getRowStyles: (row: Row<TData>) => CSSProperties
   }
-}
 
-type CustomColumnDef = ColumnDef<any> & ColumnMeta
+  class Column<TData extends RowData> {
+    columnDef: CustomColumnDef;
+  }
+}
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
@@ -144,7 +148,7 @@ const DataTable: FC<DataTableProps> = ({
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} style={{ width: (header.column.columnDef as CustomColumnDef)?.meta?.size }}>
+                  <th key={header.id} style={{ width: header.column.columnDef.meta?.size }}>
                     {header?.isPlaceholder ? null : (
                         <Track gap={8}>
                           {sortable && header.column.getCanSort() && (

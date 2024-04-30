@@ -26,7 +26,11 @@ csa_chats AS (
     )
     GROUP BY time
 )
-SELECT COALESCE(chatbot_chats.time, csa_chats.time) AS time, COALESCE(chatbot_chats.count, 0) + COALESCE(csa_chats.count, 0) AS sum_count
-FROM chatbot_chats
-FULL OUTER JOIN csa_chats ON chatbot_chats.time = csa_chats.time
+SELECT time, SUM(count) AS sum_count
+FROM (
+    SELECT time, count FROM chatbot_chats
+    UNION ALL
+    SELECT time, count FROM csa_chats
+) AS combined_chats
+GROUP BY time
 ORDER BY time ASC;

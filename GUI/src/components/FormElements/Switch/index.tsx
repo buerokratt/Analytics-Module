@@ -21,6 +21,7 @@ const Switch = forwardRef<HTMLButtonElement, SwitchProps>((
     onLabel,
     offLabel,
     onColor,
+    name,
     label,
     checked,
     hideLabel,
@@ -39,6 +40,7 @@ const Switch = forwardRef<HTMLButtonElement, SwitchProps>((
       <RadixSwitch.Root
         ref={ref}
         id={id}
+        name={name}
         className='switch__button'
         onCheckedChange={onCheckedChange}
         checked={checked}

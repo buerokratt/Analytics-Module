@@ -42,7 +42,7 @@ export const fetchChartDataWithSubOptions = async (
         const res: any = {};
         Object.keys(chartData[0]).forEach((e: string) => {
           if (e != chartDataKey) {
-            res[e] = a[e] ?? 0 + b[e] ?? 0;
+            res[e] = (a[e] ?? 0) + (b[e] ?? 0);
           }
         });
         return res;

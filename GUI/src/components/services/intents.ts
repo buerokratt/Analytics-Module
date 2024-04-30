@@ -1,5 +1,4 @@
 import api from './api';
-import localDevApi from './local-dev-api';
 import { Intent } from 'types/intent';
 
 export async function addIntent(newIntentData: { name: string }) {
@@ -18,12 +17,12 @@ export async function deleteIntent(id: string | number) {
 }
 
 export async function addExample(intentId: string | number, exampleData: { example: string }) {
-  const { data } = await api.post<{ id: number; example: string; }>(`intents/${intentId}/examples`, exampleData);
+  const { data } = await api.post<{ id: number; example: string }>(`intents/${intentId}/examples`, exampleData);
   return data;
 }
 
 export async function editExample(intentId: string | number, exampleData: { example: string }) {
-  const { data } = await api.patch<{ id: number; example: string; }>(`intents/${intentId}/examples`);
+  const { data } = await api.patch<{ id: number; example: string }>(`intents/${intentId}/examples`);
   return data;
 }
 
@@ -32,23 +31,15 @@ export async function deleteExample(intentId: string | number) {
   return data;
 }
 
-export async function turnExampleIntoIntent(data: {
-  exampleName: string;
-  intentName: string;
-}): Promise<void> {
-  await localDevApi.post('/rasa/intents/add', {
+export async function turnExampleIntoIntent(data: { exampleName: string; intentName: string }): Promise<void> {
+  await api.post('/rasa/intents/add', {
     intent: data.exampleName,
   });
-  await localDevApi.post(
-    '/rasa/intents/examples/delete',
-    { intent: data.intentName, example: data.exampleName }
-  );
+  await api.post('/rasa/intents/examples/delete', { intent: data.intentName, example: data.exampleName });
 }
 
-export async function turnIntentIntoService(
-  intent: Intent
-): Promise<void> {
-  await localDevApi.post('/rasa/intents/turn-into-service', {
-    intentName: intent.intent
+export async function turnIntentIntoService(intent: Intent): Promise<void> {
+  await api.post('/rasa/intents/turn-into-service', {
+    intentName: intent.intent,
   });
 }

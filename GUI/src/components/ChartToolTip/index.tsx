@@ -6,16 +6,19 @@ import { chartDataKey, round } from '../../util/charts-utils';
 
 const ChartToolTip = ({ active, payload, label }: TooltipProps<number, string>) => {
   if (active) {
-    const currData = payload && payload.length ? payload[0].payload.payload : null;
+    const currData = payload?.length ? payload[0].payload.payload : null;
     return (
       <div className="chart_tool_tip">
-        {Object.keys(currData).map((key, k) => (
-          <p key={k}>
-            {key === chartDataKey || key === 'created'
-              ? format(new Date(currData[chartDataKey]), 'yyyy-MM-dd')
-              : `${key}: ${typeof currData[key] === 'number' ? round(currData[key]) : currData[key]}`}
-          </p>
-        ))}
+        {Object.keys(currData).map((key, k) => {
+          const value = typeof currData[key] === 'number' ? round(currData[key]) : currData[key];
+          return (
+            <p key={`${key}-${k}`}>
+              {key === chartDataKey || key === 'created'
+                ? format(new Date(currData[chartDataKey]), 'yyyy-MM-dd')
+                : `${key}: ${value}`}
+            </p>
+          );
+        })}
       </div>
     );
   }

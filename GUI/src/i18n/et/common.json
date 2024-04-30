@@ -250,7 +250,8 @@
     "forwardedExternally": "forwardedExternally",
     "timeInterval": "timeInterval",
     "disabled_create_dataset_tooltip": "Lubamiseks konfigureerige esmalt avatud andmete juurdepääs",
-    "save_configuration_failed": "Konfiguratsiooni salvestamine ebaõnnestus"
+    "save_configuration_failed": "Konfiguratsiooni salvestamine ebaõnnestus",
+    "no_datasets_description": "Andmekogumeid ei leitud"
   },
   "advisors": {
     "chat_forwards": "Suunamised",

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { MdOutlineDownload } from 'react-icons/md';
-import { Button, Card, FormSelect, Icon, Track } from '../../components';
+import { Button, Card, FormSelect, Icon } from '../../components';
 import BarGraph from '../BarGraph';
 import './MetricsCharts.scss';
 import LineGraph from '../LineGraph';

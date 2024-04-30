@@ -58,4 +58,4 @@ SELECT date_time,
        received_chats,
        forwarded_externally
 FROM final_result
-ORDER BY date_time;
+ORDER BY date_time ASC;

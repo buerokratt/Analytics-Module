@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import { Button, Card, Dialog, Drawer, Icon, Section, Track } from '../components';
-import OptionsPanel from '../components/MetricAndPeriodOptions';
-import { Option, OnChangeCallback } from '../components/MetricAndPeriodOptions';
+import OptionsPanel, { Option, OnChangeCallback } from '../components/MetricAndPeriodOptions';
 import {
   deleteOpenDataSettings,
   deleteScheduledReport,
@@ -31,7 +30,7 @@ const ReportsPage = () => {
   const { t } = useTranslation();
   const [options, setOptions] = useState<OnChangeCallback>();
   const [apiSetupDrawerVisible, setApiSetupDrawerVisible] = useState(false);
-  const [datasetCreationVisible, setDatasetCreationVisible] = useState<boolean | any>(false);
+  const [datasetCreationVisible, setDatasetCreationVisible] = useState<any>(false);
   const [apiSettings, setApiSettings] = useState<ODPSettings>({ odpKey: null, orgId: null });
   const [datasets, setDatasets] = useState<ScheduledDataset[]>([]);
 
@@ -56,13 +55,13 @@ const ReportsPage = () => {
     'get-avg-response-time',
     'get-pct-correctly-understood',
   ];
-  const [openDataOptions, _] = useState<Option[]>([
+  const openDataOptions: Option[] = [
     {
       id: 'openDataMetrics',
       subOptions: odpQueries.map((oq) => ({ id: oq, labelKey: `reports.${oq}` })),
       labelKey: '',
     },
-  ]);
+  ];
 
   const getCSVFile = async () => {
     const result: any = await request({
@@ -135,7 +134,7 @@ const ReportsPage = () => {
       </Card>
 
       {datasets.length === 0 ? (
-        <Card header={<h3>{t('reports.no_datasets')}</h3>}>
+        <Card header={<h3>{t('reports.created_datasets')}</h3>}>
           <p>{t('reports.no_datasets_description')}</p>
         </Card>
       ) : (

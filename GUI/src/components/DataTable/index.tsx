@@ -58,13 +58,17 @@ declare module '@tanstack/table-core' {
   }
 }
 
+type CustomColumnDef = ColumnDef<any> & ColumnMeta;
+
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
     getRowStyles: (row: Row<TData>) => CSSProperties
   }
-}
 
-type CustomColumnDef = ColumnDef<any> & ColumnMeta
+  class Column<TData extends RowData> {
+    columnDef: CustomColumnDef;
+  }
+}
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value)
@@ -126,7 +130,7 @@ const DataTable: FC<DataTableProps> = ({
     const lastShownPage = Math.min(table.getPageCount(), current + pagesShown);
 
     pages.push(current);
-    for (; pages.length < Math.min(pagesShown, table.getPageCount());) {
+    while (pages.length < Math.min(pagesShown, table.getPageCount())) {
       if (pages[0] > 0) pages.unshift(pages[0] - 1);
       if (pages[pages.length - 1] + 1 < lastShownPage) {
         pages.push(pages[pages.length - 1] + 1);
@@ -144,9 +148,8 @@ const DataTable: FC<DataTableProps> = ({
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} style={{ width: (header.column.columnDef as CustomColumnDef).meta?.size }}>
-                    {header.isPlaceholder ? null : (
-                      <>
+                  <th key={header.id} style={{ width: header.column.columnDef.meta?.size }}>
+                    {header?.isPlaceholder ? null : (
                         <Track gap={8}>
                           {sortable && header.column.getCanSort() && (
                             <button onClick={header.column.getToggleSortingHandler()}>
@@ -163,7 +166,6 @@ const DataTable: FC<DataTableProps> = ({
                             <Filter column={header.column} table={table} />
                           )}
                         </Track>
-                      </>
                     )}
                   </th>
                 ))}
@@ -189,7 +191,7 @@ const DataTable: FC<DataTableProps> = ({
               <button className="previous" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
                 <MdOutlineWest />
               </button>
-              <nav role="navigation" aria-label={t('global.paginationNavigation') || ''}>
+              <nav role="navigation" aria-label={t('global.paginationNavigation') ?? ''}>
                 <ul className="links">
                 {getPages().map((page, i) => {
                     if (

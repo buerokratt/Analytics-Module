@@ -33,7 +33,7 @@ type DatasetCreationProps = {
   metrics: string[];
   start: string;
   end: string;
-  existingDataset: boolean | any;
+  existingDataset: any;
   onClose: () => void;
 };
 

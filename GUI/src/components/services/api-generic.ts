@@ -1,12 +1,19 @@
 import axios, { AxiosError } from 'axios';
 
+const testCookie = 'bearer ' + (localStorage.getItem('token') ?? 'test');
+
 const instance = axios.create({
-  baseURL: 'http://localhost:8080/',
+  baseURL: import.meta.env.REACT_APP_RUUTER_PRIVATE_API_URL + '/generic/',
   headers: {
     Accept: 'application/json',
-    'Content-Type': 'application/json',
+    Testcookie: '',
   },
-  withCredentials: true,
+  withCredentials: false,
+});
+
+instance.interceptors.request.use((config) => {
+  config.headers['Testcookie'] = testCookie;
+  return config;
 });
 
 instance.interceptors.response.use(
@@ -18,7 +25,7 @@ instance.interceptors.response.use(
       // Handle unauthorized requests
     }
     return Promise.reject(new Error(error.message));
-  },
+  }
 );
 
 export default instance;

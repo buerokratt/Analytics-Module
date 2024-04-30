@@ -19,9 +19,10 @@ const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation();
   const [chartData, setChartData] = useState({});
   const [currentMetric, setCurrentMetric] = useState('');
-  const [currentConfigs, setConfigs] = useState<MetricOptionsState>();
+  const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
-  const randomColor = () => '#' + ((Math.random() * 0xffffff) << 0).toString(16);
+  let random = () => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
+  const randomColor = () => '#' + ((random() * 0xffffff) << 0).toString(16);
   const advisors = useRef<any[]>([]);
   const [advisorsList, setAdvisorsList] = useState<any[]>([]);
   const [advisorsMetrics, setAdvisorsMetrics] = useState<Option[]>([
@@ -113,11 +114,15 @@ const AdvisorsPage: React.FC = () => {
 
       const response = res.map((item: any) => {
         const returnValue: any = {};
-        requiredKeys.forEach((key: string) =>
-          key != chartDataKey
-            ? (returnValue[t(`chart.${key}`)] = item[t(`chart.${key}`)])
-            : (returnValue[key] = item[key])
-        );
+        requiredKeys.forEach((key: string) => {
+          if (key !== chartDataKey) {
+            const chartKey = t(`chart.${key}`);
+            returnValue[chartKey] = item[chartKey];
+          } else {
+            returnValue[key] = item[key];
+          }
+        });
+
         return returnValue;
       });
 
@@ -228,7 +233,7 @@ const AdvisorsPage: React.FC = () => {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
           end_date: config?.end,
-          excluded_csas: excluded_csas.length ?? 0 > 0 ? excluded_csas : [''],
+          excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
         },
       });
 
@@ -339,7 +344,7 @@ const AdvisorsPage: React.FC = () => {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
           end_date: config?.end,
-          excluded_csas: excluded_csas.length ?? 0 > 0 ? excluded_csas : [''],
+          excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
         },
       });
 
@@ -446,7 +451,7 @@ const AdvisorsPage: React.FC = () => {
         metricOptions={advisorsMetrics}
         dateFormat="yyyy-MM-dd"
         onChange={(config) => {
-          setConfigs(config);
+          setCurrentConfigs(config);
           configsSubject.next(config);
           if (currentMetric != `advisors.${config.metric}`) {
             advisors.current = [];

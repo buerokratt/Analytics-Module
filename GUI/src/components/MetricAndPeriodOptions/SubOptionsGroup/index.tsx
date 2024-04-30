@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Track from '../../Track'
 import CheckBoxWithColorIndicator from '../CheckboxWithColorIndicator'

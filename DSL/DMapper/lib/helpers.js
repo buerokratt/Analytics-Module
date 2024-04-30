@@ -9,9 +9,9 @@ export function mergeChatCountArrays(arr1, arr2, arr3) {
 
   function mergeTheArray(arr) {
     if(!arr) return;
-    for (let i = 0; i < arr.length; i++) {
-      const key = arr[i].time;
-      let value = arr[i].chat_count || arr[i].chatCount || arr[i].long_waiting_time || arr[i].longWaitingTime;
+    for (const element of arr) {
+      const key = element.time;
+      let value = element.chat_count || element.chatCount || element.long_waiting_time || element.longWaitingTime;
 
       if(result.has(key)) {
         value += result.get(key);

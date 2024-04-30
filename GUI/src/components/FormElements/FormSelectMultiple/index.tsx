@@ -1,10 +1,10 @@
-import React, { FC, SelectHTMLAttributes, useEffect, useId, useState } from 'react';
+import React, { FC, SelectHTMLAttributes, useEffect, useId } from 'react';
 import { useMultipleSelection, useSelect } from 'downshift';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { MdArrowDropDown } from 'react-icons/md';
 
-import { Button, Icon } from '../..';
+import { Icon } from '../..';
 import './FormSelect.scss';
 
 type FormSelectMultipleProps = SelectHTMLAttributes<HTMLSelectElement> & {
@@ -71,7 +71,6 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
       label: string;
       value: string;
     }>();
-  const [selectedStateItems, setSelectedStateItems] = useState<{ label: string; value: string }[]>();
 
   useEffect(() => {
     if (onSelectionChange) onSelectionChange(selectedItems);
@@ -79,7 +78,6 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
 
   useEffect(() => {
     setSelectedItems(options.filter((o) => defaultValue?.includes(String(o.value))));
-    setSelectedStateItems(options.filter((o) => defaultValue?.includes(String(o.value))));
   }, []);
 
   const selectClasses = clsx('select', disabled && 'select--disabled');

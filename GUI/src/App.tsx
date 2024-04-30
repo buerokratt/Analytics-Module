@@ -11,9 +11,14 @@ import { useQuery } from '@tanstack/react-query';
 
 const App: React.FC = () => {
   useQuery<UserInfo>({
-    queryKey: [import.meta.env.REACT_APP_AUTH_PATH, 'auth'],
+    queryKey:
+      import.meta.env.REACT_APP_LOCAL === 'true'
+        ? ['userinfo', 'prod']
+        : [(import.meta.env.REACT_APP_AUTH_PATH, 'auth')],
     onSuccess: (res: { response: UserInfo }) => {
-      localStorage.setItem('exp', res.response.JWTExpirationTimestamp);
+      if (import.meta.env.REACT_APP_LOCAL != 'true') {
+        localStorage.setItem('exp', res.response.JWTExpirationTimestamp);
+      }
       return useStore.getState().setUserInfo(res.response);
     },
   });

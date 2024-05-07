@@ -17,38 +17,12 @@ declaration:
       - field: start
         type: string
         description: "Parameter 'start'"
-    headers:
-      - field: cookie
-        type: string
-        description: "Cookie field"
-
-check_for_cookie:
-  switch:
-    - condition: ${incoming.headers.cookie == null || incoming.headers.cookie == ""}
-      next: return_unauthorized
-  next: extract_request_data
 
 extract_request_data:
   assign:
-    cookie: ${incoming.headers.cookie}
     start: ${incoming.params.start}
     end: ${incoming.params.end}
     events: ${incoming.params.events}
-  next: check_if_authorized
-
-check_if_authorized:
-  template: templates/check-user-authority
-  requestType: post
-  headers:
-    cookie: ${cookie}
-  result: authority_result
-  next: check_authority_result
-
-check_authority_result:
-  switch:
-    - condition: ${authority_result !== "false"}
-      next: get_negative_feedback
-  next: return_unauthorized 
 
 get_negative_feedback:
   call: http.post
@@ -64,6 +38,3 @@ return_value:
   return: ${feedback.response.body}
   next: end
 
-return_unauthorized:
-  status: 401
-  return: 'unauthorized'

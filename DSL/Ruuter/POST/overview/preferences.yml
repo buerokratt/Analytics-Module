@@ -22,12 +22,6 @@ declaration:
         type: string
         description: "Cookie field"
 
-check_for_cookie:
-  switch:
-    - condition: ${incoming.headers.cookie == null || incoming.headers.cookie == ""}
-      next: return_unauthorized
-  next: check_for_required_parameters
-
 check_for_required_parameters:
   switch:
     - condition: ${incoming.body == null || incoming.body.active == null || incoming.body.metric == null || incoming.body.ordinality == null}
@@ -43,18 +37,11 @@ extract_request_data:
   next: check_if_authorized
 
 check_if_authorized:
-  template: templates/check-user-authority
-  requestType: post
+  template: check-user-authority
+  requestType: templates
   headers:
     cookie: ${cookie}
   result: authority_result
-  next: check_authority_result
-
-check_authority_result:
-  switch:
-    - condition: ${authority_result !== "false"}
-      next: update_metrics_preferences
-  next: return_unauthorized     
 
 update_metrics_preferences:
   call: http.post
@@ -79,11 +66,6 @@ get_metrics_preferences:
 
 return_value:
   return: ${metrics.response.body}
-  next: end
-
-return_unauthorized:
-  status: 401
-  return: 'unauthorized'
   next: end
 
 return_incorrect_request:

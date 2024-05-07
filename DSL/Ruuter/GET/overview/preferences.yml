@@ -6,36 +6,13 @@ declaration:
   accepts: json
   returns: json
   namespace: analytics
-  allowlist:
-    headers:
-      - field: cookie
-        type: string
-        description: "Cookie field"
-
-check_for_cookie:
-  switch:
-    - condition: ${incoming.headers.cookie == null || incoming.headers.cookie == ""}
-      next: return_unauthorized
-  next: extract_request_data
-
-extract_request_data:
-  assign:
-    cookie: ${incoming.headers.cookie}
-  next: check_if_authorized
 
 check_if_authorized:
-  template: templates/check-user-authority
-  requestType: post
+  template: check-user-authority
+  requestType: templates
   headers:
     cookie: ${cookie}
   result: authority_result
-  next: check_authority_result
-
-check_authority_result:
-  switch:
-    - condition: ${authority_result !== "false"}
-      next: get_metrics_preferences
-  next: return_unauthorized    
 
 get_metrics_preferences:
   call: http.post
@@ -44,13 +21,7 @@ get_metrics_preferences:
     body:
       user_id_code: ${authority_result.idCode}
   result: metrics
-  next: return_value
 
 return_value:
   return: ${metrics.response.body}
-  next: end
-
-return_unauthorized:
-  status: 401
-  return: "unauthorized"
   next: end

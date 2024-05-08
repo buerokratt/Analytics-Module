@@ -74,5 +74,5 @@ Currently, Header and Main Navigation used as external components, they are defi
 curl -X POST -H "Content-Type: application/json" -d '{
   "login": "EE30303039914",
   "password": ""
-}' http://localhost:8080/login-user
+}' http://localhost:8080/auth/login
 ```

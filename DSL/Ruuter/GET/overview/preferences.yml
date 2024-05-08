@@ -11,7 +11,7 @@ check_if_authorized:
   template: check-user-authority
   requestType: templates
   headers:
-    cookie: ${cookie}
+    cookie: ${incoming.headers.cookie}
   result: authority_result
 
 get_metrics_preferences:

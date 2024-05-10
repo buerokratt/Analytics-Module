@@ -1,22 +1,24 @@
-WITH botname AS
-  (SELECT "value"
-   FROM "configuration"
-   WHERE "key" = 'bot_institution_id'
-   LIMIT 1),
-     f_chats AS
-  (SELECT date_trunc(:metric, chat.created) AS date_time,
-          COUNT(DISTINCT chat.base_id) AS forwarded_chats
-   FROM chat
-   JOIN message ON chat.base_id = message.chat_base_id
-   WHERE chat.created::date BETWEEN :start::date AND :end::date
-     AND forwarded_from_csa IS NOT NULL
-     AND forwarded_from_csa <> ''
-     AND forwarded_from_csa <> 'null'
-     AND chat.received_from <>
-       (SELECT "value"
-        FROM botname)
-   GROUP BY date_time),
-     r_chats AS
+WITH botname AS (
+  SELECT "value"
+  FROM "configuration"
+  WHERE "key" = 'bot_institution_id'
+  ORDER BY id DESC
+  LIMIT 1
+),
+f_chats AS (
+  SELECT date_trunc(:metric, chat.created) AS date_time,
+        COUNT(DISTINCT chat.base_id) AS forwarded_chats
+  FROM chat
+  JOIN message ON chat.base_id = message.chat_base_id
+  CROSS JOIN botname
+  WHERE chat.created::date BETWEEN :start::date AND :end::date
+  AND forwarded_from_csa IS NOT NULL
+  AND forwarded_from_csa <> ''
+  AND forwarded_from_csa <> 'null'
+  AND chat.received_from <> botname.value
+  GROUP BY date_time
+),
+r_chats AS
   (SELECT date_trunc(:metric, chat.created) AS date_time,
           COUNT(DISTINCT chat.base_id) AS received_chats
    FROM chat

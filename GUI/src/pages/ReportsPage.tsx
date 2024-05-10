@@ -55,13 +55,13 @@ const ReportsPage = () => {
     'get-avg-response-time',
     'get-pct-correctly-understood',
   ];
-  const openDataOptions: Option[] = [
+  const [openDataOptions] = useState<Option[]>([
     {
       id: 'openDataMetrics',
       subOptions: odpQueries.map((oq) => ({ id: oq, labelKey: `reports.${oq}` })),
       labelKey: '',
     },
-  ];
+  ]);
 
   const getCSVFile = async () => {
     const result: any = await request({

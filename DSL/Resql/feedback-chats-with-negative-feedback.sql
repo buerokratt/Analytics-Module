@@ -3,10 +3,10 @@ WITH n_chats AS (
     base_id,
     MAX(created) AS created
   FROM chat
-  WHERE feedback_rating IS NOT NULL
-  AND STATUS = 'ENDED'
-  AND feedback_rating::int <= 5
+  WHERE STATUS = 'ENDED'
   AND created::date BETWEEN :start::date AND :end::date
+  AND feedback_rating IS NOT NULL
+  AND feedback_rating <= 5
   GROUP BY base_id
   ORDER BY created DESC
 ),

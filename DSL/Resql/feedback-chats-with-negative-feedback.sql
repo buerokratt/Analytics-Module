@@ -8,7 +8,6 @@ WITH n_chats AS (
   AND feedback_rating IS NOT NULL
   AND feedback_rating <= 5
   GROUP BY base_id
-  ORDER BY created DESC
 ),
 c_chat AS (
   SELECT base_id,
@@ -16,7 +15,6 @@ c_chat AS (
     MAX(ended) AS ended
   FROM chat
   GROUP BY base_id
-  ORDER BY created DESC
 )
 SELECT n_chats.base_id,
        c_chat.created,
@@ -28,4 +26,4 @@ LEFT JOIN chat ON n_chats.base_id = chat.base_id
 JOIN c_chat ON c_chat.base_id = chat.base_id AND n_chats.created = chat.created
 WHERE chat.feedback_rating IS NOT NULL
 AND chat.ended IS NOT NULL
-ORDER BY created DESC
+ORDER BY c_chat.created DESC;

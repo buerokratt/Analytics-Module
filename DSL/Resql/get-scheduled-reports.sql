@@ -3,7 +3,16 @@ WITH MaxReports AS (
   FROM scheduled_reports
   GROUP BY dataset_id
 )
-SELECT *
+SELECT 
+  id,
+  name,
+  dataset_id,
+  period,
+  metrics,
+  created,
+  updated,
+  start_date,
+  end_date
 FROM scheduled_reports
 JOIN MaxReports on id = maxId
 WHERE NOT deleted;

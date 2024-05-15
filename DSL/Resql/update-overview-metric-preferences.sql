@@ -8,11 +8,11 @@ WITH OldValue AS(
 ),
 MetricToBeChanged AS (
   SELECT MAX(id) AS maxId
-  FROM user_overview_metric_preference
+  FROM user_overview_metric_preference AS u
   CROSS JOIN OldValue
   WHERE user_id_code = :user_id_code
-  AND ordinality >= :ordinality
-  AND ordinality < OldValue.ordinality
+  AND u.ordinality >= :ordinality
+  AND u.ordinality < OldValue.ordinality
   AND metric <> :metric::overview_metric
   GROUP BY metric
 )
@@ -35,11 +35,11 @@ WITH OldValue AS(
 ),
 MetricToBeChanged AS (
   SELECT MAX(id) AS maxId
-  FROM user_overview_metric_preference
+  FROM user_overview_metric_preference AS u
   CROSS JOIN OldValue
   WHERE user_id_code = :user_id_code
-  AND ordinality > OldValue.ordinality
-  AND ordinality <= :ordinality
+  AND u.ordinality > OldValue.ordinality
+  AND u.ordinality <= :ordinality
   AND metric <> :metric::overview_metric
   GROUP BY metric
 )
@@ -54,19 +54,3 @@ JOIN MetricToBeChanged ON id = maxId;
 
 INSERT INTO user_overview_metric_preference (user_id_code, metric, ordinality, active)
 VALUES (:user_id_code, :metric::overview_metric, :ordinality, :active);
-
-
--- INSERT INTO user_overview_metric_preference (metric, user_id_code, active, ordinality)
--- SELECT
---     metric,
---     user_id_code,
---     active,
---     CASE 
---         WHEN ordinality >= :ordinality THEN ordinality + 1 
---         ELSE ordinality 
---     END
--- FROM user_overview_metric_preference
--- WHERE ordinality >= :ordinality
---     AND ordinality < old.ordinality
---     AND metric <> :metric::overview_metric
---     AND user_id_code = :user_id_code;

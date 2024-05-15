@@ -1,4 +1,2 @@
-UPDATE user_overview_metric_preference
-SET "ordinality" = :ordinality, active = :active
-WHERE user_id_code = :user_id_code
-    AND metric = :metric :: overview_metric;
+INSERT INTO user_overview_metric_preference (user_id_code, metric, ordinality, active)
+VALUES (:user_id_code, :metric::overview_metric, :ordinality, :active);

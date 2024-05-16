@@ -10,7 +10,7 @@ RUN npm install --legacy-peer-deps
 COPY . .
 RUN ./node_modules/.bin/vite build --mode=development
 
-RUN useradd -u 10001 user
+RUN adduser -u 10001 -D user
 USER user
 
 EXPOSE ${PORT}

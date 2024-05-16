@@ -1,5 +1,9 @@
 FROM node:alpine AS development
 
+ARG user=user
+ARG uid=10001
+ARG gid=20000
+
 ENV NODE_ENV development
 ENV PORT=3010
 
@@ -9,14 +13,13 @@ COPY ./package.json .
 RUN npm install --legacy-peer-deps
 COPY . .
 RUN ./node_modules/.bin/vite build --mode=development
-RUN chown -R node /app/node_modules
-
-RUN adduser -u 10001 -D user
-USER user
-
-
 
 EXPOSE ${PORT}
 
-CMD ["npm", "run", "dev"]
+RUN addgroup -g ${gid} -S ${user}
+RUN adduser -u ${uid} -g ${gid} -S ${user} -G ${user}
+RUN chown -R ${user}:${user} /app/src
+RUN chown -R ${user}:${user} /app/node_modules
+USER ${user}
 
+CMD ["npm", "run", "dev"]

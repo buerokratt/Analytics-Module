@@ -7,7 +7,6 @@ export const fetchChartDataWithSubOptions = async (
   url: string,
   config: any,
   subOptions: SubOption[],
-  isPercentage?: boolean
 ) => {
   try {
     const result: any = await request({
@@ -37,34 +36,7 @@ export const fetchChartDataWithSubOptions = async (
 
     const colors = subOptions.map((x) => ({ id: t(x.labelKey), color: x.color }));
 
-    if (isPercentage === true) {
-      const percentagesResponse = chartData.reduce(function (a: any, b: any) {
-        const res: any = {};
-        Object.keys(chartData[0]).forEach((e: string) => {
-          if (e != chartDataKey) {
-            res[e] = (a[e] ?? 0) + (b[e] ?? 0);
-          }
-        });
-        return res;
-      });
-
-      const percentagesData: any[] = [];
-      for (const key in percentagesResponse) {
-        const currentPercentage: any = {};
-        currentPercentage['name'] = key;
-        currentPercentage['value'] = parseFloat(
-          (
-            (percentagesResponse[key] /
-              Object.values(percentagesResponse).reduce<number>((a: any, b: any) => a + b, 0)) *
-            100
-          ).toFixed(1)
-        );
-        percentagesData.push(currentPercentage);
-      }
-      return { chartData, percentagesData, colors };
-    } else {
-      return { chartData, colors };
-    }
+    return { chartData, colors };
   } catch (_) {
     return {};
   }

@@ -1,0 +1,2 @@
+DROP TRIGGER IF EXISTS reorder_metric_preferences_on_update ON user_overview_metric_preference;
+DROP FUNCTION IF EXISTS reorder_metric_preferences;

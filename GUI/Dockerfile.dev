@@ -15,7 +15,7 @@ WORKDIR /app
 COPY ./package.json .
 
 RUN npm install --legacy-peer-deps
-COPY --chown=${uid}:${gid} . .
+COPY --chown=${uid}:${gid} --chmod=755 . .
 RUN ./node_modules/.bin/vite build --mode=development
 
 EXPOSE ${PORT}

@@ -8,6 +8,7 @@ import MetricsCharts from '../../components/MetricsCharts'
 import { chartDateFormat, formatDate } from '../../util/charts-utils'
 import { fetchData } from './data'
 import { metricOptions } from './options'
+import withAuthorization, { ROLES } from '../../hoc/with-authorization'
 
 const BurokrattPage: React.FC = () => {
   const { t } = useTranslation()
@@ -58,4 +59,7 @@ const BurokrattPage: React.FC = () => {
   )
 }
 
-export default BurokrattPage
+export default withAuthorization(BurokrattPage, [
+  ROLES.ROLE_ADMINISTRATOR,
+  ROLES.ROLE_ANALYST,
+]);

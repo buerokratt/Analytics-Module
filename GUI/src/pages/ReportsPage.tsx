@@ -18,6 +18,7 @@ import Popup from '../components/Popup';
 import { saveAs } from 'file-saver';
 import TooltipWrapper from '../components/TooltipWrapper';
 import { request, Methods } from '../util/axios-client';
+import withAuthorization, { ROLES } from '../hoc/with-authorization';
 
 type ScheduledDataset = {
   datasetId: string;
@@ -249,4 +250,7 @@ const ReportsPage = () => {
   );
 };
 
-export default ReportsPage;
+export default withAuthorization(ReportsPage, [
+  ROLES.ROLE_ADMINISTRATOR,
+  ROLES.ROLE_ANALYST,
+]);

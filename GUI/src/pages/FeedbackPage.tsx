@@ -16,6 +16,7 @@ import { chartDataKey, formatDate, translateChartKeys } from '../util/charts-uti
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { request, Methods } from '../util/axios-client';
+import withAuthorization, { ROLES } from '../hoc/with-authorization';
 
 const FeedbackPage: React.FC = () => {
   const { t } = useTranslation();
@@ -456,4 +457,7 @@ const FeedbackPage: React.FC = () => {
   );
 };
 
-export default FeedbackPage;
+export default withAuthorization(FeedbackPage, [
+  ROLES.ROLE_ADMINISTRATOR,
+  ROLES.ROLE_ANALYST,
+]);

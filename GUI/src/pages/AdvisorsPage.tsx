@@ -14,6 +14,7 @@ import {
   getCsaChatsTotal,
 } from '../resources/api-constants';
 import { request, Methods } from '../util/axios-client';
+import withAuthorization, { ROLES } from '../hoc/with-authorization';
 
 const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -476,4 +477,7 @@ const AdvisorsPage: React.FC = () => {
   );
 };
 
-export default AdvisorsPage;
+export default withAuthorization(AdvisorsPage, [
+  ROLES.ROLE_ADMINISTRATOR,
+  ROLES.ROLE_ANALYST,
+]);

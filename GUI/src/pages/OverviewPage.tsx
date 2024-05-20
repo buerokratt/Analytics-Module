@@ -12,6 +12,7 @@ import { OverviewMetricPreference } from '../types/overview-metrics';
 import { reorderItem } from '../util/reorder-array';
 import { formatDate } from '../util/charts-utils';
 import { request, Methods } from '../util/axios-client';
+import withAuthorization, { ROLES } from '../hoc/with-authorization';
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([]);
@@ -157,4 +158,7 @@ const OverviewPage: React.FC = () => {
   );
 };
 
-export default OverviewPage;
+export default withAuthorization(OverviewPage, [
+  ROLES.ROLE_ADMINISTRATOR,
+  ROLES.ROLE_ANALYST,
+]);

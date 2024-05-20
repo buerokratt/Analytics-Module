@@ -1,3 +1,8 @@
+WITH MaxReports AS (
+  SELECT MAX(id) AS maxId
+  FROM scheduled_reports
+  GROUP BY dataset_id
+)
 SELECT 
   id,
   name,
@@ -8,4 +13,6 @@ SELECT
   updated,
   start_date,
   end_date
-FROM scheduled_reports;
+FROM scheduled_reports
+JOIN MaxReports ON id = maxId
+WHERE NOT deleted;

@@ -4,11 +4,8 @@ FROM node:22.0.0-alpine AS image
 WORKDIR /app
 COPY ./package.json .
 
-ENV NODE_ENV development
-ENV PORT=3001
-
 FROM image AS build
-RUN npm install --legacy-peer-deps --mode=development
+RUN npm install --legacy-peer-deps --mode=development --ignore-scripts
 COPY . .
 RUN ./node_modules/.bin/vite build --mode=development
 VOLUME /app

@@ -451,7 +451,14 @@ const FeedbackPage: React.FC = () => {
           unit={unit}
         />
       )}
-      {showNegativeChart && <ChatsTable dataSource={negativeFeedbackChats} />}
+      {
+        showNegativeChart &&
+        <ChatsTable
+          dataSource={negativeFeedbackChats}
+          startDate={currentConfigs?.start}
+          endDate={currentConfigs?.end}
+        />
+      }
     </>
   );
 };

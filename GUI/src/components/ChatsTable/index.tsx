@@ -13,6 +13,8 @@ import Track from '../Track';
 
 type Props = {
   dataSource: Chat[];
+  startDate?: string;
+  endDate?: string;
 };
 
 const ChatsTable = (props: Props) => {
@@ -36,8 +38,8 @@ const ChatsTable = (props: Props) => {
   const dateTimeFormat = (props: CellContext<Chat, string>) =>
     formatDate(new Date(props.getValue()), 'd. MMM yyyy HH:mm:ss');
 
-  const feedbackViewButton = (props: any) => (
-    <a href={getLinkToChat(props.row.original?.baseId ?? '')}>
+  const feedbackViewButton = (dataTableProps: any) => (
+    <a href={getLinkToChat(dataTableProps.row.original?.baseId ?? '', props.startDate, props.endDate)}>
       <Button appearance="text">
         <Track>
           <Icon icon={<MdOutlineRemoveRedEye color={'rgba(0,0,0,0.54)'} />} />

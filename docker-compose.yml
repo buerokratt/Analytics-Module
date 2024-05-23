@@ -57,7 +57,6 @@ services:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
       - REACT_APP_API_URL=http://localhost:8080
-      - REACT_APP_BUEROKRATT_CHATBOT_URL=http://buerokratt-chat:8080
       - REACT_APP_OPENSEARCH_DASHBOARD_URL=https://opensearch.org/
       - REACT_APP_OPENDATAPORT_URL=https://avaandmeddev.eesti.ee
       - REACT_APP_RUUTER_API_URL=http://localhost:8080

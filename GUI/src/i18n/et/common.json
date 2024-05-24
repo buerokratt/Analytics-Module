@@ -181,7 +181,8 @@
     "receivedChats": "Vastu võetud vestlused",
     "forwardedChats": "Edastatud vestlused",
     "forwardedExternally": "Edastatud väliselt",
-    "timeInterval": "Ajavahemik"
+    "timeInterval": "Ajavahemik",
+    "noDataToPlot": "Puuduvad andmed, mida joonistada"
   },
   "reports": {
     "get-chat-count-total": "Vestluste koguarv",

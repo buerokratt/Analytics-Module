@@ -1,11 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { PieChart, Cell, Pie, Tooltip } from 'recharts';
-import { chartDataKey, getColor, getKeys } from '../../util/charts-utils';
+import { getColor } from '../../util/charts-utils';
 import ChartToolTip from '../ChartToolTip';
 import PercentageToolTip from '../PercentageToolTip';
 import Track from '../Track';
-import './PieGraph.scss';
+import { calculatePercentagesFromResponse } from '../../util/percentage';
+import PieCharLegends from './PieCharLegends';
 import { useTranslation } from 'react-i18next';
+import './PieGraph.scss';
 
 type Props = {
   data: any;
@@ -16,6 +18,8 @@ const PieGraph = ({ data }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
+  const percentages = useMemo(() => calculatePercentagesFromResponse(data?.chartData ?? []), [data?.chartData]);
+  
   useEffect(() => {
     const handleResize = () => {
       setWidth(ref.current?.clientWidth ?? 0);
@@ -34,101 +38,28 @@ const PieGraph = ({ data }: Props) => {
           data={data.chartData}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
-          {data?.chartData?.length > 0 && data?.percentagesData == undefined && (
             <Pie
-              data={data.chartData}
+              data={percentages}
               cx="50%"
               cy="50%"
-              outerRadius={170}
-              fill="#8884d8"
-              dataKey={chartDataKey}
-            >
-              {data?.chartData?.length > 0 &&
-                getKeys(data.chartData).map((k, i) => {
-                  return k === chartDataKey || k === t('chats.totalCount') ? null : (
-                    <Cell
-                      key={k}
-                      type="monotone"
-                      stroke={getColor(data, k)}
-                      fill={getColor(data, k)}
-                    />
-                  );
-                })}
-            </Pie>
-          )}
-          {data?.percentagesData != undefined && (
-            <Pie
-              data={data.percentagesData.map((e: any) => {
-                if (e['name'] === t('chats.totalCount')) {
-                  return null;
-                }
-                return e;
-              })}
-              cx="50%"
-              cy="50%"
-              outerRadius={'100%'}
+              outerRadius='100%'
               fill="#8884d8"
               dataKey="value"
               nameKey="name"
             >
-              {data.percentagesData.map((e: any, i: any) => {
-                return (
-                  <Cell
-                    key={`cell-${e['name']}`}
-                    type="monotone"
-                    stroke={getColor(data, e['name'])}
-                    fill={getColor(data, e['name'])}
-                  />
-                );
-              })}
+              {percentages.map((e: any) =>
+                <Cell
+                  key={`cell-${e['name']}`}
+                  type="monotone"
+                  stroke={getColor(data, e['name'])}
+                  fill={getColor(data, e['name'])}
+                />
+              )}
             </Pie>
-          )}
-          <Tooltip content={data?.percentagesData != undefined ? <PercentageToolTip /> : <ChartToolTip />} />
+          <Tooltip content={data?.percentages ? <PercentageToolTip /> : <ChartToolTip />} />
         </PieChart>
-        <Track
-          direction="vertical"
-          flex={20}
-          align="left"
-          isFlex={true}
-          isMultiline={true}
-        >
-          {data?.chartData?.length > 0 &&
-            data?.percentagesData == undefined &&
-            getKeys(data.chartData).map((k, i) => {
-              return (
-                <Track key={k}>
-                  {k !== chartDataKey && (
-                    <>
-                      <div
-                        className="legend_circle"
-                        style={{ backgroundColor: getColor(data, k) }}
-                        key={k}
-                      />
-                      <label style={{ color: getColor(data, k) }}>{k}</label>
-                    </>
-                  )}
-                </Track>
-              );
-            })}
-          {data?.percentagesData.map((e: any, i: any) => {
-            return e['name'] === t('chats.totalCount') ? (
-              <></>
-            ) : (
-              <Track key={`track-${e['name']}`}>
-                {
-                  <div
-                    className="legend_circle"
-                    style={{ backgroundColor: getColor(data, e['name']) }}
-                    key={`circle-${e['name']}`}
-                  />
-                }
-                <label
-                  style={{ color: getColor(data, e['name']), maxLines: 1 }}
-                >{`${e['name']}: ${e['value']} %`}</label>
-              </Track>
-            );
-          })}
-        </Track>
+        {percentages.length === 0 && <span>{t('chart.noDataToPlot')}</span>}
+        <PieCharLegends data={data} percentages={percentages} />
       </Track>
     </div>
   );

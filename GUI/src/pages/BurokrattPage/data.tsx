@@ -11,9 +11,9 @@ import { metricOptions } from './options';
 export const fetchData = (config: any) => {
     switch (config.metric) {
         case 'intents':
-            return fetchChartDataWithSubOptions(getBykIntents(), config, metricOptions[0].subOptions!, true)
+            return fetchChartDataWithSubOptions(getBykIntents(), config, metricOptions[0].subOptions!)
         case 'sessions':
-            return fetchChartDataWithSubOptions(getBykAvgSessionTime(), config, metricOptions[1].subOptions!, true)
+            return fetchChartDataWithSubOptions(getBykAvgSessionTime(), config, metricOptions[1].subOptions!)
         case 'averageResponseSpeed':
             return fetchChartData(geBykAvgResponseTime(), config, metricOptions[2].labelKey)
         case 'understoodQuestions':

@@ -1,18 +1,20 @@
 import React from 'react'
-import './PercentageToolTip.scss'
 import { TooltipProps } from 'recharts'
+import './PercentageToolTip.scss'
 
-const PercentageToolTip = ({ active, payload, label }: TooltipProps<number, string>) => {
-    if (active) {
-        const currData = payload?.length ? payload[0].payload.payload : null
-        return (
-            <div className="percentage_tool_tip">
-                <label>{`${currData.name} : ${currData.value}%`}</label>
-            </div>
-        )
-    }
+const PercentageToolTip = ({ active, payload }: TooltipProps<number, string>) => {
 
-    return null
+  const currData = payload?.[0]?.payload?.payload ?? {};
+
+  if (!active) {
+    return <></>
+  }
+  
+  return (
+    <div className="percentage_tool_tip">
+      <label>{`${currData?.name} : ${currData?.value}%`}</label>
+    </div>
+  )
 }
 
 export default PercentageToolTip

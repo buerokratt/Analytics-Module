@@ -126,33 +126,8 @@ const AdvisorsPage: React.FC = () => {
         return returnValue;
       });
 
-      const percentagesResponse = response.reduce(function (a: any, b: any) {
-        const res: any = {};
-        Object.keys(response[0]).forEach((e: string) => {
-          if (e != 'dateTime') {
-            res[e] = a[e] + b[e];
-          }
-        });
-        return res;
-      });
-
-      const percentages: any[] = [];
-      for (const key in percentagesResponse) {
-        const currentPercentage: any = {};
-        currentPercentage['name'] = key;
-        currentPercentage['value'] = parseFloat(
-          (
-            (percentagesResponse[key] /
-              Object.values(percentagesResponse).reduce<number>((a: any, b: any) => a + b, 0)) *
-            100
-          ).toFixed(1)
-        );
-        percentages.push(currentPercentage);
-      }
-
       chartData = {
         chartData: response,
-        percentagesData: percentages,
         colors: advisorsMetrics[0].subOptions!.map(({ id, color }) => {
           return {
             id: t(`chart.${id}`),
@@ -293,33 +268,8 @@ const AdvisorsPage: React.FC = () => {
         return res;
       });
 
-      const percentagesResponse = chartResponse.reduce(function (a: any, b: any) {
-        const res: any = {};
-        Object.keys(chartResponse[0]).forEach((e: string) => {
-          if (e != 'dateTime') {
-            res[e] = a[e] + b[e];
-          }
-        });
-        return res;
-      });
-
-      const percentages: any[] = [];
-      for (const key in percentagesResponse) {
-        const currentPercentage: any = {};
-        currentPercentage['name'] = key;
-        currentPercentage['value'] = parseFloat(
-          (
-            (percentagesResponse[key] /
-              Object.values(percentagesResponse).reduce<number>((a: any, b: any) => a + b, 0)) *
-            100
-          ).toFixed(1)
-        );
-        percentages.push(currentPercentage);
-      }
-
       chartData = {
         chartData: chartResponse,
-        percentagesData: percentages,
         colors: advisorsMetrics[3].subOptions!.map(({ labelKey, color }) => {
           return {
             id: labelKey,
@@ -404,33 +354,8 @@ const AdvisorsPage: React.FC = () => {
         return res;
       });
 
-      const percentagesResponse = chartResponse.reduce(function (a: any, b: any) {
-        const res: any = {};
-        Object.keys(chartResponse[0]).forEach((e: string) => {
-          if (e != 'dateTime') {
-            res[e] = a[e] + b[e];
-          }
-        });
-        return res;
-      });
-
-      const percentages: any[] = [];
-      for (const key in percentagesResponse) {
-        const currentPercentage: any = {};
-        currentPercentage['name'] = key;
-        currentPercentage['value'] = parseFloat(
-          (
-            (percentagesResponse[key] /
-              Object.values(percentagesResponse).reduce<number>((a: any, b: any) => a + b, 0)) *
-            100
-          ).toFixed(1)
-        );
-        percentages.push(currentPercentage);
-      }
-
       chartData = {
         chartData: chartResponse,
-        percentagesData: percentages,
         colors: advisorsMetrics[4].subOptions!.map(({ labelKey, color }) => {
           return {
             id: labelKey,

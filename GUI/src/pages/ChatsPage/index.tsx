@@ -8,6 +8,7 @@ import MetricsCharts from '../../components/MetricsCharts'
 import { chartDateFormat, formatDate } from '../../util/charts-utils'
 import { fetchData } from './data'
 import { chatOptions } from './options'
+import withAuthorization, { ROLES } from '../../hoc/with-authorization'
 
 const ChatsPage: React.FC = () => {
   const { t } = useTranslation()
@@ -55,4 +56,7 @@ const ChatsPage: React.FC = () => {
   )
 }
 
-export default ChatsPage
+export default withAuthorization(ChatsPage, [
+  ROLES.ROLE_ADMINISTRATOR,
+  ROLES.ROLE_ANALYST,
+]);

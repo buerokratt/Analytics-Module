@@ -13,6 +13,9 @@ COPY ./nginx/http-nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build ./app/build/assets /usr/share/nginx/html/analytics-module/analytics/assets
 COPY --from=build ./app/build/index.html /usr/share/nginx/html/analytics-module
 COPY --from=build ./app/build/favicon.ico /usr/share/nginx/html/analytics-module
+RUN apk add --no-cache bash
+COPY ./nginx/scripts/env.sh /docker-entrypoint.d/env.sh
+RUN chmod +x /docker-entrypoint.d/env.sh
 EXPOSE 3001
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT [ "bash", "/docker-entrypoint.d/env.sh" ]

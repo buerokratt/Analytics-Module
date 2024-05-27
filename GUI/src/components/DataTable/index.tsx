@@ -27,20 +27,20 @@ import Filter from './Filter'
 import './DataTable.scss'
 
 type DataTableProps = {
-  data: any
-  columns: ColumnDef<any, any>[]
-  tableBodyPrefix?: ReactNode
-  sortable?: boolean
-  filterable?: boolean
-  pagination?: PaginationState
-  setPagination?: React.Dispatch<React.SetStateAction<PaginationState>>
-  globalFilter?: string
-  setGlobalFilter?: React.Dispatch<React.SetStateAction<string>>
-  columnVisibility?: VisibilityState
-  setColumnVisibility?: React.Dispatch<React.SetStateAction<VisibilityState>>
-  disableHead?: boolean
-  meta?: TableMeta<any>
-}
+  data: any;
+  columns: ColumnDef<any, any>[];
+  tableBodyPrefix?: ReactNode;
+  sortable?: boolean;
+  filterable?: boolean;
+  pagination?: PaginationState;
+  setPagination?: (state: PaginationState) => void;
+  globalFilter?: string;
+  setGlobalFilter?: React.Dispatch<React.SetStateAction<string>>;
+  columnVisibility?: VisibilityState;
+  setColumnVisibility?: React.Dispatch<React.SetStateAction<VisibilityState>>;
+  disableHead?: boolean;
+  meta?: TableMeta<any>;
+};
 
 type ColumnMeta = {
   meta: {
@@ -117,12 +117,17 @@ const DataTable: FC<DataTableProps> = ({
     onColumnVisibilityChange: setColumnVisibility,
     globalFilterFn: fuzzyFilter,
     onSortingChange: setSorting,
-    onPaginationChange: setPagination,
+    onPaginationChange: (updater) => {
+      if (typeof updater !== 'function') return;
+      setPagination?.(updater(table.getState().pagination));
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     ...(pagination && { getPaginationRowModel: getPaginationRowModel() }),
     ...(sortable && { getSortedRowModel: getSortedRowModel() }),
-  })
+    manualPagination: true,
+    pageCount: data[data.length - 1]?.totalPages ?? 1,
+  });
 
   const getPages = (): number[] => {
     const current = table.getState().pagination.pageIndex;

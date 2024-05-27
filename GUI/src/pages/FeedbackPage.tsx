@@ -17,6 +17,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
+import { PaginationState } from '@tanstack/react-table';
 
 const FeedbackPage: React.FC = () => {
   const { t } = useTranslation();
@@ -29,6 +30,11 @@ const FeedbackPage: React.FC = () => {
   const randomColor = () => '#' + ((random() * 0xffffff) << 0).toString(16);
   const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
+
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
   useEffect(() => {
     setAdvisorsList(advisors.current);
@@ -343,7 +349,7 @@ const FeedbackPage: React.FC = () => {
     return chartData;
   };
 
-  const fetchChatsWithNegativeFeedback = async (config: any) => {
+  const fetchChatsWithNegativeFeedback = async (config: any, page: number = 1, pageSize: number = 10) => {
     let chartData = {};
     try {
       const result: any = await request({
@@ -352,6 +358,8 @@ const FeedbackPage: React.FC = () => {
         data: {
           start_date: config?.start,
           end_date: config?.end,
+          page: page,
+          page_size: pageSize,
         },
         withCredentials: true,
       });
@@ -402,12 +410,19 @@ const FeedbackPage: React.FC = () => {
           unit={unit}
         />
       )}
-      {showNegativeChart && <ChatsTable dataSource={negativeFeedbackChats} />}
+      {showNegativeChart && (
+        <ChatsTable
+          dataSource={negativeFeedbackChats}
+          pagination={pagination}
+          setPagination={(state: any) => {
+            if (state.pageIndex === pagination.pageIndex && state.pageSize === pagination.pageSize) return;
+            setPagination(state);
+            fetchChatsWithNegativeFeedback(currentConfigs, state.pageIndex + 1, state.pageSize);
+          }}
+        />
+      )}
     </>
   );
 };
 
-export default withAuthorization(FeedbackPage, [
-  ROLES.ROLE_ADMINISTRATOR,
-  ROLES.ROLE_ANALYST,
-]);
+export default withAuthorization(FeedbackPage, [ROLES.ROLE_ADMINISTRATOR, ROLES.ROLE_ANALYST]);

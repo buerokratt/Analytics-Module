@@ -13,14 +13,11 @@ import Track from '../Track';
 
 type Props = {
   dataSource: Chat[];
+  pagination?: PaginationState;
+  setPagination?: (state: PaginationState) => void;
 };
 
 const ChatsTable = (props: Props) => {
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-
   const [chats, setChats] = useState<Chat[]>([]);
 
   const columnHelper = createColumnHelper<Chat>();
@@ -82,9 +79,9 @@ const ChatsTable = (props: Props) => {
       <DataTable
         data={chats}
         columns={chatColumns}
-        pagination={pagination}
+        pagination={props.pagination}
         sortable={true}
-        setPagination={setPagination}
+        setPagination={props.setPagination}
       />
     </Card>
   );

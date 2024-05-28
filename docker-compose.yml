@@ -69,7 +69,6 @@ services:
       - REACT_APP_BASE_API_PATH=/
       - PORT=3001
       - REACT_APP_RUUTER_PRIVATE_API_URL=http://localhost:8080
-      - REACT_APP_AUTH_PATH=http://localhost:8080/auth
       - REACT_APP_DOCKER_RUUTER=http://ruuter:8080
       - REACT_APP_CUSTOMER_SERVICE_LOGIN=http://localhost:3004/et/dev-auth
       - REACT_APP_CONVERSATIONS_BASE_URL=http://localhost:8080/chat

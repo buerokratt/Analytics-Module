@@ -27,6 +27,6 @@ LEFT JOIN chat ON n_chats.base_id = chat.base_id
 JOIN c_chat ON c_chat.base_id = chat.base_id AND n_chats.created = chat.created
 WHERE chat.feedback_rating IS NOT NULL
 AND chat.ended IS NOT null
-ORDER BY c_chat.created desc
+ORDER BY c_chat.created DESC
 OFFSET ((GREATEST(:page, 1) - 1) * :page_size) LIMIT :page_size;
 

@@ -1,10 +1,10 @@
 const baseUrl = import.meta.env.REACT_APP_RUUTER_V2_ANALYTICS_API_URL
-const chatsUrl = import.meta.env.REACT_APP_BUEROKRATT_CHATBOT_URL
 const ruuterUrl = import.meta.env.REACT_APP_DOCKER_RUUTER;
 
 export const openSearchDashboard = "https://opensearch.org/"
 
-export const getLinkToChat = (chatId: string) => `${chatsUrl}/chat/history?chat=${chatId}`
+export const getLinkToChat = (chatId: string, startDate?: string, endDate?: string) => 
+  `/chat/history?chat=${chatId}&start=${startDate}&end=${endDate}`
 
 export const getOpenDataValues = (lang: string): string => baseUrl + '/odp/values?lang=' + lang
 

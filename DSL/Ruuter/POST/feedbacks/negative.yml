@@ -30,6 +30,7 @@ post_step:
       end: ${incoming.body.end_date}
       page: ${incoming.body.page}
       page_size: ${incoming.body.page_size}
+      sorting: ${incoming.body.sorting}
   result: result
 
 return_value:

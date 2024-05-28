@@ -33,7 +33,9 @@ type DataTableProps = {
   sortable?: boolean;
   filterable?: boolean;
   pagination?: PaginationState;
+  sorting?: SortingState;
   setPagination?: (state: PaginationState) => void;
+  setSorting?: (state: SortingState) => void;
   globalFilter?: string;
   setGlobalFilter?: React.Dispatch<React.SetStateAction<string>>;
   columnVisibility?: VisibilityState;
@@ -85,7 +87,9 @@ const DataTable: FC<DataTableProps> = ({
   sortable,
   filterable,
   pagination,
+  sorting,
   setPagination,
+  setSorting,
   globalFilter,
   setGlobalFilter,
   columnVisibility,
@@ -96,7 +100,6 @@ const DataTable: FC<DataTableProps> = ({
   const pagesShown = 7;
   const id = useId()
   const { t } = useTranslation()
-  const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const table = useReactTable({
     data,
@@ -116,7 +119,10 @@ const DataTable: FC<DataTableProps> = ({
     onGlobalFilterChange: setGlobalFilter,
     onColumnVisibilityChange: setColumnVisibility,
     globalFilterFn: fuzzyFilter,
-    onSortingChange: setSorting,
+    onSortingChange: (updater) => {
+      if (typeof updater !== 'function') return;
+      setSorting?.(updater(table.getState().sorting));
+    },
     onPaginationChange: (updater) => {
       if (typeof updater !== 'function') return;
       setPagination?.(updater(table.getState().pagination));
@@ -126,6 +132,7 @@ const DataTable: FC<DataTableProps> = ({
     ...(pagination && { getPaginationRowModel: getPaginationRowModel() }),
     ...(sortable && { getSortedRowModel: getSortedRowModel() }),
     manualPagination: true,
+    manualSorting: true,
     pageCount: data[data.length - 1]?.totalPages ?? 1,
   });
 

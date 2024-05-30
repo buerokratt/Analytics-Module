@@ -33,3 +33,4 @@ return:
   headers:
     Content-disposition: "attachment;filename=metrics.csv"
   return: ${metricDataCSV}
+  status: 200

@@ -1,8 +1,8 @@
 {
-{{#each results as |item i|}}
-{{#each item.response.body.[0]}}
-  "{{lookup @root.fields i}}": "{{this}}",
-{{/each}}
-{{/each}}
-  "eof": true
+  {{#each results as |item i|}}
+    {{#each item.response.body.[0]}}
+      "{{lookup @root.fields i}}": "{{this}}"{{#unless @last}},{{/unless}}
+    {{/each}}
+  {{#unless @last}},{{/unless}}
+  {{/each}}
 }

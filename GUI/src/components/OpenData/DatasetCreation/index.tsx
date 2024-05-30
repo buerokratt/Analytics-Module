@@ -13,7 +13,7 @@ import {
   saveJsonToYaml,
   uploadScheduledReport,
 } from '../../../resources/api-constants';
-import { ODPValues } from '../../../types/reports';
+import { ODPValues, ODPValuesType } from '../../../types/reports';
 import Button from '../../Button';
 import Card from '../../Card';
 import { FormDatepicker, FormInput, FormSelect, FormTextarea } from '../../FormElements';
@@ -25,6 +25,7 @@ import { format } from 'date-fns';
 
 import './styles.scss';
 import { request, Methods } from '../../../util/axios-client';
+import { useQuery } from '@tanstack/react-query';
 
 type AccessType = NonNullable<'public' | 'protected' | 'private' | undefined>;
 type UpdateIntervalUnitType = NonNullable<'day' | 'week' | 'month' | 'quarter' | 'year' | 'never' | undefined>;
@@ -59,6 +60,48 @@ const dataSetSchema = yup
   })
   .required();
 
+const checkForCronJob = async (data: any) => {
+  const steps = new Map();
+  steps.set('upload_job', {
+    trigger: getCronExpression(data.period),
+    type: 'http',
+    method: 'GET',
+    url: uploadScheduledReport(data.datasetId, format(new Date(), 'yyyy-MM-dd-HH:mm')),
+  });
+  const yaml = stringify(steps);
+  if (data.period === undefined || data.period === 'never') {
+    await request({
+      url: deleteCronJobTask(),
+      method: Methods.post,
+      data: { location: `/CronManager/${data.datasetId}.yml` },
+    });
+  } else {
+    await request({
+      url: saveJsonToYaml(),
+      method: Methods.post,
+      data: { yaml: yaml, location: `/CronManager/${data.datasetId}.yml` },
+    });
+  }
+};
+
+const getCronExpression = (interval: UpdateIntervalUnitType): string => {
+  switch (interval) {
+    case 'day':
+      return '0 0 * * * ?';
+    case 'week':
+      return '0 0 * * 1 ?';
+    case 'month':
+      return '0 0 1 * * ?';
+    case 'quarter':
+      return '0 0 1 */3 * ?';
+    case 'year':
+      return '0 0 1 1 * ?';
+    default:
+      return '';
+  }
+};
+
+
 const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: DatasetCreationProps) => {
   const { register, handleSubmit, setValue, getValues, watch } = useForm({
     reValidateMode: 'onChange',
@@ -71,6 +114,14 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
 
   const { t } = useTranslation();
 
+  useQuery({
+    queryKey: [getOpenDataValues(i18n.language)],
+    onSuccess: (res: { response: ODPValuesType[][]}) => {
+      const [ keywords, categories, regions, licences ] = res.response;
+      setOdpValues({ keywords, categories, regions, licences });
+    },
+  });
+  
   const onSubmit = async (data: any) => {
     if (loading) return;
     setLoading(true);
@@ -109,18 +160,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
     }
   };
 
-  useEffect(() => {
-    fetchValues();
-  }, []);
-
-  const fetchValues = async () => {
-    const lang = i18n.language;
-    const result: any = await request({ url: getOpenDataValues(lang), method: Methods.get });
-    const [keywords, categories, regions, licences] = result.response;
-    setOdpValues({ keywords, categories, regions, licences });
-  };
-
-  if (!odpValues)
+  if (!odpValues) {
     return (
       <Track
         justify="center"
@@ -132,47 +172,7 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
         />
       </Track>
     );
-
-  const checkForCronJob = async (data: any) => {
-    const steps = new Map();
-    steps.set('upload_job', {
-      trigger: getCronExpression(data.period),
-      type: 'http',
-      method: 'GET',
-      url: uploadScheduledReport(data.datasetId, format(new Date(), 'yyyy-MM-dd-HH:mm')),
-    });
-    const yaml = stringify(steps);
-    if (data.period === undefined || data.period === 'never') {
-      await request({
-        url: deleteCronJobTask(),
-        method: Methods.post,
-        data: { location: `/CronManager/${data.datasetId}.yml` },
-      });
-    } else {
-      await request({
-        url: saveJsonToYaml(),
-        method: Methods.post,
-        data: { yaml: yaml, location: `/CronManager/${data.datasetId}.yml` },
-      });
-    }
-  };
-
-  const getCronExpression = (interval: UpdateIntervalUnitType): string => {
-    switch (interval) {
-      case 'day':
-        return '0 0 * * * ?';
-      case 'week':
-        return '0 0 * * 1 ?';
-      case 'month':
-        return '0 0 1 * * ?';
-      case 'quarter':
-        return '0 0 1 */3 * ?';
-      case 'year':
-        return '0 0 1 1 * ?';
-      default:
-        return '';
-    }
-  };
+  }
 
   return (
     <Card>

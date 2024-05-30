@@ -423,6 +423,8 @@ const FeedbackPage: React.FC = () => {
           dataSource={negativeFeedbackChats}
           pagination={pagination}
           sorting={sorting}
+          startDate={currentConfigs?.start}
+          endDate={currentConfigs?.end}
           setPagination={(state: PaginationState) => {
             if (state.pageIndex === pagination.pageIndex && state.pageSize === pagination.pageSize) return;
             setPagination(state);

@@ -358,7 +358,6 @@ const FeedbackPage: React.FC = () => {
           start_date: config?.start,
           end_date: config?.end,
         },
-        withCredentials: true,
       });
 
       const response = result.response.map((entry: any) => ({

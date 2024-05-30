@@ -72,12 +72,14 @@ const checkForCronJob = async (data: any) => {
   if (data.period === undefined || data.period === 'never') {
     await request({
       url: deleteCronJobTask(),
+      withCredentials: true,
       method: Methods.post,
       data: { location: `/CronManager/${data.datasetId}.yml` },
     });
   } else {
     await request({
       url: saveJsonToYaml(),
+      withCredentials: true,
       method: Methods.post,
       data: { yaml: yaml, location: `/CronManager/${data.datasetId}.yml` },
     });
@@ -101,7 +103,6 @@ const getCronExpression = (interval: UpdateIntervalUnitType): string => {
   }
 };
 
-
 const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: DatasetCreationProps) => {
   const { register, handleSubmit, setValue, getValues, watch } = useForm({
     reValidateMode: 'onChange',
@@ -116,12 +117,12 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
 
   useQuery({
     queryKey: [getOpenDataValues(i18n.language)],
-    onSuccess: (res: { response: ODPValuesType[][]}) => {
-      const [ keywords, categories, regions, licences ] = res.response;
+    onSuccess: (res: { response: ODPValuesType[][] }) => {
+      const [keywords, categories, regions, licences] = res.response;
       setOdpValues({ keywords, categories, regions, licences });
     },
   });
-  
+
   const onSubmit = async (data: any) => {
     if (loading) return;
     setLoading(true);
@@ -137,12 +138,14 @@ const DatasetCreation = ({ metrics, start, end, onClose, existingDataset }: Data
         res = await request({
           url: openDataDataset(),
           method: Methods.post,
+          withCredentials: true,
           data: { ...data, metrics, start, end, dateTime: format(new Date(), 'yyyy-MM-dd-HH:mm') },
         });
       } else {
         res = await request({
           url: editScheduledReport(),
           method: Methods.post,
+          withCredentials: true,
           data: { ...data, datasetId: existingDataset.datasetId, start, end },
         });
       }

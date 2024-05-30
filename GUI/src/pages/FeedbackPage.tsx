@@ -158,6 +158,7 @@ const FeedbackPage: React.FC = () => {
       const result: any = await request({
         url: getChatsStatuses(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
@@ -207,6 +208,7 @@ const FeedbackPage: React.FC = () => {
       const result: any = await request({
         url: getAverageFeedbackOnBuerokrattChats(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
@@ -235,6 +237,7 @@ const FeedbackPage: React.FC = () => {
       const result: any = await request({
         url: getNpsOnCSAChatsFeedback(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
@@ -264,6 +267,7 @@ const FeedbackPage: React.FC = () => {
       const result: any = await request({
         url: getNpsOnSelectedCSAChatsFeedback(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
@@ -349,11 +353,11 @@ const FeedbackPage: React.FC = () => {
       const result: any = await request({
         url: getNegativeFeedbackChats(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           start_date: config?.start,
           end_date: config?.end,
         },
-        withCredentials: true,
       });
 
       const response = result.response.map((entry: any) => ({
@@ -402,19 +406,15 @@ const FeedbackPage: React.FC = () => {
           unit={unit}
         />
       )}
-      {
-        showNegativeChart &&
+      {showNegativeChart && (
         <ChatsTable
           dataSource={negativeFeedbackChats}
           startDate={currentConfigs?.start}
           endDate={currentConfigs?.end}
         />
-      }
+      )}
     </>
   );
 };
 
-export default withAuthorization(FeedbackPage, [
-  ROLES.ROLE_ADMINISTRATOR,
-  ROLES.ROLE_ANALYST,
-]);
+export default withAuthorization(FeedbackPage, [ROLES.ROLE_ADMINISTRATOR, ROLES.ROLE_ANALYST]);

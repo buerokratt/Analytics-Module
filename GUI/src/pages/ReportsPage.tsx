@@ -68,6 +68,7 @@ const ReportsPage = () => {
     const result: any = await request({
       url: downloadOpenDataCSV(),
       method: Methods.post,
+      withCredentials: true,
       data: { start: options?.start, end: options?.end, metrics: options?.options },
       responseType: 'blob',
     });
@@ -75,27 +76,27 @@ const ReportsPage = () => {
   };
 
   const fetchSettings = async () => {
-    const result: any = await request({ url: openDataSettings() });
+    const result: any = await request({ url: openDataSettings(), withCredentials: true });
     setApiSettings(result.response);
   };
 
   const fetchDatasets = async () => {
-    const result: any = await request({ url: scheduledReports() });
+    const result: any = await request({ url: scheduledReports(), withCredentials: true });
     setDatasets(result.response);
   };
 
   const fetchDataset = async (datasetId: string) => {
-    const result: any = await request({ url: getOpenDataDataset(datasetId) });
+    const result: any = await request({ url: getOpenDataDataset(datasetId), withCredentials: true });
     setDatasetCreationVisible({ ...result.response.data, datasetId });
   };
 
   const deleteSettings = async () => {
     setApiSettings({ odpKey: null, orgId: null });
-    await request({ url: deleteOpenDataSettings(), method: Methods.post });
+    await request({ url: deleteOpenDataSettings(), method: Methods.post, withCredentials: true });
   };
 
   const deleteSchedule = async (datasetId: string) => {
-    await request({ url: deleteScheduledReport(), method: Methods.post, data: { datasetId } });
+    await request({ url: deleteScheduledReport(), method: Methods.post, data: { datasetId }, withCredentials: true });
     fetchDatasets();
   };
 
@@ -250,7 +251,4 @@ const ReportsPage = () => {
   );
 };
 
-export default withAuthorization(ReportsPage, [
-  ROLES.ROLE_ADMINISTRATOR,
-  ROLES.ROLE_ANALYST,
-]);
+export default withAuthorization(ReportsPage, [ROLES.ROLE_ADMINISTRATOR, ROLES.ROLE_ANALYST]);

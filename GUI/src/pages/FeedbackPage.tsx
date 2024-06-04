@@ -166,6 +166,7 @@ const FeedbackPage: React.FC = () => {
       const result: any = await request({
         url: getChatsStatuses(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
@@ -215,6 +216,7 @@ const FeedbackPage: React.FC = () => {
       const result: any = await request({
         url: getAverageFeedbackOnBuerokrattChats(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
@@ -243,6 +245,7 @@ const FeedbackPage: React.FC = () => {
       const result: any = await request({
         url: getNpsOnCSAChatsFeedback(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
@@ -272,6 +275,7 @@ const FeedbackPage: React.FC = () => {
       const result: any = await request({
         url: getNpsOnSelectedCSAChatsFeedback(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
@@ -362,6 +366,7 @@ const FeedbackPage: React.FC = () => {
       const result: any = await request({
         url: getNegativeFeedbackChats(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           start_date: config?.start,
           end_date: config?.end,
@@ -369,7 +374,6 @@ const FeedbackPage: React.FC = () => {
           page_size: pageSize,
           sorting: sorting,
         },
-        withCredentials: true,
       });
 
       const response = result.response.map((entry: any) => ({

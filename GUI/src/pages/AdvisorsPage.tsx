@@ -99,6 +99,7 @@ const AdvisorsPage: React.FC = () => {
       const result: any = await request({
         url: getChatForwards(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
@@ -148,6 +149,7 @@ const AdvisorsPage: React.FC = () => {
       const result: any = await request({
         url: getAvgPickTime(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
@@ -176,6 +178,7 @@ const AdvisorsPage: React.FC = () => {
       const result: any = await request({
         url: getAvgCsaPresent(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
@@ -205,6 +208,7 @@ const AdvisorsPage: React.FC = () => {
       const result: any = await request({
         url: getCsaChatsTotal(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
@@ -291,6 +295,7 @@ const AdvisorsPage: React.FC = () => {
       const result: any = await request({
         url: getCsaAvgChatTime(),
         method: Methods.post,
+        withCredentials: true,
         data: {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
@@ -402,7 +407,4 @@ const AdvisorsPage: React.FC = () => {
   );
 };
 
-export default withAuthorization(AdvisorsPage, [
-  ROLES.ROLE_ADMINISTRATOR,
-  ROLES.ROLE_ANALYST,
-]);
+export default withAuthorization(AdvisorsPage, [ROLES.ROLE_ADMINISTRATOR, ROLES.ROLE_ANALYST]);

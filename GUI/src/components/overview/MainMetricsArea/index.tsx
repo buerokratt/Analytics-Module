@@ -38,7 +38,10 @@ const MainMetricsArea = ({ metricPreferences, saveReorderedMetric }: Props) => {
       return;
     }
 
-    const metricsResponse: any = await request({ url: overviewMetrics(metricsToFetch.map((e) => e.metric).join(',')) });
+    const metricsResponse: any = await request({
+      url: overviewMetrics(metricsToFetch.map((e) => e.metric).join(',')),
+      withCredentials: true,
+    });
     const results = metricsResponse.response;
 
     setMetrics(

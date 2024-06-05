@@ -3,15 +3,12 @@ import { SubOption } from '../components/MetricAndPeriodOptions/types';
 import { chartDataKey } from './charts-utils';
 import { request, Methods } from './axios-client';
 
-export const fetchChartDataWithSubOptions = async (
-  url: string,
-  config: any,
-  subOptions: SubOption[],
-) => {
+export const fetchChartDataWithSubOptions = async (url: string, config: any, subOptions: SubOption[]) => {
   try {
     const result: any = await request({
       url,
       method: Methods.post,
+      withCredentials: true,
       data: {
         start_date: config?.start,
         end_date: config?.end,
@@ -47,6 +44,7 @@ export const fetchChartData = async (url: string, config: any, resultId: string,
     const result: any = await request({
       url,
       method: Methods.post,
+      withCredentials: true,
       data: {
         start_date: config?.start,
         end_date: config?.end,

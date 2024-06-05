@@ -80,6 +80,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
     const res: any = await request({
       url: getCsv(),
       method: Methods.post,
+      withCredentials: true,
       data: {
         data: modifiedData.map((p) => {
           const { [chartDataKey]: originalKey, ...rest } = p;

@@ -36,7 +36,7 @@ const OverviewPage: React.FC = () => {
   };
 
   const fetchChartData = async () => {
-    const result: any = await request({ url: overviewMetrics('chat-activity') });
+    const result: any = await request({ url: overviewMetrics('chat-activity'), withCredentials: true });
 
     const response = result.response['chat-activity'].map((entry: any) => ({
       ...translateChartKeys(entry),
@@ -61,6 +61,7 @@ const OverviewPage: React.FC = () => {
     const result: any = await request({
       url: overviewMetricPreferences(),
       method: Methods.post,
+      withCredentials: true,
       data: {
         metric: metric.metric,
         ordinality: metric.ordinality,
@@ -158,7 +159,4 @@ const OverviewPage: React.FC = () => {
   );
 };
 
-export default withAuthorization(OverviewPage, [
-  ROLES.ROLE_ADMINISTRATOR,
-  ROLES.ROLE_ANALYST,
-]);
+export default withAuthorization(OverviewPage, [ROLES.ROLE_ADMINISTRATOR, ROLES.ROLE_ANALYST]);

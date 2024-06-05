@@ -45,6 +45,7 @@ const APISetupDrawer = ({ onClose, isDrawerVisible }: Props) => {
         url: openDataSettings(),
         method: Methods.post,
         data: { apiKey, keyId, orgId },
+        withCredentials: true,
       });
       if (!result.response) {
         toast.open({

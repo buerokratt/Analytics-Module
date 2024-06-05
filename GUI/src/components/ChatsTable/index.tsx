@@ -1,4 +1,4 @@
-import { createColumnHelper, PaginationState, CellContext } from '@tanstack/react-table';
+import { createColumnHelper, PaginationState, CellContext, SortingState } from '@tanstack/react-table';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
@@ -15,14 +15,13 @@ type Props = {
   dataSource: Chat[];
   startDate?: string;
   endDate?: string;
+  pagination?: PaginationState;
+  sorting?: SortingState;
+  setSorting?: (state: SortingState) => void;
+  setPagination?: (state: PaginationState) => void;
 };
 
 const ChatsTable = (props: Props) => {
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-
   const [chats, setChats] = useState<Chat[]>([]);
 
   const columnHelper = createColumnHelper<Chat>();
@@ -84,9 +83,11 @@ const ChatsTable = (props: Props) => {
       <DataTable
         data={chats}
         columns={chatColumns}
-        pagination={pagination}
+        pagination={props.pagination}
+        sorting={props.sorting}
         sortable={true}
-        setPagination={setPagination}
+        setSorting={props.setSorting}
+        setPagination={props.setPagination}
       />
     </Card>
   );

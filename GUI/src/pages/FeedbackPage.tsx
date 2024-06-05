@@ -17,6 +17,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
+import { PaginationState, SortingState } from '@tanstack/react-table';
 
 const FeedbackPage: React.FC = () => {
   const { t } = useTranslation();
@@ -29,6 +30,13 @@ const FeedbackPage: React.FC = () => {
   const randomColor = () => '#' + ((random() * 0xffffff) << 0).toString(16);
   const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
+
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   useEffect(() => {
     setAdvisorsList(advisors.current);
@@ -347,7 +355,12 @@ const FeedbackPage: React.FC = () => {
     return chartData;
   };
 
-  const fetchChatsWithNegativeFeedback = async (config: any) => {
+  const fetchChatsWithNegativeFeedback = async (
+    config: any,
+    page: number = 1,
+    pageSize: number = 10,
+    sorting: string = 'created desc'
+  ) => {
     let chartData = {};
     try {
       const result: any = await request({
@@ -357,6 +370,9 @@ const FeedbackPage: React.FC = () => {
         data: {
           start_date: config?.start,
           end_date: config?.end,
+          page: page,
+          page_size: pageSize,
+          sorting: sorting,
         },
       });
 
@@ -409,8 +425,22 @@ const FeedbackPage: React.FC = () => {
       {showNegativeChart && (
         <ChatsTable
           dataSource={negativeFeedbackChats}
+          pagination={pagination}
+          sorting={sorting}
           startDate={currentConfigs?.start}
           endDate={currentConfigs?.end}
+          setPagination={(state: PaginationState) => {
+            if (state.pageIndex === pagination.pageIndex && state.pageSize === pagination.pageSize) return;
+            setPagination(state);
+            const sort =
+              sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + (sorting[0].desc ? 'desc' : 'asc');
+            fetchChatsWithNegativeFeedback(currentConfigs, state.pageIndex + 1, state.pageSize, sort);
+          }}
+          setSorting={(state: SortingState) => {
+            setSorting(state);
+            const sorting = state.length === 0 ? 'created desc' : state[0].id + ' ' + (state[0].desc ? 'desc' : 'asc');
+            fetchChatsWithNegativeFeedback(currentConfigs, pagination.pageIndex + 1, pagination.pageSize, sorting);
+          }}
         />
       )}
     </>

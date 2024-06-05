@@ -100,7 +100,7 @@ services:
       - ./DSL:/data
       - ./DSL/DMapper/hbs:/workspace/app/views/analytics
       - ./DSL/DMapper/js:/workspace/app/js/analytics
-      - ./DSL/DMapper/lib:/workspace/app/lib
+      - ./DSL/DMapper/lib/helpers.js:/workspace/app/lib/helpers.js
     environment:
       - PORT=3000
       - CONTENT_FOLDER=/data

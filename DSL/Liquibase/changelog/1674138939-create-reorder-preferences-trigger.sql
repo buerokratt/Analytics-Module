@@ -1,9 +1,9 @@
 -- liquibase formatted sql
--- changeset gertdrui:1674138934 splitStatements:false
+-- changeset gertdrui:1674138939 splitStatements:false
 CREATE OR REPLACE FUNCTION reorder_metric_preferences() RETURNS TRIGGER AS 
 $$
 DECLARE
-    ORDINALITY VARCHAR2(150) := 'ordinality';
+    ORDINALITY VARCHAR(150) := 'ordinality';
 BEGIN 
 
 IF new.ORDINALITY < old.ORDINALITY THEN

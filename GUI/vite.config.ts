@@ -4,7 +4,6 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import svgr from 'vite-plugin-svgr';
 // @ts-ignore
 import path from 'path';
-import { removeHiddenMenuItems } from './vitePlugin';
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
@@ -16,14 +15,6 @@ export default ({ mode }) => {
       react(),
       tsconfigPaths(),
       svgr(),
-      {
-        name: 'removeHiddenMenuItemsPlugin',
-        transform: (str, id) => {
-          if(!id.endsWith('/menu-structure.json'))
-            return str;
-          return removeHiddenMenuItems(str);
-        },
-      },
     ],
     base: '/analytics',
     server: {

@@ -47,7 +47,8 @@
     "dateTime": "Kuupäev"
   },
   "mainMenu": {
-    "closeMenu": "Sulge menüü"
+    "closeMenu": "Kitsendan menüü",
+    "openMenu": "Ava menüü"
   },
   "general": {
     "period": "Periood",

@@ -46,12 +46,12 @@ const OverviewPage: React.FC = () => {
     const chartData = {
       chartData: response,
       colors: [
-        { id: 'Chats started', color: `hsl(${0 * 20}, 80%, 45%)` },
-        { id: 'Left with an answer', color: `hsl(${1 * 20}, 80%, 45%)` },
-        { id: 'Left with no answer', color: `hsl(${2 * 20}, 80%, 45%)` },
-        { id: 'Hate speech', color: `hsl(${3 * 20}, 80%, 45%)` },
-        { id: 'Unspecified reason', color: `hsl(${4 * 20}, 80%, 45%)` },
-        { id: 'Answered in other channel', color: `hsl(${5 * 20}, 80%, 45%)` },
+        { id: t('chart.metricValue'), color: `hsl(${0 * 50}, 80%, 45%)` },
+        { id: t('chart.clientLeftWithAccepted'), color: `hsl(${1 * 50}, 80%, 45%)` },
+        { id: t('chart.clientLeftWithNoResolution'), color: `hsl(${2 * 50}, 80%, 45%)` },
+        { id: t('chart.hateSpeech'), color: `hsl(${5 * 50}, 80%, 45%)` },
+        { id: t('chart.other'), color: `hsl(${6 * 50}, 80%, 45%)` },
+        { id: t('chart.responseSentToClientEmail'), color: `hsl(${7 * 50}, 80%, 45%)` },
       ],
     };
     setChartData(chartData);

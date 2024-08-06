@@ -12,17 +12,17 @@ export const chatOptions: Option[] = [
     ],
     unit: t('units.chats') ?? 'chats',
   },
-  {
-    id: 'cip',
-    labelKey: 'chats.cip',
-    subOptions: [
-      { id: 'outside-working-hours', labelKey: 'chats.outsideWorkingHours', color: '#fdbf47' },
-      { id: 'long-waiting-time', labelKey: 'chats.longWaitingTime', color: '#ed7d32' },
-      { id: 'all-csas-away', labelKey: 'chats.allCsvAway', color: '#8ab4d5' },
-      { id: 'total', labelKey: 'chats.totalCount', color: '#008000' },
-    ],
-    unit: t('units.chats') ?? 'chats',
-  },
+//   {
+//     id: 'cip',
+//     labelKey: 'chats.cip',
+//     subOptions: [
+//       { id: 'outside-working-hours', labelKey: 'chats.outsideWorkingHours', color: '#fdbf47' },
+//       { id: 'long-waiting-time', labelKey: 'chats.longWaitingTime', color: '#ed7d32' },
+//       { id: 'all-csas-away', labelKey: 'chats.allCsvAway', color: '#8ab4d5' },
+//       { id: 'total', labelKey: 'chats.totalCount', color: '#008000' },
+//     ],
+//     unit: t('units.chats') ?? 'chats',
+//   },
   {
     id: 'avgConversationTime',
     labelKey: 'chats.avgConversationTime',

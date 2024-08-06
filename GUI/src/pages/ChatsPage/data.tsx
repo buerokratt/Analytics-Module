@@ -1,7 +1,7 @@
 import {
   getAvgChatWaitingTime,
   getAvgMessagesInChats,
-  getCipChats,
+//   getCipChats,
   getDurationChats,
   getIdleChats,
   getTotalChats,
@@ -13,8 +13,8 @@ export const fetchData = (config: any) => {
   switch (config.metric) {
     case 'total':
       return fetchChartDataWithSubOptions(getTotalChats(), config, chatOptions[0].subOptions!);
-    case 'cip':
-      return fetchChartDataWithSubOptions(getCipChats(), config, chatOptions[1].subOptions!);
+//     case 'cip':
+//       return fetchChartDataWithSubOptions(getCipChats(), config, chatOptions[1].subOptions!);
     case 'avgConversationTime':
       return fetchChartData(getDurationChats(), config, chatOptions[2].labelKey);
     case 'avgWaitingTime':

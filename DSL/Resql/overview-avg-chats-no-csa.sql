@@ -18,7 +18,7 @@ WITH chats AS (
             SELECT 1
             FROM message
             WHERE message.chat_base_id = chat.base_id
-                AND message.author_role = 'chatbot'
+                AND message.author_role = 'buerokratt'
         )
         AND chat.created >= date_trunc(
             :group_period,

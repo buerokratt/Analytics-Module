@@ -5,7 +5,8 @@ WHERE EXISTS
     (SELECT 1
      FROM message
      WHERE message.chat_base_id = chat.base_id
-       AND message.author_role = 'chatbot')
+       AND message.author_role = 'end-user'
+       AND message.event = 'CLIENT_LEFT_WITH_ACCEPTED')
 AND status = 'ENDED'
 AND created::date BETWEEN :start::date AND :end::date
 GROUP BY date_time

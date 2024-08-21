@@ -264,8 +264,9 @@
     "avg_chat_time_csa": "Conversation time by advisor"
   },
   "chat": {
-    "forwarder": "Forwarded",
-    "unanswered": "Unanswered"
+    "forwarded": "Forwarded",
+    "unanswered": "Unanswered",
+    "pending": "Pending"
   },
   "settings": {
     "title": "Settings",

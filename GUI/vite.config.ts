@@ -16,6 +16,9 @@ export default ({ mode }) => {
       tsconfigPaths(),
       svgr(),
     ],
+    optimizeDeps: {
+      include: ['howler']
+    },
     base: '/analytics',
     server: {
       watch: {

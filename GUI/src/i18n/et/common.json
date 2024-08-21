@@ -304,7 +304,8 @@
   },
   "chat": {
     "unanswered": "Vastamata",
-    "forwarded": "Suunatud"
+    "forwarded": "Suunatud",
+    "pending": "Ootel"
   },
   "units": {
     "chats": "vestlused",

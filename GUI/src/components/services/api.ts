@@ -87,7 +87,8 @@ const AxiosInterceptor = ({ children }) => {
 }
 
 const handleRequestError = (error: AxiosError) => {
-  console.log(error);
+  import.meta.env.DEBUG_ENABLED && console.debug(error);
+
   if (error.response?.status === 401) {
     // To be added: handle unauthorized requests
   }

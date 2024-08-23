@@ -1,4 +1,4 @@
-import api from './api';
+import { api } from './api';
 import { Entity } from 'types/entity';
 
 export async function addEntity(entityData: { name: string }) {

@@ -1,4 +1,4 @@
-import api from './api';
+import { api } from './api';
 import { Story, StoryDTO } from 'types/story';
 
 export async function addStory(storyData: StoryDTO) {

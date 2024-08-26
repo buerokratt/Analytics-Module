@@ -41,7 +41,7 @@ const genericApi = axios.create({
 });
 
 const ruuterApi = axios.create({
-  baseURL: 'http://localhost:8080/',
+  baseURL: import.meta.env.REACT_APP_RUUTER_PRIVATE_API_URL,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',

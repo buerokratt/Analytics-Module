@@ -41,7 +41,7 @@ const genericApi = axios.create({
 });
 
 const ruuterApi = axios.create({
-  baseURL: 'http://localhost:8080/',
+  baseURL: import.meta.env.REACT_APP_RUUTER_PRIVATE_API_URL,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -54,13 +54,13 @@ const AxiosInterceptor = ({ children }) => {
 
   useEffect(() => {
     const resInterceptor = (response: any) => {
-      import.meta.env.DEBUG_ENABLED && console.log(response);
+      import.meta.env.DEBUG_ENABLED && console.debug(response);
 
       return response;
     }
 
     const errInterceptor = (error: any) => {
-      import.meta.env.DEBUG_ENABLED && console.log(error);
+      import.meta.env.DEBUG_ENABLED && console.debug(error);
 
       let message = t('global.notificationErrorMsg');
 

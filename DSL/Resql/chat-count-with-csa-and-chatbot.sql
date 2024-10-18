@@ -3,7 +3,7 @@ WITH chatbot_chats AS (
         DATE_TRUNC(:period, created) AS time,
         COUNT(DISTINCT base_id) AS count
     FROM chat
-    WHERE created::date BETWEEN :start::date AND :end::date
+    WHERE created::date BETWEEN :start::date AND :end::date AND status = 'ENDED'
     AND NOT EXISTS (
         SELECT 1
         FROM message
@@ -17,7 +17,7 @@ csa_chats AS (
         DATE_TRUNC(:period, created) AS time,
         COUNT(DISTINCT base_id) AS count
     FROM chat
-    WHERE created::date BETWEEN :start::date AND :end::date
+    WHERE created::date BETWEEN :start::date AND :end::date AND status = 'ENDED'
     AND EXISTS (
         SELECT 1
         FROM message

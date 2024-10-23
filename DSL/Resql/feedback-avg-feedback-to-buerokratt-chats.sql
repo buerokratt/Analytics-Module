@@ -5,7 +5,7 @@ WHERE EXISTS
     (SELECT 1
      FROM message
      WHERE message.chat_base_id = chat.base_id
-       AND message.author_role = 'end-user'
+       AND message.author_role = 'buerokratt'
        AND message.event = 'CLIENT_LEFT_WITH_ACCEPTED')
 AND status = 'ENDED'
 AND created::date BETWEEN :start::date AND :end::date

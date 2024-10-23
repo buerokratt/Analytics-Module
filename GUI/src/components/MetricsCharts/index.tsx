@@ -25,8 +25,6 @@ type Props = {
 const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }: Props) => {
   const { t } = useTranslation();
 
-  console.log(startDate, endDate, groupByPeriod);
-
   const charts: ChartType[] = [
     {
       label: t('chart.barChart'),

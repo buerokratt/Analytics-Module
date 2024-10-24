@@ -102,7 +102,12 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       header={
         <div className="container">
           <div className="title">
-            <h3>{t(title)}</h3>
+            <h3>
+              {t(title)}{' '}
+              {startDate !== endDate
+                ? `${formatTimestamp(startDate)} - ${formatTimestamp(endDate)}`
+                : formatTimestamp(startDate)}
+            </h3>
           </div>
           <div className="other_content">
             <Button
@@ -135,3 +140,5 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
 };
 
 export default MetricsCharts;
+
+const formatTimestamp = (timestamp: string) => formatDate(new Date(timestamp), 'dd.MM.yyyy');

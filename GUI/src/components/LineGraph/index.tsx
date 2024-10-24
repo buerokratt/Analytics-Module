@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, Legend, Label } from 'recharts';
 import { chartDataKey, dateFormatter, formatDate, getColor, getKeys, getTicks, round } from '../../util/charts-utils';
+import { useTotalPeriodCounts } from '../../hooks/ useTotalPeriodCounts';
 
 type Props = {
   data: any;
@@ -12,6 +13,7 @@ type Props = {
 const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
   const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const totalPeriodCounts = useTotalPeriodCounts(data.chartData, unit);
 
   useEffect(() => {
     const handleResize = () => {
@@ -73,7 +75,11 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
             value={unit}
           />
         </YAxis>
-        <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
+        <Legend
+          // todo helper fn
+          wrapperStyle={{ position: 'relative', marginTop: '20px' }}
+          formatter={(value) => `${value}${totalPeriodCounts[value] ? ` (${totalPeriodCounts[value]})` : ''}`}
+        />
         <CartesianGrid stroke="#f5f5f5" />
         {data?.chartData?.length > 0 &&
           getKeys(data.chartData).map((k, i) => {

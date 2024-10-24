@@ -44,16 +44,13 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
   }
 
   useEffect(() => {
-    // todo does not update when changing period
-    console.log('hook', data.chartData);
+    console.log('unit', unit);
+    // todo use t
+    if (unit !== 'vestlused') return;
+
     const totals = getPeriodTotalCounts(data.chartData);
-    console.log('totals', totals);
     setTotalPeriodCounts(totals);
   }, [data.chartData]);
-
-  // console.log('data', data.chartData);
-  // console.log(unit);
-  // console.log('PERIOD COUNTS', getPeriodTotalCounts(data.chartData));
 
   const domain = [minDate, new Date(endDate).getTime()];
   const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5);

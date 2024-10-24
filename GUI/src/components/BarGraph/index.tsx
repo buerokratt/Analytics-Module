@@ -1,6 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BarChart, CartesianGrid, YAxis, Tooltip, Legend, Bar, Label, XAxis } from 'recharts';
-import { chartDataKey, dateFormatter, formatDate, getColor, getKeys, getTicks, round } from '../../util/charts-utils';
+import {
+  chartDataKey,
+  dateFormatter,
+  formatDate,
+  formatTotalPeriodCount,
+  getColor,
+  getKeys,
+  getTicks,
+  round,
+} from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { useTranslation } from 'react-i18next';
 import { useTotalPeriodCounts } from '../../hooks/ useTotalPeriodCounts';
@@ -89,7 +98,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
         />
         <Legend
           wrapperStyle={{ position: 'relative', marginTop: '20px' }}
-          formatter={(value) => `${value}${totalPeriodCounts[value] ? ` (${totalPeriodCounts[value]})` : ''}`}
+          formatter={(value) => `${value}${formatTotalPeriodCount(totalPeriodCounts, value)}`}
         />
         {data?.chartData?.length > 0 &&
           getKeys(data.chartData).map((k, i) => {

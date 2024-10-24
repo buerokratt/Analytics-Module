@@ -44,12 +44,9 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
   }
 
   useEffect(() => {
-    console.log('unit', unit);
-    // todo use t
-    if (unit !== 'vestlused') return;
+    if (unit !== t('units.chats')) return;
 
-    const totals = getPeriodTotalCounts(data.chartData);
-    setTotalPeriodCounts(totals);
+    setTotalPeriodCounts(getPeriodTotalCounts(data.chartData));
   }, [data.chartData]);
 
   const domain = [minDate, new Date(endDate).getTime()];

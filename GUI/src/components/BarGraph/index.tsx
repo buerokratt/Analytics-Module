@@ -13,6 +13,7 @@ import {
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { useTranslation } from 'react-i18next';
 import { use } from 'i18next';
+import { useTotalPeriodCounts } from '../../hooks/ useTotalPeriodCounts';
 
 type Props = {
   data: any;
@@ -24,7 +25,8 @@ type Props = {
 
 const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod }) => {
   const [width, setWidth] = useState<number | null>(null);
-  const [totalPeriodCounts, setTotalPeriodCounts] = useState<Record<string, number>>({});
+  const totalPeriodCounts = useTotalPeriodCounts(data.chartData, unit);
+
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
@@ -42,12 +44,6 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
     const millisecondInOneDay = 24 * 60 * 60 * 1000;
     minDate = minDate - millisecondInOneDay;
   }
-
-  useEffect(() => {
-    if (unit !== t('units.chats')) return;
-
-    setTotalPeriodCounts(getPeriodTotalCounts(data.chartData));
-  }, [data.chartData]);
 
   const domain = [minDate, new Date(endDate).getTime()];
   const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5);

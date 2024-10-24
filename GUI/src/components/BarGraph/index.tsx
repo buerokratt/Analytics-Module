@@ -108,8 +108,8 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
           wrapperStyle={{ position: 'relative', marginTop: '20px' }}
           formatter={(value) => {
             // const totals = getPeriodTotalCounts(data.chartData);
-            console.log('totalPeriodCounts', totalPeriodCounts);
-            console.log('totalPeriodCounts[value]', totalPeriodCounts[value]);
+            // console.log('totalPeriodCounts', totalPeriodCounts);
+            // console.log('totalPeriodCounts[value]', totalPeriodCounts[value]);
             // console.log('entry', entry);
             // console.log('index', index);
             return `${value}${totalPeriodCounts[value] ? ` (${totalPeriodCounts[value]})` : ''}`;

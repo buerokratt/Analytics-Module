@@ -1,8 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BarChart, CartesianGrid, YAxis, Tooltip, Legend, Bar, Label, XAxis } from 'recharts';
-import { chartDataKey, dateFormatter, formatDate, getColor, getKeys, getTicks, round } from '../../util/charts-utils';
+import {
+  chartDataKey,
+  dateFormatter,
+  formatDate,
+  getColor,
+  getKeys,
+  getPeriodTotalCounts,
+  getTicks,
+  round,
+} from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { useTranslation } from 'react-i18next';
+import { use } from 'i18next';
 
 type Props = {
   data: any;
@@ -14,6 +24,7 @@ type Props = {
 
 const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod }) => {
   const [width, setWidth] = useState<number | null>(null);
+  const [totalPeriodCounts, setTotalPeriodCounts] = useState<Record<string, number>>({});
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
@@ -31,6 +42,18 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
     const millisecondInOneDay = 24 * 60 * 60 * 1000;
     minDate = minDate - millisecondInOneDay;
   }
+
+  useEffect(() => {
+    // todo does not update when changing period
+    console.log('hook', data.chartData);
+    const totals = getPeriodTotalCounts(data.chartData);
+    console.log('totals', totals);
+    setTotalPeriodCounts(totals);
+  }, [data.chartData]);
+
+  // console.log('data', data.chartData);
+  // console.log(unit);
+  // console.log('PERIOD COUNTS', getPeriodTotalCounts(data.chartData));
 
   const domain = [minDate, new Date(endDate).getTime()];
   const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5);
@@ -84,7 +107,20 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
           }}
           cursor={false}
         />
-        <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
+        <Legend
+          wrapperStyle={{ position: 'relative', marginTop: '20px' }}
+          formatter={(value) => {
+            // const totals = getPeriodTotalCounts(data.chartData);
+            console.log('totalPeriodCounts', totalPeriodCounts);
+            console.log('totalPeriodCounts[value]', totalPeriodCounts[value]);
+            // console.log('entry', entry);
+            // console.log('index', index);
+            return `${value}${totalPeriodCounts[value] ? ` (${totalPeriodCounts[value]})` : ''}`;
+
+            // return `${value}${Object.keys(totalPeriodCounts).includes(value) ? ` (${totalPeriodCounts[value]})` : ''}`;
+          }}
+          // accumulate="sum"
+        />
         {data?.chartData?.length > 0 &&
           getKeys(data.chartData).map((k, i) => {
             const isCount = k === t('chats.totalCount');

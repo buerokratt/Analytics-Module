@@ -9,6 +9,9 @@ type Props = {
 };
 
 const PieCharLegends = ({ data, percentages }: Props) => {
+  console.log('percentages', percentages);
+  console.log('data', data);
+
   return (
     <Track
       direction="vertical"
@@ -17,22 +20,19 @@ const PieCharLegends = ({ data, percentages }: Props) => {
       isFlex
       isMultiline
     >
-      {
-        percentages?.map((e: any) => {
-          const color = getColor(data, e.name);
+      {percentages?.map((e: any) => {
+        const color = getColor(data, e.name);
 
-          return (
-            <Track key={`track-${e.name}`}>
-              <div
-                className="legend_circle"
-                style={{ backgroundColor: color }}
-              />
-              <label style={{ color, maxLines: 1 }}>
-                {`${e.name}: ${e.value} %`}
-              </label>
-            </Track>
-          )})
-      }
+        return (
+          <Track key={`track-${e.name}`}>
+            <div
+              className="legend_circle"
+              style={{ backgroundColor: color }}
+            />
+            <label style={{ color, maxLines: 1 }}>{`${e.name}: ${e.value} %`}</label>
+          </Track>
+        );
+      })}
     </Track>
   );
 };

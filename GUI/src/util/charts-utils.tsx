@@ -52,23 +52,3 @@ export const chartDataKey = 'dateTime';
 export const round = (value: any) => Math.round(Number(value) * 100) / 100;
 
 export const getKeys = (data: any[]) => Array.from(new Set(data.flatMap((obj: any) => Object.keys(obj))));
-
-export const getPeriodTotalCounts = (chartData: Record<string, number>[]) => {
-  const totals: Record<string, number> = {};
-  console.log('chartData in COUNT', chartData);
-
-  // todo handle this and empty array
-  if (!chartData) return {};
-
-  chartData.forEach((entry) => {
-    Object.entries(entry).forEach(([key, value]) => {
-      if (key !== 'dateTime') {
-        totals[key] = (totals[key] ?? 0) + value;
-      }
-    });
-  });
-
-  console.log('totals', totals);
-
-  return totals;
-};

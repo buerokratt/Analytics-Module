@@ -1,18 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BarChart, CartesianGrid, YAxis, Tooltip, Legend, Bar, Label, XAxis } from 'recharts';
-import {
-  chartDataKey,
-  dateFormatter,
-  formatDate,
-  getColor,
-  getKeys,
-  getPeriodTotalCounts,
-  getTicks,
-  round,
-} from '../../util/charts-utils';
+import { chartDataKey, dateFormatter, formatDate, getColor, getKeys, getTicks, round } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { useTranslation } from 'react-i18next';
-import { use } from 'i18next';
 import { useTotalPeriodCounts } from '../../hooks/ useTotalPeriodCounts';
 
 type Props = {
@@ -99,17 +89,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
         />
         <Legend
           wrapperStyle={{ position: 'relative', marginTop: '20px' }}
-          formatter={(value) => {
-            // const totals = getPeriodTotalCounts(data.chartData);
-            // console.log('totalPeriodCounts', totalPeriodCounts);
-            // console.log('totalPeriodCounts[value]', totalPeriodCounts[value]);
-            // console.log('entry', entry);
-            // console.log('index', index);
-            return `${value}${totalPeriodCounts[value] ? ` (${totalPeriodCounts[value]})` : ''}`;
-
-            // return `${value}${Object.keys(totalPeriodCounts).includes(value) ? ` (${totalPeriodCounts[value]})` : ''}`;
-          }}
-          // accumulate="sum"
+          formatter={(value) => `${value}${totalPeriodCounts[value] ? ` (${totalPeriodCounts[value]})` : ''}`}
         />
         {data?.chartData?.length > 0 &&
           getKeys(data.chartData).map((k, i) => {

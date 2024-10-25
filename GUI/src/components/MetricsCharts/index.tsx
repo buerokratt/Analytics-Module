@@ -43,7 +43,12 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
 
   const buildChart = () => {
     if (selectedChart === 'pieChart') {
-      return <PieGraph data={data} />;
+      return (
+        <PieGraph
+          data={data}
+          unit={unit}
+        />
+      );
     } else if (selectedChart === 'lineChart') {
       return (
         <LineGraph

@@ -1,8 +1,7 @@
-import React from 'react';
 import { formatTotalPeriodCount, getColor } from '../../util/charts-utils';
 import Track from '../Track';
 import './PieGraph.scss';
-import { useTotalPeriodCounts } from '../../hooks/ useTotalPeriodCounts';
+import { usePeriodStatistics } from '../../hooks/usePeriodStatistics';
 
 type Props = {
   data: any;
@@ -11,7 +10,7 @@ type Props = {
 };
 
 const PieCharLegends = ({ data, percentages, unit }: Props) => {
-  const totalPeriodCounts = useTotalPeriodCounts(data.chartData, unit);
+  const periodStatistics = usePeriodStatistics(data.chartData, unit);
 
   return (
     <Track
@@ -31,7 +30,7 @@ const PieCharLegends = ({ data, percentages, unit }: Props) => {
               style={{ backgroundColor: color }}
             />
             <label style={{ color, maxLines: 1 }}>
-              {`${e.name}: ${e.value} %${formatTotalPeriodCount(totalPeriodCounts, e.name)}`}
+              {`${e.name}: ${e.value} %${formatTotalPeriodCount(periodStatistics, e.name)}`}
             </label>
           </Track>
         );

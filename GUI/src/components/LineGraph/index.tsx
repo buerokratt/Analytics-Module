@@ -10,7 +10,7 @@ import {
   getTicks,
   round,
 } from '../../util/charts-utils';
-import { useTotalPeriodCounts } from '../../hooks/ useTotalPeriodCounts';
+import { usePeriodStatistics } from '../../hooks/usePeriodStatistics';
 
 type Props = {
   data: any;
@@ -22,7 +22,7 @@ type Props = {
 const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
   const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
-  const totalPeriodCounts = useTotalPeriodCounts(data.chartData, unit);
+  const periodStatistics = usePeriodStatistics(data.chartData, unit);
 
   useEffect(() => {
     const handleResize = () => {
@@ -86,7 +86,7 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
         </YAxis>
         <Legend
           wrapperStyle={{ position: 'relative', marginTop: '20px' }}
-          formatter={(value) => `${value}${formatTotalPeriodCount(totalPeriodCounts, value)}`}
+          formatter={(value) => `${value}${formatTotalPeriodCount(periodStatistics, value)}`}
         />
         <CartesianGrid stroke="#f5f5f5" />
         {data?.chartData?.length > 0 &&

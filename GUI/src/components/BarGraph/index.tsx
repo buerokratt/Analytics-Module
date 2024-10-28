@@ -12,7 +12,7 @@ import {
 } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { useTranslation } from 'react-i18next';
-import { useTotalPeriodCounts } from '../../hooks/ useTotalPeriodCounts';
+import { usePeriodStatistics } from '../../hooks/usePeriodStatistics';
 
 type Props = {
   data: any;
@@ -24,7 +24,7 @@ type Props = {
 
 const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod }) => {
   const [width, setWidth] = useState<number | null>(null);
-  const totalPeriodCounts = useTotalPeriodCounts(data.chartData, unit);
+  const periodStatistics = usePeriodStatistics(data.chartData, unit);
 
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
@@ -98,7 +98,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
         />
         <Legend
           wrapperStyle={{ position: 'relative', marginTop: '20px' }}
-          formatter={(value) => `${value}${formatTotalPeriodCount(totalPeriodCounts, value)}`}
+          formatter={(value) => `${value}${formatTotalPeriodCount(periodStatistics, value)}`}
         />
         {data?.chartData?.length > 0 &&
           getKeys(data.chartData).map((k, i) => {

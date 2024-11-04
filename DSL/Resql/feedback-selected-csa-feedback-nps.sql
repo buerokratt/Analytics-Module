@@ -8,9 +8,9 @@ WITH chat_csas AS (
             PARTITION by base_id
             ORDER BY updated
 ) AS customer_support_id,
-        last_value(customer_support_display_name) over (
-            PARTITION by base_id
-            ORDER BY updated
+        first_value(customer_support_display_name) over (
+            PARTITION by customer_support_id
+            ORDER BY updated DESC
 ) AS customer_support_display_name,
         last_value(feedback_rating) over (
             PARTITION by base_id

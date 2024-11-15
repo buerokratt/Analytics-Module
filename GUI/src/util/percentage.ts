@@ -7,7 +7,6 @@ interface PercentageResult {
 }
 
 export const calculatePercentagesFromResponse = (response: Record<string, number>[]): PercentageResult[] => {
-  console.log('response', response);
   const totalCountTitle = i18n.t('chats.totalCount');
   const reducedValues: Record<string, number> = {};
 
@@ -18,8 +17,6 @@ export const calculatePercentagesFromResponse = (response: Record<string, number
       }
     }
   }
-
-  console.log('reducedValues', reducedValues);
 
   const percentages: PercentageResult[] = [];
   const total = Object.values(reducedValues).reduce((a, b) => a + b, 0);

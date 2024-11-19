@@ -20,7 +20,7 @@ const ChartToolTip = ({ active, payload }: TooltipProps<number, string>) => {
           <p key={`${key}-${k}`}>
             {key === chartDataKey || key === 'created'
               ? format(new Date(currData[chartDataKey]), 'yyyy-MM-dd')
-              : `${t(`chart.${key}`)}: ${value}`}
+              : `${t('chart.' + key)}: ${value}`}
           </p>
         );
       })}

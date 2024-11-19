@@ -1,15 +1,15 @@
-import React from 'react';
 import { format } from 'date-fns';
 import { TooltipProps } from 'recharts';
 import { chartDataKey, round } from '../../util/charts-utils';
 import './ChartToolTip.scss';
+import { useTranslation } from 'react-i18next';
 
 const ChartToolTip = ({ active, payload }: TooltipProps<number, string>) => {
-
   const currData = payload?.[0]?.payload?.payload ?? {};
+  const { t } = useTranslation();
 
   if (!active) {
-    return <></>
+    return <></>;
   }
 
   return (
@@ -20,7 +20,7 @@ const ChartToolTip = ({ active, payload }: TooltipProps<number, string>) => {
           <p key={`${key}-${k}`}>
             {key === chartDataKey || key === 'created'
               ? format(new Date(currData[chartDataKey]), 'yyyy-MM-dd')
-              : `${key}: ${value}`}
+              : `${t(`chart.${key}`)}: ${value}`}
           </p>
         );
       })}

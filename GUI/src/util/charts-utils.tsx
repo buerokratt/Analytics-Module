@@ -53,5 +53,7 @@ export const round = (value: any) => Math.round(Number(value) * 100) / 100;
 
 export const getKeys = (data: any[]) => Array.from(new Set(data.flatMap((obj: any) => Object.keys(obj))));
 
-export const formatTotalPeriodCount = (totalPeriodCounts: Record<string, number>, metric: string) =>
-  `${totalPeriodCounts[metric] ? ` (${totalPeriodCounts[metric]})` : ''}`;
+export const formatTotalPeriodCount = (totalPeriodCounts: Record<string, number>, metric: string) => {
+  // !== undefined to support 0 values
+  return `${totalPeriodCounts[metric] !== undefined ? ` (${totalPeriodCounts[metric]})` : ''}`;
+};

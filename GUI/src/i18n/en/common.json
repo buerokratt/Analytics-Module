@@ -185,7 +185,9 @@
     "forwardedChats": "Forwarded Chats",
     "forwardedExternally": "Forwarded Externally",
     "timeInterval": "Time Interval",
-    "noDataToPlot": "No data to plot"
+    "noDataToPlot": "No data to plot",
+    "name": "Name",
+    "value": "Value"
   },
   "reports": {
     "get-chat-count-total": "Total chat count",

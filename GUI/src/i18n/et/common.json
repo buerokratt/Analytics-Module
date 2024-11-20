@@ -184,7 +184,9 @@
     "forwardedChats": "Edastatud vestlused",
     "forwardedExternally": "Edastatud väliselt",
     "timeInterval": "Ajavahemik",
-    "noDataToPlot": "Puuduvad andmed, mida joonistada"
+    "noDataToPlot": "Puuduvad andmed, mida joonistada",
+    "name": "Nimi",
+    "value": "Väärtus"
   },
   "reports": {
     "get-chat-count-total": "Vestluste koguarv",

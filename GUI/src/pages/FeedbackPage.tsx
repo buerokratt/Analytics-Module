@@ -18,11 +18,12 @@ import { Subject } from 'rxjs';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { PaginationState, SortingState } from '@tanstack/react-table';
+import { Label } from '../components';
 
 const FeedbackPage: React.FC = () => {
   const { t } = useTranslation();
   const [chartData, setChartData] = useState({});
-  const [negativeFeedbackChats, setNegativeFeedbackChats] = useState<Chat[]>([]);
+  const [negativeFeedbackChats, setNegativeFeedbackChats] = useState<Chat[] | undefined>(undefined);
   const advisors = useRef<any[]>([]);
   const [advisorsList, setAdvisorsList] = useState<any[]>([]);
   const [currentMetric, setCurrentMetric] = useState('feedback.statuses');
@@ -114,7 +115,7 @@ const FeedbackPage: React.FC = () => {
     },
   ]);
 
-  const showNegativeChart = negativeFeedbackChats.length > 0 && currentConfigs?.metric === 'negative_feedback';
+  const showNegativeChart = negativeFeedbackChats != undefined && currentConfigs?.metric === 'negative_feedback';
 
   const [configsSubject] = useState(() => new Subject());
   useEffect(() => {
@@ -422,7 +423,7 @@ const FeedbackPage: React.FC = () => {
           unit={unit}
         />
       )}
-      {showNegativeChart && (
+      {showNegativeChart && (negativeFeedbackChats.length > 0 ?
         <ChatsTable
           dataSource={negativeFeedbackChats}
           pagination={pagination}
@@ -441,7 +442,7 @@ const FeedbackPage: React.FC = () => {
             const sorting = state.length === 0 ? 'created desc' : state[0].id + ' ' + (state[0].desc ? 'desc' : 'asc');
             fetchChatsWithNegativeFeedback(currentConfigs, pagination.pageIndex + 1, pagination.pageSize, sorting);
           }}
-        />
+        /> : <label style={{alignSelf: 'center', marginTop: '30px'}}>{t('feedback.no_negative_feedback_chats')}</label>
       )}
     </>
   );

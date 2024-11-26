@@ -108,6 +108,7 @@
     "advisor_chats": "Tagasiside nõustajate vestlustele",
     "selected_advisor_chats": "Tagasiside valitud nõustajale",
     "negative_feedback": "Negatiivse tagasisidega vestlused",
+    "no_negative_feedback_chats": "Vestlused puuduvad",
     "status_options": {
       "client_left_with_accepted": "Bürokratt - klient lahkus vastusega",
       "client_left_with_no_resolution": "Bürokratt - klient lahkus vastuseta",

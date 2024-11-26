@@ -108,6 +108,7 @@
     "advisor_chats": "Feedback on advisor conversations",
     "selected_advisor_chats": "Feedback to selected advisor",
     "negative_feedback": "Conversations with negative feedback",
+    "no_negative_feedback_chats": "There are no conversations",
     "status_options": {
       "client_left_with_accepted": "Bureaucrat - the client left with an answer",
       "client_left_with_no_resolution": "Bureaucrat - the customer left without an answer",

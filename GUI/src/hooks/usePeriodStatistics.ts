@@ -8,8 +8,11 @@ export const usePeriodStatistics = (chartData: Record<string, number>[] | undefi
   useEffect(() => {
     if (!chartData?.length) return;
 
-    if (unit === t('units.chats')) setPeriodStatistics(getPeriodTotalCounts(chartData));
-    if (unit === t('units.minutes') || unit === t('units.messages')) setPeriodStatistics(getPeriodAverages(chartData));
+    if (unit === t('units.chats')) {
+      setPeriodStatistics(getPeriodTotalCounts(chartData));
+    } else if (unit === t('units.minutes') || unit === t('units.messages')) {
+      setPeriodStatistics(getPeriodAveragesOrMedians(chartData, t('chats.medianWaitingTime')));
+    }
   }, [chartData, unit, t]);
 
   return periodStatistics;
@@ -27,23 +30,37 @@ const getPeriodTotalCounts = (chartData: Record<string, number>[]) => {
   return totals;
 };
 
-const getPeriodAverages = (chartData: Record<string, number>[]) => {
-  const sums: Record<string, number> = {};
-  const counts: Record<string, number> = {};
+const getPeriodAveragesOrMedians = (chartData: Record<string, number>[], medianKey: string) => {
+  const result: Record<string, number> = {};
+  const valuesByKey: Record<string, number[]> = {};
 
+  // Collect all values for each key
   chartData.forEach((entry) => {
     Object.entries(entry).forEach(([key, value]) => {
       if (key !== 'dateTime') {
-        sums[key] = (sums[key] ?? 0) + value;
-        counts[key] = (counts[key] ?? 0) + 1;
+        if (!valuesByKey[key]) valuesByKey[key] = [];
+        valuesByKey[key].push(value);
       }
     });
   });
 
-  const averages: Record<string, number> = {};
-  Object.keys(sums).forEach((key) => {
-    averages[key] = Number((sums[key] / counts[key]).toFixed(2));
+  Object.entries(valuesByKey).forEach(([key, values]) => {
+    if (key.includes(medianKey)) {
+      result[key] = calculateMedian(values);
+    } else {
+      result[key] = Number((values.reduce((a, b) => a + b, 0) / values.length).toFixed(2));
+    }
   });
 
-  return averages;
+  return result;
+};
+
+const calculateMedian = (numbers: number[]): number => {
+  const sorted = [...numbers].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+
+  if (sorted.length % 2 === 0) {
+    return Number(((sorted[middle - 1] + sorted[middle]) / 2).toFixed(2));
+  }
+  return Number(sorted[middle].toFixed(2));
 };

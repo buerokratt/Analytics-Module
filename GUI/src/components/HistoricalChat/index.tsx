@@ -14,9 +14,6 @@ type ChatProps = {
     chat: ChatType;
     header_link?: string;
     trigger: boolean;
-    onChatStatusChange: (event: string) => void;
-    onCommentChange: (comment: string) => void;
-    selectedStatus: string | null;
 };
 
 type GroupedMessage = {
@@ -39,10 +36,7 @@ const chatStatuses = [
 const HistoricalChat: FC<ChatProps> = ({
                                            chat,
                                            header_link,
-                                           trigger,
-                                           selectedStatus,
-                                           onChatStatusChange,
-                                           onCommentChange,
+                                           trigger
                                        }) => {
     const {t} = useTranslation();
     const chatRef = useRef<HTMLDivElement>(null);

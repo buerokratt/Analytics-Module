@@ -1,7 +1,7 @@
 declaration:
   call: declare
   version: 0.1
-  description: "Decription placeholder for 'ALL'"
+  description: "Decription placeholder for 'GET'"
   method: post
   accepts: json
   returns: json
@@ -16,13 +16,14 @@ extractRequestData:
   assign:
     chatId: ${incoming.body.chatId}
 
-getUnavailableEndedChats:
+getChatById:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/get-chat-messages"
+    url: "[#ANALYTICS_RESQL]/get-chat-by-id"
     body:
-      chatId: ${chatId}
+      id: ${chatId}
   result: res
 
 return_result:
-  return: ${res.response.body}
+   return: ${res.response.body[0]}  
+   next: end

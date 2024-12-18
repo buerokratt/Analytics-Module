@@ -1,96 +1,142 @@
-import { createColumnHelper, PaginationState, CellContext, SortingState } from '@tanstack/react-table';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { MdOutlineRemoveRedEye } from 'react-icons/md';
-import { getLinkToChat } from '../../resources/api-constants';
-import { Chat } from '../../types/chat';
-import { formatDate } from '../../util/charts-utils';
+import {CellContext, createColumnHelper, PaginationState, SortingState} from '@tanstack/react-table';
+import React, {useEffect, useMemo, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {MdOutlineRemoveRedEye} from 'react-icons/md';
+import {Chat} from '../../types/chat';
+import {formatDate} from '../../util/charts-utils';
 import Button from '../Button';
 import Card from '../Card';
 import DataTable from '../DataTable';
 import Icon from '../Icon';
 import Track from '../Track';
+import Drawer from "../Drawer";
+import HistoricalChat from "../HistoricalChat";
+import './ChatsTable.scss';
+import {useMutation} from "@tanstack/react-query";
+import {analyticsApi} from "../services/api";
 
 type Props = {
-  dataSource: Chat[];
-  startDate?: string;
-  endDate?: string;
-  pagination?: PaginationState;
-  sorting?: SortingState;
-  setSorting?: (state: SortingState) => void;
-  setPagination?: (state: PaginationState) => void;
+    dataSource: Chat[];
+    startDate?: string;
+    endDate?: string;
+    pagination?: PaginationState;
+    sorting?: SortingState;
+    setSorting?: (state: SortingState) => void;
+    setPagination?: (state: PaginationState) => void;
 };
 
 const ChatsTable = (props: Props) => {
-  const [chats, setChats] = useState<Chat[]>([]);
+    const [chats, setChats] = useState<Chat[]>([]);
+    const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+    const columnHelper = createColumnHelper<Chat>();
+    const {t} = useTranslation();
 
-  const columnHelper = createColumnHelper<Chat>();
-  const { t } = useTranslation();
+    useEffect(() => {
+        const fetchChats = async () => {
+            setChats(props.dataSource);
+        };
+        fetchChats().catch(console.error);
+    }, [props.dataSource]);
 
-  useEffect(() => {
-    const fetchChats = async () => {
-      setChats(props.dataSource);
-    };
-    fetchChats().catch(console.error);
-  }, [props.dataSource]);
+    const dateTimeFormat = (props: CellContext<Chat, string>) =>
+        formatDate(new Date(props.getValue()), 'd. MMM yyyy HH:mm:ss');
 
-  const dateTimeFormat = (props: CellContext<Chat, string>) =>
-    formatDate(new Date(props.getValue()), 'd. MMM yyyy HH:mm:ss');
 
-  const feedbackViewButton = (dataTableProps: any) => (
-    <a href={getLinkToChat(dataTableProps.row.original?.baseId ?? '', props.startDate, props.endDate)}>
-      <Button appearance="text">
-        <Track>
-          <Icon icon={<MdOutlineRemoveRedEye color={'rgba(0,0,0,0.54)'} />} />
-          {t('feedback.view')}
-        </Track>
-      </Button>
-    </a>
-  );
+    const fillChatData = (data: any) => {
+        getChatById.mutate(data.row.original.baseId ?? '');
+        setSelectedChat(selectedChat)
+    }
 
-  const chatColumns = useMemo(
-    () => [
-      columnHelper.accessor('baseId', {
-        header: 'ID',
-      }),
-      columnHelper.accessor('feedback', {
-        header: t('feedback.comment') ?? '',
-      }),
-      columnHelper.accessor('created', {
-        header: t('feedback.startTime') ?? '',
-        cell: dateTimeFormat,
-      }),
-      columnHelper.accessor('ended', {
-        header: t('feedback.endTime') ?? '',
-        cell: dateTimeFormat,
-      }),
-      columnHelper.accessor('rating', {
-        header: t('chart.rating') ?? '',
-      }),
-      columnHelper.display({
-        id: 'detail',
-        cell: feedbackViewButton,
-        meta: {
-          size: '1%',
+    const feedbackViewButton = (dataTableProps: any) => (
+        <Button
+            onClick={() => {
+                fillChatData(dataTableProps)
+            }}
+            appearance="text">
+            <Track>
+                <Icon icon={<MdOutlineRemoveRedEye color={'rgba(0,0,0,0.54)'}/>}/>
+                {t('feedback.view')}
+            </Track>
+        </Button>
+    );
+
+    const getChatById = useMutation({
+        mutationFn: (chatId: string) =>
+            analyticsApi.post('chats/get', {
+                chatId: chatId,
+            }),
+        onSuccess: (res: any) => {
+            setSelectedChat(res.data.response);
         },
-      }),
-    ],
-    []
-  );
+    });
 
-  return (
-    <Card>
-      <DataTable
-        data={chats}
-        columns={chatColumns}
-        pagination={props.pagination}
-        sorting={props.sorting}
-        sortable={true}
-        setSorting={props.setSorting}
-        setPagination={props.setPagination}
-      />
-    </Card>
-  );
+    const chatColumns = useMemo(
+        () => [
+            columnHelper.accessor('baseId', {
+                header: 'ID',
+            }),
+            columnHelper.accessor('feedback', {
+                header: t('feedback.comment') ?? '',
+            }),
+            columnHelper.accessor('created', {
+                header: t('feedback.startTime') ?? '',
+                cell: dateTimeFormat,
+            }),
+            columnHelper.accessor('ended', {
+                header: t('feedback.endTime') ?? '',
+                cell: dateTimeFormat,
+            }),
+            columnHelper.accessor('rating', {
+                header: t('chart.rating') ?? '',
+            }),
+            columnHelper.display({
+                id: 'detail',
+                cell: feedbackViewButton,
+                meta: {
+                    size: '3%',
+                    sticky: 'right'
+                },
+            }),
+        ],
+        []
+    );
+
+    return (
+
+        <div className="card-drawer-container">
+            <div className="card-wrapper">
+                <Card isScrollable={true}>
+                    <DataTable
+                        data={chats}
+                        columns={chatColumns}
+                        pagination={props.pagination}
+                        sorting={props.sorting}
+                        sortable={true}
+                        setSorting={props.setSorting}
+                        setPagination={props.setPagination}
+                    />
+                </Card>
+            </div>
+            {selectedChat && (
+                <div className="drawer-container">
+                    <Drawer
+                        title={
+                            selectedChat.endUserFirstName !== '' && selectedChat.endUserLastName !== ''
+                                ? `${selectedChat.endUserFirstName} ${selectedChat.endUserLastName}`
+                                : t('global.anonymous')
+                        }
+                        onClose={() => setSelectedChat(null)}
+                    >
+                        <HistoricalChat
+                            header_link={selectedChat.endUserUrl}
+                            chat={selectedChat}
+                            trigger={true}
+                        />
+                    </Drawer>
+                </div>
+            )}
+        </div>
+    );
 };
 
 export default ChatsTable;

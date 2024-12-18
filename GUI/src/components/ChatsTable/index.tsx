@@ -41,16 +41,10 @@ const ChatsTable = (props: Props) => {
     const dateTimeFormat = (props: CellContext<Chat, string>) =>
         formatDate(new Date(props.getValue()), 'd. MMM yyyy HH:mm:ss');
 
-
-    const fillChatData = (data: any) => {
-        getChatById.mutate(data.row.original.baseId ?? '');
-        setSelectedChat(selectedChat)
-    }
-
     const feedbackViewButton = (dataTableProps: any) => (
         <Button
             onClick={() => {
-                fillChatData(dataTableProps)
+                getChatById.mutate(dataTableProps.row.original.baseId ?? '');
             }}
             appearance="text">
             <Track>

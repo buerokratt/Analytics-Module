@@ -18,13 +18,17 @@ import { Subject } from 'rxjs';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { PaginationState, SortingState } from '@tanstack/react-table';
-import { Label } from '../components';
+import {analyticsApi} from "../components/services/api";
+import useStore from "../store/user/store";
+import {useMutation} from "@tanstack/react-query";
 
 const FeedbackPage: React.FC = () => {
   const { t } = useTranslation();
   const [chartData, setChartData] = useState({});
   const [negativeFeedbackChats, setNegativeFeedbackChats] = useState<Chat[] | undefined>(undefined);
   const advisors = useRef<any[]>([]);
+  const userInfo = useStore((state) => state.userInfo);
+  const [initPreferences, setInitPreferences] = useState<boolean>(false)
   const [advisorsList, setAdvisorsList] = useState<any[]>([]);
   const [currentMetric, setCurrentMetric] = useState('feedback.statuses');
   let random = () => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
@@ -42,6 +46,45 @@ const FeedbackPage: React.FC = () => {
   useEffect(() => {
     setAdvisorsList(advisors.current);
   }, [advisorsList]);
+
+  useEffect(() => {
+    if(initPreferences) {
+      fetchData();
+    }
+  }, [initPreferences]);
+
+  const fetchData = async () => {
+    try {
+      const response = await analyticsApi.get('/accounts/get-page-preference', {
+        params: { user_id: userInfo?.idCode, page_name: window.location.pathname},
+      });
+      if(response.data.pageResults !== undefined) {
+        updatePagePreference(response.data.pageResults)
+      }
+    }
+    catch (err) {
+      console.error('Failed to fetch data');
+    }
+  };
+
+  const updatePagePreference = (pageResults: number ): void => {
+    const updatedPagination: PaginationState = { ...pagination, pageSize: pageResults };
+    setPagination(updatedPagination);
+    console.log('updating pagination with', updatedPagination)
+    fetchChatsWithNegativeFeedback(currentConfigs,updatedPagination.pageIndex + 1, updatedPagination.pageSize, 'created desc');
+  }
+
+  const updatePageSize = useMutation({
+    mutationFn: (data: {
+      page_results: number;
+    }) => {
+      return analyticsApi.post('accounts/update-page-preference', {
+        user_id: userInfo?.idCode,
+        page_name: window.location.pathname,
+        page_results: data.page_results,
+      });
+    }
+  });
 
   const [feedbackMetrics, setFeedbackMetrics] = useState<Option[]>([
     {
@@ -134,6 +177,7 @@ const FeedbackPage: React.FC = () => {
             case 'selected_advisor_chats':
               return fetchNpsOnSelectedCSAChatsFeedback(config);
             case 'negative_feedback':
+              setInitPreferences(true)
               return fetchChatsWithNegativeFeedback(config);
             default:
               return fetchChatsStatuses(config);
@@ -358,12 +402,14 @@ const FeedbackPage: React.FC = () => {
 
   const fetchChatsWithNegativeFeedback = async (
     config: any,
-    page: number = 1,
-    pageSize: number = 10,
+    page: number = pagination.pageIndex + 1,
+    pageSize: number = pagination.pageSize,
     sorting: string = 'created desc'
   ) => {
     let chartData = {};
     try {
+
+      console.log('fetching wit size of', pageSize)
       const result: any = await request({
         url: getNegativeFeedbackChats(),
         method: Methods.post,
@@ -433,6 +479,7 @@ const FeedbackPage: React.FC = () => {
           setPagination={(state: PaginationState) => {
             if (state.pageIndex === pagination.pageIndex && state.pageSize === pagination.pageSize) return;
             setPagination(state);
+            updatePageSize.mutate({page_results: state.pageSize});
             const sort =
               sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + (sorting[0].desc ? 'desc' : 'asc');
             fetchChatsWithNegativeFeedback(currentConfigs, state.pageIndex + 1, state.pageSize, sort);

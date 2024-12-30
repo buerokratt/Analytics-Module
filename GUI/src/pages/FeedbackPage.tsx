@@ -28,7 +28,6 @@ const FeedbackPage: React.FC = () => {
   const [negativeFeedbackChats, setNegativeFeedbackChats] = useState<Chat[] | undefined>(undefined);
   const advisors = useRef<any[]>([]);
   const userInfo = useStore((state) => state.userInfo);
-  const [initPreferences, setInitPreferences] = useState<boolean>(false)
   const [advisorsList, setAdvisorsList] = useState<any[]>([]);
   const [currentMetric, setCurrentMetric] = useState('feedback.statuses');
   let random = () => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
@@ -47,19 +46,15 @@ const FeedbackPage: React.FC = () => {
     setAdvisorsList(advisors.current);
   }, [advisorsList]);
 
-  useEffect(() => {
-    if(initPreferences) {
-      fetchData();
-    }
-  }, [initPreferences]);
-
   const fetchData = async () => {
     try {
       const response = await analyticsApi.get('/accounts/get-page-preference', {
         params: { user_id: userInfo?.idCode, page_name: window.location.pathname},
       });
       if(response.data.pageResults !== undefined) {
-        updatePagePreference(response.data.pageResults)
+        return updatePagePreference(response.data.pageResults)
+      } else {
+        return undefined
       }
     }
     catch (err) {
@@ -67,11 +62,10 @@ const FeedbackPage: React.FC = () => {
     }
   };
 
-  const updatePagePreference = (pageResults: number ): void => {
+  const updatePagePreference = (pageResults: number ): PaginationState => {
     const updatedPagination: PaginationState = { ...pagination, pageSize: pageResults };
     setPagination(updatedPagination);
-    console.log('updating pagination with', updatedPagination)
-    fetchChatsWithNegativeFeedback(currentConfigs,updatedPagination.pageIndex + 1, updatedPagination.pageSize, 'created desc');
+    return updatedPagination;
   }
 
   const updatePageSize = useMutation({
@@ -177,8 +171,13 @@ const FeedbackPage: React.FC = () => {
             case 'selected_advisor_chats':
               return fetchNpsOnSelectedCSAChatsFeedback(config);
             case 'negative_feedback':
-              setInitPreferences(true)
-              return fetchChatsWithNegativeFeedback(config);
+              return fetchData().then((res) => {
+                if(res) {
+                  return fetchChatsWithNegativeFeedback(config,res.pageIndex + 1, res.pageSize, 'created desc')
+                } else {
+                  return fetchChatsWithNegativeFeedback(config)
+                }
+              })
             default:
               return fetchChatsStatuses(config);
           }
@@ -408,8 +407,6 @@ const FeedbackPage: React.FC = () => {
   ) => {
     let chartData = {};
     try {
-
-      console.log('fetching wit size of', pageSize)
       const result: any = await request({
         url: getNegativeFeedbackChats(),
         method: Methods.post,

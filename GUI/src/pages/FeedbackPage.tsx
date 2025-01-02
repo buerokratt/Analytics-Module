@@ -292,7 +292,7 @@ const FeedbackPage: React.FC = () => {
         .map((e) => {
           return {
             id: e?.customerSupportId ?? '',
-            labelKey: e?.customerSupportDisplayName ?? '',
+            labelKey: e?.customerSupportFullName ?? '',
             color: randomColor(),
             isSelected: true,
           };
@@ -321,11 +321,11 @@ const FeedbackPage: React.FC = () => {
         .reduce((a: any, b: any) => {
           const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
           if (dateRow) {
-            dateRow[b[t('chart.customerSupportDisplayName')]] = b[t('chart.nps')];
+            dateRow[b[t('chart.customerSupportFullName')]] = b[t('chart.nps')];
           } else {
             a.push({
               [chartDataKey]: b[chartDataKey],
-              [b[t('chart.customerSupportDisplayName')]]: b[t('chart.nps')],
+              [b[t('chart.customerSupportFullName')]]: b[t('chart.nps')],
             });
           }
           return a;

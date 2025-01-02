@@ -1,6 +1,7 @@
 SELECT date_trunc(:metric, chat.created) AS date_time,
        max("user".display_name) AS customer_support_display_name,
        max("user".id_code) AS customer_support_id,
+       max(CONCAT("user".first_name, ' ', "user".last_name)) AS customer_support_full_name,
        COUNT(DISTINCT chat.base_id)
 FROM chat
 JOIN message ON message.chat_base_id = chat.base_id

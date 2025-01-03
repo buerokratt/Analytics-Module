@@ -224,7 +224,7 @@ const AdvisorsPage: React.FC = () => {
         .map((e) => {
           return {
             id: e?.customerSupportId ?? '',
-            labelKey: e?.customerSupportDisplayName ?? '',
+            labelKey: e?.customerSupportFullName ?? '',
             color: randomColor(),
             isSelected: true,
           };
@@ -253,11 +253,11 @@ const AdvisorsPage: React.FC = () => {
         .reduce((a: any, b: any) => {
           const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
           if (dateRow) {
-            dateRow[b[t('chart.customerSupportDisplayName')]] = b[t('chart.count')];
+            dateRow[b[t('chart.customerSupportFullName')]] = b[t('chart.count')];
           } else {
             a.push({
               [chartDataKey]: b[chartDataKey],
-              [b[t('chart.customerSupportDisplayName')]]: b[t('chart.count')],
+              [b[t('chart.customerSupportFullName')]]: b[t('chart.count')],
             });
           }
           return a;
@@ -311,7 +311,7 @@ const AdvisorsPage: React.FC = () => {
         .map((e) => {
           return {
             id: e?.customerSupportId ?? '',
-            labelKey: e?.customerSupportDisplayName ?? '',
+            labelKey: e?.customerSupportFullName ?? '',
             color: randomColor(),
             isSelected: true,
           };
@@ -340,11 +340,11 @@ const AdvisorsPage: React.FC = () => {
         .reduce((a: any, b: any) => {
           const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
           if (dateRow) {
-            dateRow[b[t('chart.customerSupportDisplayName')]] = b[t('chart.avgMin')];
+            dateRow[b[t('chart.customerSupportFullName')]] = b[t('chart.avgMin')];
           } else {
             a.push({
               [chartDataKey]: b[chartDataKey],
-              [b[t('chart.customerSupportDisplayName')]]: b[t('chart.avgMin')],
+              [b[t('chart.customerSupportFullName')]]: b[t('chart.avgMin')],
             });
           }
           return a;

@@ -111,6 +111,7 @@ const ChatsTable = (props: Props) => {
                     <DataTable
                         data={chats}
                         columns={chatColumns}
+                        selectedRow={(row) => row.original.baseId === selectedChat?.id}
                         pagination={props.pagination}
                         sorting={props.sorting}
                         sortable={true}

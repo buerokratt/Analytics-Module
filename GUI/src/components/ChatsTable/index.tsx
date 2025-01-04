@@ -2,7 +2,7 @@ import {CellContext, createColumnHelper, PaginationState, SortingState} from '@t
 import React, {useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {MdOutlineRemoveRedEye} from 'react-icons/md';
-import {Chat} from '../../types/chat';
+import {BACKOFFICE_NAME, Chat} from '../../types/chat';
 import {formatDate} from '../../util/charts-utils';
 import Button from '../Button';
 import Card from '../Card';
@@ -28,7 +28,8 @@ type Props = {
 const ChatsTable = (props: Props) => {
     const [chats, setChats] = useState<Chat[]>([]);
     const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
-    const columnHelper = createColumnHelper<Chat>();
+    type CombinedRow = Chat & { firstName?: string; lastName?: string };
+    const columnHelper = createColumnHelper<CombinedRow>();
     const {t} = useTranslation();
 
     useEffect(() => {
@@ -69,6 +70,13 @@ const ChatsTable = (props: Props) => {
             columnHelper.accessor('baseId', {
                 header: 'ID',
             }),
+            columnHelper.accessor(
+                (row) => row.firstName ?`${row.firstName ?? ''} ${row.lastName ?? ''}` : BACKOFFICE_NAME.DEFAULT,
+                {
+                    id: `name`,
+                    header: t('chat.history.csaName') ?? '',
+                }
+            ),
             columnHelper.accessor('feedback', {
                 header: t('feedback.comment') ?? '',
             }),
@@ -125,7 +133,8 @@ const ChatsTable = (props: Props) => {
                         <HistoricalChat
                             header_link={selectedChat.endUserUrl}
                             chat={selectedChat}
-                            trigger={true}/>
+                            trigger={true}
+                        />
                     </Drawer>
                 </div>
             )}

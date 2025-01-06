@@ -38,3 +38,40 @@
     }
   }
 }
+
+.reset {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.5;
+}
+
+.reset h1,
+.reset h2,
+.reset h3,
+.reset h4,
+.reset h5,
+.reset h6 {
+  margin: 0 0 1rem !important;
+  padding: 0 !important;
+}
+
+.reset p {
+  margin: 0 0 1rem !important;
+  padding: 0 !important;
+}
+
+.reset ul,
+.reset ol {
+  margin: 0 0 1rem !important;
+  padding-left: 1.5rem;
+}
+
+.reset li {
+  margin: 0 0 0.5rem !important;
+  padding: 0 !important;
+}
+
+.reset a {
+  text-decoration: none;
+  color: inherit;
+}

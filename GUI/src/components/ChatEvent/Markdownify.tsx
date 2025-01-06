@@ -22,7 +22,7 @@ const LinkPreview: React.FC<{ href: string }> = ({ href }) => {
 };
 
 const Markdownify: React.FC<MarkdownifyProps> = ({ message }) => (
-  <div>
+  <div className={'reset'}>
     <Markdown
       options={{
         enforceAtxHeadings: true,

@@ -4,6 +4,10 @@ export enum CHAT_STATUS {
   REDIRECTED = 'REDIRECTED',
 }
 
+export enum BACKOFFICE_NAME {
+  DEFAULT = 'Bürokratt'
+}
+
 export enum CHAT_EVENTS {
   ANSWERED = 'answered',
   TERMINATED = 'terminated',
@@ -33,6 +37,21 @@ export enum CHAT_EVENTS {
   REQUESTED_CHAT_FORWARD_ACCEPTED = 'requested-chat-forward-accepted',
   REQUESTED_CHAT_FORWARD_REJECTED = 'requested-chat-forward-rejected',
   READ = 'message-read',
+  ASK_TO_FORWARD_TO_CSA = 'ask_to_forward_to_csa',
+  FORWARDED_TO_BACKOFFICE = 'forwarded_to_backoffice',
+  CONTINUE_CHATTING_WITH_BOT = 'continue_chatting_with_bot',
+  UNAVAILABLE_CONTACT_INFORMATION_FULFILLED = 'unavailable-contact-information-fulfilled',
+  CONTACT_INFORMATION_SKIPPED = 'contact-information-skipped',
+  UNAVAILABLE_ORGANIZATION = 'unavailable_organization',
+  UNAVAILABLE_CSAS = 'unavailable_csas',
+  UNAVAILABLE_CSAS_ASK_CONTACTS = 'unavailable_csas_ask_contacts',
+  UNAVAILABLE_HOLIDAY = 'unavailable_holiday',
+  ASSIGN_PENDING_CHAT_CSA = 'pending-assigned',
+  PENDING_USER_REACHED = 'user-reached',
+  PENDING_USER_NOT_REACHED = 'user-not-reached',
+  USER_AUTHENTICATED = 'user-authenticated',
+  WAITING_VALIDATION = 'waiting_validation',
+  APPROVED_VALIDATION = 'approved_validation',
 }
 
 export interface Chat {

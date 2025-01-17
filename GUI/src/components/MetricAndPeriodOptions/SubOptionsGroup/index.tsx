@@ -6,36 +6,28 @@ import { SubOption } from '../types'
 import './styles.scss'
 
 interface SubOptionsGroupProps {
-  label: string
-  subOptions: SubOption[]
-  onChange: (values: string[]) => void
-  useColumns?: boolean
+  label: string;
+  subOptions: SubOption[];
+  selectedValues: string[];
+  onChange: (values: string[]) => void;
+  useColumns?: boolean;
 }
 
-const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({ label, subOptions, onChange, useColumns }) => {
-  const { t } = useTranslation()
-  const [selectedValues, setSelectedValues] = useState<string[]>(
-    subOptions.filter((x) => x.isSelected).map((x) => x.id),
-  )
-
-  useEffect(() => {
-    const selectedOptions = subOptions
-      .filter((x => x.isSelected === undefined || x.isSelected === true))
-      .map((x) => x.id)
-    setSelectedValues(selectedOptions)
-  }, [subOptions])
-
-  useEffect(() => {
-    onChange(selectedValues)
-  }, [selectedValues.length])
+const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({
+                                                           label,
+                                                           subOptions,
+                                                           selectedValues,
+                                                           onChange,
+                                                           useColumns,
+                                                         }) => {
+  const { t } = useTranslation();
 
   const handleOptionClicked = (option: SubOption) => {
-    const newlist = selectedValues.filter(x => x !== option.id)
-    if (newlist.length == selectedValues.length)
-      setSelectedValues([...selectedValues, option.id])
-    else
-      setSelectedValues(newlist)
-  }
+    const newList = selectedValues.includes(option.id)
+        ? selectedValues.filter((x) => x !== option.id)
+        : [...selectedValues, option.id];
+    onChange(newList);
+  };
 
   return (
     <Track gap={100} isAlignItems={false}>

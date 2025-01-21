@@ -52,6 +52,7 @@
     "openMenu": "Open menu"
   },
   "general": {
+    "selectAll": "Select All",
     "period": "Period",
     "chooseMetric": "Choose a metric",
     "additionalOptions": "Additional Options",

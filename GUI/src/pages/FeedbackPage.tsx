@@ -34,6 +34,7 @@ const FeedbackPage: React.FC = () => {
   const randomColor = () => '#' + ((random() * 0xffffff) << 0).toString(16);
   const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
+  const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -191,6 +192,7 @@ const FeedbackPage: React.FC = () => {
   }, []);
 
   const fetchChatsStatuses = async (config: MetricOptionsState) => {
+    setShowSelectAll(false)
     let chartData = {};
     const events =
       config?.options.filter(
@@ -255,6 +257,7 @@ const FeedbackPage: React.FC = () => {
   };
 
   const fetchAverageFeedbackOnBuerokrattChats = async (config: any) => {
+    setShowSelectAll(false)
     let chartData = {};
     try {
       const result: any = await request({
@@ -284,6 +287,7 @@ const FeedbackPage: React.FC = () => {
   };
 
   const fetchNpsOnCSAChatsFeedback = async (config: any) => {
+    setShowSelectAll(false)
     let chartData = {};
     try {
       const result: any = await request({
@@ -313,6 +317,7 @@ const FeedbackPage: React.FC = () => {
   };
 
   const fetchNpsOnSelectedCSAChatsFeedback = async (config: any) => {
+    setShowSelectAll(true)
     let chartData = {};
     try {
       const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
@@ -405,6 +410,7 @@ const FeedbackPage: React.FC = () => {
     pageSize: number = pagination.pageSize,
     sorting: string = 'created desc'
   ) => {
+    setShowSelectAll(false)
     let chartData = {};
     try {
       const result: any = await request({
@@ -445,6 +451,7 @@ const FeedbackPage: React.FC = () => {
       <h1>{t('menu.feedback')}</h1>
       <OptionsPanel
         metricOptions={feedbackMetrics}
+        enableSelectAll={showSelectAll}
         dateFormat="yyyy-MM-dd"
         onChange={(config) => {
           setCurrentConfigs(config);

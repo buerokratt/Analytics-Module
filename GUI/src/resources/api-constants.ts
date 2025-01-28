@@ -54,7 +54,7 @@ export const getBykPercentOfCorrecltyUnderstood = (): string => {
 };
 
 export const getXlsx = (): string => {
-  return baseUrl + '/csv';
+  return baseUrl + '/xlsx';
 };
 
 // Feedback

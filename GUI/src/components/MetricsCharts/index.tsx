@@ -71,8 +71,6 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
     }
   };
 
-  // todo fix burokratt/nopuistaja prefix
-
   const downloadXlsx = async (data: any[]) => {
     const modifiedData: any[] = data.map((item) => {
       const modifiedItem: any = { ...item };

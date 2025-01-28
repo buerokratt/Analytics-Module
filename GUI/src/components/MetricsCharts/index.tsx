@@ -6,7 +6,7 @@ import BarGraph from '../BarGraph';
 import './MetricsCharts.scss';
 import LineGraph from '../LineGraph';
 import PieGraph from '../PieGraph';
-import { getCsv } from '../../resources/api-constants';
+import { getXlsx } from '../../resources/api-constants';
 import { ChartType } from '../../types/chart-type';
 import { chartDataKey, formatDate, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
@@ -90,7 +90,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
         base64String: string;
       }
     >({
-      url: getCsv(),
+      url: getXlsx(),
       method: Methods.post,
       withCredentials: true,
       data: {

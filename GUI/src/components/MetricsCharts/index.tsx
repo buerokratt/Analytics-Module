@@ -71,7 +71,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
     }
   };
 
-  const downloadCSV = async (data: any[]) => {
+  const downloadXlsx = async (data: any[]) => {
     const modifiedData: any[] = data.map((item) => {
       const modifiedItem: any = { ...item };
       getKeys(data).forEach((propertyName: any) => {
@@ -103,10 +103,6 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
         }),
       },
     });
-
-    // todo remove Buffer npm package?
-    // todo rename CSV button
-    // todo search code for CSV
 
     const blob = new Blob([Buffer.from(res.base64String, 'base64')], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -145,14 +141,14 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
               appearance="text"
               style={{ marginRight: 15 }}
               onClick={() => {
-                downloadCSV(data.chartData);
+                downloadXlsx(data.chartData);
               }}
             >
               <Icon
                 icon={<MdOutlineDownload />}
                 size="small"
               />
-              {t('feedback.csv')}
+              {t('feedback.xlsx')}
             </Button>
             <FormSelect
               name={''}

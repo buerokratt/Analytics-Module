@@ -262,7 +262,7 @@ get-pct-correctly-understood:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
   result: get_pct_correctly_understood_result
-  
+
 gather_responses:
   assign:
     results: ${[get_chat_count_total_result,get_chat_count_no_csa_result,get_avg_waiting_time_result,get_avg_messages_result,get_avg_time_result,get_avg_time_no_csa_result,get_avg_time_csa_result,get_avg_session_length_client_left_result,get_avg_session_length_csa_result,get_avg_session_length_no_csa_result,get_avg_response_time_result,get_pct_correctly_understood_result]}
@@ -273,23 +273,24 @@ convert_data:
   args:
     url: "[#ANALYTICS_DMAPPER]/hbs/analytics/array-to-object"
     headers:
-      type: 'json'
+      type: "json"
     body:
       results: ${results}
       fields: ${fields}
       layout: false
   result: dataObject
 
+# // todo???
 to_csv:
   template: csv
   requestType: post
   body:
     data: ${[dataObject.response.body]}
-    qul: ''
-    del: ''
+    qul: ""
+    del: ""
   result: csv
 
-return:      
+return:
   return: ${csv}
   next: end
   status: 200

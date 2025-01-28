@@ -64,6 +64,7 @@ const ReportsPage = () => {
     },
   ]);
 
+  // todo wtf is this?
   const getCSVFile = async () => {
     const result: any = await request({
       url: downloadOpenDataCSV(),

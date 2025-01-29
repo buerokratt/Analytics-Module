@@ -15,7 +15,12 @@ chat_lengths AS (
   WHERE chat.base_id IN (SELECT base_id FROM chats)
   GROUP BY chat.base_id
 )
-SELECT date_time, max("user".display_name) AS customer_support_display_name, max("user".id_code) AS customer_support_id, ROUND(EXTRACT(epoch FROM COALESCE(AVG(chat_length), '0 seconds'::interval)) / 60) AS avg_min
+SELECT
+    date_time,
+    max("user".display_name) AS customer_support_display_name,
+    max(CONCAT("user".first_name, ' ', "user".last_name)) AS customer_support_full_name,
+    max("user".id_code) AS customer_support_id,
+    ROUND(EXTRACT(epoch FROM COALESCE(AVG(chat_length), '0 seconds'::interval)) / 60) AS avg_min
 FROM chats
 LEFT JOIN chat_lengths ON chats.base_id = chat_lengths.base_id
 LEFT JOIN "user" ON "user".id_code = chats.author_id

@@ -11,15 +11,16 @@ import './PieGraph.scss';
 
 type Props = {
   data: any;
+  unit?: string;
 };
 
-const PieGraph = ({ data }: Props) => {
+const PieGraph = ({ data, unit }: Props) => {
   const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
   const percentages = useMemo(() => calculatePercentagesFromResponse(data?.chartData ?? []), [data?.chartData]);
-  
+
   useEffect(() => {
     const handleResize = () => {
       setWidth(ref.current?.clientWidth ?? 0);
@@ -38,28 +39,32 @@ const PieGraph = ({ data }: Props) => {
           data={data.chartData}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
-            <Pie
-              data={percentages}
-              cx="50%"
-              cy="50%"
-              outerRadius='100%'
-              fill="#8884d8"
-              dataKey="value"
-              nameKey="name"
-            >
-              {percentages.map((e: any) =>
-                <Cell
-                  key={`cell-${e['name']}`}
-                  type="monotone"
-                  stroke={getColor(data, e['name'])}
-                  fill={getColor(data, e['name'])}
-                />
-              )}
-            </Pie>
+          <Pie
+            data={percentages}
+            cx="50%"
+            cy="50%"
+            outerRadius="100%"
+            fill="#8884d8"
+            dataKey="value"
+            nameKey="name"
+          >
+            {percentages.map((e: any) => (
+              <Cell
+                key={`cell-${e['name']}`}
+                type="monotone"
+                stroke={getColor(data, e['name'])}
+                fill={getColor(data, e['name'])}
+              />
+            ))}
+          </Pie>
           <Tooltip content={data?.percentages ? <PercentageToolTip /> : <ChartToolTip />} />
         </PieChart>
         {percentages.length === 0 && <span>{t('chart.noDataToPlot')}</span>}
-        <PieCharLegends data={data} percentages={percentages} />
+        <PieCharLegends
+          data={data}
+          percentages={percentages}
+          unit={unit}
+        />
       </Track>
     </div>
   );

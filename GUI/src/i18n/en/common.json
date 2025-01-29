@@ -128,7 +128,7 @@
       "response_sent_to_client_email": "answered in another channel",
       "other": "other reasons"
     },
-    "csv": "CSV",
+    "xlsx": "XLSX",
     "startTime": "Start time",
     "endTime": "End time",
     "status": "Status",
@@ -435,7 +435,7 @@
       "messageApproved": "Message approved successfully",
       "messageChangeFailed": "Message change failed",
       "header": {
-        "id" : "Id",
+        "id": "Id",
         "chatId": "Chat Id",
         "message": "Message",
         "requestedAt": "Requested At",

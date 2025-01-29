@@ -6,12 +6,12 @@ import BarGraph from '../BarGraph';
 import './MetricsCharts.scss';
 import LineGraph from '../LineGraph';
 import PieGraph from '../PieGraph';
-import { getCsv } from '../../resources/api-constants';
-import { saveAs } from 'file-saver';
+import { getXlsx } from '../../resources/api-constants';
 import { ChartType } from '../../types/chart-type';
 import { chartDataKey, formatDate, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { request, Methods } from '../../util/axios-client';
+import { Buffer } from 'buffer';
 
 type Props = {
   title: any;
@@ -71,7 +71,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
     }
   };
 
-  const downloadCSV = async (data: any[]) => {
+  const downloadXlsx = async (data: any[]) => {
     const modifiedData: any[] = data.map((item) => {
       const modifiedItem: any = { ...item };
       getKeys(data).forEach((propertyName: any) => {
@@ -82,8 +82,15 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       return modifiedItem;
     });
 
-    const res: any = await request({
-      url: getCsv(),
+    const res = await request<
+      {
+        data: unknown[];
+      },
+      {
+        base64String: string;
+      }
+    >({
+      url: getXlsx(),
       method: Methods.post,
       withCredentials: true,
       data: {
@@ -94,12 +101,27 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
             ...rest,
           };
         }),
-        del: '',
-        qul: '',
       },
-      responseType: 'blob',
     });
-    saveAs(res, 'metrics.csv');
+
+    const blob = new Blob([Buffer.from(res.base64String, 'base64')], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    const fileName = 'metrics.xlsx';
+
+    if (window.showSaveFilePicker) {
+      const handle = await window.showSaveFilePicker({ suggestedName: fileName });
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      writable.close();
+    } else {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
   };
 
   return (
@@ -119,14 +141,14 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
               appearance="text"
               style={{ marginRight: 15 }}
               onClick={() => {
-                downloadCSV(data.chartData);
+                downloadXlsx(data.chartData);
               }}
             >
               <Icon
                 icon={<MdOutlineDownload />}
                 size="small"
               />
-              {t('feedback.csv')}
+              {t('feedback.xlsx')}
             </Button>
             <FormSelect
               name={''}

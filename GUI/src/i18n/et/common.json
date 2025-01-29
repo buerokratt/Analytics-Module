@@ -128,7 +128,7 @@
       "response_sent_to_client_email": "vastatud teises kanalis",
       "other": "muud põhjused"
     },
-    "csv": "CSV",
+    "xlsx": "XLSX",
     "startTime": "Algusaeg",
     "endTime": "Lõppaeg",
     "status": "Staatus",

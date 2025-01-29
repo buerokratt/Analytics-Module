@@ -65,6 +65,8 @@ const ReportsPage = () => {
   ]);
 
   const getCSVFile = async () => {
+    // TODO: temporary debug logging, remove later
+    console.log('getCSVFile input', { start: options?.start, end: options?.end, metrics: options?.options });
     const result: any = await request({
       url: downloadOpenDataCSV(),
       method: Methods.post,

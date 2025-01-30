@@ -8,7 +8,7 @@ import LineGraph from '../LineGraph';
 import PieGraph from '../PieGraph';
 import { getXlsx } from '../../resources/api-constants';
 import { ChartType } from '../../types/chart-type';
-import { chartDataKey, formatDate, getKeys } from '../../util/charts-utils';
+import { chartDataKey, formatTimestamp, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { request, Methods } from '../../util/axios-client';
 import { Buffer } from 'buffer';
@@ -97,7 +97,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
         data: modifiedData.map((p) => {
           const { [chartDataKey]: originalKey, ...rest } = p;
           return {
-            [t(`global.${chartDataKey}`)]: formatDate(new Date(originalKey), 'dd.MM.yyyy'),
+            [t(`global.${chartDataKey}`)]: formatTimestamp(originalKey),
             ...rest,
           };
         }),
@@ -167,5 +167,3 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
 };
 
 export default MetricsCharts;
-
-const formatTimestamp = (timestamp: string) => formatDate(new Date(timestamp), 'dd.MM.yyyy');

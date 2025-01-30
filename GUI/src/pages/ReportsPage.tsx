@@ -19,7 +19,7 @@ import { saveAs } from 'file-saver';
 import TooltipWrapper from '../components/TooltipWrapper';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
-import { t } from 'i18next';
+import { formatTimestamp } from '../util/charts-utils';
 
 type ScheduledDataset = {
   datasetId: string;
@@ -66,8 +66,6 @@ const ReportsPage = () => {
   ]);
 
   const getCSVFile = async () => {
-    // TODO: temporary debug logging, remove later
-    console.log('getCSVFile input', { start: options?.start, end: options?.end, metrics: options?.options });
     const result: any = await request({
       url: downloadOpenDataCSV(),
       method: Methods.post,
@@ -77,6 +75,12 @@ const ReportsPage = () => {
         end: options?.end,
         metrics: options?.options,
         metric_names: openDataOptions.flatMap((o) => o.subOptions?.map((s) => t(s.labelKey))),
+        date_rows: [
+          [t('global.startDate'), options?.start && formatTimestamp(options.start)],
+          [t('global.endDate'), options?.end && formatTimestamp(options.end)],
+          // Empty row in XSLX
+          [],
+        ],
       },
       responseType: 'blob',
     });

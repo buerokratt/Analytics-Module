@@ -8,7 +8,9 @@ declaration:
   namespace: analytics
   allowlist:
     body:
-      # -
+      - date_rows:
+        type: array
+        description: "Array of string arrays for the date rows at the top of the XSLX file"
       - field: end
         type: string
         description: "Body field 'end'"

@@ -15,11 +15,12 @@ import APISetupDrawer from '../components/OpenData/APISetupDrawer';
 import { ODPSettings } from '../types/reports';
 import DatasetCreation from '../components/OpenData/DatasetCreation';
 import Popup from '../components/Popup';
-import { saveAs } from 'file-saver';
 import TooltipWrapper from '../components/TooltipWrapper';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { formatTimestamp } from '../util/charts-utils';
+import { Buffer } from 'buffer';
+import { CgSpinner } from 'react-icons/cg';
 
 type ScheduledDataset = {
   datasetId: string;
@@ -35,6 +36,7 @@ const ReportsPage = () => {
   const [datasetCreationVisible, setDatasetCreationVisible] = useState<any>(false);
   const [apiSettings, setApiSettings] = useState<ODPSettings>({ odpKey: null, orgId: null });
   const [datasets, setDatasets] = useState<ScheduledDataset[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const [isSettingsConfirmationVisible, setIsSettingsConfirmationVisible] = useState(false);
 
@@ -66,25 +68,62 @@ const ReportsPage = () => {
   ]);
 
   const getCSVFile = async () => {
-    const result: any = await request({
-      url: downloadOpenDataCSV(),
-      method: Methods.post,
-      withCredentials: true,
-      data: {
-        start: options?.start,
-        end: options?.end,
-        metrics: options?.options,
-        metric_names: openDataOptions.flatMap((o) => o.subOptions?.map((s) => t(s.labelKey))),
-        date_rows: [
-          [t('global.startDate'), options?.start && formatTimestamp(options.start)],
-          [t('global.endDate'), options?.end && formatTimestamp(options.end)],
-          // Empty row in XSLX
-          [],
-        ],
-      },
-      responseType: 'blob',
-    });
-    saveAs(result, 'metrics.csv');
+    if (!options) return;
+
+    setLoading(true);
+
+    try {
+      const result = await request<
+        {
+          start: string;
+          end: string;
+          metrics: string[];
+          metric_names: string[];
+          date_rows: string[][];
+        },
+        {
+          base64String: string;
+        }
+      >({
+        url: downloadOpenDataCSV(),
+        method: Methods.post,
+        withCredentials: true,
+        data: {
+          start: options?.start,
+          end: options?.end,
+          metrics: options?.options,
+          metric_names: openDataOptions.flatMap((o) => o.subOptions?.map((s) => t(s.labelKey)) ?? []),
+          date_rows: [
+            [t('global.startDate'), options?.start && formatTimestamp(options.start)],
+            [t('global.endDate'), options?.end && formatTimestamp(options.end)],
+            [],
+          ],
+        },
+      });
+
+      const blob = new Blob([Buffer.from(result.base64String, 'base64')], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+      const fileName = 'metrics.xlsx';
+
+      if (window.showSaveFilePicker) {
+        const handle = await window.showSaveFilePicker({ suggestedName: fileName });
+        const writable = await handle.createWritable();
+        await writable.write(blob);
+        writable.close();
+      } else {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error('Error getting CSV file:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fetchSettings = async () => {
@@ -141,7 +180,8 @@ const ReportsPage = () => {
               appearance="secondary"
               onClick={() => getCSVFile()}
             >
-              {t('reports.download_csv')}
+              {loading && <CgSpinner className="spinner" />}
+              {!loading && t('reports.download_csv')}
             </Button>
           </Track>
         </Section>

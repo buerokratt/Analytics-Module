@@ -37,7 +37,7 @@ get_metrics:
 convert_data:
   call: http.post
   args:
-    url: "[#ANALYTICS_DMAPPER]/hbs/analytics/array-to-object"
+    url: "[#ANALYTICS_DMAPPER]/hbs/analytics/get-metric-rows"
     headers:
       type: "json"
     body:
@@ -46,18 +46,31 @@ convert_data:
       layout: false
   result: dataObject
 
-to_csv:
-  template: csv
-  requestType: post
-  body:
-    data: ${[dataObject.response.body]}
-    qul: ""
-    del: ""
-  result: csv
+# todo remove Õigesti mõistetud küsimuste %
+# todo merge arrays to also return date_rows
+# todo common method in React code
+# todo excel width
+# todo excel numbers, not strings
 
-return:
+# to_csv:
+#   template: csv
+#   requestType: post
+#   body:
+#     data: ${dataObject.response.body}
+#     qul: ""
+#     del: ""
+#   result: csv
+
+getXlsxData:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_DMAPPER]/conversion/array-to-xlsx"
+    body:
+      data: ${dataObject.response.body}
+  result: xlsxData
+
+returnSuccess:
   wrapper: false
-  headers:
-    Content-disposition: "attachment;filename=metrics.csv"
-  return: ${csv}
+  return: ${xlsxData.response.body}
+  next: end
   status: 200

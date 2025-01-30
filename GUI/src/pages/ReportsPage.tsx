@@ -19,7 +19,6 @@ import TooltipWrapper from '../components/TooltipWrapper';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { formatTimestamp } from '../util/charts-utils';
-import { Buffer } from 'buffer';
 import { CgSpinner } from 'react-icons/cg';
 import { saveFile } from 'util/file';
 
@@ -67,7 +66,6 @@ const ReportsPage = () => {
     },
   ]);
 
-  // todo style button width when shows loader
   // # todo also create TRAINING PR
 
   const getXlsxFile = async () => {
@@ -165,6 +163,7 @@ const ReportsPage = () => {
               disabled={options?.options.length === 0}
               appearance="secondary"
               onClick={() => getXlsxFile()}
+              style={{ width: '177px', height: '40px', justifyContent: 'center' }}
             >
               {loading && <CgSpinner className="spinner" />}
               {!loading && t('reports.download_xlsx')}

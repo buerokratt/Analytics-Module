@@ -47,7 +47,6 @@ convert_data:
   result: dataObject
 
 # todo remove Õigesti mõistetud küsimuste %
-# todo common method in React code
 # todo also create TRAINING PR
 
 merge:

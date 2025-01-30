@@ -6,7 +6,7 @@ import OptionsPanel, { Option, OnChangeCallback } from '../components/MetricAndP
 import {
   deleteOpenDataSettings,
   deleteScheduledReport,
-  downloadOpenDataCSV,
+  downloadOpenDataXlsx,
   getOpenDataDataset,
   openDataSettings,
   scheduledReports,
@@ -21,6 +21,7 @@ import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { formatTimestamp } from '../util/charts-utils';
 import { Buffer } from 'buffer';
 import { CgSpinner } from 'react-icons/cg';
+import { saveFile } from 'util/file';
 
 type ScheduledDataset = {
   datasetId: string;
@@ -67,7 +68,9 @@ const ReportsPage = () => {
     },
   ]);
 
-  const getCSVFile = async () => {
+  // todo fix name in string
+
+  const getXlsxFile = async () => {
     if (!options) return;
 
     setLoading(true);
@@ -85,7 +88,7 @@ const ReportsPage = () => {
           base64String: string;
         }
       >({
-        url: downloadOpenDataCSV(),
+        url: downloadOpenDataXlsx(),
         method: Methods.post,
         withCredentials: true,
         data: {
@@ -101,24 +104,7 @@ const ReportsPage = () => {
         },
       });
 
-      const blob = new Blob([Buffer.from(result.base64String, 'base64')], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
-      const fileName = 'metrics.xlsx';
-
-      if (window.showSaveFilePicker) {
-        const handle = await window.showSaveFilePicker({ suggestedName: fileName });
-        const writable = await handle.createWritable();
-        await writable.write(blob);
-        writable.close();
-      } else {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
+      await saveFile(result.base64String, 'metrics.xlsx');
     } catch (error) {
       console.error('Error getting CSV file:', error);
     } finally {
@@ -178,7 +164,7 @@ const ReportsPage = () => {
             <Button
               disabled={options?.options.length === 0}
               appearance="secondary"
-              onClick={() => getCSVFile()}
+              onClick={() => getXlsxFile()}
             >
               {loading && <CgSpinner className="spinner" />}
               {!loading && t('reports.download_csv')}

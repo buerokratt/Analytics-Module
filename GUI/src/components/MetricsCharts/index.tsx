@@ -11,7 +11,7 @@ import { ChartType } from '../../types/chart-type';
 import { chartDataKey, formatTimestamp, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { request, Methods } from '../../util/axios-client';
-import { Buffer } from 'buffer';
+import { saveFile } from 'util/file';
 
 type Props = {
   title: any;
@@ -104,24 +104,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       },
     });
 
-    const blob = new Blob([Buffer.from(res.base64String, 'base64')], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    const fileName = 'metrics.xlsx';
-
-    if (window.showSaveFilePicker) {
-      const handle = await window.showSaveFilePicker({ suggestedName: fileName });
-      const writable = await handle.createWritable();
-      await writable.write(blob);
-      writable.close();
-    } else {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    }
+    await saveFile(res.base64String, 'metrics.xlsx');
   };
 
   return (

@@ -19,6 +19,7 @@ import { saveAs } from 'file-saver';
 import TooltipWrapper from '../components/TooltipWrapper';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
+import { t } from 'i18next';
 
 type ScheduledDataset = {
   datasetId: string;
@@ -71,7 +72,12 @@ const ReportsPage = () => {
       url: downloadOpenDataCSV(),
       method: Methods.post,
       withCredentials: true,
-      data: { start: options?.start, end: options?.end, metrics: options?.options },
+      data: {
+        start: options?.start,
+        end: options?.end,
+        metrics: options?.options,
+        metric_names: openDataOptions.flatMap((o) => o.subOptions?.map((s) => t(s.labelKey))),
+      },
       responseType: 'blob',
     });
     saveAs(result, 'metrics.csv');

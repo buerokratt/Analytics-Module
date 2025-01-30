@@ -14,18 +14,24 @@ declaration:
       - field: metrics
         type: string
         description: "Body field 'metrics'"
+      - field: metric_names
+        type: array
+        description: "Localized metric names"
       - field: start
         type: string
         description: "Body field 'start'"
+
+# todo check metrics file usage? if not used, move here
 
 get_metrics:
   template: odp/metrics
   requestType: post
   body:
     metrics: ${incoming.body.metrics}
+    metric_names: ${incoming.body.metric_names}
     start: ${incoming.body.start}
     end: ${incoming.body.end}
-    period: 'never'
+    period: "never"
   result: metricDataCSV
 
 return:

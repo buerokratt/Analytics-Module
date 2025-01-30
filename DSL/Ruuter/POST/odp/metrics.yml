@@ -14,6 +14,9 @@ declaration:
       - field: metrics
         type: string
         description: "Body field 'metrics'"
+      - field: metric_names
+        type: array
+        description: "Localized metric names"
       - field: period
         type: string
         description: "Body field 'period'"
@@ -262,18 +265,18 @@ get-pct-correctly-understood:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
   result: get_pct_correctly_understood_result
-  
+
 gather_responses:
   assign:
     results: ${[get_chat_count_total_result,get_chat_count_no_csa_result,get_avg_waiting_time_result,get_avg_messages_result,get_avg_time_result,get_avg_time_no_csa_result,get_avg_time_csa_result,get_avg_session_length_client_left_result,get_avg_session_length_csa_result,get_avg_session_length_no_csa_result,get_avg_response_time_result,get_pct_correctly_understood_result]}
-    fields: ${['chat_count_total','chat_count_no_csa','avg_waiting_time_seconds','avg_messages','avg_time_seconds','avg_time_no_csa_seconds','avg_time_csa_seconds','avg_session_length_client_left_seconds','avg_session_length_csa_seconds','avg_session_length_no_csa_seconds','avg_response_time_seconds','pct_correctly_understood']}
+    fields: ${incoming.body.metric_names}
 
 convert_data:
   call: http.post
   args:
     url: "[#ANALYTICS_DMAPPER]/hbs/analytics/array-to-object"
     headers:
-      type: 'json'
+      type: "json"
     body:
       results: ${results}
       fields: ${fields}
@@ -285,11 +288,11 @@ to_csv:
   requestType: post
   body:
     data: ${[dataObject.response.body]}
-    qul: ''
-    del: ''
+    qul: ""
+    del: ""
   result: csv
 
-return:      
+return:
   return: ${csv}
   next: end
   status: 200

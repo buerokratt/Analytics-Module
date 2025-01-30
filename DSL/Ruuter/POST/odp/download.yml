@@ -47,29 +47,26 @@ convert_data:
   result: dataObject
 
 # todo remove Õigesti mõistetud küsimuste %
-# todo merge arrays to also return date_rows
 # todo common method in React code
-# todo excel width
-# todo excel numbers, not strings
 
-# to_csv:
-#   template: csv
-#   requestType: post
-#   body:
-#     data: ${dataObject.response.body}
-#     qul: ""
-#     del: ""
-#   result: csv
+merge:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_DMAPPER]/file-manager/merge"
+    body:
+      array1: ${dataObject.response.body}
+      array2: ${incoming.body.date_rows}
+  result: mergedRules
 
-getXlsxData:
+get_xlsx_data:
   call: http.post
   args:
     url: "[#ANALYTICS_DMAPPER]/conversion/array-to-xlsx"
     body:
-      data: ${dataObject.response.body}
+      data: ${mergedRules.response.body.array}
   result: xlsxData
 
-returnSuccess:
+return_success:
   wrapper: false
   return: ${xlsxData.response.body}
   next: end

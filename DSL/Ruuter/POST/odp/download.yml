@@ -22,8 +22,6 @@ declaration:
         type: string
         description: "Body field 'start'"
 
-# todo check metrics file usage? if not used, move here
-
 get_metrics:
   template: odp/metrics
   requestType: post

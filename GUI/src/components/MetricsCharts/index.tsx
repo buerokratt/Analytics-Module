@@ -104,7 +104,11 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       },
     });
 
-    await saveFile(res.base64String, 'metrics.xlsx');
+    await saveFile(
+      res.base64String,
+      'metrics.xlsx',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
   };
 
   return (

@@ -1,8 +1,8 @@
 import { Buffer } from 'buffer';
 
-export const saveFile = async (base64String: string, fileName: string) => {
+export const saveFile = async (base64String: string, fileName: string, type: string) => {
   const blob = new Blob([Buffer.from(base64String, 'base64')], {
-    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    type: type,
   });
 
   if (window.showSaveFilePicker) {

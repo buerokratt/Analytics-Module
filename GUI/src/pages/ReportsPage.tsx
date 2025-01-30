@@ -102,7 +102,11 @@ const ReportsPage = () => {
         },
       });
 
-      await saveFile(result.base64String, 'metrics.xlsx');
+      await saveFile(
+        result.base64String,
+        'metrics.xlsx',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      );
     } catch (error) {
       console.error('Error getting CSV file:', error);
     } finally {

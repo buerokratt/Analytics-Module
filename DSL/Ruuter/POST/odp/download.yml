@@ -28,15 +28,37 @@ get_metrics:
   requestType: post
   body:
     metrics: ${incoming.body.metrics}
+    # todo remove this
     metric_names: ${incoming.body.metric_names}
     start: ${incoming.body.start}
     end: ${incoming.body.end}
     period: "never"
-  result: metricDataCSV
+  result: metrics
+
+convert_data:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_DMAPPER]/hbs/analytics/array-to-object"
+    headers:
+      type: "json"
+    body:
+      results: ${metrics}
+      fields: ${incoming.body.metric_names}
+      layout: false
+  result: dataObject
+
+to_csv:
+  template: csv
+  requestType: post
+  body:
+    data: ${[dataObject.response.body]}
+    qul: ""
+    del: ""
+  result: csv
 
 return:
   wrapper: false
   headers:
     Content-disposition: "attachment;filename=metrics.csv"
-  return: ${metricDataCSV}
+  return: ${csv}
   status: 200

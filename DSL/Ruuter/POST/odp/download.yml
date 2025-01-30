@@ -8,6 +8,7 @@ declaration:
   namespace: analytics
   allowlist:
     body:
+      # -
       - field: end
         type: string
         description: "Body field 'end'"
@@ -28,8 +29,6 @@ get_metrics:
   requestType: post
   body:
     metrics: ${incoming.body.metrics}
-    # todo remove this
-    metric_names: ${incoming.body.metric_names}
     start: ${incoming.body.start}
     end: ${incoming.body.end}
     period: "never"

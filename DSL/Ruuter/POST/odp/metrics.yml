@@ -14,9 +14,6 @@ declaration:
       - field: metrics
         type: string
         description: "Body field 'metrics'"
-      - field: metric_names
-        type: array
-        description: "Localized metric names"
       - field: period
         type: string
         description: "Body field 'period'"

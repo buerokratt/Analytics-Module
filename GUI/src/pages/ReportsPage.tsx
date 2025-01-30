@@ -58,7 +58,6 @@ const ReportsPage = () => {
     'get-avg-session-length-csa',
     'get-avg-session-length-no-csa',
     'get-avg-response-time',
-    'get-pct-correctly-understood',
   ];
   const [openDataOptions] = useState<Option[]>([
     {
@@ -67,6 +66,9 @@ const ReportsPage = () => {
       labelKey: '',
     },
   ]);
+
+  // todo style button width when shows loader
+  // # todo also create TRAINING PR
 
   const getXlsxFile = async () => {
     if (!options) return;

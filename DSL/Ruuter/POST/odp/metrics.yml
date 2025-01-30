@@ -233,7 +233,7 @@ check-get-avg-response-time:
 empty-get-avg-response-time:
   assign:
     get_avg_response_time_result: ${[]}
-  next: check-get-pct-correctly-understood
+  next: gather_responses
 
 get-avg-response-time:
   call: http.post
@@ -244,28 +244,9 @@ get-avg-response-time:
       end: ${times.response.body[0].end}
   result: get_avg_response_time_result
 
-check-get-pct-correctly-understood:
-  switch:
-    - condition: ${metrics.includes('get-pct-correctly-understood')}
-      next: get-pct-correctly-understood
-
-empty-get-pct-correctly-understood:
-  assign:
-    get_pct_correctly_understood_result: ${[]}
-  next: gather_responses
-
-get-pct-correctly-understood:
-  call: http.post
-  args:
-    url: "[#ANALYTICS_RESQL]/get-pct-correctly-understood"
-    body:
-      start: ${times.response.body[0].start}
-      end: ${times.response.body[0].end}
-  result: get_pct_correctly_understood_result
-
 gather_responses:
   assign:
-    results: ${[get_chat_count_total_result,get_chat_count_no_csa_result,get_avg_waiting_time_result,get_avg_messages_result,get_avg_time_result,get_avg_time_no_csa_result,get_avg_time_csa_result,get_avg_session_length_client_left_result,get_avg_session_length_csa_result,get_avg_session_length_no_csa_result,get_avg_response_time_result,get_pct_correctly_understood_result]}
+    results: ${[get_chat_count_total_result,get_chat_count_no_csa_result,get_avg_waiting_time_result,get_avg_messages_result,get_avg_time_result,get_avg_time_no_csa_result,get_avg_time_csa_result,get_avg_session_length_client_left_result,get_avg_session_length_csa_result,get_avg_session_length_no_csa_result,get_avg_response_time_result]}
 
 return:
   return: ${results}

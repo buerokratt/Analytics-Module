@@ -46,9 +46,6 @@ convert_data:
       layout: false
   result: dataObject
 
-# todo remove Õigesti mõistetud küsimuste %
-# todo also create TRAINING PR
-
 merge:
   call: http.post
   args:

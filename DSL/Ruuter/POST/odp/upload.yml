@@ -62,7 +62,7 @@ convert_data:
       type: "json"
     body:
       results: ${metrics}
-      fields: ${['chat_count_total','chat_count_no_csa','avg_waiting_time_seconds','avg_messages','avg_time_seconds','avg_time_no_csa_seconds','avg_time_csa_seconds','avg_session_length_client_left_seconds','avg_session_length_csa_seconds','avg_session_length_no_csa_seconds','avg_response_time_seconds','pct_correctly_understood']}
+      fields: ${['chat_count_total','chat_count_no_csa','avg_waiting_time_seconds','avg_messages','avg_time_seconds','avg_time_no_csa_seconds','avg_time_csa_seconds','avg_session_length_client_left_seconds','avg_session_length_csa_seconds','avg_session_length_no_csa_seconds','avg_response_time_seconds']}
       layout: false
   result: dataObject
 

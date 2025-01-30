@@ -68,8 +68,6 @@ const ReportsPage = () => {
     },
   ]);
 
-  // todo fix name in string
-
   const getXlsxFile = async () => {
     if (!options) return;
 
@@ -167,7 +165,7 @@ const ReportsPage = () => {
               onClick={() => getXlsxFile()}
             >
               {loading && <CgSpinner className="spinner" />}
-              {!loading && t('reports.download_csv')}
+              {!loading && t('reports.download_xlsx')}
             </Button>
           </Track>
         </Section>

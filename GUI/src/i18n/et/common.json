@@ -208,7 +208,7 @@
     "api_key_id": "API võtme ID",
     "setup_odp_access": "Seadista teabevärava juurdepääs",
     "odp_title": "Eesti avaandmete teabevärav",
-    "download_csv": "Lae alla CSV",
+    "download_xlsx": "Lae alla XLSX",
     "create-new-dataset": "Loo uus andmestik teabeväravas",
     "nameEt": "Pealkiri",
     "nameEn": "Pealkiri, inglise keeles",

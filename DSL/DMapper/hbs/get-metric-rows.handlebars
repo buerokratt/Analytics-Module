@@ -1,0 +1,11 @@
+{{#each results}}
+  {{log this.response.body}}
+{{/each}}
+[
+  {{#each results as |result i|}}
+    [
+      "{{lookup ../fields i}}",
+      "{{#with result.response.body.[0]}}{{lookup this (getObjectKeys this)}}"{{/with}}
+    ]{{#unless @last}},{{/unless}}
+  {{/each}}
+]

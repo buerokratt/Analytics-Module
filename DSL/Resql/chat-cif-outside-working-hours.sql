@@ -149,15 +149,15 @@ FROM chat c
 JOIN message m ON c.base_id = m.chat_base_id 
 WHERE c.created::date BETWEEN :start::date AND :end::date
   AND (
-    m.event LIKE '%contact-information-fulfilled' OR
+    m.event = 'unavailable-contact-information-fulfilled' AND
     (c.end_user_email IS NOT NULL AND c.end_user_email <> '') OR
     (c.end_user_phone IS NOT NULL AND c.end_user_phone <> '')
   )
   AND (
-    c.base_id NOT IN (
+    c.base_id IN (
       SELECT DISTINCT m.chat_base_id
       FROM message m
-      WHERE m.event = 'contact-information' AND m.author_role = 'backoffice-user'
+      WHERE m.event = 'unavailable_organization' AND m.author_role = 'buerokratt'
     )
   )
   AND (

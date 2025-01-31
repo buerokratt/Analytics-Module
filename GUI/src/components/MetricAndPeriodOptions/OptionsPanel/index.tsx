@@ -9,14 +9,21 @@ import Section from '../../Section'
 import { formatDate } from '../../../util/charts-utils'
 
 interface MetricOptionsProps {
-  metricOptions: Option[]
-  onChange: (selection: OnChangeCallback) => void
-  dateFormat?: string
-  useColumns?: boolean
+  metricOptions: Option[];
+  onChange: (selection: OnChangeCallback) => void;
+  dateFormat?: string;
+  useColumns?: boolean;
+  enableSelectAll?: boolean;
 }
 
-const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat, onChange, useColumns }) => {
-  const { t } = useTranslation()
+const MetricOptions: React.FC<MetricOptionsProps> = ({
+                                                       metricOptions,
+                                                       dateFormat,
+                                                       onChange,
+                                                       useColumns,
+                                                       enableSelectAll = false,
+                                                     }) => {
+  const { t } = useTranslation();
   const [selection, setSelection] = useState<MetricOptionsState>({
     period: '',
     metric: '',
@@ -79,6 +86,7 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
             label={t('general.additionalOptions')}
             onChange={(options) => setSelection({ ...selection, options })}
             useColumns={useColumns}
+            enableSelectAll={enableSelectAll ?? false}
           />
         </Section>
       )}
@@ -87,6 +95,6 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
 }
 
 const getSubOptionIds = (metricOptions: Option[], metric: string) =>
-  metricOptions.find((x) => x.id === metric)?.subOptions?.map(x => x.id) ?? []
+    metricOptions.find((x) => x.id === metric)?.subOptions?.map((x) => x.id) ?? [];
 
 export default MetricOptions

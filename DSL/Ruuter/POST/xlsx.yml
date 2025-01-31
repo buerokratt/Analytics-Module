@@ -1,0 +1,26 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'CSV'"
+  method: post
+  accepts: json
+  returns: data
+  namespace: analytics
+  allowlist:
+    body:
+      - field: data
+        type: string
+        description: "Body field 'data'"
+
+get_xlsx:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_DMAPPER]/conversion/chart-data-to-xlsx"
+    body:
+      data: ${incoming.body.data}
+  result: result
+
+return_value:
+  wrapper: false
+  return: ${result.response.body}
+  next: end

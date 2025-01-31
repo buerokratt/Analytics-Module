@@ -233,7 +233,7 @@ check-get-avg-response-time:
 empty-get-avg-response-time:
   assign:
     get_avg_response_time_result: ${[]}
-  next: check-get-pct-correctly-understood
+  next: gather_responses
 
 get-avg-response-time:
   call: http.post
@@ -244,52 +244,11 @@ get-avg-response-time:
       end: ${times.response.body[0].end}
   result: get_avg_response_time_result
 
-check-get-pct-correctly-understood:
-  switch:
-    - condition: ${metrics.includes('get-pct-correctly-understood')}
-      next: get-pct-correctly-understood
-
-empty-get-pct-correctly-understood:
-  assign:
-    get_pct_correctly_understood_result: ${[]}
-  next: gather_responses
-
-get-pct-correctly-understood:
-  call: http.post
-  args:
-    url: "[#ANALYTICS_RESQL]/get-pct-correctly-understood"
-    body:
-      start: ${times.response.body[0].start}
-      end: ${times.response.body[0].end}
-  result: get_pct_correctly_understood_result
-  
 gather_responses:
   assign:
-    results: ${[get_chat_count_total_result,get_chat_count_no_csa_result,get_avg_waiting_time_result,get_avg_messages_result,get_avg_time_result,get_avg_time_no_csa_result,get_avg_time_csa_result,get_avg_session_length_client_left_result,get_avg_session_length_csa_result,get_avg_session_length_no_csa_result,get_avg_response_time_result,get_pct_correctly_understood_result]}
-    fields: ${['chat_count_total','chat_count_no_csa','avg_waiting_time_seconds','avg_messages','avg_time_seconds','avg_time_no_csa_seconds','avg_time_csa_seconds','avg_session_length_client_left_seconds','avg_session_length_csa_seconds','avg_session_length_no_csa_seconds','avg_response_time_seconds','pct_correctly_understood']}
+    results: ${[get_chat_count_total_result,get_chat_count_no_csa_result,get_avg_waiting_time_result,get_avg_messages_result,get_avg_time_result,get_avg_time_no_csa_result,get_avg_time_csa_result,get_avg_session_length_client_left_result,get_avg_session_length_csa_result,get_avg_session_length_no_csa_result,get_avg_response_time_result]}
 
-convert_data:
-  call: http.post
-  args:
-    url: "[#ANALYTICS_DMAPPER]/hbs/analytics/array-to-object"
-    headers:
-      type: 'json'
-    body:
-      results: ${results}
-      fields: ${fields}
-      layout: false
-  result: dataObject
-
-to_csv:
-  template: csv
-  requestType: post
-  body:
-    data: ${[dataObject.response.body]}
-    qul: ''
-    del: ''
-  result: csv
-
-return:      
-  return: ${csv}
+return:
+  return: ${results}
   next: end
   status: 200

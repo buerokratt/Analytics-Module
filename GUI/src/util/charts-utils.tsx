@@ -31,6 +31,8 @@ export const getTicks = (startDate: string, endDate: string, start: Date, end: D
 
 export const formatDate = (value: Date, dateFormat?: string) => format(value, dateFormat ?? 'dd-MM-yyyy');
 
+export const formatTimestamp = (timestamp: string) => formatDate(new Date(timestamp), 'dd.MM.yyyy');
+
 export const getColor = (data: any, key: any) => data.colors.find((e: any) => e.id == key)?.color ?? '#FFB511';
 
 export const translateChartKeys = (obj: any, key: string) =>
@@ -52,3 +54,8 @@ export const chartDataKey = 'dateTime';
 export const round = (value: any) => Math.round(Number(value) * 100) / 100;
 
 export const getKeys = (data: any[]) => Array.from(new Set(data.flatMap((obj: any) => Object.keys(obj))));
+
+export const formatTotalPeriodCount = (totalPeriodCounts: Record<string, number>, metric: string) => {
+  // !== undefined to support 0 values
+  return `${totalPeriodCounts[metric] !== undefined ? ` (${totalPeriodCounts[metric]})` : ''}`;
+};

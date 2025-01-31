@@ -1,4 +1,4 @@
-import api from './api';
+import { api } from './api';
 
 export async function addAppeal(appealData: { message: string }) {
   const { data } = await api.post<{ readonly id: number; message: string; }>('appeals', appealData);

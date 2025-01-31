@@ -1,4 +1,4 @@
-import api from './api';
+import { api } from './api';
 import { Slot, SlotCreateDTO, SlotEditDTO } from 'types/slot';
 
 export async function createSlot(formData: SlotCreateDTO) {

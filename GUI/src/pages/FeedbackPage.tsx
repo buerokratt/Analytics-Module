@@ -18,18 +18,23 @@ import { Subject } from 'rxjs';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { PaginationState, SortingState } from '@tanstack/react-table';
+import {analyticsApi} from "../components/services/api";
+import useStore from "../store/user/store";
+import {useMutation} from "@tanstack/react-query";
 
 const FeedbackPage: React.FC = () => {
   const { t } = useTranslation();
   const [chartData, setChartData] = useState({});
-  const [negativeFeedbackChats, setNegativeFeedbackChats] = useState<Chat[]>([]);
+  const [negativeFeedbackChats, setNegativeFeedbackChats] = useState<Chat[] | undefined>(undefined);
   const advisors = useRef<any[]>([]);
+  const userInfo = useStore((state) => state.userInfo);
   const [advisorsList, setAdvisorsList] = useState<any[]>([]);
   const [currentMetric, setCurrentMetric] = useState('feedback.statuses');
   let random = () => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
   const randomColor = () => '#' + ((random() * 0xffffff) << 0).toString(16);
   const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
+  const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -41,6 +46,40 @@ const FeedbackPage: React.FC = () => {
   useEffect(() => {
     setAdvisorsList(advisors.current);
   }, [advisorsList]);
+
+  const fetchData = async () => {
+    try {
+      const response = await analyticsApi.get('/accounts/get-page-preference', {
+        params: { user_id: userInfo?.idCode, page_name: window.location.pathname},
+      });
+      if(response.data.pageResults !== undefined) {
+        return updatePagePreference(response.data.pageResults)
+      } else {
+        return undefined
+      }
+    }
+    catch (err) {
+      console.error('Failed to fetch data');
+    }
+  };
+
+  const updatePagePreference = (pageResults: number ): PaginationState => {
+    const updatedPagination: PaginationState = { ...pagination, pageSize: pageResults };
+    setPagination(updatedPagination);
+    return updatedPagination;
+  }
+
+  const updatePageSize = useMutation({
+    mutationFn: (data: {
+      page_results: number;
+    }) => {
+      return analyticsApi.post('accounts/update-page-preference', {
+        user_id: userInfo?.idCode,
+        page_name: window.location.pathname,
+        page_results: data.page_results,
+      });
+    }
+  });
 
   const [feedbackMetrics, setFeedbackMetrics] = useState<Option[]>([
     {
@@ -114,7 +153,7 @@ const FeedbackPage: React.FC = () => {
     },
   ]);
 
-  const showNegativeChart = negativeFeedbackChats.length > 0 && currentConfigs?.metric === 'negative_feedback';
+  const showNegativeChart = negativeFeedbackChats != undefined && currentConfigs?.metric === 'negative_feedback';
 
   const [configsSubject] = useState(() => new Subject());
   useEffect(() => {
@@ -133,7 +172,13 @@ const FeedbackPage: React.FC = () => {
             case 'selected_advisor_chats':
               return fetchNpsOnSelectedCSAChatsFeedback(config);
             case 'negative_feedback':
-              return fetchChatsWithNegativeFeedback(config);
+              return fetchData().then((res) => {
+                if(res) {
+                  return fetchChatsWithNegativeFeedback(config,res.pageIndex + 1, res.pageSize, 'created desc')
+                } else {
+                  return fetchChatsWithNegativeFeedback(config)
+                }
+              })
             default:
               return fetchChatsStatuses(config);
           }
@@ -147,6 +192,7 @@ const FeedbackPage: React.FC = () => {
   }, []);
 
   const fetchChatsStatuses = async (config: MetricOptionsState) => {
+    setShowSelectAll(false)
     let chartData = {};
     const events =
       config?.options.filter(
@@ -211,6 +257,7 @@ const FeedbackPage: React.FC = () => {
   };
 
   const fetchAverageFeedbackOnBuerokrattChats = async (config: any) => {
+    setShowSelectAll(false)
     let chartData = {};
     try {
       const result: any = await request({
@@ -240,6 +287,7 @@ const FeedbackPage: React.FC = () => {
   };
 
   const fetchNpsOnCSAChatsFeedback = async (config: any) => {
+    setShowSelectAll(false)
     let chartData = {};
     try {
       const result: any = await request({
@@ -269,6 +317,7 @@ const FeedbackPage: React.FC = () => {
   };
 
   const fetchNpsOnSelectedCSAChatsFeedback = async (config: any) => {
+    setShowSelectAll(true)
     let chartData = {};
     try {
       const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
@@ -291,7 +340,7 @@ const FeedbackPage: React.FC = () => {
         .map((e) => {
           return {
             id: e?.customerSupportId ?? '',
-            labelKey: e?.customerSupportDisplayName ?? '',
+            labelKey: e?.customerSupportFullName ?? '',
             color: randomColor(),
             isSelected: true,
           };
@@ -320,11 +369,11 @@ const FeedbackPage: React.FC = () => {
         .reduce((a: any, b: any) => {
           const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
           if (dateRow) {
-            dateRow[b[t('chart.customerSupportDisplayName')]] = b[t('chart.nps')];
+            dateRow[b[t('chart.customerSupportFullName')]] = b[t('chart.nps')];
           } else {
             a.push({
               [chartDataKey]: b[chartDataKey],
-              [b[t('chart.customerSupportDisplayName')]]: b[t('chart.nps')],
+              [b[t('chart.customerSupportFullName')]]: b[t('chart.nps')],
             });
           }
           return a;
@@ -357,10 +406,11 @@ const FeedbackPage: React.FC = () => {
 
   const fetchChatsWithNegativeFeedback = async (
     config: any,
-    page: number = 1,
-    pageSize: number = 10,
+    page: number = pagination.pageIndex + 1,
+    pageSize: number = pagination.pageSize,
     sorting: string = 'created desc'
   ) => {
+    setShowSelectAll(false)
     let chartData = {};
     try {
       const result: any = await request({
@@ -401,6 +451,7 @@ const FeedbackPage: React.FC = () => {
       <h1>{t('menu.feedback')}</h1>
       <OptionsPanel
         metricOptions={feedbackMetrics}
+        enableSelectAll={showSelectAll}
         dateFormat="yyyy-MM-dd"
         onChange={(config) => {
           setCurrentConfigs(config);
@@ -422,7 +473,7 @@ const FeedbackPage: React.FC = () => {
           unit={unit}
         />
       )}
-      {showNegativeChart && (
+      {showNegativeChart && (negativeFeedbackChats.length > 0 ?
         <ChatsTable
           dataSource={negativeFeedbackChats}
           pagination={pagination}
@@ -432,6 +483,7 @@ const FeedbackPage: React.FC = () => {
           setPagination={(state: PaginationState) => {
             if (state.pageIndex === pagination.pageIndex && state.pageSize === pagination.pageSize) return;
             setPagination(state);
+            updatePageSize.mutate({page_results: state.pageSize});
             const sort =
               sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + (sorting[0].desc ? 'desc' : 'asc');
             fetchChatsWithNegativeFeedback(currentConfigs, state.pageIndex + 1, state.pageSize, sort);
@@ -441,7 +493,7 @@ const FeedbackPage: React.FC = () => {
             const sorting = state.length === 0 ? 'created desc' : state[0].id + ' ' + (state[0].desc ? 'desc' : 'asc');
             fetchChatsWithNegativeFeedback(currentConfigs, pagination.pageIndex + 1, pagination.pageSize, sorting);
           }}
-        />
+        /> : <label style={{alignSelf: 'center', marginTop: '30px'}}>{t('feedback.no_negative_feedback_chats')}</label>
       )}
     </>
   );

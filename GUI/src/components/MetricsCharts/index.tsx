@@ -8,10 +8,10 @@ import LineGraph from '../LineGraph';
 import PieGraph from '../PieGraph';
 import { getXlsx } from '../../resources/api-constants';
 import { ChartType } from '../../types/chart-type';
-import { chartDataKey, formatDate, getKeys } from '../../util/charts-utils';
+import { chartDataKey, formatTimestamp, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { request, Methods } from '../../util/axios-client';
-import { Buffer } from 'buffer';
+import { saveFile } from 'util/file';
 
 type Props = {
   title: any;
@@ -97,31 +97,18 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
         data: modifiedData.map((p) => {
           const { [chartDataKey]: originalKey, ...rest } = p;
           return {
-            [t(`global.${chartDataKey}`)]: formatDate(new Date(originalKey), 'dd.MM.yyyy'),
+            [t(`global.${chartDataKey}`)]: formatTimestamp(originalKey),
             ...rest,
           };
         }),
       },
     });
 
-    const blob = new Blob([Buffer.from(res.base64String, 'base64')], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    const fileName = 'metrics.xlsx';
-
-    if (window.showSaveFilePicker) {
-      const handle = await window.showSaveFilePicker({ suggestedName: fileName });
-      const writable = await handle.createWritable();
-      await writable.write(blob);
-      writable.close();
-    } else {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    }
+    await saveFile(
+      res.base64String,
+      'metrics.xlsx',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
   };
 
   return (
@@ -167,5 +154,3 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
 };
 
 export default MetricsCharts;
-
-const formatTimestamp = (timestamp: string) => formatDate(new Date(timestamp), 'dd.MM.yyyy');

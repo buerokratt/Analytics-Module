@@ -209,7 +209,7 @@
     "api_key_id": "API Key ID",
     "setup_odp_access": "Configure Open Data Access",
     "odp_title": "Open Data Portal",
-    "download_csv": "Download CSV",
+    "download_xlsx": "Download XLSX",
     "create-new-dataset": "Create new dataset",
     "nameEt": "Title",
     "nameEn": "Title, in English",

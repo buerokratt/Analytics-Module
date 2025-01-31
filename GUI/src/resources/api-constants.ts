@@ -21,7 +21,7 @@ export const uploadScheduledReport = (datasetId: string, dateTime: string): stri
   ruuterUrl + '/odp/upload-scheduled-report?datasetId=' + datasetId + '&dateTime=' + dateTime;
 export const deleteCronJobTask = (): string => baseUrl + '/odp/delete-cron-job-task';
 
-export const downloadOpenDataCSV = (): string => baseUrl + '/odp/download';
+export const downloadOpenDataXlsx = (): string => baseUrl + '/odp/download';
 
 export const saveJsonToYaml = (): string => baseUrl + '/saveJsonToYml';
 

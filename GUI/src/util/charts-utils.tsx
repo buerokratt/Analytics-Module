@@ -31,6 +31,8 @@ export const getTicks = (startDate: string, endDate: string, start: Date, end: D
 
 export const formatDate = (value: Date, dateFormat?: string) => format(value, dateFormat ?? 'dd-MM-yyyy');
 
+export const formatTimestamp = (timestamp: string) => formatDate(new Date(timestamp), 'dd.MM.yyyy');
+
 export const getColor = (data: any, key: any) => data.colors.find((e: any) => e.id == key)?.color ?? '#FFB511';
 
 export const translateChartKeys = (obj: any, key: string) =>

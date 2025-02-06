@@ -114,7 +114,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
                 stackId={isCount || isString ? undefined : chartDataKey}
                 stroke={getColor(data, k)}
                 fill={getColor(data, k)}
-                minPointSize={3}
+                minPointSize={data?.minPointSize ?? undefined}
               />
             );
           })}

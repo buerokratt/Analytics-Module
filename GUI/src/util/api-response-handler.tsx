@@ -61,9 +61,17 @@ export const fetchChartData = async (url: string, config: any, resultId: string,
       };
     });
 
+    const minPointSize =
+      config.metric === 'avgConversationTime' ||
+      config.metric === 'avgWaitingTime' ||
+      config.metric === 'avgNumOfMessages'
+        ? 3
+        : 0;
+
     return {
       chartData: response,
       colors: [{ id: t(resultId), color: resultColor }],
+      minPointSize: minPointSize,
     };
   } catch (_) {
     return {};

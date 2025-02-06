@@ -279,6 +279,7 @@ const FeedbackPage: React.FC = () => {
       chartData = {
         chartData: response,
         colors: [{ id: 'average', color: '#FFB511' }],
+        minPointSize: 3,
       };
     } catch (_) {
       //error

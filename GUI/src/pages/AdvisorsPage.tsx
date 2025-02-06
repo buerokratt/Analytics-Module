@@ -168,6 +168,7 @@ const AdvisorsPage: React.FC = () => {
       chartData = {
         chartData: response,
         colors: [{ id: 'Average (Min)', color: '#FFB511' }],
+        minPointSize: 3,
       };
     } catch (_) {
       //error
@@ -198,6 +199,7 @@ const AdvisorsPage: React.FC = () => {
       chartData = {
         chartData: response,
         colors: [{ id: 'Average', color: '#FFB511' }],
+        minPointSize: 3,
       };
     } catch (_) {
       //error
@@ -374,6 +376,7 @@ const AdvisorsPage: React.FC = () => {
             color,
           };
         }),
+        minPointSize: 3,
       };
     } catch (_) {
       //error

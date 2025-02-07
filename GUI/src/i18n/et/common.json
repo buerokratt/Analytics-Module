@@ -98,7 +98,7 @@
       "total_chats_no_csa_day": "Bürokrati vastatud: täna / eile",
       "total_chats_month": "Vestluste arv: kuu / eelmine",
       "total_chats_day": "Vestluste arv: täna / eile",
-      "total_forwarded_chats_yesterday": "Suunatud vestluse eile: sisesed / välised",
+      "total_forwarded_chats_yesterday": "Suunatud vestlused eile: sisesed / välised",
       "avg_waiting_time_day": "Keskmine ooteaeg: täna / eile",
       "avg_waiting_time_week": "Keskmine ootaeg: nädal / eelmine"
     }

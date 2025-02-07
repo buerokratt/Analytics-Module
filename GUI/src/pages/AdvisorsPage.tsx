@@ -15,6 +15,7 @@ import {
 } from '../resources/api-constants';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
+import { randomColor } from 'util/generateRandomColor';
 
 const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -22,8 +23,6 @@ const AdvisorsPage: React.FC = () => {
   const [currentMetric, setCurrentMetric] = useState('');
   const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
-  let random = () => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
-  const randomColor = () => '#' + ((random() * 0xffffff) << 0).toString(16);
   const advisors = useRef<any[]>([]);
   const [advisorsList, setAdvisorsList] = useState<any[]>([]);
   const [showSelectAll, setShowSelectAll] = useState<boolean>(false);

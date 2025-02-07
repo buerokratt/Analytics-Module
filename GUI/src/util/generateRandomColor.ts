@@ -1,7 +1,8 @@
 export const randomColor = (): string => {
-  const hue: number = Math.floor(Math.random() * 360);
-  const saturation: number = Math.random() * 0.4 + 0.4;
-  const lightness: number = Math.random() * 0.3 + 0.2;
+  let random = () => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
+  const hue: number = Math.floor(random() * 360);
+  const saturation: number = random() * 0.4 + 0.4;
+  const lightness: number = random() * 0.3 + 0.2;
 
   const hslToHex = (h: number, s: number, l: number): string => {
     h /= 360;

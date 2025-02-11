@@ -21,6 +21,7 @@ import { PaginationState, SortingState } from '@tanstack/react-table';
 import {analyticsApi} from "../components/services/api";
 import useStore from "../store/user/store";
 import {useMutation} from "@tanstack/react-query";
+import { randomColor } from 'util/generateRandomColor';
 
 const FeedbackPage: React.FC = () => {
   const { t } = useTranslation();
@@ -30,8 +31,6 @@ const FeedbackPage: React.FC = () => {
   const userInfo = useStore((state) => state.userInfo);
   const [advisorsList, setAdvisorsList] = useState<any[]>([]);
   const [currentMetric, setCurrentMetric] = useState('feedback.statuses');
-  let random = () => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
-  const randomColor = () => '#' + ((random() * 0xffffff) << 0).toString(16);
   const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
   const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
@@ -279,6 +278,7 @@ const FeedbackPage: React.FC = () => {
       chartData = {
         chartData: response,
         colors: [{ id: 'average', color: '#FFB511' }],
+        minPointSize: 3,
       };
     } catch (_) {
       //error

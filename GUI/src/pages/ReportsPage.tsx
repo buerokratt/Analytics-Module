@@ -6,7 +6,7 @@ import OptionsPanel, { Option, OnChangeCallback } from '../components/MetricAndP
 import {
   deleteOpenDataSettings,
   deleteScheduledReport,
-  downloadOpenDataCSV,
+  downloadOpenDataXlsx,
   getOpenDataDataset,
   openDataSettings,
   scheduledReports,
@@ -15,10 +15,12 @@ import APISetupDrawer from '../components/OpenData/APISetupDrawer';
 import { ODPSettings } from '../types/reports';
 import DatasetCreation from '../components/OpenData/DatasetCreation';
 import Popup from '../components/Popup';
-import { saveAs } from 'file-saver';
 import TooltipWrapper from '../components/TooltipWrapper';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
+import { formatTimestamp } from '../util/charts-utils';
+import { CgSpinner } from 'react-icons/cg';
+import { saveFile } from 'util/file';
 
 type ScheduledDataset = {
   datasetId: string;
@@ -34,6 +36,7 @@ const ReportsPage = () => {
   const [datasetCreationVisible, setDatasetCreationVisible] = useState<any>(false);
   const [apiSettings, setApiSettings] = useState<ODPSettings>({ odpKey: null, orgId: null });
   const [datasets, setDatasets] = useState<ScheduledDataset[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const [isSettingsConfirmationVisible, setIsSettingsConfirmationVisible] = useState(false);
 
@@ -54,7 +57,6 @@ const ReportsPage = () => {
     'get-avg-session-length-csa',
     'get-avg-session-length-no-csa',
     'get-avg-response-time',
-    'get-pct-correctly-understood',
   ];
   const [openDataOptions] = useState<Option[]>([
     {
@@ -64,15 +66,52 @@ const ReportsPage = () => {
     },
   ]);
 
-  const getCSVFile = async () => {
-    const result: any = await request({
-      url: downloadOpenDataCSV(),
-      method: Methods.post,
-      withCredentials: true,
-      data: { start: options?.start, end: options?.end, metrics: options?.options },
-      responseType: 'blob',
-    });
-    saveAs(result, 'metrics.csv');
+  // # todo also create TRAINING PR
+
+  const getXlsxFile = async () => {
+    if (!options) return;
+
+    setLoading(true);
+
+    try {
+      const result = await request<
+        {
+          start: string;
+          end: string;
+          metrics: string[];
+          metric_names: string[];
+          date_rows: string[][];
+        },
+        {
+          base64String: string;
+        }
+      >({
+        url: downloadOpenDataXlsx(),
+        method: Methods.post,
+        withCredentials: true,
+        data: {
+          start: options?.start,
+          end: options?.end,
+          metrics: options?.options,
+          metric_names: openDataOptions.flatMap((o) => o.subOptions?.map((s) => t(s.labelKey)) ?? []),
+          date_rows: [
+            [t('global.startDate'), options?.start && formatTimestamp(options.start)],
+            [t('global.endDate'), options?.end && formatTimestamp(options.end)],
+            [],
+          ],
+        },
+      });
+
+      await saveFile(
+        result.base64String,
+        'metrics.xlsx',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      );
+    } catch (error) {
+      console.error('Error getting CSV file:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fetchSettings = async () => {
@@ -127,9 +166,11 @@ const ReportsPage = () => {
             <Button
               disabled={options?.options.length === 0}
               appearance="secondary"
-              onClick={() => getCSVFile()}
+              onClick={() => getXlsxFile()}
+              style={{ width: '177px', height: '40px', justifyContent: 'center' }}
             >
-              {t('reports.download_csv')}
+              {loading && <CgSpinner className="spinner" />}
+              {!loading && t('reports.download_xlsx')}
             </Button>
           </Track>
         </Section>

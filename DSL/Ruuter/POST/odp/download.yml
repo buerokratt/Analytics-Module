@@ -24,7 +24,7 @@ declaration:
         type: string
         description: "Body field 'start'"
 
-# todo other endpoint that uses odp/metrics? + also bug. upload.yml
+# todo other endpoint that uses odp/metrics? + also bug with upload.yml
 get_metrics:
   call: http.post
   args:

@@ -23,16 +23,29 @@ declaration:
       - field: start
         type: string
         description: "Body field 'start'"
+    # headers:
+    #   - field: cookie
+    #     type: string
+    #     description: "Cookie field"
 
+# todo other endpoint that uses odp/metrics? + also bug. upload.yml
 get_metrics:
-  template: odp/metrics
-  requestType: post
-  body:
-    metrics: ${incoming.body.metrics}
-    start: ${incoming.body.start}
-    end: ${incoming.body.end}
-    period: "never"
+  call: http.post
+  # template: odp/metrics
+  # requestType: post
+  args:
+    url: "[#ANALYTICS_RUUTER]/odp/metrics"
+    # headers:
+    #   cookie: ${incoming.headers.cookie}
+    body:
+      metrics: ${incoming.body.metrics}
+      start: ${incoming.body.start}
+      end: ${incoming.body.end}
+      period: "never"
   result: metrics
+
+logMetrics:
+  log: ${metrics.response.body}
 
 convert_data:
   call: http.post
@@ -41,7 +54,7 @@ convert_data:
     headers:
       type: "json"
     body:
-      results: ${metrics}
+      results: ${metrics.response.body}
       fields: ${incoming.body.metric_names}
       layout: false
   result: dataObject

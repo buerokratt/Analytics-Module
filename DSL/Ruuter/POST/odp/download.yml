@@ -25,13 +25,14 @@ declaration:
         description: "Body field 'start'"
 
 get_metrics:
-  template: odp/metrics
-  requestType: post
-  body:
-    metrics: ${incoming.body.metrics}
-    start: ${incoming.body.start}
-    end: ${incoming.body.end}
-    period: "never"
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RUUTER]/odp/metrics"
+    body:
+      metrics: ${incoming.body.metrics}
+      start: ${incoming.body.start}
+      end: ${incoming.body.end}
+      period: "never"
   result: metrics
 
 convert_data:
@@ -41,7 +42,7 @@ convert_data:
     headers:
       type: "json"
     body:
-      results: ${metrics}
+      results: ${metrics.response.body}
       fields: ${incoming.body.metric_names}
       layout: false
   result: dataObject

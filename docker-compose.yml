@@ -9,6 +9,7 @@ services:
       - application.logging.displayRequestContent=true
       - application.logging.displayResponseContent=true
       - application.logging.printStackTrace=true
+      - application.internalRequests.disabled=true
     volumes:
       - ./DSL/Ruuter:/DSL
       - ./constants.ini:/app/constants.ini
@@ -34,7 +35,7 @@ services:
     ports:
       - 8082:8082
     volumes:
-      - ./DSL/Resql:/workspace/app/templates/byk
+      - ./DSL/Resql:/DSL
     networks:
       - bykstack
 
@@ -64,7 +65,7 @@ services:
       - REACT_APP_RUUTER_V2_ANALYTICS_API_URL=http://localhost:8080/analytics
       - REACT_APP_MENU_URL=https://admin.dev.buerokratt.ee
       - REACT_APP_MENU_PATH=/chat/menu.json
-      - REACT_APP_AUTH_BASE_URL=http://localhost:8080
+      - REACT_APP_AUTH_BASE_URL=http://localhost:8080/analytics
       - REACT_APP_APP_PORT=3001
       - REACT_APP_LOCAL=true
       - REACT_APP_BASE_API_PATH=/

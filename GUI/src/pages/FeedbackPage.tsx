@@ -18,14 +18,19 @@ import { Subject } from 'rxjs';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { PaginationState, SortingState } from '@tanstack/react-table';
-import {analyticsApi} from "../components/services/api";
-import useStore from "../store/user/store";
-import {useMutation} from "@tanstack/react-query";
+import { analyticsApi } from '../components/services/api';
+import useStore from '../store/user/store';
+import { useMutation } from '@tanstack/react-query';
 import { randomColor } from 'util/generateRandomColor';
+import { usePeriodStatisticsContext } from 'components/context/PeriodStatisticsContext';
+import { ChartData } from 'types/chart-type';
 
 const FeedbackPage: React.FC = () => {
   const { t } = useTranslation();
-  const [chartData, setChartData] = useState({});
+  const [chartData, setChartData] = useState<ChartData>({
+    chartData: [],
+    colors: [],
+  });
   const [negativeFeedbackChats, setNegativeFeedbackChats] = useState<Chat[] | undefined>(undefined);
   const advisors = useRef<any[]>([]);
   const userInfo = useStore((state) => state.userInfo);
@@ -35,6 +40,7 @@ const FeedbackPage: React.FC = () => {
   const [unit, setUnit] = useState('');
   const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
   const [npsStatistics, setNpsStatistics] = useState<Record<string, number>>({});
+  const { periodStatistics, setPeriodStatistics, updatePeriodStatistics } = usePeriodStatisticsContext();
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -47,38 +53,40 @@ const FeedbackPage: React.FC = () => {
     setAdvisorsList(advisors.current);
   }, [advisorsList]);
 
+  useEffect(() => {
+    console.log('chartData', chartData);
+    updatePeriodStatistics(chartData.chartData, unit);
+  }, [chartData, unit]);
+
   const fetchData = async () => {
     try {
       const response = await analyticsApi.get('/accounts/get-page-preference', {
-        params: { user_id: userInfo?.idCode, page_name: window.location.pathname},
+        params: { user_id: userInfo?.idCode, page_name: window.location.pathname },
       });
-      if(response.data.pageResults !== undefined) {
-        return updatePagePreference(response.data.pageResults)
+      if (response.data.pageResults !== undefined) {
+        return updatePagePreference(response.data.pageResults);
       } else {
-        return undefined
+        return undefined;
       }
-    }
-    catch (err) {
+    } catch (err) {
       console.error('Failed to fetch data');
     }
   };
 
-  const updatePagePreference = (pageResults: number ): PaginationState => {
+  const updatePagePreference = (pageResults: number): PaginationState => {
     const updatedPagination: PaginationState = { ...pagination, pageSize: pageResults };
     setPagination(updatedPagination);
     return updatedPagination;
-  }
+  };
 
   const updatePageSize = useMutation({
-    mutationFn: (data: {
-      page_results: number;
-    }) => {
+    mutationFn: (data: { page_results: number }) => {
       return analyticsApi.post('accounts/update-page-preference', {
         user_id: userInfo?.idCode,
         page_name: window.location.pathname,
         page_results: data.page_results,
       });
-    }
+    },
   });
 
   const [feedbackMetrics, setFeedbackMetrics] = useState<Option[]>([
@@ -173,12 +181,12 @@ const FeedbackPage: React.FC = () => {
               return fetchNpsOnSelectedCSAChatsFeedback(config);
             case 'negative_feedback':
               return fetchData().then((res) => {
-                if(res) {
-                  return fetchChatsWithNegativeFeedback(config,res.pageIndex + 1, res.pageSize, 'created desc')
+                if (res) {
+                  return fetchChatsWithNegativeFeedback(config, res.pageIndex + 1, res.pageSize, 'created desc');
                 } else {
-                  return fetchChatsWithNegativeFeedback(config)
+                  return fetchChatsWithNegativeFeedback(config);
                 }
-              })
+              });
             default:
               return fetchChatsStatuses(config);
           }
@@ -192,7 +200,7 @@ const FeedbackPage: React.FC = () => {
   }, []);
 
   const fetchChatsStatuses = async (config: MetricOptionsState) => {
-    setShowSelectAll(false)
+    setShowSelectAll(false);
     let chartData = {};
     const events =
       config?.options.filter(
@@ -257,7 +265,7 @@ const FeedbackPage: React.FC = () => {
   };
 
   const fetchAverageFeedbackOnBuerokrattChats = async (config: any) => {
-    setShowSelectAll(false)
+    setShowSelectAll(false);
     let chartData = {};
     try {
       const result: any = await request({
@@ -288,7 +296,7 @@ const FeedbackPage: React.FC = () => {
   };
 
   const fetchNpsOnCSAChatsFeedback = async (config: any) => {
-    setShowSelectAll(false)
+    setShowSelectAll(false);
     let chartData = {};
     try {
       const result: any = await request({
@@ -320,7 +328,7 @@ const FeedbackPage: React.FC = () => {
   };
 
   const fetchNpsOnSelectedCSAChatsFeedback = async (config: any) => {
-    setShowSelectAll(true)
+    setShowSelectAll(true);
     let chartData = {};
     try {
       const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
@@ -413,7 +421,7 @@ const FeedbackPage: React.FC = () => {
     pageSize: number = pagination.pageSize,
     sorting: string = 'created desc'
   ) => {
-    setShowSelectAll(false)
+    setShowSelectAll(false);
     let chartData = {};
     try {
       const result: any = await request({
@@ -477,28 +485,32 @@ const FeedbackPage: React.FC = () => {
           npsStatistics={npsStatistics}
         />
       )}
-      {showNegativeChart && (negativeFeedbackChats.length > 0 ?
-        <ChatsTable
-          dataSource={negativeFeedbackChats}
-          pagination={pagination}
-          sorting={sorting}
-          startDate={currentConfigs?.start}
-          endDate={currentConfigs?.end}
-          setPagination={(state: PaginationState) => {
-            if (state.pageIndex === pagination.pageIndex && state.pageSize === pagination.pageSize) return;
-            setPagination(state);
-            updatePageSize.mutate({page_results: state.pageSize});
-            const sort =
-              sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + (sorting[0].desc ? 'desc' : 'asc');
-            fetchChatsWithNegativeFeedback(currentConfigs, state.pageIndex + 1, state.pageSize, sort);
-          }}
-          setSorting={(state: SortingState) => {
-            setSorting(state);
-            const sorting = state.length === 0 ? 'created desc' : state[0].id + ' ' + (state[0].desc ? 'desc' : 'asc');
-            fetchChatsWithNegativeFeedback(currentConfigs, pagination.pageIndex + 1, pagination.pageSize, sorting);
-          }}
-        /> : <label style={{alignSelf: 'center', marginTop: '30px'}}>{t('feedback.no_negative_feedback_chats')}</label>
-      )}
+      {showNegativeChart &&
+        (negativeFeedbackChats.length > 0 ? (
+          <ChatsTable
+            dataSource={negativeFeedbackChats}
+            pagination={pagination}
+            sorting={sorting}
+            startDate={currentConfigs?.start}
+            endDate={currentConfigs?.end}
+            setPagination={(state: PaginationState) => {
+              if (state.pageIndex === pagination.pageIndex && state.pageSize === pagination.pageSize) return;
+              setPagination(state);
+              updatePageSize.mutate({ page_results: state.pageSize });
+              const sort =
+                sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + (sorting[0].desc ? 'desc' : 'asc');
+              fetchChatsWithNegativeFeedback(currentConfigs, state.pageIndex + 1, state.pageSize, sort);
+            }}
+            setSorting={(state: SortingState) => {
+              setSorting(state);
+              const sorting =
+                state.length === 0 ? 'created desc' : state[0].id + ' ' + (state[0].desc ? 'desc' : 'asc');
+              fetchChatsWithNegativeFeedback(currentConfigs, pagination.pageIndex + 1, pagination.pageSize, sorting);
+            }}
+          />
+        ) : (
+          <label style={{ alignSelf: 'center', marginTop: '30px' }}>{t('feedback.no_negative_feedback_chats')}</label>
+        ))}
     </>
   );
 };

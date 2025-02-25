@@ -34,12 +34,31 @@ post_step:
       end: ${incoming.body.end_date}
   result: result
 
+# log_step:
+#   log: ${JSON.parse(result.response.body[0].result.value).pointNps}
+
+# assign_values:
+#   assign:
+#     pointNps: ${JSON.parse(result.response.body[0].result.value).pointNps ?? []}
+#     periodNps: ${JSON.parse(result.response.body[0].result.value).periodNps}
+
+get_nps_object:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_DMAPPER]/hbs/analytics/get-nps-object"
+    headers:
+      type: "json"
+    body:
+      pointNps: ${JSON.parse(result.response.body[0].result.value).pointNps ?? []}
+      periodNps: ${JSON.parse(result.response.body[0].result.value).periodNps}
+  result: responseObject
+
 log_step:
-  log: ${JSON.parse(result.response.body[0].result.value).pointNps}
+  log: ${responseObject.response.body}
 
 return_value:
-  # wrapper: false
-  return: ${JSON.parse(result.response.body[0].result.value).pointNps ?? []}
+  wrapper: false
+  return: ${responseObject.response.body}
   next: end
 
 return_incorrect_request:

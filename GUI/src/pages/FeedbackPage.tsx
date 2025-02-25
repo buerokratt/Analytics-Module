@@ -138,12 +138,12 @@ const FeedbackPage: React.FC = () => {
     {
       id: 'advisor_chats',
       labelKey: 'feedback.advisor_chats',
-      unit: t('units.chats') ?? 'chats',
+      unit: t('units.nps') ?? 'nps',
     },
     {
       id: 'selected_advisor_chats',
       labelKey: 'feedback.selected_advisor_chats',
-      unit: t('units.chats') ?? 'chats',
+      unit: t('units.nps') ?? 'nps',
     },
     {
       id: 'negative_feedback',

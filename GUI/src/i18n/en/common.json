@@ -486,6 +486,7 @@
     "intents": "intents",
     "questions": "questions",
     "counselors": "counselors",
-    "feedback": "feedback"
+    "feedback": "feedback",
+    "nps": "NPS"
   }
 }

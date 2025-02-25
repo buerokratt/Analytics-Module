@@ -26,11 +26,21 @@ WITH chat_csas AS (
         AND feedback_rating IS NOT NULL
         AND created::date BETWEEN :start::date AND :end::date
 )
-SELECT date_trunc(:metric, created) AS date_time,
+SELECT date_trunc(:metric, created)::text AS date_time,
     coalesce(CAST(((
        SUM(CASE WHEN feedback_rating BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 -
        SUM(CASE WHEN feedback_rating BETWEEN 0 AND 6 THEN 1 ELSE 0 END)
        ) / COUNT(base_id) * 100) AS int), 0) AS nps
 FROM chat_csas
 GROUP BY date_time
+
+UNION ALL
+
+SELECT 'Overall' AS date_time,
+    coalesce(CAST(((
+       SUM(CASE WHEN feedback_rating BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 -
+       SUM(CASE WHEN feedback_rating BETWEEN 0 AND 6 THEN 1 ELSE 0 END)
+       ) / COUNT(base_id) * 100) AS int), 0) AS nps
+FROM chat_csas
+
 ORDER BY date_time

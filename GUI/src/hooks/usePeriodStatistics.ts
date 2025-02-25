@@ -12,6 +12,8 @@ export const usePeriodStatistics = (chartData: Record<string, number>[] | undefi
       setPeriodStatistics(getPeriodTotalCounts(chartData));
     } else if (unit === t('units.minutes') || unit === t('units.messages')) {
       setPeriodStatistics(getPeriodAveragesOrMedians(chartData, t('chats.medianWaitingTime')));
+    } else if (unit === t('units.nps')) {
+      setPeriodStatistics(getPeriodNPS(chartData));
     }
   }, [chartData, unit, t]);
 
@@ -63,4 +65,9 @@ const calculateMedian = (numbers: number[]): number => {
     return Number(((sorted[middle - 1] + sorted[middle]) / 2).toFixed(2));
   }
   return Number(sorted[middle].toFixed(2));
+};
+
+const getPeriodNPS = (chartData: Record<string, number>[]) => {
+  const nps = chartData[chartData.length - 1].NPS;
+  return { NPS: nps };
 };

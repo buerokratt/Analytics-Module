@@ -102,14 +102,3 @@ export const usePeriodStatisticsContext = () => {
   }
   return context;
 };
-
-// // Export the original hook with the same interface for backward compatibility
-// export const usePeriodStatistics = (chartData: Record<string, number>[] | undefined, unit: string | undefined) => {
-//   const { periodStatistics, updatePeriodStatistics } = usePeriodStatisticsContext();
-
-//   React.useEffect(() => {
-//     updatePeriodStatistics(chartData, unit);
-//   }, [chartData, unit]);
-
-//   return periodStatistics;
-// };

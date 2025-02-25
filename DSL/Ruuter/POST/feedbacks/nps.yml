@@ -34,14 +34,6 @@ post_step:
       end: ${incoming.body.end_date}
   result: result
 
-# log_step:
-#   log: ${JSON.parse(result.response.body[0].result.value).pointNps}
-
-# assign_values:
-#   assign:
-#     pointNps: ${JSON.parse(result.response.body[0].result.value).pointNps ?? []}
-#     periodNps: ${JSON.parse(result.response.body[0].result.value).periodNps}
-
 get_nps_object:
   call: http.post
   args:
@@ -52,9 +44,6 @@ get_nps_object:
       pointNps: ${JSON.parse(result.response.body[0].result.value).pointNps ?? []}
       periodNps: ${JSON.parse(result.response.body[0].result.value).periodNps}
   result: responseObject
-
-log_step:
-  log: ${responseObject.response.body}
 
 return_value:
   wrapper: false

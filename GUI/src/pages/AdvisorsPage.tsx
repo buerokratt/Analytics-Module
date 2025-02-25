@@ -63,14 +63,14 @@ const AdvisorsPage: React.FC = () => {
       unit: t('units.minutes') ?? 'minutes',
     },
   ]);
-  const { updatePeriodStatistics } = usePeriodStatisticsContext();
+  const { setPeriodStatistics } = usePeriodStatisticsContext();
 
   useEffect(() => {
     setAdvisorsList(advisors.current);
   }, [advisorsList]);
 
   useEffect(() => {
-    updatePeriodStatistics(chartData, unit);
+    setPeriodStatistics(chartData, unit);
   }, [chartData, unit]);
 
   const [configsSubject] = useState(() => new Subject());

@@ -39,7 +39,7 @@ const FeedbackPage: React.FC = () => {
   const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
   const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
-  const { updatePeriodStatistics } = usePeriodStatisticsContext();
+  const { setPeriodStatistics } = usePeriodStatisticsContext();
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -53,7 +53,7 @@ const FeedbackPage: React.FC = () => {
   }, [advisorsList]);
 
   useEffect(() => {
-    updatePeriodStatistics(chartData, unit);
+    setPeriodStatistics(chartData, unit);
   }, [chartData, unit]);
 
   const fetchData = async () => {

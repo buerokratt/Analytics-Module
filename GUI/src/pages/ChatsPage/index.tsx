@@ -21,10 +21,10 @@ const ChatsPage: React.FC = () => {
     chartData: [],
     colors: [],
   });
-  const { updatePeriodStatistics } = usePeriodStatisticsContext();
+  const { setPeriodStatistics } = usePeriodStatisticsContext();
 
   useEffect(() => {
-    updatePeriodStatistics(chartData, unit);
+    setPeriodStatistics(chartData, unit);
   }, [chartData, unit]);
 
   const [configsSubject] = useState(() => new Subject());

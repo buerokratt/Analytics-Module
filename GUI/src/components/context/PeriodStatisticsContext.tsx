@@ -4,8 +4,7 @@ import { ChartData } from 'types/chart';
 
 interface PeriodStatisticsContextType {
   periodStatistics: Record<string, number>;
-  setPeriodStatistics: React.Dispatch<React.SetStateAction<Record<string, number>>>;
-  updatePeriodStatistics: (data: ChartData, unit: string | undefined) => void;
+  setPeriodStatistics: (data: ChartData, unit: string | undefined) => void;
 }
 
 const PeriodStatisticsContext = createContext<PeriodStatisticsContextType | undefined>(undefined);
@@ -65,8 +64,8 @@ export const PeriodStatisticsProvider: React.FC<PeriodStatisticsProviderProps> =
   const [periodStatistics, setPeriodStatistics] = useState<Record<string, number>>({});
   const { t } = useTranslation();
 
-  const updatePeriodStatistics = (data: ChartData, unit: string | undefined) => {
-    if (!data?.chartData?.length) return;
+  const setPeriodStatisticsFromChartData = (data: ChartData, unit: string | undefined) => {
+    if (!data.chartData.length) return;
 
     if (unit === t('units.chats')) {
       setPeriodStatistics(getPeriodTotalCounts(data.chartData));
@@ -81,8 +80,7 @@ export const PeriodStatisticsProvider: React.FC<PeriodStatisticsProviderProps> =
     <PeriodStatisticsContext.Provider
       value={{
         periodStatistics,
-        setPeriodStatistics,
-        updatePeriodStatistics,
+        setPeriodStatistics: setPeriodStatisticsFromChartData,
       }}
     >
       {children}

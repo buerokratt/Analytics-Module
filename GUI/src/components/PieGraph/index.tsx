@@ -63,7 +63,6 @@ const PieGraph = ({ data, unit }: Props) => {
         <PieCharLegends
           data={data}
           percentages={percentages}
-          unit={unit}
         />
       </Track>
     </div>

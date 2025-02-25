@@ -13,21 +13,19 @@ import {
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { useTranslation } from 'react-i18next';
 import { usePeriodStatisticsContext } from 'components/context/PeriodStatisticsContext';
+import { ChartData } from 'types/chart';
 
 type Props = {
-  data: any;
+  data: ChartData;
   startDate: string;
   endDate: string;
   unit?: string;
   groupByPeriod: GroupByPeriod;
-  npsStatistics?: Record<string, number>;
 };
 
-const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod, npsStatistics }) => {
+const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod }) => {
   const [width, setWidth] = useState<number | null>(null);
-  // const periodStatistics = npsStatistics ?? usePeriodStatistics(data.chartData, unit);
-  const { periodStatistics, setPeriodStatistics, updatePeriodStatistics } = usePeriodStatisticsContext();
-  console.log('periodStatistics', periodStatistics);
+  const { periodStatistics } = usePeriodStatisticsContext();
 
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();

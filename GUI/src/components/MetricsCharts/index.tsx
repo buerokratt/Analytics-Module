@@ -7,7 +7,7 @@ import './MetricsCharts.scss';
 import LineGraph from '../LineGraph';
 import PieGraph from '../PieGraph';
 import { getXlsx } from '../../resources/api-constants';
-import { ChartType } from '../../types/chart-type';
+import { ChartData, ChartType } from '../../types/chart';
 import { chartDataKey, formatTimestamp, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { request, Methods } from '../../util/axios-client';
@@ -15,15 +15,14 @@ import { saveFile } from 'util/file';
 
 type Props = {
   title: any;
-  data: any;
+  data: ChartData;
   startDate: string;
   endDate: string;
   unit?: string;
   groupByPeriod: GroupByPeriod;
-  npsStatistics?: Record<string, number>;
 };
 
-const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, npsStatistics }: Props) => {
+const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }: Props) => {
   const { t } = useTranslation();
 
   const charts: ChartType[] = [
@@ -67,7 +66,6 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, n
           endDate={endDate}
           unit={unit}
           groupByPeriod={groupByPeriod}
-          npsStatistics={npsStatistics}
         />
       );
     }

@@ -1,3 +1,5 @@
+import { MinPointSize } from 'recharts/types/util/BarUtils';
+
 export type ChartType = {
   label: string;
   value: string;
@@ -6,4 +8,5 @@ export type ChartType = {
 export type ChartData = {
   chartData: Record<string, number>[];
   colors: { id: string; color: string }[];
+  minPointSize?: MinPointSize;
 };

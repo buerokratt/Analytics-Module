@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 interface PeriodStatisticsContextType {
   periodStatistics: Record<string, number>;
   setPeriodStatistics: React.Dispatch<React.SetStateAction<Record<string, number>>>;
+  // todo rename
   updatePeriodStatistics: (chartData: Record<string, number>[] | undefined, unit: string | undefined) => void;
 }
 

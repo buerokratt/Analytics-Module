@@ -23,7 +23,7 @@ import useStore from '../store/user/store';
 import { useMutation } from '@tanstack/react-query';
 import { randomColor } from 'util/generateRandomColor';
 import { usePeriodStatisticsContext } from 'components/context/PeriodStatisticsContext';
-import { ChartData } from 'types/chart-type';
+import { ChartData } from 'types/chart';
 
 const FeedbackPage: React.FC = () => {
   const { t } = useTranslation();
@@ -40,7 +40,7 @@ const FeedbackPage: React.FC = () => {
   const [unit, setUnit] = useState('');
   const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
   const [npsStatistics, setNpsStatistics] = useState<Record<string, number>>({});
-  const { periodStatistics, setPeriodStatistics, updatePeriodStatistics } = usePeriodStatisticsContext();
+  const { setPeriodStatistics, updatePeriodStatistics } = usePeriodStatisticsContext();
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -54,7 +54,6 @@ const FeedbackPage: React.FC = () => {
   }, [advisorsList]);
 
   useEffect(() => {
-    console.log('chartData', chartData);
     updatePeriodStatistics(chartData.chartData, unit);
   }, [chartData, unit]);
 
@@ -482,7 +481,6 @@ const FeedbackPage: React.FC = () => {
           endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
           groupByPeriod={currentConfigs?.groupByPeriod ?? 'day'}
           unit={unit}
-          npsStatistics={npsStatistics}
         />
       )}
       {showNegativeChart &&

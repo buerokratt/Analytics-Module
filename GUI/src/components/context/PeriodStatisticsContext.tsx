@@ -67,19 +67,12 @@ export const PeriodStatisticsProvider: React.FC<PeriodStatisticsProviderProps> =
 
   const updatePeriodStatistics = (chartData: Record<string, number>[] | undefined, unit: string | undefined) => {
     if (!chartData?.length) return;
-    console.log('chartData CONTEXT', chartData);
 
     if (unit === t('units.chats')) {
       setPeriodStatistics(getPeriodTotalCounts(chartData));
     } else if (unit === t('units.minutes') || unit === t('units.messages')) {
       setPeriodStatistics(getPeriodAveragesOrMedians(chartData, t('chats.medianWaitingTime')));
-    } else if (unit === t('units.nps')) {
-      // todo
-      // Handle NPS case if needed in the future
-      // setPeriodStatistics({ [t('units.nps')]: chartData[chartData.length - 1].NPS });
     }
-
-    console.log('periodStatistics CONTEXT', periodStatistics);
   };
 
   return (

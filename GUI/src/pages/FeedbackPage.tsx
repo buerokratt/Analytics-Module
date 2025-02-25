@@ -39,7 +39,7 @@ const FeedbackPage: React.FC = () => {
   const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
   const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
-  const { setPeriodStatistics, updatePeriodStatistics } = usePeriodStatisticsContext();
+  const { updatePeriodStatistics } = usePeriodStatisticsContext();
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -53,7 +53,7 @@ const FeedbackPage: React.FC = () => {
   }, [advisorsList]);
 
   useEffect(() => {
-    if (unit !== t('units.nps')) updatePeriodStatistics(chartData.chartData, unit);
+    updatePeriodStatistics(chartData, unit);
   }, [chartData, unit]);
 
   const fetchData = async () => {
@@ -308,8 +308,6 @@ const FeedbackPage: React.FC = () => {
         },
       });
 
-      setPeriodStatistics({ [t('units.nps')]: result.periodNps });
-
       const response = result.response.map((entry: any) => ({
         ...translateChartKeys(entry, chartDataKey),
         [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
@@ -318,6 +316,7 @@ const FeedbackPage: React.FC = () => {
       chartData = {
         chartData: response,
         colors: [{ id: 'Nps', color: '#FFB511' }],
+        periodNps: result.periodNps,
       };
     } catch (_) {
       //error

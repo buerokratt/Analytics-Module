@@ -70,7 +70,7 @@ const AdvisorsPage: React.FC = () => {
   }, [advisorsList]);
 
   useEffect(() => {
-    updatePeriodStatistics(chartData.chartData, unit);
+    updatePeriodStatistics(chartData, unit);
   }, [chartData, unit]);
 
   const [configsSubject] = useState(() => new Subject());

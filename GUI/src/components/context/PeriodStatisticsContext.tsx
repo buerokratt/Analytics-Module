@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ChartData } from 'types/chart';
 
 interface PeriodStatisticsContextType {
   periodStatistics: Record<string, number>;
   setPeriodStatistics: React.Dispatch<React.SetStateAction<Record<string, number>>>;
-  // todo rename
-  updatePeriodStatistics: (chartData: Record<string, number>[] | undefined, unit: string | undefined) => void;
+  updatePeriodStatistics: (data: ChartData, unit: string | undefined) => void;
 }
 
 const PeriodStatisticsContext = createContext<PeriodStatisticsContextType | undefined>(undefined);
@@ -65,13 +65,15 @@ export const PeriodStatisticsProvider: React.FC<PeriodStatisticsProviderProps> =
   const [periodStatistics, setPeriodStatistics] = useState<Record<string, number>>({});
   const { t } = useTranslation();
 
-  const updatePeriodStatistics = (chartData: Record<string, number>[] | undefined, unit: string | undefined) => {
-    if (!chartData?.length) return;
+  const updatePeriodStatistics = (data: ChartData, unit: string | undefined) => {
+    if (!data?.chartData?.length) return;
 
     if (unit === t('units.chats')) {
-      setPeriodStatistics(getPeriodTotalCounts(chartData));
+      setPeriodStatistics(getPeriodTotalCounts(data.chartData));
     } else if (unit === t('units.minutes') || unit === t('units.messages')) {
-      setPeriodStatistics(getPeriodAveragesOrMedians(chartData, t('chats.medianWaitingTime')));
+      setPeriodStatistics(getPeriodAveragesOrMedians(data.chartData, t('chats.medianWaitingTime')));
+    } else if (unit === t('units.nps')) {
+      setPeriodStatistics({ [t('units.nps')]: data.periodNps ?? 0 });
     }
   };
 

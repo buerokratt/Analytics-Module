@@ -9,4 +9,5 @@ export type ChartData = {
   chartData: Record<string, number>[];
   colors: { id: string; color: string }[];
   minPointSize?: MinPointSize;
+  periodNps?: number;
 };

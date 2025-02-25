@@ -24,7 +24,7 @@ const ChatsPage: React.FC = () => {
   const { updatePeriodStatistics } = usePeriodStatisticsContext();
 
   useEffect(() => {
-    updatePeriodStatistics(chartData.chartData, unit);
+    updatePeriodStatistics(chartData, unit);
   }, [chartData, unit]);
 
   const [configsSubject] = useState(() => new Subject());

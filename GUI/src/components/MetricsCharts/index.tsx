@@ -20,9 +20,10 @@ type Props = {
   endDate: string;
   unit?: string;
   groupByPeriod: GroupByPeriod;
+  npsStatistics?: Record<string, number>;
 };
 
-const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }: Props) => {
+const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, npsStatistics }: Props) => {
   const { t } = useTranslation();
 
   const charts: ChartType[] = [
@@ -66,6 +67,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
           endDate={endDate}
           unit={unit}
           groupByPeriod={groupByPeriod}
+          npsStatistics={npsStatistics}
         />
       );
     }

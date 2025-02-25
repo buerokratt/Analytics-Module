@@ -34,6 +34,7 @@ const FeedbackPage: React.FC = () => {
   const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
   const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
+  const [npsStatistics, setNpsStatistics] = useState<Record<string, number>>({});
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -301,6 +302,8 @@ const FeedbackPage: React.FC = () => {
         },
       });
 
+      setNpsStatistics({ [t('units.nps')]: result.periodNps });
+
       const response = result.response.map((entry: any) => ({
         ...translateChartKeys(entry, chartDataKey),
         [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
@@ -471,6 +474,7 @@ const FeedbackPage: React.FC = () => {
           endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
           groupByPeriod={currentConfigs?.groupByPeriod ?? 'day'}
           unit={unit}
+          npsStatistics={npsStatistics}
         />
       )}
       {showNegativeChart && (negativeFeedbackChats.length > 0 ?

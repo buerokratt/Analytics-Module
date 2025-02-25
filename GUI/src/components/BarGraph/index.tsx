@@ -20,11 +20,13 @@ type Props = {
   endDate: string;
   unit?: string;
   groupByPeriod: GroupByPeriod;
+  npsStatistics?: Record<string, number>;
 };
 
-const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod }) => {
+const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod, npsStatistics }) => {
+  console.log('IGOR', npsStatistics);
   const [width, setWidth] = useState<number | null>(null);
-  const periodStatistics = usePeriodStatistics(data.chartData, unit);
+  const periodStatistics = npsStatistics ?? usePeriodStatistics(data.chartData, unit);
 
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();

@@ -24,7 +24,6 @@ type Props = {
 };
 
 const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod, npsStatistics }) => {
-  console.log('IGOR', npsStatistics);
   const [width, setWidth] = useState<number | null>(null);
   const periodStatistics = npsStatistics ?? usePeriodStatistics(data.chartData, unit);
 

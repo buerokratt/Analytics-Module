@@ -12,8 +12,8 @@ import {
 } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { useTranslation } from 'react-i18next';
-import { usePeriodStatisticsContext } from 'components/context/PeriodStatisticsContext';
 import { ChartData } from 'types/chart';
+import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 
 type Props = {
   data: ChartData;

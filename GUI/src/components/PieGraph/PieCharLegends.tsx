@@ -2,7 +2,7 @@ import { ChartData } from 'types/chart';
 import { formatTotalPeriodCount, getColor } from '../../util/charts-utils';
 import Track from '../Track';
 import './PieGraph.scss';
-import { usePeriodStatisticsContext } from 'components/context/PeriodStatisticsContext';
+import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 
 type Props = {
   data: ChartData;

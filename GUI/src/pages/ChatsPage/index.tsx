@@ -10,7 +10,7 @@ import { fetchData } from './data';
 import { chatOptions } from './options';
 import withAuthorization, { ROLES } from '../../hoc/with-authorization';
 import { ChartData } from 'types/chart';
-import { usePeriodStatisticsContext } from 'components/context/PeriodStatisticsContext';
+import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 
 const ChatsPage: React.FC = () => {
   const { t } = useTranslation();

@@ -16,8 +16,8 @@ import {
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { randomColor } from 'util/generateRandomColor';
-import { usePeriodStatisticsContext } from 'components/context/PeriodStatisticsContext';
 import { ChartData } from 'types/chart';
+import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 
 const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation();

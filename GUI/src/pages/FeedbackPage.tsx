@@ -22,8 +22,8 @@ import { analyticsApi } from '../components/services/api';
 import useStore from '../store/user/store';
 import { useMutation } from '@tanstack/react-query';
 import { randomColor } from 'util/generateRandomColor';
-import { usePeriodStatisticsContext } from 'components/context/PeriodStatisticsContext';
 import { ChartData } from 'types/chart';
+import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 
 const FeedbackPage: React.FC = () => {
   const { t } = useTranslation();

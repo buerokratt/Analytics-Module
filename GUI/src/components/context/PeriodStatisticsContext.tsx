@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChartData } from 'types/chart';
 
@@ -7,7 +7,7 @@ interface PeriodStatisticsContextType {
   setPeriodStatistics: (data: ChartData, unit: string | undefined) => void;
 }
 
-const PeriodStatisticsContext = createContext<PeriodStatisticsContextType | undefined>(undefined);
+export const PeriodStatisticsContext = createContext<PeriodStatisticsContextType | undefined>(undefined);
 
 interface PeriodStatisticsProviderProps {
   children: ReactNode;
@@ -41,13 +41,13 @@ export const PeriodStatisticsProvider: React.FC<PeriodStatisticsProviderProps> =
   );
 };
 
-export const usePeriodStatisticsContext = () => {
-  const context = useContext(PeriodStatisticsContext);
-  if (context === undefined) {
-    throw new Error('usePeriodStatisticsContext must be used within a PeriodStatisticsProvider');
-  }
-  return context;
-};
+// export const usePeriodStatisticsContext = () => {
+//   const context = useContext(PeriodStatisticsContext);
+//   if (context === undefined) {
+//     throw new Error('usePeriodStatisticsContext must be used within a PeriodStatisticsProvider');
+//   }
+//   return context;
+// };
 
 const getPeriodTotalCounts = (chartData: Record<string, number>[]) => {
   const totals: Record<string, number> = {};

@@ -10,8 +10,8 @@ import {
   getTicks,
   round,
 } from '../../util/charts-utils';
-import { usePeriodStatisticsContext } from 'components/context/PeriodStatisticsContext';
 import { ChartData } from 'types/chart';
+import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 
 type Props = {
   data: ChartData;

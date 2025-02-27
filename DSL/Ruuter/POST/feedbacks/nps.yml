@@ -37,17 +37,17 @@ post_step:
 get_nps_object:
   call: http.post
   args:
-    url: "[#ANALYTICS_DMAPPER]/hbs/analytics/get-nps-object"
+    url: "[#ANALYTICS_DMAPPER]/hbs/analytics/get-csa-nps-object"
     headers:
       type: "json"
     body:
       pointNps: ${JSON.parse(result.response.body[0].result.value).pointNps ?? []}
       periodNps: ${JSON.parse(result.response.body[0].result.value).periodNps}
-  result: responseObject
+  result: nps
 
 return_value:
   wrapper: false
-  return: ${responseObject.response.body}
+  return: ${nps.response.body}
   next: end
 
 return_incorrect_request:

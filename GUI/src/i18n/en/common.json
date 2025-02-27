@@ -169,7 +169,7 @@
     "count": "Count",
     "event": "Event",
     "avg": "Average",
-    "nps": "Nps",
+    "nps": "NPS",
     "id": "Id",
     "baseId": "Id",
     "rating": "Rating",

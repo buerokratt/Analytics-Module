@@ -24,8 +24,10 @@ export const PeriodStatisticsProvider: React.FC<PeriodStatisticsProviderProps> =
       setPeriodStatistics(getPeriodTotalCounts(data.chartData));
     } else if (unit === t('units.minutes') || unit === t('units.messages')) {
       setPeriodStatistics(getPeriodAveragesOrMedians(data.chartData, t('chats.medianWaitingTime')));
-    } else if (unit === t('units.nps')) {
+    } else if (unit === t('units.nps') && data.periodNps) {
       setPeriodStatistics({ [t('units.nps')]: data.periodNps ?? 0 });
+    } else if (unit === t('units.nps') && data.periodNpsByCsa) {
+      setPeriodStatistics(data.periodNpsByCsa);
     }
   };
 
@@ -40,14 +42,6 @@ export const PeriodStatisticsProvider: React.FC<PeriodStatisticsProviderProps> =
     </PeriodStatisticsContext.Provider>
   );
 };
-
-// export const usePeriodStatisticsContext = () => {
-//   const context = useContext(PeriodStatisticsContext);
-//   if (context === undefined) {
-//     throw new Error('usePeriodStatisticsContext must be used within a PeriodStatisticsProvider');
-//   }
-//   return context;
-// };
 
 const getPeriodTotalCounts = (chartData: Record<string, number>[]) => {
   const totals: Record<string, number> = {};

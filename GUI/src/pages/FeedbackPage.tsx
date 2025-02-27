@@ -150,7 +150,7 @@ const FeedbackPage: React.FC = () => {
     {
       id: 'selected_advisor_chats',
       labelKey: 'feedback.selected_advisor_chats',
-      unit: t('units.chats') ?? 'chats',
+      unit: t('units.nps') ?? 'nps',
     },
     {
       id: 'negative_feedback',
@@ -315,7 +315,7 @@ const FeedbackPage: React.FC = () => {
 
       chartData = {
         chartData: response,
-        colors: [{ id: 'Nps', color: '#FFB511' }],
+        colors: [{ id: 'NPS', color: '#FFB511' }],
         periodNps: result.periodNps,
       };
     } catch (_) {
@@ -405,6 +405,7 @@ const FeedbackPage: React.FC = () => {
             color,
           };
         }),
+        periodNpsByCsa: result.periodNpsByCsa,
       };
     } catch (_) {
       //error

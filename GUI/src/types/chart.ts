@@ -10,4 +10,5 @@ export type ChartData = {
   colors: { id: string; color: string }[];
   minPointSize?: MinPointSize;
   periodNps?: number;
+  periodNpsByCsa?: Record<string, number>;
 };

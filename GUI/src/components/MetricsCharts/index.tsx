@@ -20,9 +20,15 @@ type Props = {
   endDate: string;
   unit?: string;
   groupByPeriod: GroupByPeriod;
+  filterEmpty?: boolean;
 };
 
-const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }: Props) => {
+type DataItem = {
+  dateTime: number;
+  [key: string]: number;
+};
+
+const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, filterEmpty }: Props) => {
   const { t } = useTranslation();
 
   const charts: ChartType[] = [
@@ -41,7 +47,19 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
   ];
   const [selectedChart, setSelectedChart] = useState<string>('barChart');
 
+  const filterChartsData = () => {
+    return data.chartData.map((obj : DataItem) => {
+      return Object.fromEntries(
+          Object.entries(obj).filter(([key, value]) => key === "dateTime" || value !== 0)
+      );
+    });
+  }
+
   const buildChart = () => {
+    if(filterEmpty) {
+      data.chartData = filterChartsData();
+    }
+
     if (selectedChart === 'pieChart') {
       return (
         <PieGraph

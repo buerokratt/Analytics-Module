@@ -160,15 +160,16 @@ WHERE c.created::date BETWEEN :start::date AND :end::date
       WHERE m.event = 'unavailable_organization' AND m.author_role = 'buerokratt'
     )
   )
-  AND (
-    EXTRACT(HOUR FROM m.created) BETWEEN (SELECT time FROM workingTimeStart) AND (SELECT time FROM workingTimeEnd)
-    OR (EXTRACT(DOW FROM m.created) = 0 AND EXTRACT(HOUR FROM m.created) BETWEEN (SELECT time FROM sundayWorkingTimeStart) AND (SELECT time FROM sundayWorkingTimeEnd))
-    OR (EXTRACT(DOW FROM m.created) = 1 AND EXTRACT(HOUR FROM m.created) BETWEEN (SELECT time FROM mondayWorkingTimeStart) AND (SELECT time FROM mondayWorkingTimeEnd))
-    OR (EXTRACT(DOW FROM m.created) = 2 AND EXTRACT(HOUR FROM m.created) BETWEEN (SELECT time FROM tuesdayWorkingTimeStart) AND (SELECT time FROM tuesdayWorkingTimeEnd))
-    OR (EXTRACT(DOW FROM m.created) = 3 AND EXTRACT(HOUR FROM m.created) BETWEEN (SELECT time FROM wednesdayWorkingTimeStart) AND (SELECT time FROM wednesdayWorkingTimeEnd))
-    OR (EXTRACT(DOW FROM m.created) = 4 AND EXTRACT(HOUR FROM m.created) BETWEEN (SELECT time FROM thursdayWorkingTimeStart) AND (SELECT time FROM thursdayWorkingTimeEnd))
-    OR (EXTRACT(DOW FROM m.created) = 5 AND EXTRACT(HOUR FROM m.created) BETWEEN (SELECT time FROM fridayWorkingTimeStart) AND (SELECT time FROM fridayWorkingTimeEnd))
-    OR (EXTRACT(DOW FROM m.created) = 6 AND EXTRACT(HOUR FROM m.created) BETWEEN (SELECT time FROM saturdayWorkingTimeStart) AND (SELECT time FROM saturdayWorkingTimeEnd))
-  )
+AND (
+    EXTRACT(HOUR FROM m.created) < (SELECT time FROM workingTimeStart)
+    OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM workingTimeEnd)
+    OR (EXTRACT(DOW FROM m.created) = 0 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM sundayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM sundayWorkingTimeEnd)))
+    OR (EXTRACT(DOW FROM m.created) = 1 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM mondayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM mondayWorkingTimeEnd)))
+    OR (EXTRACT(DOW FROM m.created) = 2 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM tuesdayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM tuesdayWorkingTimeEnd)))
+    OR (EXTRACT(DOW FROM m.created) = 3 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM wednesdayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM wednesdayWorkingTimeEnd)))
+    OR (EXTRACT(DOW FROM m.created) = 4 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM thursdayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM thursdayWorkingTimeEnd)))
+    OR (EXTRACT(DOW FROM m.created) = 5 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM fridayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM fridayWorkingTimeEnd)))
+    OR (EXTRACT(DOW FROM m.created) = 6 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM saturdayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM saturdayWorkingTimeEnd)))
+)
 GROUP BY time
 ORDER BY time;

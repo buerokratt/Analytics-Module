@@ -1,155 +1,155 @@
 WITH workingTimeStart AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+    SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationWorkingTimeStartISO'
-    AND deleted IS false
-  )
-),
-saturdayWorkingTimeStart AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    saturdayWorkingTimeStart AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationSaturdayWorkingTimeStartISO'
-    AND deleted IS false
-  )
-),
-sundayWorkingTimeStart AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    sundayWorkingTimeStart AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationSundayWorkingTimeStartISO'
-    AND deleted IS false
-  )
-),
-mondayWorkingTimeStart AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    mondayWorkingTimeStart AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationMondayWorkingTimeStartISO'
-    AND deleted IS false
-  )
-),
-tuesdayWorkingTimeStart AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    tuesdayWorkingTimeStart AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationTuesdayWorkingTimeStartISO'
-    AND deleted IS false
-  )
-),
-wednesdayWorkingTimeStart AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    wednesdayWorkingTimeStart AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationWednesdayWorkingTimeStartISO'
-    AND deleted IS false
-  )
-),
-thursdayWorkingTimeStart AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    thursdayWorkingTimeStart AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationThursdayWorkingTimeStartISO'
-    AND deleted IS false
-  )
-),
-fridayWorkingTimeStart AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    fridayWorkingTimeStart AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationFridayWorkingTimeStartISO'
-    AND deleted IS false
-  )
-),
-workingTimeEnd AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    workingTimeEnd AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationWorkingTimeEndISO'
-    AND deleted IS false
-  )
-),
-saturdayWorkingTimeEnd AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    saturdayWorkingTimeEnd AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationSaturdayWorkingTimeEndISO'
-    AND deleted IS false
-  )
-),
-sundayWorkingTimeEnd AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    sundayWorkingTimeEnd AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationSundayWorkingTimeEndISO'
-    AND deleted IS false
-  )
-),
-mondayWorkingTimeEnd AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    mondayWorkingTimeEnd AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationMondayWorkingTimeEndISO'
-    AND deleted IS false
-  )
-),
-tuesdayWorkingTimeEnd AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    tuesdayWorkingTimeEnd AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationTuesdayWorkingTimeEndISO'
-    AND deleted IS false
-  )
-),
-wednesdayWorkingTimeEnd AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    wednesdayWorkingTimeEnd AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationWednesdayWorkingTimeEndISO'
-    AND deleted IS false
-  )
-),
-thursdayWorkingTimeEnd AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    thursdayWorkingTimeEnd AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationThursdayWorkingTimeEndISO'
-    AND deleted IS false
-  )
-),
-fridayWorkingTimeEnd AS (
-  SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-  FROM configuration
-  WHERE id = (
+  AND deleted IS false
+    )
+    ),
+    fridayWorkingTimeEnd AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+FROM configuration
+WHERE id = (
     SELECT MAX(id) FROM configuration
     WHERE key = 'organizationFridayWorkingTimeEndISO'
-    AND deleted IS false
-  )
-)
+  AND deleted IS false
+    )
+    )
 SELECT
-  DATE_TRUNC(:period, c.created) AS time,
+    DATE_TRUNC(:period, c.created) AS time,
   COUNT(DISTINCT c.base_id) AS chat_count
 FROM chat c
-JOIN message m ON c.base_id = m.chat_base_id 
+    JOIN message m ON c.base_id = m.chat_base_id
 WHERE c.created::date BETWEEN :start::date AND :end::date
   AND (
-    m.event = 'unavailable-contact-information-fulfilled' AND
+    m.event = 'contact-information-fulfilled' AND
     (c.end_user_email IS NOT NULL AND c.end_user_email <> '') OR
     (c.end_user_phone IS NOT NULL AND c.end_user_phone <> '')
   )
@@ -157,7 +157,7 @@ WHERE c.created::date BETWEEN :start::date AND :end::date
     c.base_id IN (
       SELECT DISTINCT m.chat_base_id
       FROM message m
-      WHERE m.event = 'unavailable_organization' AND m.author_role = 'buerokratt'
+      WHERE m.event = 'unavailable_organization_ask_contacts' AND m.author_role = 'buerokratt'
     )
   )
 AND (

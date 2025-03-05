@@ -10,10 +10,11 @@ import {
   getTicks,
   round,
 } from '../../util/charts-utils';
-import { usePeriodStatistics } from '../../hooks/usePeriodStatistics';
+import { ChartData } from 'types/chart';
+import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 
 type Props = {
-  data: any;
+  data: ChartData;
   startDate: string;
   endDate: string;
   unit?: string;
@@ -22,7 +23,7 @@ type Props = {
 const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
   const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
-  const periodStatistics = usePeriodStatistics(data.chartData, unit);
+  const { periodStatistics } = usePeriodStatisticsContext();
 
   useEffect(() => {
     const handleResize = () => {

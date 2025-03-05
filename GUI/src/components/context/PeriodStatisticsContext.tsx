@@ -1,21 +1,46 @@
-import { useState, useEffect } from 'react';
+import React, { createContext, useState, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ChartData } from 'types/chart';
 
-export const usePeriodStatistics = (chartData: Record<string, number>[] | undefined, unit: string | undefined) => {
+interface PeriodStatisticsContextType {
+  periodStatistics: Record<string, number>;
+  setPeriodStatistics: (data: ChartData, unit: string | undefined) => void;
+}
+
+export const PeriodStatisticsContext = createContext<PeriodStatisticsContextType | undefined>(undefined);
+
+interface PeriodStatisticsProviderProps {
+  children: ReactNode;
+}
+
+export const PeriodStatisticsProvider: React.FC<PeriodStatisticsProviderProps> = ({ children }) => {
   const [periodStatistics, setPeriodStatistics] = useState<Record<string, number>>({});
   const { t } = useTranslation();
 
-  useEffect(() => {
-    if (!chartData?.length) return;
+  const setPeriodStatisticsFromChartData = (data: ChartData, unit: string | undefined) => {
+    if (!data.chartData.length) return;
 
     if (unit === t('units.chats')) {
-      setPeriodStatistics(getPeriodTotalCounts(chartData));
+      setPeriodStatistics(getPeriodTotalCounts(data.chartData));
     } else if (unit === t('units.minutes') || unit === t('units.messages')) {
-      setPeriodStatistics(getPeriodAveragesOrMedians(chartData, t('chats.medianWaitingTime')));
+      setPeriodStatistics(getPeriodAveragesOrMedians(data.chartData, t('chats.medianWaitingTime')));
+    } else if (unit === t('units.nps') && data.periodNps) {
+      setPeriodStatistics({ [t('units.nps')]: data.periodNps ?? 0 });
+    } else if (unit === t('units.nps') && data.periodNpsByCsa) {
+      setPeriodStatistics(data.periodNpsByCsa);
     }
-  }, [chartData, unit, t]);
+  };
 
-  return periodStatistics;
+  return (
+    <PeriodStatisticsContext.Provider
+      value={{
+        periodStatistics,
+        setPeriodStatistics: setPeriodStatisticsFromChartData,
+      }}
+    >
+      {children}
+    </PeriodStatisticsContext.Provider>
+  );
 };
 
 const getPeriodTotalCounts = (chartData: Record<string, number>[]) => {

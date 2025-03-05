@@ -13,10 +13,14 @@ import { reorderItem } from '../util/reorder-array';
 import { formatDate } from '../util/charts-utils';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
+import { ChartData } from 'types/chart';
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([]);
-  const [chartData, setChartData] = useState({});
+  const [chartData, setChartData] = useState<ChartData>({
+    chartData: [],
+    colors: [],
+  });
   const [drawerIsHidden, setDrawerIsHidden] = useState(true);
 
   const { t } = useTranslation();

@@ -7,7 +7,7 @@ import './MetricsCharts.scss';
 import LineGraph from '../LineGraph';
 import PieGraph from '../PieGraph';
 import { getXlsx } from '../../resources/api-constants';
-import { ChartType } from '../../types/chart-type';
+import { ChartData, ChartType } from '../../types/chart';
 import { chartDataKey, formatTimestamp, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { request, Methods } from '../../util/axios-client';
@@ -15,7 +15,7 @@ import { saveFile } from 'util/file';
 
 type Props = {
   title: any;
-  data: any;
+  data: ChartData;
   startDate: string;
   endDate: string;
   unit?: string;
@@ -43,12 +43,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
 
   const buildChart = () => {
     if (selectedChart === 'pieChart') {
-      return (
-        <PieGraph
-          data={data}
-          unit={unit}
-        />
-      );
+      return <PieGraph data={data} />;
     } else if (selectedChart === 'lineChart') {
       return (
         <LineGraph

@@ -16,10 +16,15 @@ import {
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { randomColor } from 'util/generateRandomColor';
+import { ChartData } from 'types/chart';
+import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 
 const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation();
-  const [chartData, setChartData] = useState({});
+  const [chartData, setChartData] = useState<ChartData>({
+    chartData: [],
+    colors: [],
+  });
   const [currentMetric, setCurrentMetric] = useState('');
   const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
@@ -58,10 +63,15 @@ const AdvisorsPage: React.FC = () => {
       unit: t('units.minutes') ?? 'minutes',
     },
   ]);
+  const { setPeriodStatistics } = usePeriodStatisticsContext();
 
   useEffect(() => {
     setAdvisorsList(advisors.current);
   }, [advisorsList]);
+
+  useEffect(() => {
+    setPeriodStatistics(chartData, unit);
+  }, [chartData, unit]);
 
   const [configsSubject] = useState(() => new Subject());
   useEffect(() => {
@@ -95,7 +105,7 @@ const AdvisorsPage: React.FC = () => {
 
   const fetchChatsForwards = async (config: any) => {
     let chartData = {};
-    setShowSelectAll(false)
+    setShowSelectAll(false);
     try {
       const result: any = await request({
         url: getChatForwards(),
@@ -145,7 +155,7 @@ const AdvisorsPage: React.FC = () => {
   };
 
   const fetchAverageChatPickUpTime = async (config: any) => {
-    setShowSelectAll(false)
+    setShowSelectAll(false);
     let chartData = {};
     try {
       const result: any = await request({
@@ -176,7 +186,7 @@ const AdvisorsPage: React.FC = () => {
   };
 
   const fetchAveragePresentCsas = async (config: any) => {
-    setShowSelectAll(false)
+    setShowSelectAll(false);
     let chartData = {};
     try {
       const result: any = await request({
@@ -207,7 +217,7 @@ const AdvisorsPage: React.FC = () => {
   };
 
   const fetchTotalCsaChats = async (config: any) => {
-    setShowSelectAll(true)
+    setShowSelectAll(true);
     let chartData = {};
     try {
       const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
@@ -295,7 +305,7 @@ const AdvisorsPage: React.FC = () => {
   };
 
   const fetchAverageCsaChatTime = async (config: any) => {
-    setShowSelectAll(true)
+    setShowSelectAll(true);
     let chartData = {};
     try {
       const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));

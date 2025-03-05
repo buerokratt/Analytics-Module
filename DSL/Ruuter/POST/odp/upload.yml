@@ -44,15 +44,15 @@ authenticate:
   next: get_metrics
 
 get_metrics:
-  template: odp/metrics
-  requestType: post
-  body:
-    metrics: ${incoming.body.metrics}
-    start: ${incoming.body.start}
-    end: ${incoming.body.end}
-    period: ${incoming.body.period}
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RUUTER]/odp/metrics"
+    body:
+      metrics: ${incoming.body.metrics}
+      start: ${incoming.body.start}
+      end: ${incoming.body.end}
+      period: ${incoming.body.period}
   result: metrics
-  next: convert_data
 
 convert_data:
   call: http.post
@@ -61,7 +61,7 @@ convert_data:
     headers:
       type: "json"
     body:
-      results: ${metrics}
+      results: ${metrics.response.body}
       fields: ${['chat_count_total','chat_count_no_csa','avg_waiting_time_seconds','avg_messages','avg_time_seconds','avg_time_no_csa_seconds','avg_time_csa_seconds','avg_session_length_client_left_seconds','avg_session_length_csa_seconds','avg_session_length_no_csa_seconds','avg_response_time_seconds']}
       layout: false
   result: dataObject

@@ -1,12 +1,22 @@
 import { Buffer } from 'buffer';
 
-export const saveFile = async (base64String: string, fileName: string, type: string) => {
+export const saveFile = async (base64String: string, fileName: `${string}.${string}`, type: string) => {
   const blob = new Blob([Buffer.from(base64String, 'base64')], {
     type: type,
   });
 
+  const extension = fileName.split('.').pop();
+
   if (window.showSaveFilePicker) {
-    const handle = await window.showSaveFilePicker({ suggestedName: fileName });
+    const handle = await window.showSaveFilePicker({
+      suggestedName: fileName,
+      types: [
+        {
+          description: extension!.toUpperCase() + ' file',
+          accept: { [type]: [`.${extension}` as `.${string}`] },
+        },
+      ],
+    });
     const writable = await handle.createWritable();
     await writable.write(blob);
     writable.close();

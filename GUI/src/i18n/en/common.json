@@ -169,7 +169,7 @@
     "count": "Count",
     "event": "Event",
     "avg": "Average",
-    "nps": "Nps",
+    "nps": "NPS",
     "id": "Id",
     "baseId": "Id",
     "rating": "Rating",
@@ -486,6 +486,7 @@
     "intents": "intents",
     "questions": "questions",
     "counselors": "counselors",
-    "feedback": "feedback"
+    "feedback": "feedback",
+    "nps": "NPS"
   }
 }

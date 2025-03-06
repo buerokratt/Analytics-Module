@@ -491,6 +491,7 @@
     "intents": "teemad",
     "questions": "küsimused",
     "counselors": "nõustajad",
-    "feedback": "tagasiside"
+    "feedback": "tagasiside",
+    "nps": "NPS"
   }
 }

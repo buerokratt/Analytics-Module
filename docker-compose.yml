@@ -9,6 +9,7 @@ services:
       - application.logging.displayRequestContent=true
       - application.logging.displayResponseContent=true
       - application.logging.printStackTrace=true
+      - application.internalRequests.disabled=true
     volumes:
       - ./DSL/Ruuter:/DSL
       - ./constants.ini:/app/constants.ini
@@ -34,7 +35,7 @@ services:
     ports:
       - 8082:8082
     volumes:
-      - ./DSL/Resql:/workspace/app/templates/byk
+      - ./DSL/Resql:/DSL
     networks:
       - bykstack
 
@@ -57,20 +58,20 @@ services:
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
-      - REACT_APP_API_URL=http://localhost:8080
+      - REACT_APP_API_URL=http://localhost:8080/analytics
       - REACT_APP_OPENSEARCH_DASHBOARD_URL=https://opensearch.org/
       - REACT_APP_OPENDATAPORT_URL=https://avaandmed.eesti.ee
-      - REACT_APP_RUUTER_API_URL=http://localhost:8080
-      - REACT_APP_RUUTER_V2_ANALYTICS_API_URL=http://localhost:8080
+      - REACT_APP_RUUTER_API_URL=http://localhost:8080/analytics
+      - REACT_APP_RUUTER_V2_ANALYTICS_API_URL=http://localhost:8080/analytics
       - REACT_APP_MENU_URL=https://admin.dev.buerokratt.ee
       - REACT_APP_MENU_PATH=/chat/menu.json
-      - REACT_APP_AUTH_BASE_URL=http://localhost:8080
+      - REACT_APP_AUTH_BASE_URL=http://localhost:8080/analytics
       - REACT_APP_APP_PORT=3001
       - REACT_APP_LOCAL=true
       - REACT_APP_BASE_API_PATH=/
       - PORT=3001
-      - REACT_APP_RUUTER_PRIVATE_API_URL=http://localhost:8080
-      - REACT_APP_DOCKER_RUUTER=http://ruuter:8080
+      - REACT_APP_RUUTER_PRIVATE_API_URL=http://localhost:8080/analytics
+      - REACT_APP_DOCKER_RUUTER=http://ruuter:8080/analytics
       - REACT_APP_CUSTOMER_SERVICE_LOGIN=http://localhost:3004/et/dev-auth
       - REACT_APP_CONVERSATIONS_BASE_URL=http://localhost:8080/chat
       - REACT_APP_TRAINING_BASE_URL=http://localhost:8080/training
@@ -102,8 +103,8 @@ services:
     image: data-mapper
     volumes:
       - ./DSL:/data
-      - ./DSL/DMapper/hbs:/workspace/app/views/analytics
-      - ./DSL/DMapper/js:/workspace/app/js/analytics
+      - ./DSL/DMapper/analytics/hbs:/workspace/app/views/analytics
+      - ./DSL/DMapper/analytics/js:/workspace/app/js/analytics
     environment:
       - PORT=3000
       - CONTENT_FOLDER=/data

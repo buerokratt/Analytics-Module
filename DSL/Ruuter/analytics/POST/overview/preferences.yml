@@ -37,7 +37,7 @@ extract_request_data:
   next: check_if_authorized
 
 check_if_authorized:
-  template: check-user-authority
+  template: "[#ANALYTICS_PROJECT_LAYER]/check-user-authority"
   requestType: templates
   headers:
     cookie: ${cookie}

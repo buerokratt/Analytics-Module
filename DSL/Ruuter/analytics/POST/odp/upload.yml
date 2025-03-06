@@ -57,7 +57,7 @@ get_metrics:
 convert_data:
   call: http.post
   args:
-    url: "[#ANALYTICS_DMAPPER]/hbs/analytics/array-to-object"
+    url: "[#ANALYTICS_DMAPPER_HBS]/array-to-object"
     headers:
       type: "json"
     body:

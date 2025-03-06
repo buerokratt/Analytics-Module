@@ -1,5 +1,6 @@
 import { add, differenceInCalendarDays, differenceInHours, format } from 'date-fns';
 import { t } from 'i18next';
+import { ChartData } from 'types/chart';
 
 export const dateFormatter = (startDate: string, endDate: string, date: string) => {
   return format(new Date(date), startDate === endDate ? 'HH:mm' : 'dd-MM-yyyy');
@@ -33,7 +34,7 @@ export const formatDate = (value: Date, dateFormat?: string) => format(value, da
 
 export const formatTimestamp = (timestamp: string) => formatDate(new Date(timestamp), 'dd.MM.yyyy');
 
-export const getColor = (data: any, key: any) => data.colors.find((e: any) => e.id == key)?.color ?? '#FFB511';
+export const getColor = (data: ChartData, key: string) => data.colors.find((e: any) => e.id == key)?.color ?? '#FFB511';
 
 export const translateChartKeys = (obj: any, key: string) =>
   Object.keys(obj).reduce(

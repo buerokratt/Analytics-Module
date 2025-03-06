@@ -8,13 +8,13 @@ import { calculatePercentagesFromResponse } from '../../util/percentage';
 import PieCharLegends from './PieCharLegends';
 import { useTranslation } from 'react-i18next';
 import './PieGraph.scss';
+import { ChartData } from 'types/chart';
 
 type Props = {
-  data: any;
-  unit?: string;
+  data: ChartData;
 };
 
-const PieGraph = ({ data, unit }: Props) => {
+const PieGraph = ({ data }: Props) => {
   const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
@@ -57,13 +57,12 @@ const PieGraph = ({ data, unit }: Props) => {
               />
             ))}
           </Pie>
-          <Tooltip content={data?.percentages ? <PercentageToolTip /> : <ChartToolTip />} />
+          <Tooltip content={percentages ? <PercentageToolTip /> : <ChartToolTip />} />
         </PieChart>
         {percentages.length === 0 && <span>{t('chart.noDataToPlot')}</span>}
         <PieCharLegends
           data={data}
           percentages={percentages}
-          unit={unit}
         />
       </Track>
     </div>

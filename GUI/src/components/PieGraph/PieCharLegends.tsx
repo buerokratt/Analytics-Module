@@ -1,16 +1,16 @@
+import { ChartData } from 'types/chart';
 import { formatTotalPeriodCount, getColor } from '../../util/charts-utils';
 import Track from '../Track';
 import './PieGraph.scss';
-import { usePeriodStatistics } from '../../hooks/usePeriodStatistics';
+import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 
 type Props = {
-  data: any;
+  data: ChartData;
   percentages: any;
-  unit?: string;
 };
 
-const PieCharLegends = ({ data, percentages, unit }: Props) => {
-  const periodStatistics = usePeriodStatistics(data.chartData, unit);
+const PieCharLegends = ({ data, percentages }: Props) => {
+  const { periodStatistics } = usePeriodStatisticsContext();
 
   return (
     <Track

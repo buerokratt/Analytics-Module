@@ -1,9 +1,7 @@
-### 1.1.3 (20, Feb 2025)
-## Fixes
-- **388**: Fixed overview forwareded chats values and translation (#400) by [<u>@Ahmed yasser</u>](https://www.github.com/Ahmedyasser) in [#970e2a5](https://github.com/buerokratt/Analytics-Module/commit/970e2a5)
+### 1.1.4 (06, Mar 2025)
 ## Chores
-- **950**: Bumped Header Version (#402) by [<u>@Ahmed yasser</u>](https://www.github.com/Ahmedyasser) in [#0141cc0](https://github.com/buerokratt/Analytics-Module/commit/0141cc0)
+- **1191**: Added Hex conversion (#419) by [<u>@Ahmed yasser</u>](https://www.github.com/Ahmedyasser) in [#e624079](https://github.com/buerokratt/Analytics-Module/commit/e624079)
+- **1133**: Bumped header version (#420) by [<u>@Ahmed yasser</u>](https://www.github.com/Ahmedyasser) in [#d84d5d9](https://github.com/buerokratt/Analytics-Module/commit/d84d5d9)
 ## Others
-- 379 Fix report download (#404) by [<u>@Igor Krupenja</u>](https://www.github.com/IgorKrupenja) in [#afd72a3](https://github.com/buerokratt/Analytics-Module/commit/afd72a3)
-- 372 Fix XLSX extension on Windows (#401) by [<u>@Igor Krupenja</u>](https://www.github.com/IgorKrupenja) in [#eba9073](https://github.com/buerokratt/Analytics-Module/commit/eba9073)
-- Analytics module feedback CSA colors (#399) by [<u>@Ahmed yasser</u>](https://www.github.com/Ahmedyasser) in [#b888df2](https://github.com/buerokratt/Analytics-Module/commit/b888df2)
+- 408 Fix period NPS on chart legend (#415) by [<u>@Igor Krupenja</u>](https://www.github.com/IgorKrupenja) in [#a6f6d0f](https://github.com/buerokratt/Analytics-Module/commit/a6f6d0f)
+- 407 CIp incorrect display (#418) by [<u>@Vassili Moskaljov</u>](https://www.github.com/VassiliMoskaljov) in [#8ccda4c](https://github.com/buerokratt/Analytics-Module/commit/8ccda4c)

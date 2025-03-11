@@ -134,6 +134,12 @@ const FeedbackPage: React.FC = () => {
           color: randomColor(),
           isSelected: true,
         },
+        {
+          id: 'contact-information-skipped',
+          labelKey: 'feedback.status_options.contact-information-skipped',
+          color: randomColor(),
+          isSelected: true,
+        },
       ],
       unit: t('units.chats') ?? 'chats',
     },
@@ -205,7 +211,8 @@ const FeedbackPage: React.FC = () => {
         (e) =>
           e === 'CLIENT_LEFT_WITH_ACCEPTED' ||
           e === 'CLIENT_LEFT_WITH_NO_RESOLUTION' ||
-          e === 'CLIENT_LEFT_FOR_UNKNOWN_REASONS'
+          e === 'CLIENT_LEFT_FOR_UNKNOWN_REASONS' ||
+          e === 'contact-information-skipped'
       ) ?? [];
     const csa_events =
       config?.options.filter(

@@ -4,11 +4,16 @@ SELECT
 FROM chat
 WHERE ended::date BETWEEN :start::date AND :end::date AND status = 'ENDED'
 AND NOT EXISTS (
-    SELECT *
+    SELECT 1
     FROM message
     WHERE message.chat_base_id = chat.base_id
     AND message.author_role = 'backoffice-user'
-    AND message.content = ''
+)
+AND NOT EXISTS (
+    SELECT 1
+    FROM message
+    WHERE message.chat_base_id = chat.base_id
+    AND message.event = 'taken-over'
 )
 GROUP BY time
 ORDER BY time

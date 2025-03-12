@@ -1,9 +1,7 @@
 SELECT DATE_TRUNC(:period, ended) AS time,
     COUNT(DISTINCT base_id) AS count
 FROM chat
-WHERE ended:: date BETWEEN :
-start :: date AND :
-end::date AND status = 'ENDED'
+WHERE ended::date BETWEEN :start::date AND :end::date AND status = 'ENDED'
 AND EXISTS (
     SELECT 1
     FROM message

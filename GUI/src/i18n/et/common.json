@@ -188,7 +188,10 @@
     "timeInterval": "Ajavahemik",
     "noDataToPlot": "Puuduvad andmed, mida joonistada",
     "name": "Nimi",
-    "value": "Väärtus"
+    "value": "Väärtus",
+    "promoters": "Soovitajad",
+    "passives": "Neutraalsed",
+    "detractors": "Kriitikud"
   },
   "reports": {
     "get-chat-count-total": "Vestluste koguarv",

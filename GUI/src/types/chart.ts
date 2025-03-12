@@ -11,4 +11,6 @@ export type ChartData = {
   minPointSize?: MinPointSize;
   periodNps?: number;
   periodNpsByCsa?: Record<string, number>;
+  distributionData?: ChartData;
+  npsData?: ChartData;
 };

@@ -5,10 +5,13 @@ import MetricsCharts from '../components/MetricsCharts';
 import ChatsTable from '../components/ChatsTable';
 import {
   getAverageFeedbackOnBuerokrattChats,
+  getNpsFeedbackOnBuerokrattChats,
   getChatsStatuses,
+  getDistributionOnCSAChatsFeedback,
   getNegativeFeedbackChats,
   getNpsOnCSAChatsFeedback,
   getNpsOnSelectedCSAChatsFeedback,
+  getDistributionOnBuerokrattChatsFeedback,
 } from '../resources/api-constants';
 import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types';
 import { Chat } from '../types/chat';
@@ -53,7 +56,7 @@ const FeedbackPage: React.FC = () => {
   }, [advisorsList]);
 
   useEffect(() => {
-    setPeriodStatistics(chartData, unit);
+    setPeriodStatistics(chartData.npsData ? {...chartData.npsData} : chartData, unit);
   }, [chartData, unit]);
 
   const fetchData = async () => {
@@ -140,7 +143,7 @@ const FeedbackPage: React.FC = () => {
     {
       id: 'burokratt_chats',
       labelKey: 'feedback.burokratt_chats',
-      unit: t('units.chats') ?? 'chats',
+      unit: t('units.nps') ?? 'nps',
     },
     {
       id: 'advisor_chats',
@@ -167,14 +170,24 @@ const FeedbackPage: React.FC = () => {
       .pipe(
         distinctUntilChanged(),
         debounceTime(300),
-        switchMap((config: any) => {
+        switchMap(async (config: any) => {
           switch (config.metric) {
             case 'statuses':
               return fetchChatsStatuses(config);
-            case 'burokratt_chats':
-              return fetchAverageFeedbackOnBuerokrattChats(config);
-            case 'advisor_chats':
-              return fetchNpsOnCSAChatsFeedback(config);
+            case 'burokratt_chats': {
+              const [distributionData, npsData] = await Promise.all([
+                fetchDistributionOnBuerokrattChatsFeedback(config),
+                fetchNpsFeedbackOnBuerokrattChats(config),
+              ]);
+              return { distributionData, npsData };
+            }
+            case 'advisor_chats': {
+              const [distributionData, npsData] = await Promise.all([
+                fetchDistributionOnCSAChatsFeedback(config),
+                fetchNpsOnCSAChatsFeedback(config),
+              ]);
+              return { distributionData, npsData };
+            }
             case 'selected_advisor_chats':
               return fetchNpsOnSelectedCSAChatsFeedback(config);
             case 'negative_feedback':
@@ -266,21 +279,10 @@ const FeedbackPage: React.FC = () => {
     setShowSelectAll(false);
     let chartData = {};
     try {
-      const result: any = await request({
-        url: getAverageFeedbackOnBuerokrattChats(),
-        method: Methods.post,
-        withCredentials: true,
-        data: {
-          metric: config?.groupByPeriod ?? 'day',
-          start_date: config?.start,
-          end_date: config?.end,
-        },
-      });
-
-      const response = result.response.map((entry: any) => ({
-        ...translateChartKeys(entry, chartDataKey),
-        [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
-      }));
+      const { response } = await fetchAndMapFeedbackData(
+        getAverageFeedbackOnBuerokrattChats,
+        config,
+      );
 
       chartData = {
         chartData: response,
@@ -293,25 +295,11 @@ const FeedbackPage: React.FC = () => {
     return chartData;
   };
 
-  const fetchNpsOnCSAChatsFeedback = async (config: any) => {
+  const fetchNpsFeedbackOnBuerokrattChats = async (config: any) => {
     setShowSelectAll(false);
     let chartData = {};
     try {
-      const result: any = await request({
-        url: getNpsOnCSAChatsFeedback(),
-        method: Methods.post,
-        withCredentials: true,
-        data: {
-          metric: config?.groupByPeriod ?? 'day',
-          start_date: config?.start,
-          end_date: config?.end,
-        },
-      });
-
-      const response = result.response.map((entry: any) => ({
-        ...translateChartKeys(entry, chartDataKey),
-        [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
-      }));
+      const { result, response } = await fetchAndMapFeedbackData(getNpsFeedbackOnBuerokrattChats, config);
 
       chartData = {
         chartData: response,
@@ -320,6 +308,65 @@ const FeedbackPage: React.FC = () => {
       };
     } catch (_) {
       //error
+    }
+    return chartData;
+  };
+
+  const fetchDistributionOnBuerokrattChatsFeedback = async (config: any) => {
+    setShowSelectAll(false);
+    let chartData = {};
+    try {
+      const result: any = await request({
+        url: getDistributionOnBuerokrattChatsFeedback(),
+        method: Methods.post,
+        withCredentials: true,
+        data: {
+          start_date: config?.start,
+          end_date: config?.end,
+        },
+      });
+
+      chartData = mapDistributionChartData(result);
+    } catch (e) {
+      console.error(e);
+    }
+    return chartData;
+  };
+
+  const fetchNpsOnCSAChatsFeedback = async (config: any) => {
+    setShowSelectAll(false);
+    let chartData = {};
+    try {
+      const { result, response } = await fetchAndMapFeedbackData(getNpsOnCSAChatsFeedback, config);
+
+      chartData = {
+        chartData: response,
+        colors: [{ id: 'NPS', color: '#FFB511' }],
+        periodNps: result.periodNps,
+      };
+    } catch (_) {
+      //error
+    }
+    return chartData;
+  };
+
+  const fetchDistributionOnCSAChatsFeedback = async (config: any) => {
+    setShowSelectAll(false);
+    let chartData = {};
+    try {
+      const result: any = await request({
+        url: getDistributionOnCSAChatsFeedback(),
+        method: Methods.post,
+        withCredentials: true,
+        data: {
+          start_date: config?.start,
+          end_date: config?.end,
+        },
+      });
+
+      chartData = mapDistributionChartData(result);
+    } catch (e) {
+      console.error(e);
     }
     return chartData;
   };
@@ -453,6 +500,48 @@ const FeedbackPage: React.FC = () => {
       //error
     }
     return chartData;
+  };
+
+  const fetchAndMapFeedbackData = async (
+    urlFunction: () => string,
+    config: { groupByPeriod?: string; start?: string; end?: string },
+  ) => {
+    const result: any = await request({
+      url: urlFunction(),
+      method: Methods.post,
+      withCredentials: true,
+      data: {
+        metric: config?.groupByPeriod ?? 'day',
+        start_date: config?.start,
+        end_date: config?.end,
+      },
+    });
+
+    const response = result.response.map((entry: any) => ({
+      ...translateChartKeys(entry, chartDataKey),
+      [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
+    }));
+
+    return { result, response };
+  };
+
+  const mapDistributionChartData = (result: any) => {
+    const { promoters, passives, detractors } = result.response[0];
+    return {
+      chartData:
+        promoters === 0 && passives === 0 && detractors === 0
+          ? []
+          : [
+              { [t('chart.promoters')]: promoters },
+              { [t('chart.passives')]: passives },
+              { [t('chart.detractors')]: detractors },
+            ],
+      colors: [
+        { id: t('chart.promoters'), color: '#FF0000' },
+        { id: t('chart.passives'), color: '#0000FF' },
+        { id: t('chart.detractors'), color: '#00FF00' },
+      ],
+    };
   };
 
   return (

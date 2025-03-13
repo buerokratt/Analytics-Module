@@ -38,7 +38,7 @@ get_metrics:
 convert_data:
   call: http.post
   args:
-    url: "[#ANALYTICS_DMAPPER]/hbs/analytics/get-metric-rows"
+    url: "[#ANALYTICS_DMAPPER_HBS]/get-metric-rows"
     headers:
       type: "json"
     body:

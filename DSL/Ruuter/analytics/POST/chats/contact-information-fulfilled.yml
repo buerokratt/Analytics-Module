@@ -161,7 +161,7 @@ all_csas_away_for_total:
 get_total:
   call: http.post
   args:
-    url: "[#ANALYTICS_DMAPPER]/hbs/analytics/merge-arrays"
+    url: "[#ANALYTICS_DMAPPER_HBS]/merge-arrays"
     headers:
       type: 'json'
     body:

@@ -18,7 +18,7 @@ export const PeriodStatisticsProvider: React.FC<PeriodStatisticsProviderProps> =
   const { t } = useTranslation();
 
   const setPeriodStatisticsFromChartData = (data: ChartData, unit: string | undefined) => {
-    if (!data.chartData.length) return;
+    if (!data.chartData?.length) return;
 
     if (unit === t('units.chats')) {
       setPeriodStatistics(getPeriodTotalCounts(data.chartData));

@@ -21,6 +21,7 @@ import Box from './Box'
 import Drawer from './Drawer'
 import Dialog from './Dialog'
 import Section from './Section'
+import CustomChartTooltip from './CustomChartTooltip'
 
 export {
   Toast,
@@ -44,4 +45,5 @@ export {
   Drawer,
   Dialog,
   Section,
-}
+  CustomChartTooltip,
+};

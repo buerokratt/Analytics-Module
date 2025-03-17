@@ -118,7 +118,9 @@
       "accepted": "Advisor - accepted answer",
       "hate_speech": "Advisor - signs of hate speech",
       "response_sent_to_client_email": "Advisor - answered in another channel",
-      "other": "Advisor - other reasons"
+      "other": "Advisor - other reasons",
+      "average": "Average",
+      "nps": "NPS"
     },
     "plain_status_options": {
       "client_left_with_accepted": "the client left with an answer",

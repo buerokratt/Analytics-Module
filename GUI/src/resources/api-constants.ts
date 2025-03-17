@@ -67,8 +67,20 @@ export const getAverageFeedbackOnBuerokrattChats = (): string => {
   return baseUrl + '/feedbacks/avg';
 };
 
+export const getNpsFeedbackOnBuerokrattChats = (): string => {
+  return baseUrl + '/feedbacks/buerokratt-chats-nps';
+};
+
 export const getNpsOnCSAChatsFeedback = (): string => {
   return baseUrl + '/feedbacks/nps';
+};
+
+export const getDistributionOnBuerokrattChatsFeedback = (): string => {
+  return baseUrl + '/feedbacks/buerokratt-chats-distribution';
+};
+
+export const getDistributionOnCSAChatsFeedback = (): string => {
+  return baseUrl + '/feedbacks/csa-chats-distribution';
 };
 
 export const getNpsOnSelectedCSAChatsFeedback = (): string => {

@@ -18,13 +18,13 @@ export const PeriodStatisticsProvider: React.FC<PeriodStatisticsProviderProps> =
   const { t } = useTranslation();
 
   const setPeriodStatisticsFromChartData = (data: ChartData, unit: string | undefined) => {
-    if (!data.chartData.length) return;
+    if (!data.chartData?.length) return;
 
     if (unit === t('units.chats')) {
       setPeriodStatistics(getPeriodTotalCounts(data.chartData));
     } else if (unit === t('units.minutes') || unit === t('units.messages')) {
       setPeriodStatistics(getPeriodAveragesOrMedians(data.chartData, t('chats.medianWaitingTime')));
-    } else if (unit === t('units.nps') && data.periodNps) {
+    } else if (unit === t('units.nps') && data.periodNps !== undefined && data.periodNps !== null) {
       setPeriodStatistics({ [t('units.nps')]: data.periodNps ?? 0 });
     } else if (unit === t('units.nps') && data.periodNpsByCsa) {
       setPeriodStatistics(data.periodNpsByCsa);

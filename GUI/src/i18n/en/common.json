@@ -191,7 +191,10 @@
     "timeInterval": "Time Interval",
     "noDataToPlot": "No data to plot",
     "name": "Name",
-    "value": "Value"
+    "value": "Value",
+    "promoters": "Promoters",
+    "passives": "Passives",
+    "detractors": "Detractors"
   },
   "reports": {
     "get-chat-count-total": "Total chat count",

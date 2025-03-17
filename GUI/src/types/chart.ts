@@ -12,5 +12,5 @@ export type ChartData = {
   periodNps?: number;
   periodNpsByCsa?: Record<string, number>;
   distributionData?: ChartData;
-  npsData?: ChartData;
+  feedBackData?: ChartData;
 };

@@ -56,7 +56,7 @@ const FeedbackPage: React.FC = () => {
   }, [advisorsList]);
 
   useEffect(() => {
-    setPeriodStatistics(chartData.npsData ? {...chartData.npsData} : chartData, unit);
+    setPeriodStatistics(chartData.feedBackData ? { ...chartData.feedBackData } : chartData, unit);
   }, [chartData, unit]);
 
   const fetchData = async () => {
@@ -150,6 +150,18 @@ const FeedbackPage: React.FC = () => {
       id: 'burokratt_chats',
       labelKey: 'feedback.burokratt_chats',
       unit: t('units.nps') ?? 'nps',
+      subRadioOptions: [
+        {
+          id: 'NPS',
+          labelKey: 'feedback.status_options.nps',
+          color: randomColor(),
+        },
+        {
+          id: 'AVG',
+          labelKey: 'feedback.status_options.average',
+          color: randomColor(),
+        },
+      ],
     },
     {
       id: 'advisor_chats',
@@ -181,18 +193,21 @@ const FeedbackPage: React.FC = () => {
             case 'statuses':
               return fetchChatsStatuses(config);
             case 'burokratt_chats': {
-              const [distributionData, npsData] = await Promise.all([
+              const promises = [
                 fetchDistributionOnBuerokrattChatsFeedback(config),
-                fetchNpsFeedbackOnBuerokrattChats(config),
-              ]);
-              return { distributionData, npsData };
+                config.options === 'AVG'
+                  ? fetchAverageFeedbackOnBuerokrattChats(config)
+                  : fetchNpsFeedbackOnBuerokrattChats(config),
+              ];
+              const [distributionData, feedBackData] = await Promise.all(promises);
+              return { distributionData, feedBackData };
             }
             case 'advisor_chats': {
-              const [distributionData, npsData] = await Promise.all([
+              const [distributionData, feedBackData] = await Promise.all([
                 fetchDistributionOnCSAChatsFeedback(config),
                 fetchNpsOnCSAChatsFeedback(config),
               ]);
-              return { distributionData, npsData };
+              return { distributionData, feedBackData };
             }
             case 'selected_advisor_chats':
               return fetchNpsOnSelectedCSAChatsFeedback(config);
@@ -296,6 +311,7 @@ const FeedbackPage: React.FC = () => {
         colors: [{ id: 'average', color: '#FFB511' }],
         minPointSize: 3,
       };
+      setUnit(t('units.minutes') ?? 'chats');
     } catch (_) {
       //error
     }

@@ -17,7 +17,7 @@ WITH chat_csas AS (
             ORDER BY updated
 ) AS feedback_rating
     FROM chat
-    WHERE customer_support_id <> ''
+    WHERE customer_support_id NOT IN ('', 'chatbot')
       AND EXISTS (
         SELECT 1
         FROM message

@@ -9,6 +9,7 @@ const api = axios.create({
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
   },
   withCredentials: true,
 });
@@ -18,6 +19,7 @@ const analyticsApi = axios.create({
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
   },
   withCredentials: true,
 });
@@ -27,6 +29,7 @@ const authApi = axios.create({
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
   },
   withCredentials: true,
 });
@@ -36,6 +39,7 @@ const genericApi = axios.create({
   headers: {
     Accept: 'application/json',
     Testcookie: '',
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
   },
   withCredentials: false,
 });
@@ -45,6 +49,7 @@ const ruuterApi = axios.create({
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
   },
   withCredentials: true,
 });

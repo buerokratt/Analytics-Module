@@ -118,7 +118,9 @@
       "accepted": "Nõustaja - aksepteeritud vastus",
       "hate_speech": "Nõustaja - vihakõne tunnused",
       "response_sent_to_client_email": "Nõustaja - vastatud teises kanalis",
-      "other": "Nõustaja - muud põhjused"
+      "other": "Nõustaja - muud põhjused",
+      "average": "Keskmine",
+      "nps": "NPS"
     },
     "plain_status_options": {
       "client_left_with_accepted": "klient lahkus vastusega",
@@ -190,7 +192,10 @@
     "timeInterval": "Ajavahemik",
     "noDataToPlot": "Puuduvad andmed, mida joonistada",
     "name": "Nimi",
-    "value": "Väärtus"
+    "value": "Väärtus",
+    "promoters": "Soovitajad",
+    "passives": "Neutraalsed",
+    "detractors": "Kriitikud"
   },
   "reports": {
     "get-chat-count-total": "Vestluste koguarv",

@@ -90,6 +90,9 @@ const FeedbackPage: React.FC = () => {
     },
   });
 
+  // todo chat count in history is 97, in analytics 81
+  // todo extra statuses seen in test: user-reached, accepted (many events), user-not-reached
+
   const [feedbackMetrics, setFeedbackMetrics] = useState<Option[]>([
     {
       id: 'statuses',
@@ -301,10 +304,7 @@ const FeedbackPage: React.FC = () => {
     setShowSelectAll(false);
     let chartData = {};
     try {
-      const { response } = await fetchAndMapFeedbackData(
-        getAverageFeedbackOnBuerokrattChats,
-        config,
-      );
+      const { response } = await fetchAndMapFeedbackData(getAverageFeedbackOnBuerokrattChats, config);
 
       chartData = {
         chartData: response,
@@ -527,7 +527,7 @@ const FeedbackPage: React.FC = () => {
 
   const fetchAndMapFeedbackData = async (
     urlFunction: () => string,
-    config: { groupByPeriod?: string; start?: string; end?: string },
+    config: { groupByPeriod?: string; start?: string; end?: string }
   ) => {
     const result: any = await request({
       url: urlFunction(),

@@ -78,8 +78,8 @@ export const getAdvisorsList = (response: any): Advisor[] => {
   return advisorsList;
 };
 
-export const getChartResponse = (response: any, advisors: Advisor[]) => {
-  const res = response
+export const getAdvisorChartData = (response: any, advisors: Advisor[]) => {
+  const data = response
     .flat(1)
     .map((entry: any) => ({
       ...translateChartKeys(entry, chartDataKey),
@@ -96,17 +96,16 @@ export const getChartResponse = (response: any, advisors: Advisor[]) => {
         });
       }
       return a;
-    }, []);
-
-  const chartResponse = res.map((e: any) => {
-    const res = { ...e };
-    advisors.forEach((i) => {
-      if (!(i.labelKey in e)) {
-        res[i.labelKey] = 0;
-      }
+    }, [])
+    .map((e: any) => {
+      const res = { ...e };
+      advisors.forEach((i) => {
+        if (!(i.labelKey in e)) {
+          res[i.labelKey] = 0;
+        }
+      });
+      return res;
     });
-    return res;
-  });
 
-  return chartResponse;
+  return data;
 };

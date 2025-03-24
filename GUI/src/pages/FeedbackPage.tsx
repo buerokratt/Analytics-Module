@@ -15,7 +15,13 @@ import {
 } from '../resources/api-constants';
 import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types';
 import { Chat } from '../types/chat';
-import { chartDataKey, formatDate, getAdvisorsList, getChartResponse, translateChartKeys } from '../util/charts-utils';
+import {
+  chartDataKey,
+  formatDate,
+  getAdvisorsList,
+  getAdvisorChartData,
+  translateChartKeys,
+} from '../util/charts-utils';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { request, Methods } from '../util/axios-client';
@@ -410,22 +416,14 @@ const FeedbackPage: React.FC = () => {
 
       const advisorsList = getAdvisorsList(res);
 
-      if (advisorsList.length > advisors.current.length) {
-        const updatedMetrics = [...feedbackMetrics];
-        updatedMetrics[3].subOptions = advisorsList;
-        advisors.current = advisorsList;
-        setFeedbackMetrics(updatedMetrics);
-        setAdvisorsList(advisors.current);
-      } else if (advisors.current.length === 0) {
-        const updatedMetrics = [...feedbackMetrics];
-        updatedMetrics[3].subOptions = [];
-        advisors.current = [];
-        setFeedbackMetrics(updatedMetrics);
-        setAdvisorsList([]);
-      }
+      const updatedMetrics = [...feedbackMetrics];
+      updatedMetrics[3].subOptions = advisorsList;
+      advisors.current = advisorsList;
+      setFeedbackMetrics(updatedMetrics);
+      setAdvisorsList(advisors.current);
 
       chartData = {
-        chartData: getChartResponse(res, advisorsList),
+        chartData: getAdvisorChartData(res, advisorsList),
         colors: feedbackMetrics[3].subOptions!.map(({ labelKey, color }) => {
           return {
             id: labelKey,

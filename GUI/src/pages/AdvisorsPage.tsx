@@ -3,7 +3,13 @@ import { useTranslation } from 'react-i18next';
 import OptionsPanel, { Option } from '../components/MetricAndPeriodOptions';
 import MetricsCharts from '../components/MetricsCharts';
 import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types';
-import { chartDataKey, formatDate, getAdvisorsList, getChartResponse, translateChartKeys } from '../util/charts-utils';
+import {
+  chartDataKey,
+  formatDate,
+  getAdvisorsList,
+  getAdvisorChartData,
+  translateChartKeys,
+} from '../util/charts-utils';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import {
@@ -237,22 +243,14 @@ const AdvisorsPage: React.FC = () => {
 
       const advisorsList = getAdvisorsList(res);
 
-      if (advisorsList.length > advisors.current.length) {
-        const updatedMetrics = [...advisorsMetrics];
-        updatedMetrics[3].subOptions = advisorsList;
-        advisors.current = advisorsList;
-        setAdvisorsMetrics(updatedMetrics);
-        setAdvisorsList(advisors.current);
-      } else if (advisors.current.length === 0) {
-        const updatedMetrics = [...advisorsMetrics];
-        updatedMetrics[3].subOptions = [];
-        advisors.current = [];
-        setAdvisorsMetrics(updatedMetrics);
-        setAdvisorsList([]);
-      }
+      const updatedMetrics = [...advisorsMetrics];
+      updatedMetrics[3].subOptions = advisorsList;
+      advisors.current = advisorsList;
+      setAdvisorsMetrics(updatedMetrics);
+      setAdvisorsList(advisors.current);
 
       chartData = {
-        chartData: getChartResponse(res, advisorsList),
+        chartData: getAdvisorChartData(res, advisorsList),
         colors: advisorsMetrics[3].subOptions!.map(({ labelKey, color }) => {
           return {
             id: labelKey,

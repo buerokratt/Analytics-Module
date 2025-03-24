@@ -90,12 +90,6 @@ const FeedbackPage: React.FC = () => {
     },
   });
 
-  // todo chat count in history is 97, in analytics 81
-  // todo extra statuses seen in test: user-reached, user-not-reached
-  // todo some statuses are not selected below. why?
-  // todo status-csa-chats.sql: change created to ended
-  // todo status-all-chats.sql: change created to ended
-
   const [feedbackMetrics, setFeedbackMetrics] = useState<Option[]>([
     {
       id: 'statuses',
@@ -146,6 +140,18 @@ const FeedbackPage: React.FC = () => {
         {
           id: 'contact-information-skipped',
           labelKey: 'feedback.status_options.contact-information-skipped',
+          color: randomColor(),
+          isSelected: true,
+        },
+        {
+          id: 'user-reached',
+          labelKey: 'feedback.status_options.user-reached',
+          color: randomColor(),
+          isSelected: true,
+        },
+        {
+          id: 'user-not-reached',
+          labelKey: 'feedback.status_options.user-not-reached',
           color: randomColor(),
           isSelected: true,
         },
@@ -240,10 +246,7 @@ const FeedbackPage: React.FC = () => {
   const fetchChatsStatuses = async (config: MetricOptionsState) => {
     setShowSelectAll(false);
     let chartData = {};
-    // todo some events are still filtered out
-    console.log('igor options', config?.options);
-    const events = config?.options ?? [];
-    const csa_events = config?.options ?? [];
+    const events = config.options;
     try {
       const result: any = await request({
         url: getChatsStatuses(),
@@ -253,8 +256,8 @@ const FeedbackPage: React.FC = () => {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
           end_date: config?.end,
-          events: events?.length > 0 ? events : null,
-          csa_events: csa_events?.length > 0 ? csa_events : null,
+          events: events.length > 0 ? events : null,
+          csa_events: events.length > 0 ? events : null,
         },
       });
 

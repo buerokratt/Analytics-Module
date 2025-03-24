@@ -118,8 +118,8 @@
       "accepted": "Advisor - accepted answer",
       "hate_speech": "Advisor - signs of hate speech",
       "response_sent_to_client_email": "Advisor - answered in another channel",
-      "user-reached": "Advisor - User contacted",
-      "user-not-reached": "Advisor - User could not be reached",
+      "user-reached": "Advisor - user contacted",
+      "user-not-reached": "Advisor - user could not be reached",
       "other": "Advisor - other reasons",
       "average": "Average",
       "nps": "NPS"
@@ -132,6 +132,8 @@
       "accepted": "accepted answer",
       "hate_speech": "signs of hate speech",
       "response_sent_to_client_email": "answered in another channel",
+      "user-reached": "user contacted",
+      "user-not-reached": "user could not be reached",
       "other": "other reasons"
     },
     "xlsx": "XLSX",

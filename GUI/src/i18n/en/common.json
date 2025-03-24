@@ -118,8 +118,8 @@
       "accepted": "Advisor - accepted answer",
       "hate_speech": "Advisor - signs of hate speech",
       "response_sent_to_client_email": "Advisor - answered in another channel",
-      "user-reached": "User contacted",
-      "user-not-reached": "User could not be reached",
+      "user-reached": "Advisor - User contacted",
+      "user-not-reached": "Advisor - User could not be reached",
       "other": "Advisor - other reasons",
       "average": "Average",
       "nps": "NPS"

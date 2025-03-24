@@ -34,6 +34,19 @@ import { randomColor } from 'util/generateRandomColor';
 import { ChartData } from 'types/chart';
 import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 
+const statusOptions = [
+  'CLIENT_LEFT_WITH_ACCEPTED',
+  'CLIENT_LEFT_WITH_NO_RESOLUTION',
+  'CLIENT_LEFT_FOR_UNKNOWN_REASONS',
+  'ACCEPTED',
+  'HATE_SPEECH',
+  'OTHER',
+  'RESPONSE_SENT_TO_CLIENT_EMAIL',
+  'contact-information-skipped',
+  'user-reached',
+  'user-not-reached',
+];
+
 const FeedbackPage: React.FC = () => {
   const { t } = useTranslation();
   const [chartData, setChartData] = useState<ChartData>({
@@ -100,68 +113,12 @@ const FeedbackPage: React.FC = () => {
     {
       id: 'statuses',
       labelKey: 'feedback.statuses',
-      subOptions: [
-        {
-          id: 'CLIENT_LEFT_WITH_ACCEPTED',
-          labelKey: 'feedback.status_options.client_left_with_accepted',
-          color: randomColor(),
-          isSelected: true,
-        },
-        {
-          id: 'CLIENT_LEFT_WITH_NO_RESOLUTION',
-          labelKey: 'feedback.status_options.client_left_with_no_resolution',
-          color: randomColor(),
-          isSelected: true,
-        },
-        {
-          id: 'CLIENT_LEFT_FOR_UNKNOWN_REASONS',
-          labelKey: 'feedback.status_options.client_left_for_unknown_reasons',
-          color: randomColor(),
-          isSelected: true,
-        },
-        {
-          id: 'ACCEPTED',
-          labelKey: 'feedback.status_options.accepted',
-          color: randomColor(),
-          isSelected: true,
-        },
-        {
-          id: 'HATE_SPEECH',
-          labelKey: 'feedback.status_options.hate_speech',
-          color: randomColor(),
-          isSelected: true,
-        },
-        {
-          id: 'OTHER',
-          labelKey: 'feedback.status_options.other',
-          color: randomColor(),
-          isSelected: true,
-        },
-        {
-          id: 'RESPONSE_SENT_TO_CLIENT_EMAIL',
-          labelKey: 'feedback.status_options.response_sent_to_client_email',
-          color: randomColor(),
-          isSelected: true,
-        },
-        {
-          id: 'contact-information-skipped',
-          labelKey: 'feedback.status_options.contact-information-skipped',
-          color: randomColor(),
-          isSelected: true,
-        },
-        {
-          id: 'user-reached',
-          labelKey: 'feedback.status_options.user-reached',
-          color: randomColor(),
-          isSelected: true,
-        },
-        {
-          id: 'user-not-reached',
-          labelKey: 'feedback.status_options.user-not-reached',
-          color: randomColor(),
-          isSelected: true,
-        },
-      ],
+      subOptions: statusOptions.map((id) => ({
+        id,
+        labelKey: `feedback.status_options.${id.toLowerCase()}`,
+        color: randomColor(),
+        isSelected: true,
+      })),
       unit: t('units.chats') ?? 'chats',
     },
     {

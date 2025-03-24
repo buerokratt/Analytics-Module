@@ -118,6 +118,8 @@
       "accepted": "Nõustaja - aksepteeritud vastus",
       "hate_speech": "Nõustaja - vihakõne tunnused",
       "response_sent_to_client_email": "Nõustaja - vastatud teises kanalis",
+      "user-reached": "Kasutajaga võeti ühendust",
+      "user-not-reached": "Kasutajaga ei õnnestunud ühendust saada",
       "other": "Nõustaja - muud põhjused",
       "average": "Keskmine",
       "nps": "NPS"

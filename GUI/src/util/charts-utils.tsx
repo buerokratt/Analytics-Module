@@ -1,6 +1,8 @@
 import { add, differenceInCalendarDays, differenceInHours, format } from 'date-fns';
 import { t } from 'i18next';
 import { ChartData } from 'types/chart';
+import { randomColor } from './generateRandomColor';
+import { Advisor } from 'types/advisor';
 
 export const dateFormatter = (startDate: string, endDate: string, date: string) => {
   return format(new Date(date), startDate === endDate ? 'HH:mm' : 'dd-MM-yyyy');
@@ -59,4 +61,52 @@ export const getKeys = (data: any[]) => Array.from(new Set(data.flatMap((obj: an
 export const formatTotalPeriodCount = (totalPeriodCounts: Record<string, number>, metric: string) => {
   // !== undefined to support 0 values
   return `${totalPeriodCounts[metric] !== undefined ? ` (${totalPeriodCounts[metric]})` : ''}`;
+};
+
+export const getAdvisorsList = (response: any): Advisor[] => {
+  const advisorsList = Array.from(new Set(response.map((advisor: any) => advisor.customerSupportId)))
+    .map((id: any) => response.find((e: any) => e.customerSupportId == id))
+    .map((e) => {
+      return {
+        id: e?.customerSupportId ?? '',
+        labelKey: e?.customerSupportFullName ?? '',
+        color: randomColor(),
+        isSelected: true,
+      };
+    });
+
+  return advisorsList;
+};
+
+export const getChartResponse = (response: any, advisors: Advisor[]) => {
+  const res = response
+    .flat(1)
+    .map((entry: any) => ({
+      ...translateChartKeys(entry, chartDataKey),
+      [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
+    }))
+    .reduce((a: any, b: any) => {
+      const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
+      if (dateRow) {
+        dateRow[b[t('chart.customerSupportFullName')]] = b[t('chart.nps')];
+      } else {
+        a.push({
+          [chartDataKey]: b[chartDataKey],
+          [b[t('chart.customerSupportFullName')]]: b[t('chart.nps')],
+        });
+      }
+      return a;
+    }, []);
+
+  const chartResponse = res.map((e: any) => {
+    const res = { ...e };
+    advisors.forEach((i) => {
+      if (!(i.labelKey in e)) {
+        res[i.labelKey] = 0;
+      }
+    });
+    return res;
+  });
+
+  return chartResponse;
 };

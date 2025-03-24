@@ -15,7 +15,7 @@ import {
 } from '../resources/api-constants';
 import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types';
 import { Chat } from '../types/chat';
-import { chartDataKey, formatDate, translateChartKeys } from '../util/charts-utils';
+import { chartDataKey, formatDate, getAdvisorsList, getChartResponse, translateChartKeys } from '../util/charts-utils';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { request, Methods } from '../util/axios-client';
@@ -408,16 +408,7 @@ const FeedbackPage: React.FC = () => {
 
       const res = result.response;
 
-      const advisorsList = Array.from(new Set(res.map((advisor: any) => advisor.customerSupportId)))
-        .map((id: any) => res.find((e: any) => e.customerSupportId == id))
-        .map((e) => {
-          return {
-            id: e?.customerSupportId ?? '',
-            labelKey: e?.customerSupportFullName ?? '',
-            color: randomColor(),
-            isSelected: true,
-          };
-        });
+      const advisorsList = getAdvisorsList(res);
 
       if (advisorsList.length > advisors.current.length) {
         const updatedMetrics = [...feedbackMetrics];
@@ -433,37 +424,8 @@ const FeedbackPage: React.FC = () => {
         setAdvisorsList([]);
       }
 
-      const response = res
-        .flat(1)
-        .map((entry: any) => ({
-          ...translateChartKeys(entry, chartDataKey),
-          [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
-        }))
-        .reduce((a: any, b: any) => {
-          const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
-          if (dateRow) {
-            dateRow[b[t('chart.customerSupportFullName')]] = b[t('chart.nps')];
-          } else {
-            a.push({
-              [chartDataKey]: b[chartDataKey],
-              [b[t('chart.customerSupportFullName')]]: b[t('chart.nps')],
-            });
-          }
-          return a;
-        }, []);
-
-      const chartResponse = response.map((e: any) => {
-        const res = { ...e };
-        advisorsList.forEach((i) => {
-          if (!(i.labelKey in e)) {
-            res[i.labelKey] = 0;
-          }
-        });
-        return res;
-      });
-
       chartData = {
-        chartData: chartResponse,
+        chartData: getChartResponse(res, advisorsList),
         colors: feedbackMetrics[3].subOptions!.map(({ labelKey, color }) => {
           return {
             id: labelKey,

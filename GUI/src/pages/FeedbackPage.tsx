@@ -91,7 +91,10 @@ const FeedbackPage: React.FC = () => {
   });
 
   // todo chat count in history is 97, in analytics 81
-  // todo extra statuses seen in test: user-reached, accepted (many events), user-not-reached
+  // todo extra statuses seen in test: user-reached, user-not-reached
+  // todo some statuses are not selected below. why?
+  // todo status-csa-chats.sql: change created to ended
+  // todo status-all-chats.sql: change created to ended
 
   const [feedbackMetrics, setFeedbackMetrics] = useState<Option[]>([
     {
@@ -237,21 +240,10 @@ const FeedbackPage: React.FC = () => {
   const fetchChatsStatuses = async (config: MetricOptionsState) => {
     setShowSelectAll(false);
     let chartData = {};
-    const events =
-      config?.options.filter(
-        (e) =>
-          e === 'CLIENT_LEFT_WITH_ACCEPTED' ||
-          e === 'CLIENT_LEFT_WITH_NO_RESOLUTION' ||
-          e === 'CLIENT_LEFT_FOR_UNKNOWN_REASONS' ||
-          e === 'contact-information-skipped'
-      ) ?? [];
-    const csa_events =
-      config?.options.filter(
-        (e) =>
-          e !== 'CLIENT_LEFT_WITH_ACCEPTED' &&
-          e !== 'CLIENT_LEFT_WITH_NO_RESOLUTION' &&
-          e !== 'CLIENT_LEFT_FOR_UNKNOWN_REASONS'
-      ) ?? [];
+    // todo some events are still filtered out
+    console.log('igor options', config?.options);
+    const events = config?.options ?? [];
+    const csa_events = config?.options ?? [];
     try {
       const result: any = await request({
         url: getChatsStatuses(),

@@ -1,11 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BarChart, CartesianGrid, YAxis, Tooltip, Legend, Bar, Label, XAxis } from 'recharts';
-import { chartDataKey, dateFormatter, formatDate, getColor, getKeys, getTicks, round } from '../../util/charts-utils';
+import {
+  chartDataKey,
+  dateFormatter,
+  formatDate,
+  formatTotalPeriodCount,
+  getColor,
+  getKeys,
+  getTicks,
+  round,
+} from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { useTranslation } from 'react-i18next';
+import { ChartData } from 'types/chart';
+import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 
 type Props = {
-  data: any;
+  data: ChartData;
   startDate: string;
   endDate: string;
   unit?: string;
@@ -14,6 +25,8 @@ type Props = {
 
 const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod }) => {
   const [width, setWidth] = useState<number | null>(null);
+  const { periodStatistics } = usePeriodStatisticsContext();
+
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
@@ -84,7 +97,10 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
           }}
           cursor={false}
         />
-        <Legend wrapperStyle={{ position: 'relative', marginTop: '20px' }} />
+        <Legend
+          wrapperStyle={{ position: 'relative', marginTop: '20px' }}
+          formatter={(value) => `${value}${formatTotalPeriodCount(periodStatistics, value)}`}
+        />
         {data?.chartData?.length > 0 &&
           getKeys(data.chartData).map((k, i) => {
             const isCount = k === t('chats.totalCount');
@@ -99,6 +115,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
                 stackId={isCount || isString ? undefined : chartDataKey}
                 stroke={getColor(data, k)}
                 fill={getColor(data, k)}
+                minPointSize={data?.minPointSize ?? undefined}
               />
             );
           })}

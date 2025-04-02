@@ -15,17 +15,22 @@ import {
 } from '../resources/api-constants';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
+import { randomColor } from 'util/generateRandomColor';
+import { ChartData } from 'types/chart';
+import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 
 const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation();
-  const [chartData, setChartData] = useState({});
+  const [chartData, setChartData] = useState<ChartData>({
+    chartData: [],
+    colors: [],
+  });
   const [currentMetric, setCurrentMetric] = useState('');
   const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
   const [unit, setUnit] = useState('');
-  let random = () => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
-  const randomColor = () => '#' + ((random() * 0xffffff) << 0).toString(16);
   const advisors = useRef<any[]>([]);
   const [advisorsList, setAdvisorsList] = useState<any[]>([]);
+  const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
   const [advisorsMetrics, setAdvisorsMetrics] = useState<Option[]>([
     {
       id: 'chat_forwards',
@@ -58,10 +63,15 @@ const AdvisorsPage: React.FC = () => {
       unit: t('units.minutes') ?? 'minutes',
     },
   ]);
+  const { setPeriodStatistics } = usePeriodStatisticsContext();
 
   useEffect(() => {
     setAdvisorsList(advisors.current);
   }, [advisorsList]);
+
+  useEffect(() => {
+    setPeriodStatistics(chartData, unit);
+  }, [chartData, unit]);
 
   const [configsSubject] = useState(() => new Subject());
   useEffect(() => {
@@ -95,6 +105,7 @@ const AdvisorsPage: React.FC = () => {
 
   const fetchChatsForwards = async (config: any) => {
     let chartData = {};
+    setShowSelectAll(false);
     try {
       const result: any = await request({
         url: getChatForwards(),
@@ -144,6 +155,7 @@ const AdvisorsPage: React.FC = () => {
   };
 
   const fetchAverageChatPickUpTime = async (config: any) => {
+    setShowSelectAll(false);
     let chartData = {};
     try {
       const result: any = await request({
@@ -165,6 +177,7 @@ const AdvisorsPage: React.FC = () => {
       chartData = {
         chartData: response,
         colors: [{ id: 'Average (Min)', color: '#FFB511' }],
+        minPointSize: 3,
       };
     } catch (_) {
       //error
@@ -173,6 +186,7 @@ const AdvisorsPage: React.FC = () => {
   };
 
   const fetchAveragePresentCsas = async (config: any) => {
+    setShowSelectAll(false);
     let chartData = {};
     try {
       const result: any = await request({
@@ -194,6 +208,7 @@ const AdvisorsPage: React.FC = () => {
       chartData = {
         chartData: response,
         colors: [{ id: 'Average', color: '#FFB511' }],
+        minPointSize: 3,
       };
     } catch (_) {
       //error
@@ -202,6 +217,7 @@ const AdvisorsPage: React.FC = () => {
   };
 
   const fetchTotalCsaChats = async (config: any) => {
+    setShowSelectAll(true);
     let chartData = {};
     try {
       const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
@@ -224,7 +240,7 @@ const AdvisorsPage: React.FC = () => {
         .map((e) => {
           return {
             id: e?.customerSupportId ?? '',
-            labelKey: e?.customerSupportDisplayName ?? '',
+            labelKey: e?.customerSupportFullName ?? '',
             color: randomColor(),
             isSelected: true,
           };
@@ -253,11 +269,11 @@ const AdvisorsPage: React.FC = () => {
         .reduce((a: any, b: any) => {
           const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
           if (dateRow) {
-            dateRow[b[t('chart.customerSupportDisplayName')]] = b[t('chart.count')];
+            dateRow[b[t('chart.customerSupportFullName')]] = b[t('chart.count')];
           } else {
             a.push({
               [chartDataKey]: b[chartDataKey],
-              [b[t('chart.customerSupportDisplayName')]]: b[t('chart.count')],
+              [b[t('chart.customerSupportFullName')]]: b[t('chart.count')],
             });
           }
           return a;
@@ -289,6 +305,7 @@ const AdvisorsPage: React.FC = () => {
   };
 
   const fetchAverageCsaChatTime = async (config: any) => {
+    setShowSelectAll(true);
     let chartData = {};
     try {
       const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
@@ -311,7 +328,7 @@ const AdvisorsPage: React.FC = () => {
         .map((e) => {
           return {
             id: e?.customerSupportId ?? '',
-            labelKey: e?.customerSupportDisplayName ?? '',
+            labelKey: e?.customerSupportFullName ?? '',
             color: randomColor(),
             isSelected: true,
           };
@@ -340,11 +357,11 @@ const AdvisorsPage: React.FC = () => {
         .reduce((a: any, b: any) => {
           const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
           if (dateRow) {
-            dateRow[b[t('chart.customerSupportDisplayName')]] = b[t('chart.avgMin')];
+            dateRow[b[t('chart.customerSupportFullName')]] = b[t('chart.avgMin')];
           } else {
             a.push({
               [chartDataKey]: b[chartDataKey],
-              [b[t('chart.customerSupportDisplayName')]]: b[t('chart.avgMin')],
+              [b[t('chart.customerSupportFullName')]]: b[t('chart.avgMin')],
             });
           }
           return a;
@@ -368,6 +385,7 @@ const AdvisorsPage: React.FC = () => {
             color,
           };
         }),
+        minPointSize: 3,
       };
     } catch (_) {
       //error
@@ -380,6 +398,7 @@ const AdvisorsPage: React.FC = () => {
       <h1>{t('menu.advisors')}</h1>
       <OptionsPanel
         metricOptions={advisorsMetrics}
+        enableSelectAll={showSelectAll}
         dateFormat="yyyy-MM-dd"
         onChange={(config) => {
           setCurrentConfigs(config);

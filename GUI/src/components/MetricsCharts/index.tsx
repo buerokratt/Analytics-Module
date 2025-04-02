@@ -6,16 +6,16 @@ import BarGraph from '../BarGraph';
 import './MetricsCharts.scss';
 import LineGraph from '../LineGraph';
 import PieGraph from '../PieGraph';
-import { getCsv } from '../../resources/api-constants';
-import { saveAs } from 'file-saver';
-import { ChartType } from '../../types/chart-type';
-import { chartDataKey, formatDate, getKeys } from '../../util/charts-utils';
+import { getXlsx } from '../../resources/api-constants';
+import { ChartData, ChartType } from '../../types/chart';
+import { chartDataKey, formatTimestamp, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { request, Methods } from '../../util/axios-client';
+import { saveFile } from 'util/file';
 
 type Props = {
   title: any;
-  data: any;
+  data: ChartData;
   startDate: string;
   endDate: string;
   unit?: string;
@@ -40,14 +40,15 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
     },
   ];
   const [selectedChart, setSelectedChart] = useState<string>('barChart');
+  const selectedData = selectedChart === 'pieChart' ? (data.distributionData ?? data) : (data.feedBackData ?? data);
 
   const buildChart = () => {
     if (selectedChart === 'pieChart') {
-      return <PieGraph data={data} />;
+      return <PieGraph data={selectedData} />;
     } else if (selectedChart === 'lineChart') {
       return (
         <LineGraph
-          data={data}
+          data={selectedData}
           startDate={startDate}
           endDate={endDate}
           unit={unit}
@@ -56,7 +57,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
     } else {
       return (
         <BarGraph
-          data={data}
+          data={selectedData}
           startDate={startDate}
           endDate={endDate}
           unit={unit}
@@ -66,7 +67,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
     }
   };
 
-  const downloadCSV = async (data: any[]) => {
+  const downloadXlsx = async (data: any[]) => {
     const modifiedData: any[] = data.map((item) => {
       const modifiedItem: any = { ...item };
       getKeys(data).forEach((propertyName: any) => {
@@ -77,24 +78,33 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       return modifiedItem;
     });
 
-    const res: any = await request({
-      url: getCsv(),
+    const res = await request<
+      {
+        data: unknown[];
+      },
+      {
+        base64String: string;
+      }
+    >({
+      url: getXlsx(),
       method: Methods.post,
       withCredentials: true,
       data: {
         data: modifiedData.map((p) => {
           const { [chartDataKey]: originalKey, ...rest } = p;
           return {
-            [t(`global.${chartDataKey}`)]: formatDate(new Date(originalKey), 'dd.MM.yyyy'),
+            [t(`global.${chartDataKey}`)]: formatTimestamp(originalKey),
             ...rest,
           };
         }),
-        del: '',
-        qul: '',
       },
-      responseType: 'blob',
     });
-    saveAs(res, 'metrics.csv');
+
+    await saveFile(
+      res.base64String,
+      'metrics.xlsx',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
   };
 
   return (
@@ -102,21 +112,26 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       header={
         <div className="container">
           <div className="title">
-            <h3>{t(title)}</h3>
+            <h3>
+              {t(title)}{' '}
+              {startDate !== endDate
+                ? `${formatTimestamp(startDate)} - ${formatTimestamp(endDate)}`
+                : formatTimestamp(startDate)}
+            </h3>
           </div>
           <div className="other_content">
             <Button
               appearance="text"
               style={{ marginRight: 15 }}
               onClick={() => {
-                downloadCSV(data.chartData);
+                downloadXlsx(data.chartData);
               }}
             >
               <Icon
                 icon={<MdOutlineDownload />}
                 size="small"
               />
-              {t('feedback.csv')}
+              {t('feedback.xlsx')}
             </Button>
             <FormSelect
               name={''}

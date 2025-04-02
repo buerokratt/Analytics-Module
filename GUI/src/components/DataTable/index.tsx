@@ -1,28 +1,28 @@
-import React, { CSSProperties, FC, ReactNode, useId } from 'react'
+import React, {CSSProperties, FC, ReactNode, useId} from 'react'
 import {
   ColumnDef,
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-  getSortedRowModel,
-  SortingState,
+  ColumnFiltersState,
   FilterFn,
+  flexRender,
+  getCoreRowModel,
   getFilteredRowModel,
-  VisibilityState,
   getPaginationRowModel,
+  getSortedRowModel,
   PaginationState,
-  TableMeta,
   Row,
   RowData,
-  ColumnFiltersState,
+  SortingState,
+  TableMeta,
+  useReactTable,
+  VisibilityState,
 } from '@tanstack/react-table'
-import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils'
-import { MdUnfoldMore, MdExpandMore, MdExpandLess, MdOutlineEast, MdOutlineWest } from 'react-icons/md'
+import {RankingInfo, rankItem} from '@tanstack/match-sorter-utils'
+import {MdExpandLess, MdExpandMore, MdOutlineEast, MdOutlineWest, MdUnfoldMore} from 'react-icons/md'
 import clsx from 'clsx'
-import { Link } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
+import {Link} from 'react-router-dom'
+import {useTranslation} from 'react-i18next'
 
-import { Icon, Track } from '../../components'
+import {Icon, Track} from '../../components'
 import Filter from './Filter'
 import './DataTable.scss'
 
@@ -42,6 +42,7 @@ type DataTableProps = {
   setColumnVisibility?: React.Dispatch<React.SetStateAction<VisibilityState>>;
   disableHead?: boolean;
   meta?: TableMeta<any>;
+  selectedRow?: (row: Row<any>) => boolean;
 };
 
 type ColumnMeta = {
@@ -96,6 +97,7 @@ const DataTable: FC<DataTableProps> = ({
   setColumnVisibility,
   disableHead,
   meta,
+  selectedRow
 }) => {
   const pagesShown = 7;
   const id = useId()
@@ -188,7 +190,10 @@ const DataTable: FC<DataTableProps> = ({
         <tbody>
           {tableBodyPrefix}
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} style={table.options.meta?.getRowStyles(row)}>
+            <tr key={row.id}
+                style={table.options.meta?.getRowStyles(row)}
+                className={selectedRow?.(row) ? 'highlighted' : 'default'}
+            >
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
               ))}

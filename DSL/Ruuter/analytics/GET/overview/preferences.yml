@@ -1,0 +1,27 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'PREFERENCES'"
+  method: get
+  accepts: json
+  returns: json
+  namespace: analytics
+
+check_if_authorized:
+  template: "[#ANALYTICS_PROJECT_LAYER]/check-user-authority"
+  requestType: templates
+  headers:
+    cookie: ${incoming.headers.cookie}
+  result: authority_result
+
+get_metrics_preferences:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]/overview-metric-preferences"
+    body:
+      user_id_code: ${authority_result.idCode}
+  result: metrics
+
+return_value:
+  return: ${metrics.response.body}
+  next: end

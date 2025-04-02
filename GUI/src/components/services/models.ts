@@ -1,4 +1,4 @@
-import api from './api';
+import { api } from './api';
 import { Model, UpdateModelDTO } from 'types/model';
 
 export async function activateModel(id: string | number, modelData: UpdateModelDTO) {

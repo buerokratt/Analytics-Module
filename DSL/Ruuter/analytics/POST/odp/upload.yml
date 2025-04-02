@@ -1,0 +1,125 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'UPLOAD'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    body:
+      - field: datasetId
+        type: string
+        description: "Body field 'datasetId'"
+      - field: dateTime
+        type: string
+        description: "Body field 'dateTime'"
+      - field: end
+        type: string
+        description: "Body field 'end'"
+      - field: metrics
+        type: string
+        description: "Body field 'metrics'"
+      - field: period
+        type: string
+        description: "Body field 'period'"
+      - field: start
+        type: string
+        description: "Body field 'start'"
+
+getKey:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]/get-odp-settings"
+  result: settings
+  next: authenticate
+
+authenticate:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/auth/key-login"
+    headers:
+      X-API-KEY: ${settings.response.body[0].odpKey}
+  result: apiToken
+  next: get_metrics
+
+get_metrics:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RUUTER]/odp/metrics"
+    body:
+      metrics: ${incoming.body.metrics}
+      start: ${incoming.body.start}
+      end: ${incoming.body.end}
+      period: ${incoming.body.period}
+  result: metrics
+
+convert_data:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_DMAPPER_HBS]/array-to-object"
+    headers:
+      type: "json"
+    body:
+      results: ${metrics.response.body}
+      fields: ${['chat_count_total','chat_count_no_csa','avg_waiting_time_seconds','avg_messages','avg_time_seconds','avg_time_no_csa_seconds','avg_time_csa_seconds','avg_session_length_client_left_seconds','avg_session_length_csa_seconds','avg_session_length_no_csa_seconds','avg_response_time_seconds']}
+      layout: false
+  result: dataObject
+
+to_csv:
+  template: csv
+  requestType: post
+  body:
+    data: ${[dataObject.response.body]}
+    qul: ""
+    del: ""
+  result: csv
+
+upload:
+  call: http.post
+  args:
+    contentType: formdata
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/${settings.response.body[0].odpOrgId}/datasets/${incoming.body.datasetId}/upload"
+    body:
+      delimiter: ","
+      headerIndex: "1"
+      file:files:metrics-${incoming.body.dateTime}.csv: ${metricDataCSV}
+    headers:
+      Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
+  result: uploadResult
+  next: check_upload_result
+
+check_upload_result:
+  switch:
+    - condition: ${200 <= uploadResult.response.statusCodeValue && uploadResult.response.statusCodeValue < 300}
+      next: publish
+  next: return_upload_fail
+
+publish:
+  call: http.put
+  args:
+    url: "[#ANALYTICS_OPEN_DATA_SERVICE]/api/organizations/my-organizations/${settings.response.body[0].odpOrgId}/datasets/${incoming.body.datasetId}/publish"
+    headers:
+      Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
+  result: publishResult
+  next: check_publish_result
+
+check_publish_result:
+  switch:
+    - condition: ${200 <= publishResult.response.statusCodeValue && publishResult.response.statusCodeValue < 300}
+      next: return_success
+  next: return_publish_fail
+
+return_success:
+  return: "Dataset uploaded and published successfully"
+  next: end
+
+return_upload_fail:
+  status: 400
+  return: "Dataset upload failed"
+  next: end
+
+return_publish_fail:
+  status: 400
+  return: "Dataset publish failed"
+  next: end

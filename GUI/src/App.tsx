@@ -8,6 +8,7 @@ import { persistor, store as reducerStore } from './store/reducers/store';
 import { UserInfo } from './types/userInfo';
 import useStore from './store/user/store';
 import { useQuery } from '@tanstack/react-query';
+import { PeriodStatisticsProvider } from 'components/context/PeriodStatisticsContext';
 
 const App: React.FC = () => {
   useQuery<UserInfo>({
@@ -31,7 +32,9 @@ const App: React.FC = () => {
       >
         <BrowserRouter basename={import.meta.env.BASE_URL}>
           <ToastProvider>
-            <RootComponent />
+            <PeriodStatisticsProvider>
+              <RootComponent />
+            </PeriodStatisticsProvider>
           </ToastProvider>
         </BrowserRouter>
       </PersistGate>

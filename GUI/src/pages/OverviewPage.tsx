@@ -13,10 +13,14 @@ import { reorderItem } from '../util/reorder-array';
 import { formatDate } from '../util/charts-utils';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
+import { ChartData } from 'types/chart';
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([]);
-  const [chartData, setChartData] = useState({});
+  const [chartData, setChartData] = useState<ChartData>({
+    chartData: [],
+    colors: [],
+  });
   const [drawerIsHidden, setDrawerIsHidden] = useState(true);
 
   const { t } = useTranslation();
@@ -46,12 +50,13 @@ const OverviewPage: React.FC = () => {
     const chartData = {
       chartData: response,
       colors: [
-        { id: t('chart.metricValue'), color: `hsl(${0 * 50}, 80%, 45%)` },
-        { id: t('chart.clientLeftWithAccepted'), color: `hsl(${1 * 50}, 80%, 45%)` },
-        { id: t('chart.clientLeftWithNoResolution'), color: `hsl(${2 * 50}, 80%, 45%)` },
-        { id: t('chart.hateSpeech'), color: `hsl(${5 * 50}, 80%, 45%)` },
-        { id: t('chart.other'), color: `hsl(${6 * 50}, 80%, 45%)` },
-        { id: t('chart.responseSentToClientEmail'), color: `hsl(${7 * 50}, 80%, 45%)` },
+        { id: t('chart.metricValue'), color: '#89B5CB' },
+        { id: t('chart.clientLeftWithAccepted'), color: '#B72727' },
+        { id: t('chart.clientLeftWithNoResolution'), color: '#B4E282' },
+        { id: t('chart.hateSpeech'), color: '#F2E041' },
+        { id: t('chart.accepted'), color: '#13B005' },
+        { id: t('chart.other'), color: '#9D0AB4' },
+        { id: t('chart.responseSentToClientEmail'), color: '#320CBB' },
       ],
     };
     setChartData(chartData);

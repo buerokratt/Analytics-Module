@@ -1,14 +1,17 @@
-import React from 'react';
-import { getColor } from '../../util/charts-utils';
+import { ChartData } from 'types/chart';
+import { formatTotalPeriodCount, getColor } from '../../util/charts-utils';
 import Track from '../Track';
 import './PieGraph.scss';
+import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 
 type Props = {
-  data: any;
+  data: ChartData;
   percentages: any;
 };
 
 const PieCharLegends = ({ data, percentages }: Props) => {
+  const { periodStatistics } = usePeriodStatisticsContext();
+
   return (
     <Track
       direction="vertical"
@@ -17,22 +20,21 @@ const PieCharLegends = ({ data, percentages }: Props) => {
       isFlex
       isMultiline
     >
-      {
-        percentages?.map((e: any) => {
-          const color = getColor(data, e.name);
+      {percentages?.map((e: any) => {
+        const color = getColor(data, e.name);
 
-          return (
-            <Track key={`track-${e.name}`}>
-              <div
-                className="legend_circle"
-                style={{ backgroundColor: color }}
-              />
-              <label style={{ color, maxLines: 1 }}>
-                {`${e.name}: ${e.value} %`}
-              </label>
-            </Track>
-          )})
-      }
+        return (
+          <Track key={`track-${e.name}`}>
+            <div
+              className="legend_circle"
+              style={{ backgroundColor: color }}
+            />
+            <label style={{ color, maxLines: 1 }}>
+              {`${e.name}: ${e.value} %${formatTotalPeriodCount(periodStatistics, e.name)}`}
+            </label>
+          </Track>
+        );
+      })}
     </Track>
   );
 };

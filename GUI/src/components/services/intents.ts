@@ -1,4 +1,4 @@
-import api from './api';
+import { api } from './api';
 import { Intent } from 'types/intent';
 
 export async function addIntent(newIntentData: { name: string }) {

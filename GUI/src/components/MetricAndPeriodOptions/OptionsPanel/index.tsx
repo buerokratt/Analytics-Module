@@ -7,16 +7,24 @@ import SubOptionsGroup from '../SubOptionsGroup'
 import { MetricOptionsState, Option, OnChangeCallback } from '../types'
 import Section from '../../Section'
 import { formatDate } from '../../../util/charts-utils'
+import { FormRadios } from 'components/FormElements'
 
 interface MetricOptionsProps {
-  metricOptions: Option[]
-  onChange: (selection: OnChangeCallback) => void
-  dateFormat?: string
-  useColumns?: boolean
+  metricOptions: Option[];
+  onChange: (selection: OnChangeCallback) => void;
+  dateFormat?: string;
+  useColumns?: boolean;
+  enableSelectAll?: boolean;
 }
 
-const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat, onChange, useColumns }) => {
-  const { t } = useTranslation()
+const MetricOptions: React.FC<MetricOptionsProps> = ({
+                                                       metricOptions,
+                                                       dateFormat,
+                                                       onChange,
+                                                       useColumns,
+                                                       enableSelectAll = false,
+                                                     }) => {
+  const { t } = useTranslation();
   const [selection, setSelection] = useState<MetricOptionsState>({
     period: '',
     metric: '',
@@ -47,6 +55,11 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
     [metricOptions.find((x) => x.id === selection.metric)?.subOptions],
   )
 
+  const subRadioOptions = useMemo(
+    () => metricOptions.find((x) => x.id === selection.metric)?.subRadioOptions ?? [],
+    [metricOptions.find((x) => x.id === selection.metric)?.subRadioOptions]
+  );
+
   const setPeriod = (period: any): void => setSelection((selection) => ({ ...selection, period }))
 
   return (
@@ -58,7 +71,7 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
           label={t('general.period')}
           onChange={setPeriod}
           onDatePicked={(start, end) => {
-            setSelection({ ...selection, start, end })
+            setSelection({ ...selection, start, end });
           }}
         />
       </Section>
@@ -68,7 +81,9 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
             dateFormat={dateFormat}
             options={metricOptions}
             label={t('general.chooseMetric')}
-            onChange={(metric) => setSelection({ ...selection, metric, options: getSubOptionIds(metricOptions, metric) })}
+            onChange={(metric) =>
+              setSelection({ ...selection, metric, options: getSubOptionIds(metricOptions, metric) })
+            }
           />
         </Section>
       )}
@@ -79,14 +94,30 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({ metricOptions, dateFormat
             label={t('general.additionalOptions')}
             onChange={(options) => setSelection({ ...selection, options })}
             useColumns={useColumns}
+            enableSelectAll={enableSelectAll ?? false}
           />
         </Section>
       )}
+      {subRadioOptions.length > 0 && (
+        <Section>
+            <FormRadios
+              name="graphData"
+              label={t('general.additionalOptions')}
+              items={subRadioOptions.map((option) => ({
+                label: t(`${option.labelKey}`),
+                value: option.id,
+              }))}
+              onChange={(options) => {
+                setSelection({ ...selection, options });
+              }}
+            />
+        </Section>
+      )}
     </Card>
-  )
+  );
 }
 
 const getSubOptionIds = (metricOptions: Option[], metric: string) =>
-  metricOptions.find((x) => x.id === metric)?.subOptions?.map(x => x.id) ?? []
+    metricOptions.find((x) => x.id === metric)?.subOptions?.map((x) => x.id) ?? [];
 
 export default MetricOptions

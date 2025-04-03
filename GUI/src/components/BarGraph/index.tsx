@@ -8,12 +8,12 @@ import {
   getColor,
   getKeys,
   getTicks,
-  round,
 } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { useTranslation } from 'react-i18next';
 import { ChartData } from 'types/chart';
 import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
+import { CustomChartTooltip } from 'components';
 
 type Props = {
   data: ChartData;
@@ -78,25 +78,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
             value={unit}
           />
         </YAxis>
-        <Tooltip
-          labelFormatter={(value) => {
-            if (typeof value === 'number') {
-              return formatDate(new Date(value), 'dd-MM-yyyy');
-            } else if (typeof value === 'string') {
-              return value;
-            }
-            return '';
-          }}
-          formatter={(value) => {
-            if (typeof value === 'number') {
-              return round(value);
-            } else if (typeof value === 'string') {
-              return value;
-            }
-            return '';
-          }}
-          cursor={false}
-        />
+        <Tooltip content={<CustomChartTooltip formatDate={(date) => formatDate(date, 'dd-MM-yyyy')} />} />
         <Legend
           wrapperStyle={{ position: 'relative', marginTop: '20px' }}
           formatter={(value) => `${value}${formatTotalPeriodCount(periodStatistics, value)}`}
@@ -119,7 +101,6 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
               />
             );
           })}
-        <Tooltip />
       </BarChart>
     </div>
   );

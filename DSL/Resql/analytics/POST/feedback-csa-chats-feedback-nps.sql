@@ -9,13 +9,7 @@ WITH chat_csas AS (
             ORDER BY updated
             ) AS feedback_rating
     FROM chat
-    WHERE customer_support_id <> ''
-        AND EXISTS (
-            SELECT 1
-            FROM message
-            WHERE message.chat_base_id = chat.base_id
-                AND message.author_role = 'backoffice-user'
-        )
+    WHERE customer_support_id NOT IN ('', 'chatbot')
         AND EXISTS (
             SELECT 1
             FROM message

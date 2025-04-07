@@ -40,14 +40,15 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
     },
   ];
   const [selectedChart, setSelectedChart] = useState<string>('barChart');
+  const selectedData = selectedChart === 'pieChart' ? (data.distributionData ?? data) : (data.feedBackData ?? data);
 
   const buildChart = () => {
     if (selectedChart === 'pieChart') {
-      return <PieGraph data={data} />;
+      return <PieGraph data={selectedData} />;
     } else if (selectedChart === 'lineChart') {
       return (
         <LineGraph
-          data={data}
+          data={selectedData}
           startDate={startDate}
           endDate={endDate}
           unit={unit}
@@ -55,13 +56,15 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       );
     } else {
       return (
+          <div style={{ height: '50%'}}>
         <BarGraph
-          data={data}
+          data={selectedData}
           startDate={startDate}
           endDate={endDate}
           unit={unit}
           groupByPeriod={groupByPeriod}
         />
+          </div>
       );
     }
   };
@@ -143,7 +146,9 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
         </div>
       }
     >
-      {buildChart()}
+      <div className="charts_wrapper">
+        {buildChart()}
+      </div>
     </Card>
   );
 };

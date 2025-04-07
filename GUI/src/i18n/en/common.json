@@ -114,18 +114,26 @@
       "client_left_with_accepted": "Bureaucrat - the client left with an answer",
       "client_left_with_no_resolution": "Bureaucrat - the customer left without an answer",
       "client_left_for_unknown_reasons": "Bureaucrat - terminated for an unspecified reason",
+      "contact-information-skipped": "Bureaucrat - contact information skipped",
       "accepted": "Advisor - accepted answer",
       "hate_speech": "Advisor - signs of hate speech",
       "response_sent_to_client_email": "Advisor - answered in another channel",
-      "other": "Advisor - other reasons"
+      "user-reached": "Advisor - user contacted",
+      "user-not-reached": "Advisor - user could not be reached",
+      "other": "Advisor - other reasons",
+      "average": "Average",
+      "nps": "NPS"
     },
     "plain_status_options": {
       "client_left_with_accepted": "the client left with an answer",
       "client_left_with_no_resolution": "the customer left without an answer",
       "client_left_for_unknown_reasons": "terminated for an unspecified reason",
+      "contact-information-skipped": "contact information skipped",
       "accepted": "accepted answer",
       "hate_speech": "signs of hate speech",
       "response_sent_to_client_email": "answered in another channel",
+      "user-reached": "user contacted",
+      "user-not-reached": "user could not be reached",
       "other": "other reasons"
     },
     "xlsx": "XLSX",
@@ -189,7 +197,10 @@
     "timeInterval": "Time Interval",
     "noDataToPlot": "No data to plot",
     "name": "Name",
-    "value": "Value"
+    "value": "Value",
+    "promoters": "Promoters",
+    "passives": "Passives",
+    "detractors": "Detractors"
   },
   "reports": {
     "get-chat-count-total": "Total chat count",

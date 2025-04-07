@@ -13,7 +13,7 @@ const baseURL = import.meta.env.REACT_APP_BUEROKRATT_API_URL;
 
 const axiosInstance = axios.create({
   baseURL,
-  headers: { 'Content-Type': 'application/json' },
+  headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache, no-store, must-revalidate' },
 });
 
 axiosInstance.interceptors.response.use(

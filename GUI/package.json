@@ -28,7 +28,7 @@
     "howler": "^2.2.4",
     "i18next": "^22.4.9",
     "i18next-browser-languagedetector": "^7.0.1",
-    "markdown-to-jsx": "7.7.3",
+    "markdown-to-jsx": "7.7.4",
     "moment": "^2.29.4",
     "radix-ui": "^1.0.1",
     "react": "^18.2.0",

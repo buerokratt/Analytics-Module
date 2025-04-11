@@ -9,6 +9,11 @@ import './HistoricalChat.scss';
 import {analyticsApi} from '../services/api';
 import ChatEvent from '../ChatEvent';
 import {AUTHOR_ROLES} from '../../util/constants';
+import Track from "../Track";
+import {FormTextarea} from "../FormElements";
+import {Button} from "../index";
+import Icon from "../Icon";
+import {MdOutlineModeEditOutline, MdOutlineSave} from "react-icons/md";
 
 type ChatProps = {
     chat: ChatType;
@@ -48,6 +53,8 @@ const HistoricalChat: FC<ChatProps> = ({
     const chatRef = useRef<HTMLDivElement>(null);
     const [messageGroups, setMessageGroups] = useState<GroupedMessage[]>([]);
     const [messagesList, setMessagesList] = useState<Message[]>([]);
+    const [editingComment, setEditingComment] = useState<string | null>(null);
+
 
     useEffect(() => {
         const initializeComponent = () => {
@@ -69,6 +76,48 @@ const HistoricalChat: FC<ChatProps> = ({
         });
         setMessagesList(res.response);
     };
+
+    const handleCommentChange = (comment: string) => {
+        if (!selectedChat) return;
+        chatCommentChangeMutation.mutate({
+            chatId: selectedChat.id,
+            comment,
+            authorDisplayName: userInfo!.displayName,
+        });
+    };
+
+    const chatCommentChangeMutation = useMutation({
+        mutationFn: (data: {
+            chatId: string | number;
+            comment: string;
+            authorDisplayName: string;
+        }) => apiDev.post('comments/history', data),
+        onSuccess: (res, {chatId, comment}) => {
+            const updatedChatList = filteredEndedChatsList.map((chat) =>
+                chat.id === chatId ? {...chat, comment} : chat
+            );
+            filterChatsList(updatedChatList);
+            if (selectedChat)
+                setSelectedChat({
+                    ...selectedChat,
+                    comment,
+                    commentAddedDate: res.data.response[0].created,
+                    commentAuthor: res.data.response[0].authorDisplayName,
+                });
+            toast?.open({
+                type: 'success',
+                title: t('global.notification'),
+                message: t('toast.success.chatCommentChanged'),
+            });
+        },
+        onError: (error: AxiosError) => {
+            toast?.open({
+                type: 'error',
+                title: t('global.notificationError'),
+                message: error.message,
+            });
+        },
+    });
 
     const endUserFullName =
         chat.endUserFirstName !== '' && chat.endUserLastName !== ''
@@ -193,6 +242,40 @@ const HistoricalChat: FC<ChatProps> = ({
                         </div>
                     ))}
                     <div id="anchor" ref={chatRef}></div>
+                </div>
+                <div className="historical-chat__toolbar-row">
+                    <Track gap={16} justify="between">
+                        {editingComment || editingComment === "" ? (
+                            <FormTextarea
+                                name="comment"
+                                label={t("global.comment")}
+                                value={editingComment}
+                                hideLabel
+                                onChange={(e) => setEditingComment(e.target.value)}
+                            />
+                        ) : (
+                            <p className={`historical-chat__comment-text ${chat.comment ? "" : "placeholder"}`}>
+                                {chat.comment ?? t("chat.history.addACommentToTheConversation")}
+                            </p>
+                        )}
+                        {editingComment || editingComment === "" ? (
+                            <Button
+                                appearance="text"
+                                onClick={() => {
+                                    onCommentChange(editingComment);
+                                    setEditingComment(null);
+                                }}
+                            >
+                                <Icon icon={<MdOutlineSave />} />
+                                {t("global.save")}
+                            </Button>
+                        ) : (
+                            <Button appearance="text" onClick={() => setEditingComment(chat.comment ?? "")}>
+                                <Icon icon={<MdOutlineModeEditOutline />} />
+                                {t("global.edit")}
+                            </Button>
+                        )}
+                    </Track>
                 </div>
             </div>
             <div id="anchor" ref={chatRef}></div>

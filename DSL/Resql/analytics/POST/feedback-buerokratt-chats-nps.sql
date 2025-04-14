@@ -1,10 +1,12 @@
+
+
 WITH chat_buerokratt AS (
     SELECT DISTINCT base_id,
-        first_value(created) OVER (
+        first_value(ended) OVER (
             PARTITION BY base_id
             ORDER BY updated
             ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-        ) AS created,
+        ) AS ended,
         last_value(feedback_rating) OVER (
             PARTITION BY base_id
             ORDER BY updated
@@ -19,10 +21,10 @@ WITH chat_buerokratt AS (
     )
     AND status = 'ENDED'
     AND feedback_rating IS NOT NULL
-    AND created::date BETWEEN :start::date AND :end::date
+    AND ended::date BETWEEN :start::date AND :end::date
 ),
 point_nps AS (
-    SELECT date_trunc(:metric, created)::text AS date_time,
+    SELECT date_trunc(:metric, ended)::text AS date_time,
            COALESCE(
              CAST((
                (

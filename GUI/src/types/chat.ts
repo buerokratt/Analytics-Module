@@ -58,6 +58,7 @@ export interface Chat {
   id: string;
   baseId?: string;
   feedback?: string;
+  feedbackText?: string;
   rating?: string;
   csaTitle?: string | null;
   customerSupportId?: string;

@@ -71,6 +71,11 @@
     "advisors": "Advisors",
     "reports": "Open Data"
   },
+  "toast": {
+    "success": {
+      "chatCommentChanged": "Chat comment changed"
+    }
+  },
   "burokratt": {
     "intents": "Intents",
     "sessions": "Sessions",
@@ -142,7 +147,8 @@
     "status": "Status",
     "ended": "Ended",
     "view": "View",
-    "comment": "Comment"
+    "comment": "Comment",
+    "feedback": "Feedback"
   },
   "chats": {
     "total": "Total number of chats",
@@ -185,6 +191,7 @@
     "ended": "Ended",
     "customerSupportId": "Customer Support Id",
     "customerSupportDisplayName": "Customer Support Display Name",
+    "customerSupportFullName": "Customer Support Full Name",
     "barChart": "Bar Chart",
     "pieChart": "Pie Chart",
     "lineChart": "Line Chart",
@@ -200,7 +207,12 @@
     "value": "Value",
     "promoters": "Promoters",
     "passives": "Passives",
-    "detractors": "Detractors"
+    "detractors": "Detractors",
+    "totalPages": "Total Pages",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "comment": "Comment",
+    "feebackText": "Feedback"
   },
   "reports": {
     "get-chat-count-total": "Total chat count",

@@ -89,7 +89,7 @@ const FeedbackPage: React.FC = () => {
         return undefined;
       }
     } catch (err) {
-      console.error('Failed to fetch data');
+      console.error('Failed to fetch data: ', err);
     }
   };
 
@@ -479,6 +479,10 @@ const FeedbackPage: React.FC = () => {
     };
   };
 
+  const getSortingStyles = (isDesc: boolean): string => {
+    return isDesc ? 'desc' : 'asc';
+  }
+
   return (
     <>
       <h1>{t('menu.feedback')}</h1>
@@ -519,13 +523,13 @@ const FeedbackPage: React.FC = () => {
               setPagination(state);
               updatePageSize.mutate({ page_results: state.pageSize });
               const sort =
-                sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + (sorting[0].desc ? 'desc' : 'asc');
+                sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + (getSortingStyles(sorting[0].desc));
               fetchChatsWithNegativeFeedback(currentConfigs, state.pageIndex + 1, state.pageSize, sort);
             }}
             setSorting={(state: SortingState) => {
               setSorting(state);
               const sorting =
-                state.length === 0 ? 'created desc' : state[0].id + ' ' + (state[0].desc ? 'desc' : 'asc');
+                state.length === 0 ? 'created desc' : state[0].id + ' ' + (getSortingStyles(state[0].desc));
               fetchChatsWithNegativeFeedback(currentConfigs, pagination.pageIndex + 1, pagination.pageSize, sorting);
             }}
           />

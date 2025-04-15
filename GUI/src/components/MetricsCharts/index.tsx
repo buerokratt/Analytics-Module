@@ -39,7 +39,6 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       value: 'lineChart',
     },
   ];
-
   const [selectedChart, setSelectedChart] = useState<string>('barChart');
   const selectedData = selectedChart === 'pieChart' ? (data.distributionData ?? data) : (data.feedBackData ?? data);
 

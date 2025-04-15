@@ -56,7 +56,6 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       );
     } else {
       return (
-          <div style={{ height: '50%'}}>
         <BarGraph
           data={selectedData}
           startDate={startDate}
@@ -64,7 +63,6 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
           unit={unit}
           groupByPeriod={groupByPeriod}
         />
-          </div>
       );
     }
   };

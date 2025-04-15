@@ -72,7 +72,7 @@ const FeedbackPage: React.FC = () => {
 
   useEffect(() => {
     setAdvisorsList(advisors.current);
-  }, [advisorsList]);
+  }, [advisorsList.length]);
 
   useEffect(() => {
     setPeriodStatistics(chartData.feedBackData ? { ...chartData.feedBackData } : chartData, unit);

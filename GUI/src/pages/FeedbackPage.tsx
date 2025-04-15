@@ -252,8 +252,8 @@ const FeedbackPage: React.FC = () => {
           };
         }),
       };
-    } catch (_) {
-      //error
+    } catch (err) {
+      console.error("Failed: ", err)
     }
     return chartData;
   };
@@ -270,8 +270,8 @@ const FeedbackPage: React.FC = () => {
         minPointSize: 3,
       };
       setUnit(t('units.minutes') ?? 'chats');
-    } catch (_) {
-      //error
+    } catch (err) {
+      console.error("Failed: ", err)
     }
     return chartData;
   };
@@ -287,8 +287,8 @@ const FeedbackPage: React.FC = () => {
         colors: [{ id: 'NPS', color: '#FFB511' }],
         periodNps: result.periodNps,
       };
-    } catch (_) {
-      //error
+    } catch (err) {
+      console.error("Failed: ", err)
     }
     return chartData;
   };
@@ -325,8 +325,8 @@ const FeedbackPage: React.FC = () => {
         colors: [{ id: 'NPS', color: '#FFB511' }],
         periodNps: result.periodNps,
       };
-    } catch (_) {
-      //error
+    } catch (err) {
+      console.error("Failed: ", err)
     }
     return chartData;
   };
@@ -389,8 +389,8 @@ const FeedbackPage: React.FC = () => {
         }),
         periodNpsByCsa: result.periodNpsByCsa,
       };
-    } catch (_) {
-      //error
+    } catch (err) {
+      console.error("Failed: ", err)
     }
     return chartData;
   };
@@ -431,8 +431,8 @@ const FeedbackPage: React.FC = () => {
       };
 
       setNegativeFeedbackChats(result.response);
-    } catch (_) {
-      //error
+    } catch (err) {
+      console.error("Failed: ", err)
     }
     return chartData;
   };

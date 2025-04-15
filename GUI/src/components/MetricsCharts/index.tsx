@@ -39,6 +39,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       value: 'lineChart',
     },
   ];
+
   const [selectedChart, setSelectedChart] = useState<string>('barChart');
   const selectedData = selectedChart === 'pieChart' ? (data.distributionData ?? data) : (data.feedBackData ?? data);
 
@@ -69,8 +70,8 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
     }
   };
 
-  const downloadXlsx = async (data: any[]) => {
-    const modifiedData: any[] = data.map((item) => {
+  const downloadXlsx = async (data: any[] = []) => {
+    const modifiedData: any[] = data?.map((item) => {
       const modifiedItem: any = { ...item };
       getKeys(data).forEach((propertyName: any) => {
         if (!(propertyName in modifiedItem)) {
@@ -92,7 +93,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       method: Methods.post,
       withCredentials: true,
       data: {
-        data: modifiedData.map((p) => {
+        data: modifiedData?.map((p) => {
           const { [chartDataKey]: originalKey, ...rest } = p;
           return {
             [t(`global.${chartDataKey}`)]: formatTimestamp(originalKey),
@@ -126,7 +127,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
               appearance="text"
               style={{ marginRight: 15 }}
               onClick={() => {
-                downloadXlsx(data.chartData);
+                downloadXlsx(data.feedBackData ? data.feedBackData?.chartData : data.chartData);
               }}
             >
               <Icon

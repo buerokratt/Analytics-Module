@@ -14,6 +14,9 @@ import HistoricalChat from "../HistoricalChat";
 import './ChatsTable.scss';
 import {useMutation} from "@tanstack/react-query";
 import {analyticsApi} from "../services/api";
+import {useToast} from "../../hooks/useToast";
+import {AxiosError} from "axios";
+import useStore from "../../store/user/store";
 
 type Props = {
     dataSource: Chat[];
@@ -27,6 +30,8 @@ type Props = {
 
 const ChatsTable = (props: Props) => {
     const [chats, setChats] = useState<Chat[]>([]);
+    const toast = useToast();
+    const userInfo = useStore((state) => state.userInfo);
     const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
     type CombinedRow = Chat & { firstName?: string; lastName?: string };
     const columnHelper = createColumnHelper<CombinedRow>();
@@ -65,6 +70,36 @@ const ChatsTable = (props: Props) => {
         },
     });
 
+    const handleCommentChange = (comment: string) => {
+        if (!selectedChat) return;
+        const displayName = userInfo?.displayName || "";
+        chatCommentChangeMutation.mutate({chatId: selectedChat.id,comment: comment, authorDisplayName: displayName});
+    };
+
+    const chatCommentChangeMutation = useMutation({
+        mutationFn: (data: { chatId: string | number; comment: string ; authorDisplayName: string;}) =>
+            analyticsApi.post('feedbacks/add-comment', data),
+        onSuccess: (res, {chatId, comment}) => {
+            const updatedChatList = chats.map((chat) =>
+                chat.id === chatId ? {...chat, comment} : chat
+            );
+            setChats(updatedChatList);
+            if (selectedChat) setSelectedChat({...selectedChat, comment});
+            toast.open({
+                type: 'success',
+                title: t('global.notification'),
+                message: t('toast.success.chatCommentChanged'),
+            });
+        },
+        onError: (error: AxiosError) => {
+            toast.open({
+                type: 'error',
+                title: t('global.notificationError'),
+                message: error.message,
+            });
+        },
+    });
+
     const chatColumns = useMemo(
         () => [
             columnHelper.accessor('baseId', {
@@ -77,7 +112,10 @@ const ChatsTable = (props: Props) => {
                     header: t('chat.history.csaName') ?? '',
                 }
             ),
-            columnHelper.accessor('feedback', {
+            columnHelper.accessor('feedbackText', {
+                header: t('feedback.feedback') ?? '',
+            }),
+            columnHelper.accessor('comment', {
                 header: t('feedback.comment') ?? '',
             }),
             columnHelper.accessor('created', {
@@ -133,6 +171,7 @@ const ChatsTable = (props: Props) => {
                         <HistoricalChat
                             header_link={selectedChat.endUserUrl}
                             chat={selectedChat}
+                            onCommentChange={handleCommentChange}
                             trigger={true}
                         />
                     </Drawer>

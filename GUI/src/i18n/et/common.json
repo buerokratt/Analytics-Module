@@ -71,6 +71,11 @@
     "advisors": "Nõustajad",
     "reports": "Avaandmed"
   },
+  "toast": {
+    "success": {
+      "chatCommentChanged": "Vestluse kommentaar muudetud"
+    }
+  },
   "burokratt": {
     "intents": "Teemad",
     "sessions": "Sessioonid",
@@ -142,7 +147,8 @@
     "status": "Staatus",
     "ended": "Lõppenud",
     "view": "Vaata",
-    "comment": "Kommentaar"
+    "comment": "Kommentaar",
+    "feedback": "Tagasiside"
   },
   "chats": {
     "total": "Vestluste koguarv",
@@ -187,6 +193,7 @@
     "avgMin": "Keskmine (min)",
     "customerSupportId": "Nõustaja Id",
     "customerSupportDisplayName": "Nõustaja nimi",
+    "customerSupportFullName": "Nõustaja nimi",
     "barChart": "Tulpdiagramm",
     "pieChart": "Sektordiagramm",
     "lineChart": "Joondiagramm",
@@ -199,7 +206,12 @@
     "value": "Väärtus",
     "promoters": "Soovitajad",
     "passives": "Neutraalsed",
-    "detractors": "Kriitikud"
+    "detractors": "Kriitikud",
+    "totalPages": "Total Pages",
+    "firstName": "Ees nimi",
+    "lastName": "Perekonnanimi",
+    "comment": "Kommentaar",
+    "feebackText": "Tagasiside"
   },
   "reports": {
     "get-chat-count-total": "Vestluste koguarv",

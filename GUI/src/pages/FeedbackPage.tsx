@@ -490,7 +490,9 @@ const FeedbackPage: React.FC = () => {
   }
 
   const configsAreEqual = (a: MetricOptionsState, b: MetricOptionsState | undefined) => {
-    return JSON.stringify(a) === JSON.stringify(b);
+    const { options: _, ...restA } = a ?? {};
+    const { options: __, ...restB } = b ?? {};
+    return JSON.stringify(restA) === JSON.stringify(restB);
   };
 
   return (

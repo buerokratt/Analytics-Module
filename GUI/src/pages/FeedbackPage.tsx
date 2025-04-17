@@ -22,7 +22,7 @@ import {
   getAdvisorChartData,
   translateChartKeys,
 } from '../util/charts-utils';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
@@ -205,6 +205,12 @@ const FeedbackPage: React.FC = () => {
       subscription.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    if (currentConfigs) {
+      configsSubject.next(currentConfigs);
+    }
+  }, [currentConfigs]);
 
   const fetchChatsStatuses = async (config: MetricOptionsState) => {
     setShowSelectAll(false);
@@ -483,6 +489,12 @@ const FeedbackPage: React.FC = () => {
     return isDesc ? 'desc' : 'asc';
   }
 
+  const configsAreEqual = (a: MetricOptionsState, b: MetricOptionsState | undefined) => {
+    const { options: _, ...restA } = a ?? {};
+    const { options: __, ...restB } = b ?? {};
+    return JSON.stringify(restA) === JSON.stringify(restB);
+  };
+
   return (
     <>
       <h1>{t('menu.feedback')}</h1>
@@ -491,13 +503,14 @@ const FeedbackPage: React.FC = () => {
         enableSelectAll={showSelectAll}
         dateFormat="yyyy-MM-dd"
         onChange={(config) => {
-          setCurrentConfigs(config);
-          configsSubject.next(config);
-          setCurrentMetric(`feedback.${config.metric}`);
+          if (!configsAreEqual(config, currentConfigs)) {
+            setCurrentConfigs(config);
+            setCurrentMetric(`feedback.${config.metric}`);
 
-          const selectedOption = feedbackMetrics.find((x) => x.id === config.metric);
-          if (!selectedOption) return;
-          setUnit(selectedOption.unit ?? '');
+            const selectedOption = feedbackMetrics.find((x) => x.id === config.metric);
+            if (!selectedOption) return;
+            setUnit(selectedOption.unit ?? '');
+          }
         }}
       />
       {currentConfigs?.metric != 'negative_feedback' && (

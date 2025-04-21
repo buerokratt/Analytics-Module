@@ -45,7 +45,8 @@
     "forward": "Forward",
     "chosen": "Chosen",
     "read": "Read",
-    "dateTime": "Date"
+    "dateTime": "Date",
+    "statusClarification": "Status clarification"
   },
   "mainMenu": {
     "closeMenu": "Close menu",
@@ -486,7 +487,8 @@
       "newValidationMessage": "New message to validate",
       "useAutocorrect": "Text auto corrector",
       "required": "Required",
-      "invalidemail": "Invalid email"
+      "invalidemail": "Invalid email",
+      "statusCommentUpdated": "Status clarification updated"
     }
   },
   "roles": {

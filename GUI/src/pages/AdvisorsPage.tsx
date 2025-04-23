@@ -307,6 +307,12 @@ const AdvisorsPage: React.FC = () => {
     return chartData;
   };
 
+  const configsAreEqual = (a: MetricOptionsState, b: MetricOptionsState | undefined) => {
+    const { options: _, ...restA } = a ?? {};
+    const { options: __, ...restB } = b ?? {};
+    return JSON.stringify(restA) === JSON.stringify(restB);
+  };
+
   return (
     <>
       <h1>{t('menu.advisors')}</h1>
@@ -315,6 +321,7 @@ const AdvisorsPage: React.FC = () => {
         enableSelectAll={showSelectAll}
         dateFormat="yyyy-MM-dd"
         onChange={(config) => {
+          if(!configsAreEqual(config, currentConfigs)) {
           setCurrentConfigs(config);
           configsSubject.next(config);
           if (currentMetric != `advisors.${config.metric}`) {
@@ -326,7 +333,7 @@ const AdvisorsPage: React.FC = () => {
           const selectedOption = advisorsMetrics.find((x) => x.id === config.metric);
           if (!selectedOption) return;
           setUnit(selectedOption?.unit ?? 'chats');
-        }}
+        }}}
       />
       <MetricsCharts
         title={currentMetric}

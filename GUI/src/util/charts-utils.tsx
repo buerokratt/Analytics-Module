@@ -60,7 +60,8 @@ export const getKeys = (data: any[]) => Array.from(new Set(data.flatMap((obj: an
 
 export const formatTotalPeriodCount = (totalPeriodCounts: Record<string, number>, metric: string) => {
   // !== undefined to support 0 values
-  return `${totalPeriodCounts[metric] !== undefined ? ` (${totalPeriodCounts[metric]})` : ''}`;
+  const count = totalPeriodCounts[metric];
+  return count !== undefined ? ` (${count})` : '';
 };
 
 export const getAdvisorsList = (response: any): Advisor[] => {

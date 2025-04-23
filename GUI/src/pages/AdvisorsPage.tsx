@@ -79,8 +79,15 @@ const AdvisorsPage: React.FC = () => {
     setPeriodStatistics(chartData, unit);
   }, [chartData, unit]);
 
+  useEffect(() => {
+    if (currentConfigs) {
+      configsSubject.next(currentConfigs);
+    }
+  }, [currentConfigs]);
+
   const [configsSubject] = useState(() => new Subject());
   useEffect(() => {
+
     const subscription = configsSubject
       .pipe(
         distinctUntilChanged(),

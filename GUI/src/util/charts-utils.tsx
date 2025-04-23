@@ -88,11 +88,11 @@ export const getAdvisorChartData = (response: any, advisors: Advisor[]) => {
     .reduce((a: any, b: any) => {
       const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
       if (dateRow) {
-        dateRow[b[t('chart.customerSupportFullName')]] = b[t('chart.nps')];
+        dateRow[b[t('chart.customerSupportFullName')]] = b[t('chart.count')];
       } else {
         a.push({
           [chartDataKey]: b[chartDataKey],
-          [b[t('chart.customerSupportFullName')]]: b[t('chart.nps')],
+          [b[t('chart.customerSupportFullName')]]: b[t('chart.count')],
         });
       }
       return a;

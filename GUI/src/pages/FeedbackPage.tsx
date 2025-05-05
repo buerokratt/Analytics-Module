@@ -33,6 +33,10 @@ import { useMutation } from '@tanstack/react-query';
 import { randomColor } from 'util/generateRandomColor';
 import { ChartData } from 'types/chart';
 import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
+import { Card, Track } from 'components';
+import FormMultiselect from 'components/FormElements/FormSelect/FormMultiselect';
+import { api } from 'components/services/api';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 const statusOptions = [
   'CLIENT_LEFT_WITH_ACCEPTED',
@@ -69,6 +73,11 @@ const FeedbackPage: React.FC = () => {
   });
 
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [customerSupportAgents, setCustomerSupportAgents] = useState<any[]>([]);
+  const routerLocation = useLocation();
+  const params = new URLSearchParams(routerLocation.search);
+  const passedCustomerSupportIds = params.getAll('customerSupportIds');
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     setAdvisorsList(advisors.current);
@@ -188,8 +197,9 @@ const FeedbackPage: React.FC = () => {
               return fetchNpsOnSelectedCSAChatsFeedback(config);
             case 'negative_feedback':
               return fetchData().then((res) => {
+                listCustomerSupportAgents.mutate();
                 if (res) {
-                  return fetchChatsWithNegativeFeedback(config, res.pageIndex + 1, res.pageSize, 'created desc');
+                  return fetchChatsWithNegativeFeedback(config, res.pageIndex + 1, res.pageSize, 'created desc', passedCustomerSupportIds);
                 } else {
                   return fetchChatsWithNegativeFeedback(config);
                 }
@@ -405,7 +415,8 @@ const FeedbackPage: React.FC = () => {
     config: any,
     page: number = pagination.pageIndex + 1,
     pageSize: number = pagination.pageSize,
-    sorting: string = 'created desc'
+    sorting: string = 'created desc',
+    customerSupportIds: string[] = []
   ) => {
     setShowSelectAll(false);
     let chartData = {};
@@ -420,6 +431,7 @@ const FeedbackPage: React.FC = () => {
           page: page,
           page_size: pageSize,
           sorting: sorting,
+          customerSupportIds: customerSupportIds ?? [],
         },
       });
 
@@ -495,6 +507,27 @@ const FeedbackPage: React.FC = () => {
     return JSON.stringify(restA) === JSON.stringify(restB);
   };
 
+  const listCustomerSupportAgents = useMutation({
+    mutationFn: () =>
+      api.post('accounts/customer-support-agents', {
+        page: 0,
+        page_size: 99999,
+        sorting: 'name asc',
+        show_active_only: false,
+        roles: ['ROLE_CUSTOMER_SUPPORT_AGENT'],
+      }),
+    onSuccess: (res: any) => {
+      setCustomerSupportAgents([
+        { label: '-', value: ',' },
+        { label: 'Bürokratt', value: 'chatbot' },
+        ...res.data.response.map((item: any) => ({
+          label: [item.firstName, item.lastName].join(' ').trim(),
+          value: item.idCode,
+        })),
+      ]);
+    },
+  });
+
   return (
     <>
       <h1>{t('menu.feedback')}</h1>
@@ -525,27 +558,63 @@ const FeedbackPage: React.FC = () => {
       )}
       {showNegativeChart &&
         (negativeFeedbackChats.length > 0 ? (
-          <ChatsTable
-            dataSource={negativeFeedbackChats}
-            pagination={pagination}
-            sorting={sorting}
-            startDate={currentConfigs?.start}
-            endDate={currentConfigs?.end}
-            setPagination={(state: PaginationState) => {
-              if (state.pageIndex === pagination.pageIndex && state.pageSize === pagination.pageSize) return;
-              setPagination(state);
-              updatePageSize.mutate({ page_results: state.pageSize });
-              const sort =
-                sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + (getSortingStyles(sorting[0].desc));
-              fetchChatsWithNegativeFeedback(currentConfigs, state.pageIndex + 1, state.pageSize, sort);
-            }}
-            setSorting={(state: SortingState) => {
-              setSorting(state);
-              const sorting =
-                state.length === 0 ? 'created desc' : state[0].id + ' ' + (getSortingStyles(state[0].desc));
-              fetchChatsWithNegativeFeedback(currentConfigs, pagination.pageIndex + 1, pagination.pageSize, sorting);
-            }}
-          />
+          <Track
+            isMultiline={true}
+            gap={16}
+          >
+            <div style={{ width: '100%' }}>
+              <Card>
+                <FormMultiselect
+                  name="agent"
+                  label={t('')}
+                  placeholder={t('feedback.chosen_csas') ?? ''}
+                  options={customerSupportAgents}
+                  selectedOptions={customerSupportAgents.filter((item) =>
+                    passedCustomerSupportIds.includes(item.value)
+                  )}
+                  onSelectionChange={(selection) => {
+                    setSearchParams((params) => {
+                      params.delete('customerSupportIds');
+                      params.set('page', '1');
+                      selection?.forEach((s) => params.append('customerSupportIds', s.value));
+                      return params;
+                    });
+
+                    setPagination({ pageIndex: 0, pageSize: pagination.pageSize });
+                    const sort = sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + getSortingStyles(sorting[0].desc);
+                    fetchChatsWithNegativeFeedback(
+                      currentConfigs,
+                      pagination.pageIndex,
+                      pagination.pageSize,
+                      sort,
+                      selection?.map((s) => s.value) ?? []
+                    );
+                  }}
+                />
+              </Card>
+            </div>
+            <ChatsTable
+              dataSource={negativeFeedbackChats ?? []}
+              pagination={pagination}
+              sorting={sorting}
+              startDate={currentConfigs?.start}
+              endDate={currentConfigs?.end}
+              setPagination={(state: PaginationState) => {
+                if (state.pageIndex === pagination.pageIndex && state.pageSize === pagination.pageSize) return;
+                setPagination(state);
+                updatePageSize.mutate({ page_results: state.pageSize });
+                const sort =
+                  sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + getSortingStyles(sorting[0].desc);
+                fetchChatsWithNegativeFeedback(currentConfigs, state.pageIndex + 1, state.pageSize, sort, passedCustomerSupportIds);
+              }}
+              setSorting={(state: SortingState) => {
+                setSorting(state);
+                const sorting =
+                  state.length === 0 ? 'created desc' : state[0].id + ' ' + getSortingStyles(state[0].desc);
+                fetchChatsWithNegativeFeedback(currentConfigs, pagination.pageIndex + 1, pagination.pageSize, sorting, passedCustomerSupportIds);
+              }}
+            />
+          </Track>
         ) : (
           <label style={{ alignSelf: 'center', marginTop: '30px' }}>{t('feedback.no_negative_feedback_chats')}</label>
         ))}

@@ -1,1 +1,1 @@
-export const POPUP_DURATION = 6 // seconds
+export const POPUP_DURATION = 5 // seconds

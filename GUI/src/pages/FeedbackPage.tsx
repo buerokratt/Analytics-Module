@@ -77,7 +77,7 @@ const FeedbackPage: React.FC = () => {
   const routerLocation = useLocation();
   const params = new URLSearchParams(routerLocation.search);
   const passedCustomerSupportIds = params.getAll('customerSupportIds');
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [ _, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     setAdvisorsList(advisors.current);
@@ -497,10 +497,6 @@ const FeedbackPage: React.FC = () => {
     };
   };
 
-  const getSortingStyles = (isDesc: boolean): string => {
-    return isDesc ? 'desc' : 'asc';
-  }
-
   const configsAreEqual = (a: MetricOptionsState, b: MetricOptionsState | undefined) => {
     const { options: _, ...restA } = a ?? {};
     const { options: __, ...restB } = b ?? {};
@@ -581,7 +577,8 @@ const FeedbackPage: React.FC = () => {
                     });
 
                     setPagination({ pageIndex: 0, pageSize: pagination.pageSize });
-                    const sort = sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + getSortingStyles(sorting[0].desc);
+                    const sortingStyle = sorting[0].desc ? 'desc' : 'asc';
+                    const sort = sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + sortingStyle;
                     fetchChatsWithNegativeFeedback(
                       currentConfigs,
                       pagination.pageIndex,
@@ -603,14 +600,14 @@ const FeedbackPage: React.FC = () => {
                 if (state.pageIndex === pagination.pageIndex && state.pageSize === pagination.pageSize) return;
                 setPagination(state);
                 updatePageSize.mutate({ page_results: state.pageSize });
-                const sort =
-                  sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + getSortingStyles(sorting[0].desc);
+                const sortingStyle = sorting[0].desc ? 'desc' : 'asc';
+                const sort = sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + sortingStyle;
                 fetchChatsWithNegativeFeedback(currentConfigs, state.pageIndex + 1, state.pageSize, sort, passedCustomerSupportIds);
               }}
               setSorting={(state: SortingState) => {
                 setSorting(state);
-                const sorting =
-                  state.length === 0 ? 'created desc' : state[0].id + ' ' + getSortingStyles(state[0].desc);
+                const sortingStyle = state[0].desc ? 'desc' : 'asc';
+                const sorting = state.length === 0 ? 'created desc' : state[0].id + ' ' + sortingStyle;
                 fetchChatsWithNegativeFeedback(currentConfigs, pagination.pageIndex + 1, pagination.pageSize, sorting, passedCustomerSupportIds);
               }}
             />

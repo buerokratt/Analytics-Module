@@ -551,44 +551,42 @@ const FeedbackPage: React.FC = () => {
           unit={unit}
         />
       )}
-      {showNegativeChart &&
-        (negativeFeedbackChats.length > 0 ? (
-          <Track
-            isMultiline={true}
-            gap={16}
-          >
-            <div style={{ width: '100%' }}>
-              <Card>
-                <FormMultiselect
-                  name="agent"
-                  label={t('')}
-                  placeholder={t('feedback.chosen_csas') ?? ''}
-                  options={customerSupportAgents}
-                  selectedOptions={customerSupportAgents.filter((item) =>
-                    passedCustomerSupportIds.includes(item.value)
-                  )}
-                  onSelectionChange={(selection) => {
-                    setSearchParams((params) => {
-                      params.delete('customerSupportIds');
-                      params.set('page', '1');
-                      selection?.forEach((s) => params.append('customerSupportIds', s.value));
-                      return params;
-                    });
+      {showNegativeChart && (
+        <Track
+          isMultiline={true}
+          gap={16}
+        >
+          <div style={{ width: '100%' }}>
+            <Card>
+              <FormMultiselect
+                name="agent"
+                label={t('')}
+                placeholder={t('feedback.chosen_csas') ?? ''}
+                options={customerSupportAgents}
+                selectedOptions={customerSupportAgents.filter((item) => passedCustomerSupportIds.includes(item.value))}
+                onSelectionChange={(selection) => {
+                  setSearchParams((params) => {
+                    params.delete('customerSupportIds');
+                    params.set('page', '1');
+                    selection?.forEach((s) => params.append('customerSupportIds', s.value));
+                    return params;
+                  });
 
-                    setPagination({ pageIndex: 0, pageSize: pagination.pageSize });
-                    const sortingStyle = sorting[0]?.desc ? 'desc' : 'asc';
-                    const sort = sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + sortingStyle;
-                    fetchChatsWithNegativeFeedback(
-                      currentConfigs,
-                      pagination.pageIndex,
-                      pagination.pageSize,
-                      sort,
-                      selection?.map((s) => s.value) ?? []
-                    );
-                  }}
-                />
-              </Card>
-            </div>
+                  setPagination({ pageIndex: 0, pageSize: pagination.pageSize });
+                  const sortingStyle = sorting[0]?.desc ? 'desc' : 'asc';
+                  const sort = sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + sortingStyle;
+                  fetchChatsWithNegativeFeedback(
+                    currentConfigs,
+                    pagination.pageIndex,
+                    pagination.pageSize,
+                    sort,
+                    selection?.map((s) => s.value) ?? []
+                  );
+                }}
+              />
+            </Card>
+          </div>
+          {negativeFeedbackChats.length > 0 ? (
             <ChatsTable
               dataSource={negativeFeedbackChats ?? []}
               pagination={pagination}
@@ -610,10 +608,15 @@ const FeedbackPage: React.FC = () => {
                 fetchChatsWithNegativeFeedback(currentConfigs, pagination.pageIndex + 1, pagination.pageSize, sorting, passedCustomerSupportIds);
               }}
             />
-          </Track>
-        ) : (
-          <label style={{ alignSelf: 'center', marginTop: '30px' }}>{t('feedback.no_negative_feedback_chats')}</label>
-        ))}
+          ) : (
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column'}} >
+              <label style={{ textAlign: 'center', marginTop: '20px' }}>
+                {t('feedback.no_negative_feedback_chats')}
+              </label>
+            </div>
+          )}
+        </Track>
+      )}
     </>
   );
 };

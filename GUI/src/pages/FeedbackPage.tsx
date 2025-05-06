@@ -576,7 +576,7 @@ const FeedbackPage: React.FC = () => {
                     });
 
                     setPagination({ pageIndex: 0, pageSize: pagination.pageSize });
-                    const sortingStyle = sorting[0].desc ? 'desc' : 'asc';
+                    const sortingStyle = sorting[0]?.desc ? 'desc' : 'asc';
                     const sort = sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + sortingStyle;
                     fetchChatsWithNegativeFeedback(
                       currentConfigs,
@@ -599,13 +599,13 @@ const FeedbackPage: React.FC = () => {
                 if (state.pageIndex === pagination.pageIndex && state.pageSize === pagination.pageSize) return;
                 setPagination(state);
                 updatePageSize.mutate({ page_results: state.pageSize });
-                const sortingStyle = sorting[0].desc ? 'desc' : 'asc';
+                const sortingStyle = sorting[0]?.desc ? 'desc' : 'asc';
                 const sort = sorting.length === 0 ? 'created desc' : sorting[0].id + ' ' + sortingStyle;
                 fetchChatsWithNegativeFeedback(currentConfigs, state.pageIndex + 1, state.pageSize, sort, passedCustomerSupportIds);
               }}
               setSorting={(state: SortingState) => {
                 setSorting(state);
-                const sortingStyle = state[0].desc ? 'desc' : 'asc';
+                const sortingStyle = state[0]?.desc ? 'desc' : 'asc';
                 const sorting = state.length === 0 ? 'created desc' : state[0].id + ' ' + sortingStyle;
                 fetchChatsWithNegativeFeedback(currentConfigs, pagination.pageIndex + 1, pagination.pageSize, sorting, passedCustomerSupportIds);
               }}

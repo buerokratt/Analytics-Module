@@ -35,7 +35,6 @@ import { ChartData } from 'types/chart';
 import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 import { Card, Track } from 'components';
 import FormMultiselect from 'components/FormElements/FormSelect/FormMultiselect';
-import { api } from 'components/services/api';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
 const statusOptions = [
@@ -505,7 +504,7 @@ const FeedbackPage: React.FC = () => {
 
   const listCustomerSupportAgents = useMutation({
     mutationFn: () =>
-      api.post('accounts/customer-support-agents', {
+      analyticsApi.post('accounts/customer-support-agents', {
         page: 0,
         page_size: 99999,
         sorting: 'name asc',

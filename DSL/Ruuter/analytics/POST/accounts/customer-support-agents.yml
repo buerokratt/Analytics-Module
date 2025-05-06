@@ -47,7 +47,7 @@ extractRequestData:
 getCustomerSupportAgents:
   call: http.post
   args:
-    url: "[#CHATBOT_RESQL]/get-users-with-roles-by-role"
+    url: "[#ANALYTICS_RESQL]/get-users-with-roles-by-role"
     body:
       page: ${page}
       page_size: ${page_size}

@@ -1,12 +1,26 @@
-WITH n_chats AS (
-    SELECT
-        base_id,
-        MAX(created) AS created
-    FROM chat
-    WHERE STATUS = 'ENDED'
-      AND created::date BETWEEN :start::date AND :end::date
-                                   AND feedback_rating IS NOT NULL
-                                   AND feedback_rating <= 5
+WITH MaxChatHistoryComments AS (
+    SELECT MAX(id) AS maxId
+    FROM chat_history_comments
+    GROUP BY chat_id
+),
+     ChatHistoryComments AS (
+         SELECT
+             chc.comment,
+             chc.chat_id,
+             chc.created,
+             chc.author_display_name
+         FROM chat_history_comments chc
+                  JOIN MaxChatHistoryComments m ON chc.id = m.maxId
+     ),
+     n_chats AS (
+         SELECT
+             base_id,
+             MAX(created) AS created
+         FROM chat
+         WHERE STATUS = 'ENDED'
+           AND created::date BETWEEN :start::date AND :end::date
+                                        AND feedback_rating IS NOT NULL
+                                        AND feedback_rating <= 5
 GROUP BY base_id
     ),
     c_chat AS (
@@ -37,14 +51,16 @@ SELECT
     c_chat.created,
     c_chat.ended,
     chat.feedback_rating AS rating,
-    chat.feedback_text AS feedback,
+    chat.feedback_text,
     deduplicated_users.first_name AS first_name,
     deduplicated_users.last_name AS last_name,
+    chc.comment AS comment,
     CEIL(COUNT(*) OVER() / :page_size::DECIMAL) AS total_pages
 FROM n_chats
          LEFT JOIN chat ON n_chats.base_id = chat.base_id
          LEFT JOIN c_chat ON c_chat.base_id = chat.base_id AND n_chats.created = chat.created
          LEFT JOIN deduplicated_users ON chat.customer_support_id = deduplicated_users.id_code
+         LEFT JOIN ChatHistoryComments chc ON chat.base_id = chc.chat_id
 WHERE chat.feedback_rating IS NOT NULL
   AND chat.ended IS NOT NULL
 ORDER BY

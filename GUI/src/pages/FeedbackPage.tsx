@@ -516,6 +516,7 @@ const FeedbackPage: React.FC = () => {
       {currentConfigs?.metric != 'negative_feedback' && (
         <MetricsCharts
           title={currentMetric}
+          filterEmpty={true}
           data={chartData}
           startDate={currentConfigs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
           endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}

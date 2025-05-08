@@ -45,8 +45,10 @@ FROM n_chats
          LEFT JOIN chat ON n_chats.base_id = chat.base_id
          LEFT JOIN c_chat ON c_chat.base_id = chat.base_id AND n_chats.created = chat.created
          LEFT JOIN deduplicated_users ON chat.customer_support_id = deduplicated_users.id_code
-WHERE chat.feedback_rating IS NOT NULL
-  AND chat.ended IS NOT NULL
+WHERE (
+    LENGTH(:customerSupportIds) = 0 OR
+    chat.customer_support_id = ANY(string_to_array(:customerSupportIds, ','))
+  ) AND chat.feedback_rating IS NOT NULL AND chat.ended IS NOT NULL
 ORDER BY
     CASE WHEN :sorting = 'created desc' THEN n_chats.created END DESC,
     CASE WHEN :sorting = 'created asc' THEN n_chats.created END ASC,

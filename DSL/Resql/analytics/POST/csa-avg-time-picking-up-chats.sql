@@ -1,9 +1,4 @@
-WITH botname AS (
-    SELECT "value"
-    FROM "configuration"
-    WHERE "key" = 'bot_institution_id'
-    LIMIT 1
-), customer_support_changes AS (
+WITH customer_support_changes AS (
     SELECT base_id,
         customer_support_id,
         updated,
@@ -28,11 +23,6 @@ SELECT date_time, ROUND(COALESCE(
     ) AS avg_min
 FROM customer_support_changes
 WHERE prev_support_id = ''
-    AND customer_support_id NOT IN (
-        (
-            SELECT "value"
-            FROM botname
-        ),
-        ''
-    )
+    AND customer_support_id <> ''
+    AND customer_support_id <> :botname
 GROUP BY date_time;

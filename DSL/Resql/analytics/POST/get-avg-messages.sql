@@ -1,21 +1,16 @@
-WITH chats AS (
-    SELECT DISTINCT base_id
-    FROM chat
-    WHERE created::date BETWEEN :start::date AND :end::date
-        AND EXISTS (
-            SELECT 1
-            FROM message
-            WHERE message.chat_base_id = chat.base_id
-                AND message.author_role = 'end-user'
-        )
-)
-SELECT COALESCE(AVG(num_messages),0)
+SELECT 
+    COALESCE(AVG(message_count), 0) AS avg_messages_per_chat
 FROM (
-        SELECT COUNT(DISTINCT base_id) AS num_messages
-        FROM "message"
-        WHERE chat_base_id IN (
-                SELECT base_id
-                FROM chats
-            )
-        GROUP BY chat_base_id
-    ) AS msg_counts;
+    SELECT 
+        chat_base_id,
+        COUNT(DISTINCT message_base_id) AS message_count
+    FROM denormalized_chat_messages_for_metrics dcm
+    WHERE created::date BETWEEN :start::date AND :end::date AND
+    EXISTS (
+            SELECT 1
+            FROM denormalized_chat_messages_for_metrics inner_dcm
+            WHERE inner_dcm.chat_base_id = dcm.chat_base_id
+                AND inner_dcm.message_author_role = 'end-user'
+        )
+    GROUP BY chat_base_id
+) AS chat_message_counts;

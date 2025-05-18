@@ -1,175 +1,30 @@
-WITH workingTimeStart AS (
-    SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationWorkingTimeStartISO'
-  AND deleted IS false
-    )
-    ),
-    saturdayWorkingTimeStart AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationSaturdayWorkingTimeStartISO'
-  AND deleted IS false
-    )
-    ),
-    sundayWorkingTimeStart AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationSundayWorkingTimeStartISO'
-  AND deleted IS false
-    )
-    ),
-    mondayWorkingTimeStart AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationMondayWorkingTimeStartISO'
-  AND deleted IS false
-    )
-    ),
-    tuesdayWorkingTimeStart AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationTuesdayWorkingTimeStartISO'
-  AND deleted IS false
-    )
-    ),
-    wednesdayWorkingTimeStart AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationWednesdayWorkingTimeStartISO'
-  AND deleted IS false
-    )
-    ),
-    thursdayWorkingTimeStart AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationThursdayWorkingTimeStartISO'
-  AND deleted IS false
-    )
-    ),
-    fridayWorkingTimeStart AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationFridayWorkingTimeStartISO'
-  AND deleted IS false
-    )
-    ),
-    workingTimeEnd AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationWorkingTimeEndISO'
-  AND deleted IS false
-    )
-    ),
-    saturdayWorkingTimeEnd AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationSaturdayWorkingTimeEndISO'
-  AND deleted IS false
-    )
-    ),
-    sundayWorkingTimeEnd AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationSundayWorkingTimeEndISO'
-  AND deleted IS false
-    )
-    ),
-    mondayWorkingTimeEnd AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationMondayWorkingTimeEndISO'
-  AND deleted IS false
-    )
-    ),
-    tuesdayWorkingTimeEnd AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationTuesdayWorkingTimeEndISO'
-  AND deleted IS false
-    )
-    ),
-    wednesdayWorkingTimeEnd AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationWednesdayWorkingTimeEndISO'
-  AND deleted IS false
-    )
-    ),
-    thursdayWorkingTimeEnd AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationThursdayWorkingTimeEndISO'
-  AND deleted IS false
-    )
-    ),
-    fridayWorkingTimeEnd AS (
-SELECT EXTRACT(HOUR FROM value::timestamp) AS time
-FROM configuration
-WHERE id = (
-    SELECT MAX(id) FROM configuration
-    WHERE key = 'organizationFridayWorkingTimeEndISO'
-  AND deleted IS false
-    )
-    )
 SELECT
-    DATE_TRUNC(:period, c.created) AS time,
-  COUNT(DISTINCT c.base_id) AS chat_count
-FROM chat c
-    JOIN message m ON c.base_id = m.chat_base_id
-WHERE c.created::date BETWEEN :start::date AND :end::date
-  AND (
-    m.event = 'contact-information-fulfilled' AND
-    (c.end_user_email IS NOT NULL AND c.end_user_email <> '') OR
-    (c.end_user_phone IS NOT NULL AND c.end_user_phone <> '')
-  )
-  AND (
-    c.base_id IN (
-      SELECT DISTINCT m.chat_base_id
-      FROM message m
-      WHERE m.event = 'unavailable_organization_ask_contacts' AND m.author_id = 'chatbot'
-    )
-  )
+    DATE_TRUNC(:period, created) AS time,
+    COUNT(DISTINCT chat_base_id) AS chat_count
+FROM denormalized_chat_messages_for_metrics dcm
+WHERE created::date BETWEEN :start::date AND :end::date
 AND (
-    EXTRACT(HOUR FROM m.created) < (SELECT time FROM workingTimeStart)
-    OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM workingTimeEnd)
-    OR (EXTRACT(DOW FROM m.created) = 0 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM sundayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM sundayWorkingTimeEnd)))
-    OR (EXTRACT(DOW FROM m.created) = 1 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM mondayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM mondayWorkingTimeEnd)))
-    OR (EXTRACT(DOW FROM m.created) = 2 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM tuesdayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM tuesdayWorkingTimeEnd)))
-    OR (EXTRACT(DOW FROM m.created) = 3 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM wednesdayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM wednesdayWorkingTimeEnd)))
-    OR (EXTRACT(DOW FROM m.created) = 4 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM thursdayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM thursdayWorkingTimeEnd)))
-    OR (EXTRACT(DOW FROM m.created) = 5 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM fridayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM fridayWorkingTimeEnd)))
-    OR (EXTRACT(DOW FROM m.created) = 6 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM saturdayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM saturdayWorkingTimeEnd)))
+    message_event = 'contact-information-fulfilled' 
+    AND ((end_user_email IS NOT NULL AND end_user_email <> '') 
+    OR (end_user_phone IS NOT NULL AND end_user_phone <> ''))
+)
+AND EXISTS (
+    SELECT 1
+    FROM denormalized_chat_messages_for_metrics dcm_inner
+    WHERE dcm.chat_base_id = dcm_inner.chat_base_id
+    AND dcm_inner.message_event = 'unavailable_organization_ask_contacts' 
+    AND dcm_inner.message_author_id = 'chatbot'
+)
+AND (
+    EXTRACT(HOUR FROM timestamp) < :workingTimeStart
+    OR EXTRACT(HOUR FROM timestamp) > :workingTimeEnd
+    OR (EXTRACT(DOW FROM timestamp) = 0 AND (EXTRACT(HOUR FROM timestamp) < :sundayWorkingTimeStart OR EXTRACT(HOUR FROM timestamp) > :sundayWorkingTimeEnd))
+    OR (EXTRACT(DOW FROM timestamp) = 1 AND (EXTRACT(HOUR FROM timestamp) < :mondayWorkingTimeStart OR EXTRACT(HOUR FROM timestamp) > :mondayWorkingTimeEnd))
+    OR (EXTRACT(DOW FROM timestamp) = 2 AND (EXTRACT(HOUR FROM timestamp) < :tuesdayWorkingTimeStart OR EXTRACT(HOUR FROM timestamp) > :tuesdayWorkingTimeEnd))
+    OR (EXTRACT(DOW FROM timestamp) = 3 AND (EXTRACT(HOUR FROM timestamp) < :wednesdayWorkingTimeStart OR EXTRACT(HOUR FROM timestamp) > :wednesdayWorkingTimeEnd))
+    OR (EXTRACT(DOW FROM timestamp) = 4 AND (EXTRACT(HOUR FROM timestamp) < :thursdayWorkingTimeStart OR EXTRACT(HOUR FROM timestamp) > :thursdayWorkingTimeEnd))
+    OR (EXTRACT(DOW FROM timestamp) = 5 AND (EXTRACT(HOUR FROM timestamp) < :fridayWorkingTimeStart OR EXTRACT(HOUR FROM timestamp) > :fridayWorkingTimeEnd))
+    OR (EXTRACT(DOW FROM timestamp) = 6 AND (EXTRACT(HOUR FROM timestamp) < :saturdayWorkingTimeStart OR EXTRACT(HOUR FROM timestamp) > :saturdayWorkingTimeEnd))
 )
 GROUP BY time
 ORDER BY time;

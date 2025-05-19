@@ -23,7 +23,6 @@ import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {Methods, request} from '../util/axios-client';
 import withAuthorization, {ROLES} from '../hoc/with-authorization';
-import {PaginationState} from '@tanstack/react-table';
 import useStore from '../store/user/store';
 import {randomColor} from 'util/generateRandomColor';
 import {ChartData} from 'types/chart';
@@ -46,23 +45,18 @@ const statusOptions = [
 
 const FeedbackPage: React.FC = () => {
     const {t} = useTranslation();
+    const toastContext = useToast();
     const [chartData, setChartData] = useState<ChartData>({
         chartData: [],
         colors: [],
     });
     const advisors = useRef<any[]>([]);
-    const userInfo = useStore((state) => state.userInfo);
     const [advisorsList, setAdvisorsList] = useState<any[]>([]);
     const [currentMetric, setCurrentMetric] = useState('feedback.statuses');
     const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
     const [unit, setUnit] = useState('');
     const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
     const {setPeriodStatistics} = usePeriodStatisticsContext();
-
-    const [pagination, setPagination] = useState<PaginationState>({
-        pageIndex: 0,
-        pageSize: 10,
-    });
 
     useEffect(() => {
         setAdvisorsList(advisors.current);
@@ -434,7 +428,7 @@ const FeedbackPage: React.FC = () => {
             )}
             {showNegativeChart &&
                 <ChatHistory
-                    toastContext={useToast()}
+                    toastContext={toastContext}
                     displayDateFilter={false}
                     displaySearchBar={false}
                     displayTitle={false}

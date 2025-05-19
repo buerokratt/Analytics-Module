@@ -73,8 +73,10 @@ FROM message
 SELECT MAX(id) AS maxId
 FROM chat
 WHERE ended IS NOT NULL
-  AND status <> 'IDLE'
+  AND status = 'ENDED'
   AND ended::date BETWEEN :start::date AND :end::date
+  AND feedback_rating IS NOT NULL
+  AND feedback_rating <= 5
 GROUP BY base_id
     ),
     EndedChatMessages AS (

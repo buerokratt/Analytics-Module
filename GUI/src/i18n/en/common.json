@@ -358,7 +358,9 @@
       "forwarded": "Forwarded",
       "addACommentToTheConversation": "Add a comment to the conversation",
       "rating": "Rating",
-      "feedback": "Feedback"
+      "feedback": "Feedback",
+      "chosenCsa": "Chosen csa(s)",
+      "chosenColumn": "Chosen column(s)"
     },
     "plainEvents": {
       "answered": "Answered",

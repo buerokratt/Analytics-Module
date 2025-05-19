@@ -7,7 +7,6 @@ import {
     getChatsStatuses,
     getDistributionOnBuerokrattChatsFeedback,
     getDistributionOnCSAChatsFeedback,
-    getNegativeFeedbackChats,
     getNpsFeedbackOnBuerokrattChats,
     getNpsOnCSAChatsFeedback,
     getNpsOnSelectedCSAChatsFeedback,
@@ -156,7 +155,7 @@ const FeedbackPage: React.FC = () => {
         },
     ]);
 
-    const showNegativeChart = negativeFeedbackChats != undefined && currentConfigs?.metric === 'negative_feedback';
+    const showNegativeChart = currentConfigs?.metric === 'negative_feedback';
 
     const [configsSubject] = useState(() => new Subject());
     useEffect(() => {
@@ -187,14 +186,6 @@ const FeedbackPage: React.FC = () => {
                         }
                         case 'selected_advisor_chats':
                             return fetchNpsOnSelectedCSAChatsFeedback(config);
-                        case 'negative_feedback':
-                            return fetchData().then((res) => {
-                                if (res) {
-                                    return fetchChatsWithNegativeFeedback(config, res.pageIndex + 1, res.pageSize, 'created desc');
-                                } else {
-                                    return fetchChatsWithNegativeFeedback(config);
-                                }
-                            });
                         default:
                             return fetchChatsStatuses(config);
                     }
@@ -402,48 +393,6 @@ const FeedbackPage: React.FC = () => {
         return chartData;
     };
 
-    const fetchChatsWithNegativeFeedback = async (
-        config: any,
-        page: number = pagination.pageIndex + 1,
-        pageSize: number = pagination.pageSize,
-        sorting: string = 'created desc'
-    ) => {
-        setShowSelectAll(false);
-        let chartData = {};
-        try {
-            const result: any = await request({
-                url: getNegativeFeedbackChats(),
-                method: Methods.post,
-                withCredentials: true,
-                data: {
-                    start_date: config?.start,
-                    end_date: config?.end,
-                    page: page,
-                    page_size: pageSize,
-                    sorting: sorting,
-                },
-            });
-
-            const response = result.response.map((entry: any) => ({
-                ...translateChartKeys(entry, 'created'),
-                [chartDataKey]: new Date(entry.created).getTime(),
-            }));
-
-            chartData = {
-                chartData: response,
-                colors: [
-                    {id: chartDataKey, color: '#FFB511'},
-                    {id: 'Ended', color: '#FFB511'},
-                ],
-            };
-
-            setNegativeFeedbackChats(result.response);
-        } catch (err) {
-            console.error("Failed: ", err)
-        }
-        return chartData;
-    };
-
     const fetchAndMapFeedbackData = async (
         urlFunction: () => string,
         config: { groupByPeriod?: string; start?: string; end?: string }
@@ -536,7 +485,8 @@ const FeedbackPage: React.FC = () => {
                         delegatedStartDate={currentConfigs?.start}
                         user={useStore.getState().userInfo}
                     />
-                </>}
+                </>
+            }
         </>
     );
 };

@@ -74,7 +74,23 @@ const ChatsTable = (props: Props) => {
                 header: 'ID',
             }),
             columnHelper.accessor(
-                (row) => row.firstName ? `${row.firstName ?? ''} ${row.lastName ?? ''}` : BACKOFFICE_NAME.DEFAULT,
+                (row) => {
+                    if (Array.isArray(row.allCsaNames) && !(row.allCsaNames.length === 1 && (row.allCsaNames[0] == null || row.allCsaNames[0].toString().trim() === ''))) {
+                        const cleanedNames = row.allCsaNames
+                            .filter(name => !!name && typeof name === 'string')
+                            .map(name => name.trim())
+                            .filter(name => name !== "")
+                            .filter((name, index, self) => self.indexOf(name) === index);
+
+                        const filteredNames = cleanedNames.length > 1
+                            ? cleanedNames.filter(name => name !== "Bürokratt")
+                            : cleanedNames;
+
+                        return filteredNames.join(", ");
+                    } else {
+                        return BACKOFFICE_NAME.DEFAULT;
+                    }
+                },
                 {
                     id: `name`,
                     header: t('chat.history.csaName') ?? '',

@@ -1,4 +1,7 @@
-WITH MaxChatHistoryComments AS (
+WITH chatbot_var AS (
+    SELECT 'chatbot'::TEXT AS chatbot_id
+),
+ MaxChatHistoryComments AS (
     SELECT MAX(id) AS maxId
     FROM chat_history_comments
     GROUP BY chat_id
@@ -138,24 +141,25 @@ SELECT
     c2.base_id,
     ARRAY_AGG(DISTINCT TRIM(
     CASE
-    WHEN c2.customer_support_id = 'chatbot' THEN c2.customer_support_display_name
+    WHEN c2.customer_support_id = chatbot_var.chatbot_id THEN c2.customer_support_display_name
     ELSE COALESCE(NULLIF(TRIM(cu.first_name || ' ' || cu.last_name), ''), cu.display_name)
     END
     )) FILTER (
     WHERE NOT (
-    c2.customer_support_id = 'chatbot'
-    AND (lo.latest_open_csa IS NULL OR lo.latest_open_csa <> 'chatbot')
+    c2.customer_support_id = chatbot_var.chatbot_id
+    AND (lo.latest_open_csa IS NULL OR lo.latest_open_csa <> chatbot_var.chatbot_id)
     )
     ) AS all_csa_names,
     ARRAY_AGG(DISTINCT c2.customer_support_id) FILTER (
     WHERE NOT (
-    c2.customer_support_id = 'chatbot'
-    AND (lo.latest_open_csa IS NULL OR lo.latest_open_csa <> 'chatbot')
+    c2.customer_support_id = chatbot_var.chatbot_id
+    AND (lo.latest_open_csa IS NULL OR lo.latest_open_csa <> chatbot_var.chatbot_id)
     )
     ) AS all_csa_ids
 FROM chat c2
     LEFT JOIN ChatUser cu ON cu.id_code = c2.customer_support_id
     LEFT JOIN LatestOpenChat lo ON lo.base_id = c2.base_id
+    CROSS JOIN chatbot_var
 GROUP BY c2.base_id
     )
 SELECT c.base_id AS id,

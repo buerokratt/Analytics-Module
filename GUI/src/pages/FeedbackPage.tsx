@@ -12,7 +12,6 @@ import {
     getNpsOnSelectedCSAChatsFeedback,
 } from '../resources/api-constants';
 import {MetricOptionsState} from '../components/MetricAndPeriodOptions/types';
-import {Chat} from '../types/chat';
 import {
     chartDataKey,
     formatDate,
@@ -24,10 +23,8 @@ import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {Methods, request} from '../util/axios-client';
 import withAuthorization, {ROLES} from '../hoc/with-authorization';
-import {PaginationState, SortingState} from '@tanstack/react-table';
-import {analyticsApi} from '../components/services/api';
+import {PaginationState} from '@tanstack/react-table';
 import useStore from '../store/user/store';
-import {useMutation} from '@tanstack/react-query';
 import {randomColor} from 'util/generateRandomColor';
 import {ChartData} from 'types/chart';
 import {usePeriodStatisticsContext} from 'hooks/usePeriodStatisticsContext';
@@ -53,7 +50,6 @@ const FeedbackPage: React.FC = () => {
         chartData: [],
         colors: [],
     });
-    const [negativeFeedbackChats, setNegativeFeedbackChats] = useState<Chat[] | undefined>(undefined);
     const advisors = useRef<any[]>([]);
     const userInfo = useStore((state) => state.userInfo);
     const [advisorsList, setAdvisorsList] = useState<any[]>([]);
@@ -68,8 +64,6 @@ const FeedbackPage: React.FC = () => {
         pageSize: 10,
     });
 
-    const [sorting, setSorting] = useState<SortingState>([]);
-
     useEffect(() => {
         setAdvisorsList(advisors.current);
     }, [advisorsList.length]);
@@ -77,37 +71,6 @@ const FeedbackPage: React.FC = () => {
     useEffect(() => {
         setPeriodStatistics(chartData.feedBackData ? {...chartData.feedBackData} : chartData, unit);
     }, [chartData, unit]);
-
-    const fetchData = async () => {
-        try {
-            const response = await analyticsApi.get('/accounts/get-page-preference', {
-                params: {user_id: userInfo?.idCode, page_name: window.location.pathname},
-            });
-            if (response.data.pageResults !== undefined) {
-                return updatePagePreference(response.data.pageResults);
-            } else {
-                return undefined;
-            }
-        } catch (err) {
-            console.error('Failed to fetch data: ', err);
-        }
-    };
-
-    const updatePagePreference = (pageResults: number): PaginationState => {
-        const updatedPagination: PaginationState = {...pagination, pageSize: pageResults};
-        setPagination(updatedPagination);
-        return updatedPagination;
-    };
-
-    const updatePageSize = useMutation({
-        mutationFn: (data: { page_results: number }) => {
-            return analyticsApi.post('accounts/update-page-preference', {
-                user_id: userInfo?.idCode,
-                page_name: window.location.pathname,
-                page_results: data.page_results,
-            });
-        },
-    });
 
     const [feedbackMetrics, setFeedbackMetrics] = useState<Option[]>([
         {
@@ -435,10 +398,6 @@ const FeedbackPage: React.FC = () => {
         };
     };
 
-    const getSortingStyles = (isDesc: boolean): string => {
-        return isDesc ? 'desc' : 'asc';
-    }
-
     const configsAreEqual = (a: MetricOptionsState, b: MetricOptionsState | undefined) => {
         const {options: _, ...restA} = a ?? {};
         const {options: __, ...restB} = b ?? {};
@@ -474,18 +433,16 @@ const FeedbackPage: React.FC = () => {
                 />
             )}
             {showNegativeChart &&
-                <>
-                    <ChatHistory
-                        toastContext={useToast()}
-                        displayDateFilter={false}
-                        displaySearchBar={false}
-                        displayTitle={false}
-                        showStatus={false}
-                        delegatedEndDate={currentConfigs?.end}
-                        delegatedStartDate={currentConfigs?.start}
-                        user={useStore.getState().userInfo}
-                    />
-                </>
+                <ChatHistory
+                    toastContext={useToast()}
+                    displayDateFilter={false}
+                    displaySearchBar={false}
+                    displayTitle={false}
+                    showStatus={false}
+                    delegatedEndDate={currentConfigs?.end}
+                    delegatedStartDate={currentConfigs?.start}
+                    user={useStore.getState().userInfo}
+                />
             }
         </>
     );

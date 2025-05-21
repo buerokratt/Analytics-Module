@@ -206,12 +206,6 @@ const FeedbackPage: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (currentConfigs) {
-      configsSubject.next(currentConfigs);
-    }
-  }, [currentConfigs]);
-
   const fetchChatsStatuses = async (config: MetricOptionsState) => {
     setShowSelectAll(false);
     let chartData = {};
@@ -379,11 +373,19 @@ const FeedbackPage: React.FC = () => {
 
       const advisorsList = getAdvisorsList(res);
 
-      const updatedMetrics = [...feedbackMetrics];
-      updatedMetrics[3].subOptions = advisorsList;
-      advisors.current = advisorsList;
-      setFeedbackMetrics(updatedMetrics);
-      setAdvisorsList(advisors.current);
+      if (advisorsList.length > advisors.current.length) {
+        const updatedMetrics = [...feedbackMetrics];
+        updatedMetrics[3].subOptions = advisorsList;
+        advisors.current = advisorsList;
+        setFeedbackMetrics(updatedMetrics);
+        setAdvisorsList(advisors.current);
+      } else if (advisors.current.length === 0) {
+        const updatedMetrics = [...feedbackMetrics];
+        updatedMetrics[3].subOptions = [];
+        advisors.current = [];
+        setFeedbackMetrics(updatedMetrics);
+        setAdvisorsList([]);
+      }
 
       chartData = {
         chartData: getAdvisorChartData(res, advisorsList),
@@ -489,12 +491,6 @@ const FeedbackPage: React.FC = () => {
     return isDesc ? 'desc' : 'asc';
   }
 
-  const configsAreEqual = (a: MetricOptionsState, b: MetricOptionsState | undefined) => {
-    const { options: _, ...restA } = a ?? {};
-    const { options: __, ...restB } = b ?? {};
-    return JSON.stringify(restA) === JSON.stringify(restB);
-  };
-
   return (
     <>
       <h1>{t('menu.feedback')}</h1>
@@ -503,14 +499,13 @@ const FeedbackPage: React.FC = () => {
         enableSelectAll={showSelectAll}
         dateFormat="yyyy-MM-dd"
         onChange={(config) => {
-          if (!configsAreEqual(config, currentConfigs)) {
             setCurrentConfigs(config);
+            configsSubject.next(config);
             setCurrentMetric(`feedback.${config.metric}`);
 
             const selectedOption = feedbackMetrics.find((x) => x.id === config.metric);
             if (!selectedOption) return;
             setUnit(selectedOption.unit ?? '');
-          }
         }}
       />
       {currentConfigs?.metric != 'negative_feedback' && (

@@ -1,25 +1,14 @@
-WITH chats AS (
-    SELECT DISTINCT base_id
-    FROM chat
-    WHERE created::date BETWEEN :start::date AND :end::date
-        AND EXISTS (
-            SELECT 1
-            FROM message
-            WHERE message.chat_base_id = chat.base_id
-                AND message.author_role = 'backoffice-user'
-        )
-        AND EXISTS (
-            SELECT 1
-            FROM message
-            WHERE message.chat_base_id = chat.base_id
-                AND message.author_role = 'end-user'
-        )
-),
-chat_lengths AS (
-    SELECT EXTRACT(EPOCH FROM (MAX(created) - MIN(created))) AS chat_length
-    FROM message
-        JOIN chats ON message.chat_base_id = chats.base_id
-    GROUP BY message.chat_base_id
+WITH chat_durations AS (
+    SELECT 
+        chat_base_id,
+        EXTRACT(EPOCH FROM (MAX(message_created) - MIN(message_created))) AS chat_length
+    FROM denormalized_chat_messages_for_metrics
+    WHERE created IS NOT NULL
+      AND created::date BETWEEN :start::date AND :end::date
+    GROUP BY chat_base_id
+    HAVING 
+        SUM(CASE WHEN message_author_role = 'backoffice-user' THEN 1 ELSE 0 END) > 0
+        AND SUM(CASE WHEN message_author_role = 'end-user' THEN 1 ELSE 0 END) > 0
 )
-SELECT COALESCE(AVG(chat_length), 0)
-FROM chat_lengths;
+SELECT COALESCE(AVG(chat_length), 0) AS avg_chat_length
+FROM chat_durations;

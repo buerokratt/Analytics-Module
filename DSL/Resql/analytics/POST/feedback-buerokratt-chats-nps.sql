@@ -1,27 +1,19 @@
-
-
 WITH chat_buerokratt AS (
-    SELECT DISTINCT base_id,
-        first_value(ended) OVER (
-            PARTITION BY base_id
-            ORDER BY updated
-            ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-        ) AS ended,
-        last_value(feedback_rating) OVER (
-            PARTITION BY base_id
-            ORDER BY updated
-            ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-        ) AS feedback_rating
-    FROM chat
+    SELECT DISTINCT ON (chat_base_id, feedback_rating) 
+        chat_base_id AS base_id,
+        ended,
+        feedback_rating
+    FROM denormalized_chat_messages_for_metrics
     WHERE EXISTS (
         SELECT 1
-        FROM message
-        WHERE message.chat_base_id = chat.base_id
-          AND message.author_role = 'buerokratt'
+        FROM denormalized_chat_messages_for_metrics dcm_inner
+        WHERE dcm_inner.chat_base_id = denormalized_chat_messages_for_metrics.chat_base_id
+          AND dcm_inner.message_author_role = 'buerokratt'
     )
-    AND status = 'ENDED'
+    AND chat_status = 'ENDED'
     AND feedback_rating IS NOT NULL
     AND ended::date BETWEEN :start::date AND :end::date
+    ORDER BY chat_base_id, feedback_rating, timestamp DESC
 ),
 point_nps AS (
     SELECT date_trunc(:metric, ended)::text AS date_time,

@@ -1,24 +1,20 @@
 WITH chat_csas AS (
-    SELECT DISTINCT base_id,
-    first_value(created) over (
-            PARTITION by base_id
-            ORDER BY updated
-            ) AS created,
-    last_value(feedback_rating) over (
-            PARTITION by base_id
-            ORDER BY updated
-            ) AS feedback_rating
-    FROM chat
+    SELECT DISTINCT ON (chat_base_id, feedback_rating) 
+        chat_base_id AS base_id,
+        created,
+        feedback_rating
+    FROM denormalized_chat_messages_for_metrics
     WHERE customer_support_id NOT IN ('', 'chatbot')
         AND EXISTS (
             SELECT 1
-            FROM message
-            WHERE message.chat_base_id = chat.base_id
-                AND message.author_role = 'end-user'
+            FROM denormalized_chat_messages_for_metrics dcm_inner
+            WHERE dcm_inner.chat_base_id = denormalized_chat_messages_for_metrics.chat_base_id
+              AND dcm_inner.message_author_role = 'end-user'
         )
-        AND STATUS = 'ENDED'
+        AND chat_status = 'ENDED'
         AND feedback_rating IS NOT NULL
         AND created::date BETWEEN :start::date AND :end::date
+    ORDER BY chat_base_id, feedback_rating, timestamp DESC
 ),
 point_nps AS (
     SELECT date_trunc(:metric, created)::text AS date_time,
@@ -28,7 +24,6 @@ point_nps AS (
            ) / COUNT(base_id) * 100) AS int), 0) AS nps
     FROM chat_csas
     GROUP BY date_time
-    ORDER BY date_time
 ),
 period_nps AS (
     SELECT coalesce(CAST(((

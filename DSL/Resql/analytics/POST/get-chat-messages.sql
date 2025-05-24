@@ -1,39 +1,28 @@
-WITH MaxMessages AS (
-  SELECT max(id) AS maxId 
-  FROM message
-  WHERE chat_base_id = :chatId
-  GROUP BY base_id
-),
-LatestActiveUser AS (
-  SELECT
-    u.id_code, u.created, u.csa_title
-  FROM
-    "user" u INNER JOIN (
-        SELECT iu.id_code, max(created) AS MaxCreated
-        FROM "user" iu
-        WHERE iu.status = 'active'
-        GROUP BY iu.id_code
-    ) iju ON iju.id_code = u.id_code AND iju.MaxCreated = u.created
+WITH filtered_messages AS (
+    SELECT DISTINCT ON (m.base_id)
+    *
+    FROM message m
+    WHERE m.chat_base_id = :chatId
+    ORDER BY m.base_id, m.updated DESC
 )
-SELECT m.base_id      AS id,
-       m.chat_base_id AS chat_id,
-       m.content,
-       m.buttons,
-       m.options,
-       m.event,
-       m.author_id,
-       m.author_timestamp,
-       m.author_first_name,
-       m.author_last_name,
-       m.author_role,
-       m.forwarded_by_user,
-       m.forwarded_from_csa,
-       m.forwarded_to_csa,
-       rating,
-       m.created,
-       updated,
-       u.csa_title
-FROM message m
-LEFT JOIN LatestActiveUser u ON m.author_id = u.id_code
-JOIN MaxMessages ON m.id = maxId
-ORDER BY created ASC;
+
+SELECT
+    fm.base_id AS id,
+    fm.chat_base_id AS chat_id,
+    fm.content,
+    fm.buttons,
+    fm.options,
+    fm.event,
+    fm.author_id,
+    fm.author_timestamp,
+    fm.author_first_name,
+    fm.author_last_name,
+    fm.author_role,
+    fm.forwarded_by_user,
+    fm.forwarded_from_csa,
+    fm.forwarded_to_csa,
+    fm.rating,
+    fm.created,
+    fm.updated
+FROM filtered_messages AS fm
+ORDER BY fm.created ASC;

@@ -16,12 +16,29 @@ extractRequestData:
   assign:
     chatId: ${incoming.body.chatId}
 
+get_users_having_active_status:
+  call: http.get
+  args:
+    url: "[#ANALYTICS_RESQL]/list_users_having_status_active"
+  result: activeUsers
+
 getUnavailableEndedChats:
   call: http.post
   args:
     url: "[#ANALYTICS_RESQL]/get-chat-messages"
     body:
       chatId: ${chatId}
+  result: res
+
+enrich_messages_with_csa_titles:
+  call: http.post
+  args:
+    url: "[#CHATBOT_DMAPPER_HBS]/enrich_chats_with_author_data"
+    headers:
+      type: json
+    body:
+      chatMessagesRes: ${res.response.body}
+      activeUsers: ${activeUsers.response.body}
   result: res
 
 return_result:

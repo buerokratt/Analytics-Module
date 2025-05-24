@@ -33,7 +33,7 @@ getUnavailableEndedChats:
 enrich_messages_with_csa_titles:
   call: http.post
   args:
-    url: "[#CHATBOT_DMAPPER_HBS]/enrich_chats_with_author_data"
+    url: "[#ANALYTICS_DMAPPER_HBS]/enrich_chats_with_author_data"
     headers:
       type: json
     body:

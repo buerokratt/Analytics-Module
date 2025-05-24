@@ -1,5 +1,5 @@
 WITH chat_csas AS (
-    SELECT DISTINCT ON (chat_base_id) 
+    SELECT DISTINCT ON (chat_base_id, feedback_rating) 
         chat_base_id AS base_id,
         created,
         feedback_rating
@@ -14,7 +14,7 @@ WITH chat_csas AS (
         AND chat_status = 'ENDED'
         AND feedback_rating IS NOT NULL
         AND created::date BETWEEN :start::date AND :end::date
-    ORDER BY chat_base_id, timestamp DESC
+    ORDER BY chat_base_id, feedback_rating, timestamp DESC
 ),
 point_nps AS (
     SELECT date_trunc(:metric, created)::text AS date_time,

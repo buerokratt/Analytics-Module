@@ -1,10 +1,12 @@
+-- liquibase formatted sql
+-- changeset ahmer-mt:20250524122754 ignore:true
 -- Create the denormalized table for chat metrics
 CREATE TABLE denormalized_chat_messages_for_metrics (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    chat_id BIGINT,
+    chat_id UUID,
     chat_base_id VARCHAR(36),
     message_base_id VARCHAR(36),
-    message_id BIGINT,
+    message_id UUID,
     chat_status VARCHAR(128),
     end_user_email VARCHAR,
     end_user_phone VARCHAR,
@@ -201,111 +203,6 @@ WITH combined_records AS (
         FROM message 
         WHERE chat_base_id = c.base_id
         AND created = c.updated
-    )
-    
-    UNION ALL
-    
-    -- User changes (when user changes but with no corresponding message or chat at the same timestamp)
-    SELECT
-        c.id AS chat_id,
-        c.base_id AS chat_base_id,
-        m.base_id AS message_base_id,
-        m.id AS message_id,
-        c.status AS chat_status,
-        c.end_user_email,
-        c.end_user_phone,
-        c.feedback_rating,
-        c.feedback_text,
-        c.customer_support_display_name,
-        c.customer_support_id,
-        CASE 
-            WHEN u.login = c.customer_support_id THEN u.first_name 
-            ELSE csa.first_name 
-        END AS customer_support_first_name,
-        CASE 
-            WHEN u.login = c.customer_support_id THEN u.last_name 
-            ELSE csa.last_name 
-        END AS customer_support_last_name,
-        c.created,
-        c.updated,
-        c.ended,
-        (SELECT MIN(created) FROM message WHERE chat_base_id = c.base_id) AS first_message_timestamp,
-        (SELECT MAX(created) FROM message WHERE chat_base_id = c.base_id) AS last_message_timestamp,
-        m.event AS message_event,
-        m.author_role AS message_author_role,
-        m.author_id AS message_author_id,
-        CASE 
-            WHEN u.login = m.author_id THEN u.display_name 
-            ELSE author.display_name 
-        END AS message_author_display_name,
-        CASE 
-            WHEN u.login = m.author_id THEN u.first_name 
-            ELSE author.first_name 
-        END AS message_author_user_first_name,
-        CASE 
-            WHEN u.login = m.author_id THEN u.last_name 
-            ELSE author.last_name 
-        END AS message_author_user_last_name,
-        c.external_id,
-        c.received_from,
-        u.created AS timestamp,
-        m.created AS message_created,
-        m.updated AS message_updated,
-        m.forwarded_from_csa,
-        m.forwarded_to_csa
-    FROM 
-        "user" u
-    -- Find chats where this user is either a CSA or message author
-    LEFT JOIN LATERAL (
-        SELECT c.*
-        FROM chat c
-        WHERE (c.customer_support_id = u.login OR 
-              EXISTS (SELECT 1 FROM message WHERE chat_base_id = c.base_id AND author_id = u.login))
-        AND c.updated <= u.created
-        ORDER BY c.updated DESC
-        LIMIT 1
-    ) c ON true
-    -- Find messages for this chat
-    LEFT JOIN LATERAL (
-        SELECT *
-        FROM message m
-        WHERE m.chat_base_id = c.base_id
-        AND m.updated <= u.created
-        ORDER BY m.created DESC
-        LIMIT 1
-    ) m ON true
-    -- Get CSA info if this user is not the CSA
-    LEFT JOIN LATERAL (
-        SELECT *
-        FROM "user" csa
-        WHERE csa.login = c.customer_support_id
-        AND csa.login != u.login
-        AND csa.created <= u.created
-        ORDER BY csa.created DESC
-        LIMIT 1
-    ) csa ON c.customer_support_id != u.login
-    -- Get author info if this user is not the author
-    LEFT JOIN LATERAL (
-        SELECT *
-        FROM "user" author
-        WHERE author.login = m.author_id
-        AND author.login != u.login
-        AND author.created <= u.created
-        ORDER BY author.created DESC
-        LIMIT 1
-    ) author ON m.author_id != u.login
-    WHERE c.id IS NOT NULL  -- Only include users that are related to chats
-    AND NOT EXISTS (
-        SELECT 1 
-        FROM message 
-        WHERE chat_base_id = c.base_id 
-        AND created = u.created
-    )
-    AND NOT EXISTS (
-        SELECT 1 
-        FROM chat 
-        WHERE base_id = c.base_id 
-        AND updated = u.created
     )
 )
 SELECT 

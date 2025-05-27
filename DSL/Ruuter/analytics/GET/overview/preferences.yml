@@ -17,7 +17,7 @@ check_if_authorized:
 get_metrics_preferences:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview/overview-metric-preferences"
+    url: "[#ANALYTICS_RESQL]/overview/list_overview_metric_preferences"
     body:
       user_id_code: ${authority_result.idCode}
   result: metrics

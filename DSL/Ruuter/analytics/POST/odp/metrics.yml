@@ -48,7 +48,7 @@ empty-get-chat-count-total:
 get-chat-count-total:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat/get-chat-count-total"
+    url: "[#ANALYTICS_RESQL]/chat/get_chat_count_total"
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -67,7 +67,7 @@ empty-get-chat-count-no-csa:
 get-chat-count-no-csa:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat/get-chat-count-no-csa"
+    url: "[#ANALYTICS_RESQL]/chat/get_chat_count_no_csa"
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}

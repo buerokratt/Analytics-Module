@@ -50,7 +50,7 @@ check_for_csa_events:
 call_all_chats:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat/status-all-chats"
+    url: "[#ANALYTICS_RESQL]/chat/list_status_all_chats"
     body:
       events: ${incoming.body.events}
       metric: ${incoming.body.metric}
@@ -62,7 +62,7 @@ call_all_chats:
 call_csa_chats:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat/status-csa-chats"
+    url: "[#ANALYTICS_RESQL]/chat/list_status_csa_chats"
     body:
       events: ${incoming.body.csa_events}
       metric: ${incoming.body.metric}

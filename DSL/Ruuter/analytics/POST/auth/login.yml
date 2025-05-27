@@ -46,7 +46,7 @@ check_login_result:
 get_session_length:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/service_management/get-configuration"
+    url: "[#ANALYTICS_RESQL]/service_management/get_configuration"
     body:
       key: "session_length"
   result: session_result

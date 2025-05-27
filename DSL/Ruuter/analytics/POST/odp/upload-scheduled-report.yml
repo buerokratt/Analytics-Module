@@ -18,7 +18,7 @@ declaration:
 getJobDetails:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/service_management/get-scheduled-report"
+    url: "[#ANALYTICS_RESQL]/service_management/get_scheduled_report"
     body:
       datasetId: ${incoming.params.datasetId}
   result: jobDetails

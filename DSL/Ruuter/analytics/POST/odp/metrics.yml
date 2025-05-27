@@ -28,7 +28,7 @@ set_variables:
 get-timescale:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/service_management/get-period-times"
+    url: "[#ANALYTICS_RESQL]/service_management/get_period_times"
     body:
       start: ${incoming.body.start}
       end: ${incoming.body.end}

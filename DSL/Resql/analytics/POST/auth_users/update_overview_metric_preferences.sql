@@ -1,3 +1,27 @@
+/*
+declaration:
+  version: 0.1
+  description: "Update the order of overview metrics for a user and insert the new metric at the specified ordinality"
+  method: post
+  namespace: auth_users
+  returns: json
+  allowlist:
+    query:
+      - field: user_id_code
+        type: string
+        description: "Unique identifier for the user"
+      - field: metric
+        type: string
+        description: "Name of the overview metric to reposition"
+      - field: ordinality
+        type: integer
+        description: "Target position for the overview metric"
+      - field: active
+        type: boolean
+        description: "Whether the overview metric is active"
+  response:
+    fields: []
+*/
 WITH OldValue AS(
   SELECT ordinality
   FROM user_overview_metric_preference

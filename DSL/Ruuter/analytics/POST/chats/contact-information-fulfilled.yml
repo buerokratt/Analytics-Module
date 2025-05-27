@@ -55,9 +55,9 @@ empty_outside_working_hours:
   next: check_long_waiting_time
 
 outside_working_hours:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat-cif-outside-working-hours"
+    url: "[#ANALYTICS_RESQL]/chat/chat-cif-outside-working-hours"
     body:
       period: ${period}
       start: ${start}
@@ -79,9 +79,9 @@ empty_long_waiting_time:
   next: check_all_csas_away
 
 long_waiting_time:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat-cif-long-waiting-time"
+    url: "[#ANALYTICS_RESQL]/chat/chat-cif-long-waiting-time"
     body:
       period: ${period}
       start: ${start}
@@ -104,9 +104,9 @@ empty_all_csas_away:
   next: check_total
 
 all_csas_away:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat-cif-all-csas-away"
+    url: "[#ANALYTICS_RESQL]/chat/chat-cif-all-csas-away"
     body:
       period: ${period}
       start: ${start}
@@ -128,9 +128,9 @@ empty_total:
   next: respond
 
 outside_working_hours_for_total:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat-cif-outside-working-hours"
+    url: "[#ANALYTICS_RESQL]/chat/chat-cif-outside-working-hours"
     body:
       period: ${period}
       start: ${start}
@@ -138,9 +138,9 @@ outside_working_hours_for_total:
   result: outside_working_hours_for_total_results
 
 long_waiting_time_for_total:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat-cif-long-waiting-time"
+    url: "[#ANALYTICS_RESQL]/chat/chat-cif-long-waiting-time"
     body:
       period: ${period}
       start: ${start}
@@ -149,9 +149,9 @@ long_waiting_time_for_total:
   result: long_waiting_time_for_total_results
 
 all_csas_away_for_total:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat-cif-all-csas-away"
+    url: "[#ANALYTICS_RESQL]/chat/chat-cif-all-csas-away"
     body:
       period: ${period}
       start: ${start}

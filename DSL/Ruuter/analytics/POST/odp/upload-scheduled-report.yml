@@ -16,9 +16,9 @@ declaration:
         description: "Parameter 'dateTime'"
 
 getJobDetails:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/get-scheduled-report"
+    url: "[#ANALYTICS_RESQL]/service_management/get-scheduled-report"
     body:
       datasetId: ${incoming.params.datasetId}
   result: jobDetails

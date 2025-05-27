@@ -19,13 +19,13 @@ extractRequestData:
 get_users_having_active_status:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/list_users_having_status_active"
+    url: "[#ANALYTICS_RESQL]/auth_users/list_users_having_status_active"
   result: activeUsers
 
 getUnavailableEndedChats:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/get-chat-messages"
+    url: "[#ANALYTICS_RESQL]/chat/get-chat-messages"
     body:
       chatId: ${chatId}
   result: res

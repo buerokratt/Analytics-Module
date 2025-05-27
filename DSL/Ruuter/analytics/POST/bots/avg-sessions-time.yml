@@ -55,9 +55,9 @@ empty_byk:
   next: check_csa
 
 byk:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/byk-avg-sessions-time-chatbot"
+    url: "[#ANALYTICS_RESQL]/byk/byk-avg-sessions-time-chatbot"
     body:
       period: ${period}
       start: ${start}
@@ -79,9 +79,9 @@ empty_csa:
   next: check_customer
 
 csa:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/byk-avg-sessions-time-csa"
+    url: "[#ANALYTICS_RESQL]/byk/byk-avg-sessions-time-csa"
     body:
       period: ${period}
       start: ${start}
@@ -103,9 +103,9 @@ empty_customer:
   next: respond
 
 customer:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/byk-avg-sessions-time-customer"
+    url: "[#ANALYTICS_RESQL]/byk/byk-avg-sessions-time-customer"
     body:
       period: ${period}
       start: ${start}

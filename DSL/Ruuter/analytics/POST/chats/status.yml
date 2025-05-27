@@ -48,9 +48,9 @@ check_for_csa_events:
   next: return_response  
 
 call_all_chats:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/status-all-chats"
+    url: "[#ANALYTICS_RESQL]/chat/status-all-chats"
     body:
       events: ${incoming.body.events}
       metric: ${incoming.body.metric}
@@ -60,9 +60,9 @@ call_all_chats:
   next: check_for_csa_events
 
 call_csa_chats:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/status-csa-chats"
+    url: "[#ANALYTICS_RESQL]/chat/status-csa-chats"
     body:
       events: ${incoming.body.csa_events}
       metric: ${incoming.body.metric}

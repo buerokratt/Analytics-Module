@@ -25,9 +25,9 @@ check_for_required_parameters:
   next: post_step
 
 post_step:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/csa-avg-time-picking-up-chats"
+    url: "[#ANALYTICS_RESQL]/csa/csa-avg-time-picking-up-chats"
     body:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}

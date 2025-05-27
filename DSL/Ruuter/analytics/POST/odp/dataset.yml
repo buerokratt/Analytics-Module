@@ -64,9 +64,9 @@ declaration:
         description: "Body field 'updateIntervalUnit'"
 
 getKey:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/get-odp-settings"
+    url: "[#ANALYTICS_RESQL]/service_management/get-odp-settings"
   result: settings
   
 authenticate:

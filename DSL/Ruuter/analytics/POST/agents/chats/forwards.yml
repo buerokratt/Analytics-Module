@@ -25,9 +25,9 @@ check_for_required_parameters:
   next: post_step
 
 post_step:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/csa-chat-forwards"
+    url: "[#ANALYTICS_RESQL]/csa/csa-chat-forwards"
     body:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}

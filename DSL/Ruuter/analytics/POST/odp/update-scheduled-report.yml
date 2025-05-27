@@ -115,7 +115,7 @@ removePreviousSchedule:
 saveJobInformation:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/add-scheduled-report"
+    url: "[#ANALYTICS_RESQL]/service_management/add-scheduled-report"
     body:
       name: ${incoming.body.nameEt}
       period: ${incoming.body.updateIntervalUnit}

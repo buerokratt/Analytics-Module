@@ -1,3 +1,37 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate the average chat duration in minutes per customer support agent over time, excluding specified agents"
+  method: get
+  namespace: csa
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering chats"
+      - field: end
+        type: date
+        description: "End date for filtering chats"
+      - field: metric
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time granularity for grouping results"
+      - field: excluded_csas
+        type: string
+        description: "Comma-separated list of CSA IDs to exclude (array format)"
+  response:
+    fields:
+      - field: date_time
+        type: timestamp
+        description: "Truncated timestamp representing the grouped period"
+      - field: customer_support_id
+        type: string
+        description: "ID of the customer support agent"
+      - field: avg_min
+        type: number
+        description: "Average duration of chats in minutes for the given period and CSA"
+*/
 WITH distinct_chats AS (
   SELECT DISTINCT ON (chat_base_id, message_author_id)
     chat_base_id AS base_id, 

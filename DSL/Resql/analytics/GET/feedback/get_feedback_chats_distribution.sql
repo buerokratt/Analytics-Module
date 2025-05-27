@@ -1,3 +1,34 @@
+/*
+declaration:
+  version: 0.1
+  description: "Count promoters, passives, and detractors based on feedback ratings, filtered by chat type (CSA or buerokratt)"
+  method: get
+  namespace: feedback
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering feedback ratings"
+      - field: end
+        type: date
+        description: "End date for filtering feedback ratings"
+      - field: chat_type
+        type: string
+        enum: ['csa', 'buerokratt']
+        description: "Type of chat: either 'csa' for customer support agents or 'buerokratt' for virtual assistant"
+  response:
+    fields:
+      - field: promoters
+        type: integer
+        description: "Number of feedback ratings between 9 and 10"
+      - field: passives
+        type: integer
+        description: "Number of feedback ratings between 7 and 8"
+      - field: detractors
+        type: integer
+        description: "Number of feedback ratings between 0 and 6"
+*/
 WITH chats_filtered AS (
     SELECT DISTINCT ON (chat_base_id, feedback_rating)
         chat_base_id AS base_id,

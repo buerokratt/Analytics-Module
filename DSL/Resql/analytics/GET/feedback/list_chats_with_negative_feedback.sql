@@ -1,3 +1,58 @@
+/*
+declaration:
+  version: 0.1
+  description: "Fetch paginated list of chats with low feedback (rating ≤ 5), including CSA details and full CSA name history"
+  method: get
+  namespace: feedback
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering ended chats"
+      - field: end
+        type: date
+        description: "End date for filtering ended chats"
+      - field: page
+        type: integer
+        description: "Page number for pagination"
+      - field: page_size
+        type: integer
+        description: "Number of records per page"
+      - field: sorting
+        type: string
+        enum: ['created asc', 'created desc', 'ended asc', 'ended desc', 'base_id asc', 'base_id desc', 'feedback asc', 'feedback desc', 'rating asc', 'rating desc']
+        description: "Field and direction to sort results by"
+  response:
+    fields:
+      - field: base_id
+        type: string
+        description: "Base ID of the chat"
+      - field: created
+        type: timestamp
+        description: "Timestamp when the chat was created"
+      - field: ended
+        type: timestamp
+        description: "Timestamp when the chat ended"
+      - field: rating
+        type: integer
+        description: "Feedback rating value (must be ≤ 5)"
+      - field: feedback
+        type: string
+        description: "Textual feedback provided by the user"
+      - field: first_name
+        type: string
+        description: "First name of the CSA who handled the chat"
+      - field: last_name
+        type: string
+        description: "Last name of the CSA who handled the chat"
+      - field: all_csa_names
+        type: string[]
+        description: "List of all CSAs associated with the chat, excluding irrelevant chatbot entries"
+      - field: total_pages
+        type: integer
+        description: "Total number of pages in the result set"
+*/
 WITH latest_open_chats AS (
     SELECT DISTINCT ON (chat_base_id)
         chat_base_id,

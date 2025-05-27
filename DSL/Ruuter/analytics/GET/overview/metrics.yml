@@ -97,7 +97,7 @@ getTotalChatsDayResults:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/overview/list_overview_total_chats"
-    body:
+    query:
       group_period: 'day'
   result: res1
   next: check2
@@ -106,7 +106,7 @@ getTotalChatsMonthResults:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/overview/list_overview_total_chats"
-    body:
+    query:
       group_period: 'month'
   result: res2
   next: check3
@@ -115,7 +115,7 @@ getTotalChatsNoCSAResults:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/overview/list_overview_total_chats_no_csa"
-    body:
+    query:
       group_period: 'day'
   result: res3
   next: check4
@@ -124,7 +124,7 @@ getAvgChatsMonthResults:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/overview/list_overview_avg_chats"
-    body:
+    query:
       group_period: 'month'
   result: res4
   next: check5
@@ -133,7 +133,7 @@ getAvgChatsWeekResults:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/overview/list_overview_avg_chats"
-    body:
+    query:
       group_period: 'week'
   result: res5
   next: check6
@@ -142,7 +142,7 @@ getAvgChatsNoCSAMonthResult:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/overview/list_overview_avg_chats_no_csa"
-    body:
+    query:
       group_period: 'month'
   result: res6
   next: check7
@@ -151,7 +151,7 @@ getAvgChatsNoCSAWeekResult:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/overview/list_overview_avg_chats_no_csa"
-    body:
+    query:
       group_period: 'week'
   result: res7
   next: check8
@@ -160,7 +160,7 @@ getAvgWaitingTimeDayResult:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/overview/list_overview_avg_waiting_time"
-    body:
+    query:
       group_period: 'day'
   result: res8
   next: check9
@@ -169,7 +169,7 @@ getAvgWaitingTimeWeekResult:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/overview/list_overview_avg_waiting_time"
-    body:
+    query:
       group_period: 'week'
   result: res9
   next: check10

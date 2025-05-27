@@ -44,7 +44,7 @@ byk-pct-correctly-understood:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/byk/list_byk_pct_correctly_understood"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}

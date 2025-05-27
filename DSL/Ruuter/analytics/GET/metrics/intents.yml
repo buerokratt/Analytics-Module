@@ -38,7 +38,7 @@ get_intents:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/byk/list_intents"
-    body:
+    query:
       start: ${start}
       end: ${end}
       intent: ${intent}

@@ -20,7 +20,7 @@ getChatById:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/chat/get_chat_by_id"
-    body:
+    query:
       id: ${chatId}
   result: res
 

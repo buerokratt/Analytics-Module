@@ -58,7 +58,7 @@ avg:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/chat/list_chat_avg_waiting_time"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -82,7 +82,7 @@ median:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/chat/list_chat_median_waiting_time"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}

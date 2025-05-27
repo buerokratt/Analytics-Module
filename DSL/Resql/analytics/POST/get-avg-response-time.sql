@@ -33,5 +33,5 @@ SELECT COALESCE(AVG(
         )
     ), 0)
 FROM chat_responses
-WHERE message_author_role = 'chatbot'
+WHERE message_author_role = 'buerokratt'
     AND prev_author = 'end-user'

@@ -3,7 +3,7 @@ SELECT
     (
         SUM(
             CASE
-                WHEN author_role != 'chatbot'
+                WHEN author_role != 'buerokratt'
                 AND event != 'not-confident'
                 THEN 1
                 ELSE 0
@@ -12,6 +12,6 @@ SELECT
     ) * 100 AS percentage_correctly_understood
 FROM message 
 WHERE created >= :start::date AND created < (:end::date + INTERVAL '1 day')
-AND author_role = 'chatbot'
+AND author_role = 'buerokratt'
 GROUP BY time
 ORDER BY time

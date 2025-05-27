@@ -24,5 +24,5 @@ SELECT date_time, ROUND(COALESCE(
 FROM customer_support_changes
 WHERE prev_support_id = ''
     AND customer_support_id <> ''
-    AND customer_support_id <> :botname
+    AND customer_support_id <> 'chatbot'
 GROUP BY date_time;

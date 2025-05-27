@@ -13,7 +13,7 @@ AND EXISTS (
     FROM denormalized_chat_messages_for_metrics dcm_inner
     WHERE dcm.chat_base_id = dcm_inner.chat_base_id
     AND dcm_inner.message_event = 'unavailable_organization_ask_contacts' 
-    AND dcm_inner.message_author_id = 'chatbot'
+    AND dcm_inner.message_author_id = 'buerokratt'
 )
 AND (
     EXTRACT(HOUR FROM timestamp) < :workingTimeStart

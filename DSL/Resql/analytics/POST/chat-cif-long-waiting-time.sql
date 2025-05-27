@@ -1,40 +1,42 @@
 WITH user_messages AS (
-  SELECT 
+  SELECT DISTINCT ON (chat_base_id, message_created)
     chat_base_id, 
-    created, 
-    LAG(created) OVER (PARTITION BY chat_base_id, author_role ORDER BY created) AS prev_message_time
-  FROM message
-  WHERE author_role = 'end-user' 
+    message_created AS created,
+    LAG(message_created) OVER (PARTITION BY chat_base_id ORDER BY message_created) AS prev_message_time
+  FROM denormalized_chat_messages_for_metrics dcm1
+  WHERE message_author_role = 'end-user'
+    AND message_created::date BETWEEN :start::date AND :end::date
+    AND EXISTS (
+      SELECT 1
+      FROM denormalized_chat_messages_for_metrics dcm2
+      WHERE dcm1.chat_base_id = dcm2.chat_base_id
+      AND dcm2.message_author_role = 'backoffice-user'
+    )
+    AND EXISTS (
+      SELECT 1
+      FROM denormalized_chat_messages_for_metrics dcm3
+      WHERE dcm1.chat_base_id = dcm3.chat_base_id
+      AND (
+        dcm3.message_event LIKE '%contact-information-fulfilled' OR
+        (dcm3.end_user_email IS NOT NULL AND dcm3.end_user_email <> '') OR
+        (dcm3.end_user_phone IS NOT NULL AND dcm3.end_user_phone <> '')
+      )
+    )
+  ORDER BY chat_base_id, message_created
 ),
-waiting_times AS(
+waiting_times AS (
   SELECT
-    m.chat_base_id AS chat_base_id,
-    MIN(m.created) AS created, 
-    EXTRACT(epoch FROM MAX(m.created - prev_message_time))::INT AS waiting_time_seconds
-  FROM user_messages m
-  JOIN message ms
-  ON m.chat_base_id = ms.chat_base_id
-  AND ms.author_role = 'backoffice-user'
+    chat_base_id,
+    MIN(created) AS created, 
+    EXTRACT(epoch FROM MAX(created - prev_message_time))::INT AS waiting_time_seconds
+  FROM user_messages
   WHERE prev_message_time IS NOT NULL
-  GROUP BY m.chat_base_id
+  GROUP BY chat_base_id
 )
 SELECT 
   DATE_TRUNC(:period, created) AS time, 
   COUNT(*) AS long_waiting_time
-FROM waiting_times w
-WHERE created::date BETWEEN :start::date AND :end::date
-AND waiting_time_seconds > :threshold_seconds
-AND 0 < (
-  SELECT 1
-  FROM message m
-  JOIN chat c ON m.chat_base_id = c.base_id
-  WHERE m.chat_base_id = w.chat_base_id
-  AND (
-    m.event LIKE '%contact-information-fulfilled'  OR
-    (c.end_user_email IS NOT NULL AND c.end_user_email <> '') OR
-    (c.end_user_phone IS NOT NULL AND c.end_user_phone <> '')
-  )
-  LIMIT 1
-)
+FROM waiting_times
+WHERE waiting_time_seconds > :threshold_seconds
 GROUP BY time
-ORDER BY time
+ORDER BY time;

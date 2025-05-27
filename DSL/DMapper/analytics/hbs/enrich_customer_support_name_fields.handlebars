@@ -1,0 +1,34 @@
+[
+  {{#each chatMessagesRes}}
+    {
+      {{#each this}}
+        "{{@key}}": {{{toJSON this}}},
+      {{/each}}
+      
+      {{#if ../users}}
+
+        {{#if (eq this.customerSupportId null)}}
+          "customerSupportDisplayName": null,
+          "customerSupportFirstName": null,
+          "customerSupportLastName": null
+        {{else}}
+            {{#if (eq (getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "displayName") null) }}
+            "customerSupportDisplayName": null,
+            {{else}}
+            "customerSupportDisplayName": "{{getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "displayName"}}",
+          {{/if}}
+          {{#if (eq (getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "firstName") null) }}
+            "customerSupportFirstName": null,
+            {{else}}
+            "customerSupportFirstName": "{{getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "firstName"}}",
+          {{/if}}
+          {{#if (eq (getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "lastName") null) }}
+            "customerSupportLastName": null
+            {{else}}
+            "customerSupportLastName": "{{getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "firstName"}}"
+          {{/if}}
+        {{/if}}  
+      {{/if}}
+    }{{#unless @last}},{{/unless}}
+  {{/each}}
+]

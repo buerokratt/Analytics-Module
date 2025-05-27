@@ -1,15 +1,15 @@
-SELECT u.login,
-       u.first_name,
-       u.last_name,
-       u.id_code,
-       u.display_name,
-       ua.authority_name AS authorities
-FROM "user" u
-         INNER JOIN (SELECT authority_name, user_id
-                     FROM user_authority AS ua
-                     WHERE ua.id IN (SELECT max(id)
-                                     FROM user_authority
-                                     GROUP BY user_id)) ua ON u.id_code = ua.user_id
-WHERE login = :login
-  AND password_hash = :password
-  AND array_length(authority_name, 1) > 0;
+SELECT
+    login,
+    first_name,
+    last_name,
+    id_code,
+    display_name,
+    authority_name AS authorities
+FROM denormalized_user_data
+WHERE
+    id_code = :userIdCode
+    AND password_hash = :password
+    AND ARRAY_LENGTH(authority_name, 1) > 0
+ORDER BY created DESC
+LIMIT 1;
+

@@ -1,10 +1,9 @@
-WITH MaxMetrics AS (
-  SELECT MAX(id) AS maxId
+SELECT metric, ordinality, active
+FROM (
+  SELECT metric, ordinality, active,
+         ROW_NUMBER() OVER (PARTITION BY metric ORDER BY id DESC) as rn
   FROM user_overview_metric_preference
   WHERE user_id_code = :user_id_code
-  GROUP BY metric
-)
-SELECT metric, ordinality, active
-FROM user_overview_metric_preference
-JOIN MaxMetrics ON id = maxId
-ORDER BY "ordinality" ASC;
+) ranked
+WHERE rn = 1
+ORDER BY ordinality ASC;

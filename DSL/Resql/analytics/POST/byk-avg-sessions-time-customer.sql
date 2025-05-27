@@ -1,17 +1,21 @@
 WITH closed_chats AS (
-    SELECT
+    SELECT DISTINCT ON (chat_base_id)
         chat_base_id,
-        (MAX(m.created) - MIN(m.created)) AS duration,
-        MIN(chat.created) AS created
-    FROM message m
-    JOIN chat ON m.chat_base_id = chat.base_id
-    WHERE m.event IN ('answered', 'client-left')
-    AND chat.created::date BETWEEN :start::date AND :end::date
-    GROUP BY chat_base_id
+        created,
+        (last_message_timestamp - first_message_timestamp) AS duration
+    FROM denormalized_chat_messages_for_metrics dcm
+    WHERE EXISTS (
+        SELECT 1
+        FROM denormalized_chat_messages_for_metrics dcm_inner
+        WHERE dcm.chat_base_id = dcm_inner.chat_base_id
+        AND dcm_inner.message_event IN ('answered', 'client-left')
+    )
+    AND created::date BETWEEN :start::date AND :end::date
+    ORDER BY chat_base_id, timestamp DESC
 )
 SELECT
     DATE_TRUNC(:period, created) AS time,
     ROUND(EXTRACT(epoch FROM COALESCE(AVG(duration), '0 minutes'::interval))/60) AS avg_sesssion_time
 FROM closed_chats
 GROUP BY time
-ORDER BY time
+ORDER BY time;

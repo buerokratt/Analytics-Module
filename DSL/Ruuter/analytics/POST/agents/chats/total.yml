@@ -38,11 +38,40 @@ post_step:
       excluded_csas: ${incoming.body.excluded_csas}
   result: result
 
+mapCustomerSupportIds:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_DMAPPER_HBS]/map_customer_support_ids"
+    headers:
+      type: json
+    body:
+      chats: ${result.response.body}
+  result: customerSupportIdsResult
+
+enrich_result_with_customer_support_name_fields:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_DMAPPER_HBS]/enrich_customer_support_name_fields"
+    headers:
+      type: json
+    body:
+      chatMessagesRes: ${result.response.body}
+      users: ${getUsersResults.response.body}
+  result: result
+
+getUsers:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]/list_users_names_by_id_code"
+    query:
+      idCodes: ${customerSupportIdsResult.response.body?.join(',') ?? ''}
+  result: getUsersResults
+
 return_value:
   return: ${result.response.body}
   next: end
 
 return_incorrect_request:
   status: 400
-  return: 'missing parameters'
+  return: "missing parameters"
   next: end

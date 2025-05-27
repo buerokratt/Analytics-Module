@@ -1,9 +1,4 @@
-WITH botname AS (
-    SELECT "value"
-    FROM "configuration"
-    WHERE "key" = 'bot_institution_id'
-    LIMIT 1
-), customer_support_changes AS (
+WITH customer_support_changes AS (
     SELECT base_id,
         date_trunc('day', created) AS created,
         customer_support_id,
@@ -31,13 +26,7 @@ SELECT date_trunc(:group_period, timescale.ended) AS ended,
             )
         ) filter (
             WHERE prev_support_id = ''
-                AND customer_support_id NOT IN (
-                    (
-                        SELECT "value"
-                        FROM botname
-                    ),
-                    ''
-                )
+                AND customer_support_id <> '' AND customer_support_id <> :botname
         ),
         0
     ) AS metric_value

@@ -5,8 +5,9 @@ declaration:
   method: post
   namespace: auth_users
   returns: json
+  accepts: json
   allowlist:
-    query:
+    body:
       - field: user_id_code
         type: string
         description: "Unique identifier for the user"

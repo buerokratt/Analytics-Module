@@ -23,7 +23,7 @@ extractRequestData:
 getUserPagePreferences:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/auth_users/get-user-page-preferences"
+    url: "[#ANALYTICS_RESQL]/auth_users/get_user_page_preferences"
     body:
       user_id: ${user_id}
       page_name: ${page_name}

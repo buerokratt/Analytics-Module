@@ -30,7 +30,7 @@ extract_request_data:
 login_user:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/auth_users/get-user-by-login"
+    url: "[#ANALYTICS_RESQL]/auth_users/get_user_by_login"
     body:
       login: ${login}
       password: ${password}

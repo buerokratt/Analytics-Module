@@ -28,7 +28,7 @@ extractRequestData:
 setUserPagePreferences:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/auth_users/update-user-page-preferences"
+    url: "[#ANALYTICS_RESQL]/auth_users/update_user_page_preferences"
     body:
       user_id: ${user_id}
       page_name: ${page_name}

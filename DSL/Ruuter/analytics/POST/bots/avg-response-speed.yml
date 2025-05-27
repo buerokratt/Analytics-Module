@@ -43,7 +43,7 @@ missing_parameter:
 avg_response_time:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/byk/byk-avg-response-speed"
+    url: "[#ANALYTICS_RESQL]/byk/list_byk_avg_response_speed"
     body:
       period: ${period}
       start: ${start}

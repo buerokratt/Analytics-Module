@@ -37,7 +37,7 @@ check_for_request_data:
 get_intents:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/byk/get-intents"
+    url: "[#ANALYTICS_RESQL]/byk/list_intents"
     body:
       start: ${start}
       end: ${end}

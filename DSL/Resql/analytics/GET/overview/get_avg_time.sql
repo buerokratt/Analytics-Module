@@ -1,3 +1,24 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate the average duration in seconds of all chats that included at least one end-user message, based on message timestamps"
+  method: get
+  namespace: overview
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering chat messages"
+      - field: end
+        type: date
+        description: "End date for filtering chat messages"
+  response:
+    fields:
+      - field: avg_chat_length
+        type: number
+        description: "Average duration in seconds of chats that included at least one end-user message"
+*/
 WITH chat_durations AS (
     SELECT 
         chat_base_id,

@@ -1,3 +1,28 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate the average waiting time in seconds before customer support takes over after a bot exits, grouped by a dynamic time period"
+  method: get
+  namespace: overview
+  returns: json
+  allowlist:
+    query:
+      - field: group_period
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time grouping interval used in date_trunc"
+      - field: botname
+        type: string
+        description: "Name of the bot to exclude from customer support assignment evaluation"
+  response:
+    fields:
+      - field: ended
+        type: date
+        description: "Truncated timestamp for the time period grouping"
+      - field: metric_value
+        type: number
+        description: "Average waiting time in seconds for customer support assignment"
+*/
 WITH customer_support_changes AS (
     SELECT base_id,
         date_trunc('day', created) AS created,

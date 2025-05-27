@@ -1,3 +1,24 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate the average duration in seconds of ended chats involving both backoffice-users and end-users"
+  method: get
+  namespace: overview
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering chat records"
+      - field: end
+        type: date
+        description: "End date for filtering chat records"
+  response:
+    fields:
+      - field: avg_chat_length
+        type: number
+        description: "Average duration in seconds of chats that ended and involved both end-user and backoffice-user"
+*/
 WITH chat_durations AS (
     SELECT 
         chat_base_id,

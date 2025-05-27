@@ -1,3 +1,24 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate the average chat session duration in seconds for chats that include at least one end-user message and end with a 'client-left' event"
+  method: get
+  namespace: overview
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering chat sessions"
+      - field: end
+        type: date
+        description: "End date for filtering chat sessions"
+  response:
+    fields:
+      - field: avg
+        type: number
+        description: "Average chat session duration in seconds"
+*/
 WITH chat_lengths AS (
     SELECT 
         chat_base_id,

@@ -1,3 +1,25 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate the average number of chats per period involving end-user and buerokratt, excluding backoffice-user"
+  method: get
+  namespace: overview
+  returns: json
+  allowlist:
+    query:
+      - field: group_period
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time grouping interval used in date_trunc"
+  response:
+    fields:
+      - field: ended
+        type: date
+        description: "Truncated end timestamp based on the specified grouping interval"
+      - field: metric_value
+        type: number
+        description: "Average number of chats per period involving end-user and buerokratt, excluding backoffice-user"
+*/
 WITH filtered_chats AS (
     SELECT 
         chat_base_id,

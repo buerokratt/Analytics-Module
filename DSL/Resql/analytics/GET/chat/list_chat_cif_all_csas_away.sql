@@ -1,3 +1,31 @@
+/*
+declaration:
+  version: 0.1
+  description: "Count chats over time where contact info was requested by the virtual assistant and successfully provided"
+  method: get
+  namespace: chat
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering chat messages"
+      - field: end
+        type: date
+        description: "End date for filtering chat messages"
+      - field: period
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time granularity for grouping chat counts"
+  response:
+    fields:
+      - field: time
+        type: timestamp
+        description: "Start of the grouped time period"
+      - field: chat_count
+        type: integer
+        description: "Number of chats where contact info was requested and provided"
+*/
 WITH contact_info_chats AS (
     SELECT DISTINCT chat_base_id
     FROM denormalized_chat_messages_for_metrics

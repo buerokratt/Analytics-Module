@@ -1,3 +1,24 @@
+/*
+declaration:
+  version: 0.1
+  description: "Count chats that included both end-user and chatbot messages but no backoffice-user messages"
+  method: get
+  namespace: chat
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering chat messages"
+      - field: end
+        type: date
+        description: "End date for filtering chat messages"
+  response:
+    fields:
+      - field: count
+        type: integer
+        description: "Number of chats with both end-user and chatbot messages and no backoffice-user involvement"
+*/
 SELECT COUNT(DISTINCT chat_base_id)
 FROM (
     SELECT 

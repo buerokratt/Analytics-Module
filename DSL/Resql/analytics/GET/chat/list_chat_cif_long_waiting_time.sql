@@ -1,3 +1,34 @@
+/*
+declaration:
+  version: 0.1
+  description: "Count chats where end-users waited longer than a threshold before receiving a response, in cases where contact information was available and a backoffice-user was involved"
+  method: get
+  namespace: chat
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering chat messages"
+      - field: end
+        type: date
+        description: "End date for filtering chat messages"
+      - field: period
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time granularity for grouping results"
+      - field: threshold_seconds
+        type: integer
+        description: "Threshold in seconds to define a long waiting time"
+  response:
+    fields:
+      - field: time
+        type: timestamp
+        description: "Start of the grouped time period"
+      - field: long_waiting_time
+        type: integer
+        description: "Number of chats where end-user waiting time exceeded the specified threshold"
+*/
 WITH user_messages AS (
   SELECT DISTINCT ON (chat_base_id, message_created)
     chat_base_id, 

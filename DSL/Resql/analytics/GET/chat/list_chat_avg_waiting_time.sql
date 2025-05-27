@@ -1,3 +1,31 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate average waiting time (in minutes) for end-users before a backoffice-user response, grouped by time period"
+  method: get
+  namespace: chat
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering end-user messages"
+      - field: end
+        type: date
+        description: "End date for filtering end-user messages"
+      - field: period
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time granularity for grouping average waiting times"
+  response:
+    fields:
+      - field: time
+        type: timestamp
+        description: "Start of the grouped time period"
+      - field: average_waiting_time
+        type: number
+        description: "Average waiting time in minutes before a response from a backoffice-user"
+*/
 WITH user_messages AS (
   SELECT 
     chat_base_id, 

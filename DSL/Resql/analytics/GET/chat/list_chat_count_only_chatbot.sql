@@ -1,3 +1,31 @@
+/*
+declaration:
+  version: 0.1
+  description: "Count chats that ended without backoffice-user involvement and were not taken over, grouped by time period"
+  method: get
+  namespace: chat
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering ended chats"
+      - field: end
+        type: date
+        description: "End date for filtering ended chats"
+      - field: period
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time granularity for grouping ended chat counts"
+  response:
+    fields:
+      - field: time
+        type: timestamp
+        description: "Truncated timestamp representing the grouped period"
+      - field: count
+        type: integer
+        description: "Number of ended chats with no backoffice-user involvement and no takeover"
+*/
 WITH ended_chats AS (
     SELECT DISTINCT ON (chat_base_id)
         chat_base_id,

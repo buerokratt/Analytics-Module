@@ -1,3 +1,24 @@
+/*
+declaration:
+  version: 0.1
+  description: "Count chats that included at least one message from an end user"
+  method: get
+  namespace: chat
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering chat messages"
+      - field: end
+        type: date
+        description: "End date for filtering chat messages"
+  response:
+    fields:
+      - field: count
+        type: integer
+        description: "Number of chats with at least one end-user message"
+*/
 SELECT COUNT(DISTINCT chat_base_id)
 FROM (
     SELECT 

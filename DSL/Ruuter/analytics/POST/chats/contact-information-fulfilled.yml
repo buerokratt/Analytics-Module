@@ -58,7 +58,7 @@ outside_working_hours:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/chat/chat-cif-outside-working-hours"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -82,7 +82,7 @@ long_waiting_time:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/chat/chat-cif-long-waiting-time"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -107,7 +107,7 @@ all_csas_away:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/chat/chat-cif-all-csas-away"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -131,7 +131,7 @@ outside_working_hours_for_total:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/chat/chat-cif-outside-working-hours"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -141,7 +141,7 @@ long_waiting_time_for_total:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/chat/chat-cif-long-waiting-time"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -152,7 +152,7 @@ all_csas_away_for_total:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/chat/chat-cif-all-csas-away"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}

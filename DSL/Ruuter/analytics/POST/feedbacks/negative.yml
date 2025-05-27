@@ -34,7 +34,7 @@ post_step:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/feedback/feedback-chats-with-negative-feedback"
-    body:
+    query:
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
       page: ${incoming.body.page}

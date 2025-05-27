@@ -58,7 +58,7 @@ byk:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/byk/byk-avg-sessions-time-chatbot"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -82,7 +82,7 @@ csa:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/byk/byk-avg-sessions-time-csa"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -106,7 +106,7 @@ customer:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/byk/byk-avg-sessions-time-customer"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}

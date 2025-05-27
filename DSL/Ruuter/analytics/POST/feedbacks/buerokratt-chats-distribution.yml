@@ -25,7 +25,7 @@ post_step:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/feedback/feedback-chats-distribution"
-    body:
+    query:
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
       chat_type: "buerokratt"

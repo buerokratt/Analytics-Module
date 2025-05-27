@@ -24,7 +24,7 @@ getUserPagePreferences:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/auth_users/get-user-page-preferences"
-    body:
+    query:
       user_id: ${user_id}
       page_name: ${page_name}
   result: getUserPagePreferencesResult

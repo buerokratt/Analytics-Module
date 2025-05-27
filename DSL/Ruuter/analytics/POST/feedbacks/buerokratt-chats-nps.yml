@@ -28,7 +28,7 @@ post_step:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/feedback/feedback-buerokratt-chats-nps"
-    body:
+    query:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}

@@ -1,3 +1,31 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate average chatbot response time based on time elapsed since previous non-chatbot message"
+  method: get
+  namespace: byk
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering messages"
+      - field: end
+        type: date
+        description: "End date for filtering messages"
+      - field: period
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time period for grouping the average response time"
+  response:
+    fields:
+      - field: time
+        type: timestamp
+        description: "Truncated timestamp for the grouped time period"
+      - field: avg_response_time
+        type: number
+        description: "Average chatbot response time in seconds for the time period"
+*/
 WITH chatbot_messages AS (
     SELECT
         created,

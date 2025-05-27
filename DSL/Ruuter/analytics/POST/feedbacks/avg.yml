@@ -27,7 +27,7 @@ check_for_required_parameters:
 post_step:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/feedback/feedback-avg-feedback-to-buerokratt-chats"
+    url: "[#ANALYTICS_RESQL]/feedback/list_avg_feedback_to_buerokratt_chats"
     body:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}

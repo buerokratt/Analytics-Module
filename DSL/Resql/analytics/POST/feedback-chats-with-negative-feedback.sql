@@ -43,7 +43,7 @@ rated_chats AS (
         CEIL(COUNT(*) OVER() / :page_size::DECIMAL) AS total_pages
     FROM denormalized_chat_messages_for_metrics
     WHERE chat_status = 'ENDED'
-      AND created::date BETWEEN :start::date AND :end::date
+      AND created >= :start::date AND created < (:end::date + INTERVAL '1 day')
       AND feedback_rating IS NOT NULL
       AND feedback_rating <= 5
 )

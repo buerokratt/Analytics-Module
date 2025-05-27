@@ -11,7 +11,7 @@ SELECT
         )::float / COUNT(*)::float 
     ) * 100 AS percentage_correctly_understood
 FROM message 
-WHERE created::date BETWEEN :start::date AND :end::date
+WHERE created >= :start::date AND created < (:end::date + INTERVAL '1 day')
 AND author_role = 'chatbot'
 GROUP BY time
 ORDER BY time

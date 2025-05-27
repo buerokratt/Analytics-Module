@@ -22,7 +22,7 @@ WITH chat_responses AS (
             created
         FROM denormalized_chat_messages_for_metrics
         WHERE created IS NOT NULL
-          AND created::date BETWEEN :start::date AND :end::date
+          AND created >= :start::date AND created < (:end::date + INTERVAL '1 day')
         ORDER BY chat_base_id, message_id, timestamp DESC
     ) dcm
 )

@@ -2,7 +2,7 @@ SELECT
     DATE_TRUNC(:period, created) AS time,
     COUNT(DISTINCT chat_base_id) AS chat_count
 FROM denormalized_chat_messages_for_metrics dcm
-WHERE created::date BETWEEN :start::date AND :end::date
+WHERE created >= :start::date AND created < (:end::date + INTERVAL '1 day')
 AND (
     message_event = 'contact-information-fulfilled' 
     AND ((end_user_email IS NOT NULL AND end_user_email <> '') 

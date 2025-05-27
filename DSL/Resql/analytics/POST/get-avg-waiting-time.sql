@@ -11,7 +11,7 @@ customer_support_changes AS (
             ORDER BY updated
         ) AS prev_updated
     FROM chat
-    WHERE created::date BETWEEN :start::date AND :end::date
+    WHERE created >= :start::date AND created < (:end::date + INTERVAL '1 day')
 )
 SELECT COALESCE(
         AVG(

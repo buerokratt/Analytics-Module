@@ -16,7 +16,7 @@ getJobDetails:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/service_management/get_scheduled_report"
-    body:
+    query:
       datasetId: ${incoming.body.datasetId}
   result: jobDetails
 

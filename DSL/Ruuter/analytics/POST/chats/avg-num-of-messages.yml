@@ -44,7 +44,7 @@ fetch:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/chat/list_chat_avg_num_of_messages"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}

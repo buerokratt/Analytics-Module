@@ -44,7 +44,7 @@ avg_response_time:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/byk/list_byk_avg_response_speed"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}

@@ -26,7 +26,7 @@ getUnavailableEndedChats:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/chat/list_chat_messages"
-    body:
+    query:
       chatId: ${chatId}
   result: res
 

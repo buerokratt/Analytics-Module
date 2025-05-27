@@ -59,7 +59,7 @@ get_metrics_preferences:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/overview/list_overview_metric_preferences"
-    body:
+    query:
       user_id_code: ${authority_result.idCode}
   result: metrics
   next: return_value

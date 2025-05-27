@@ -58,7 +58,7 @@ fetch_option1:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/byk/list_byk_intents_count"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -82,7 +82,7 @@ fetch_option2:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/byk/list_byk_new_intents"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -106,7 +106,7 @@ fetch_option3:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/byk/list_byk_modified_intents"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -130,7 +130,7 @@ fetch_option4:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/byk/list_byk_avg_intents"
-    body:
+    query:
       period: ${period}
       start: ${start}
       end: ${end}

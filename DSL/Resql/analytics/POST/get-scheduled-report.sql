@@ -10,5 +10,5 @@ SELECT
   end_date
 FROM scheduled_reports
 WHERE dataset_id = :datasetId
-ORDER BY id DESC
+ORDER BY updated DESC
 LIMIT 1;

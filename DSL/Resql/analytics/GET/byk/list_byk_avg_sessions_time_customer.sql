@@ -10,7 +10,7 @@ WITH closed_chats AS (
         WHERE dcm.chat_base_id = dcm_inner.chat_base_id
         AND dcm_inner.message_event IN ('answered', 'client-left')
     )
-    AND created::date BETWEEN :start::date AND :end::date
+    AND created >= :start::date AND created < (:end::date + INTERVAL '1 day')
     ORDER BY chat_base_id, timestamp DESC
 )
 SELECT

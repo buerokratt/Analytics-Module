@@ -19,7 +19,7 @@ FROM (
     updated,
     start_date,
     end_date,
-    ROW_NUMBER() OVER (PARTITION BY dataset_id ORDER BY id DESC) as rn
+    ROW_NUMBER() OVER (PARTITION BY dataset_id ORDER BY updated DESC) as rn
   FROM scheduled_reports
   WHERE NOT deleted
 ) ranked

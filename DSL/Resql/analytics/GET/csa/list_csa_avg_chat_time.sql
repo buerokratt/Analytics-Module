@@ -7,7 +7,7 @@ WITH distinct_chats AS (
   FROM denormalized_chat_messages_for_metrics
   WHERE 
     created IS NOT NULL 
-    AND created::date BETWEEN :start::date AND :end::date
+    AND created >= :start::date AND created < (:end::date + INTERVAL '1 day')
     AND message_author_role IN ('backoffice-user', 'end-user')
     AND message_author_id IS NOT NULL
     AND message_author_id <> ''

@@ -3,5 +3,5 @@ SELECT
     COUNT(DISTINCT base_id) AS count
 FROM message
 WHERE intent IS NOT NULL
-AND created::date between :start::date AND :end::date
+AND created >= :start::date AND created < (:end::date + INTERVAL '1 day')
 GROUP BY intent

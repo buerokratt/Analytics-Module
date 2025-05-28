@@ -1,27 +1,23 @@
-WITH closed_chats AS (
-    SELECT DISTINCT ON (chat_base_id)
+WITH chat_stats AS (
+    SELECT 
         chat_base_id,
-        created,
-        (last_message_timestamp - first_message_timestamp) AS duration
-    FROM denormalized_chat_messages_for_metrics dcm
-    WHERE EXISTS (
-        SELECT 1
-        FROM denormalized_chat_messages_for_metrics dcm_inner
-        WHERE dcm.chat_base_id = dcm_inner.chat_base_id
-        AND dcm_inner.chat_status = 'ENDED'
-    )
-    AND EXISTS (
-        SELECT 1
-        FROM denormalized_chat_messages_for_metrics dcm_inner
-        WHERE dcm.chat_base_id = dcm_inner.chat_base_id
-        AND dcm_inner.message_author_role = 'backoffice-user'
-    )
-    AND created::date BETWEEN :start::date AND :end::date
-    ORDER BY chat_base_id, timestamp DESC
+        MAX(created) as created,
+        MAX(last_message_timestamp - first_message_timestamp) AS duration,
+        BOOL_OR(chat_status = 'ENDED') as has_ended_status,
+        BOOL_OR(message_author_role = 'backoffice-user') as has_backoffice
+    FROM denormalized_chat_messages_for_metrics
+    WHERE created >= :start::date AND created < (:end::date + INTERVAL '1 day')
+    GROUP BY chat_base_id
+),
+backoffice_chats AS (
+    SELECT chat_base_id, created, duration
+    FROM chat_stats
+    WHERE has_ended_status = true
+    AND has_backoffice = true
 )
 SELECT
     DATE_TRUNC(:period, created) AS time,
-    ROUND(EXTRACT(epoch FROM COALESCE(AVG(duration), '0 minutes'::interval))/60) AS avg_sesssion_time
-FROM closed_chats
+    ROUND(EXTRACT(epoch FROM COALESCE(AVG(duration), '0 minutes'::interval))/60) AS avg_session_time
+FROM backoffice_chats
 GROUP BY time
 ORDER BY time;

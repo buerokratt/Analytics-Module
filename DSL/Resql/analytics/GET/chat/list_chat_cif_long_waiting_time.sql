@@ -5,7 +5,7 @@ WITH user_messages AS (
     LAG(message_created) OVER (PARTITION BY chat_base_id ORDER BY message_created) AS prev_message_time
   FROM denormalized_chat_messages_for_metrics dcm1
   WHERE message_author_role = 'end-user'
-    AND message_created::date BETWEEN :start::date AND :end::date
+    AND message_created >= :start::date AND message_created < (:end::date + INTERVAL '1 day')
     AND EXISTS (
       SELECT 1
       FROM denormalized_chat_messages_for_metrics dcm2
@@ -17,7 +17,7 @@ WITH user_messages AS (
       FROM denormalized_chat_messages_for_metrics dcm3
       WHERE dcm1.chat_base_id = dcm3.chat_base_id
       AND (
-        dcm3.message_event LIKE '%contact-information-fulfilled' OR
+        dcm3.message_event IN ('contact-information-fulfilled', 'unavailable-contact-information-fulfilled') OR
         (dcm3.end_user_email IS NOT NULL AND dcm3.end_user_email <> '') OR
         (dcm3.end_user_phone IS NOT NULL AND dcm3.end_user_phone <> '')
       )

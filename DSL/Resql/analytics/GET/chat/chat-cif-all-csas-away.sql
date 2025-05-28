@@ -18,7 +18,7 @@ SELECT
     DATE_TRUNC(:period, created) AS time,
     COUNT(DISTINCT chat_base_id) AS chat_count
 FROM denormalized_chat_messages_for_metrics dcm
-WHERE created::date BETWEEN :start::date AND :end::date
+WHERE created >= :start::date AND created < (:end::date + INTERVAL '1 day')
 AND chat_base_id IN (SELECT chat_base_id FROM contact_info_chats)
 AND chat_base_id IN (SELECT chat_base_id FROM asked_contacts_chats)
 GROUP BY time

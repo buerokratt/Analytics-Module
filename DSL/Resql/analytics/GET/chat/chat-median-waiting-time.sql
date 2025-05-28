@@ -9,7 +9,7 @@ WITH waiting_times AS (
     WHERE m1.author_role = 'end-user'
     AND m2.author_role = 'backoffice-user'
     AND m2.created > m1.created
-    AND m1.created::date BETWEEN :start::date AND :end::date
+    AND m1.created >= :start::date AND m1.created < (:end::date + INTERVAL '1 day')
 )
 SELECT 
     time, 

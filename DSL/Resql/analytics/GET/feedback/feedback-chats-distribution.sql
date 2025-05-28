@@ -6,7 +6,7 @@ WITH chats_filtered AS (
     FROM denormalized_chat_messages_for_metrics
     WHERE chat_status = 'ENDED'
         AND feedback_rating IS NOT NULL
-        AND created::date BETWEEN :start::date AND :end::date
+        AND created >= :start::date AND created < (:end::date + INTERVAL '1 day')
         AND (
             (:chat_type = 'buerokratt' AND EXISTS (
                 SELECT 1 

@@ -6,7 +6,7 @@ WITH user_messages AS (
     LAG(created) OVER (PARTITION BY chat_base_id, author_role ORDER BY created) AS prev_message_time
   FROM message
   WHERE author_role = 'end-user' 
-  AND created::date BETWEEN :start::date AND :end::date
+  AND created >= :start::date AND created < (:end::date + INTERVAL '1 day')
 ),
 average_waiting_time AS (
   SELECT 

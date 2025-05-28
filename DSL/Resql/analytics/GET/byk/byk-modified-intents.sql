@@ -5,8 +5,8 @@ WITH modified_intent_counts AS (
         MIN(m.created) AS created
     FROM message m
     JOIN intents i ON i.base_id = m.intent_base_id
-    WHERE m.created::date BETWEEN :start::date AND :end::date
-    AND i.modified BETWEEN :start::date AND :end::date
+    WHERE (m.created >= :start::date AND m.created < (:end::date + INTERVAL '1 day')) AND
+    (i.modified >= :start::date AND i.modified < (:end::date + INTERVAL '1 day'))
     AND m.intent IS NOT NULL
     GROUP BY m.intent
     ORDER BY intent_count DESC

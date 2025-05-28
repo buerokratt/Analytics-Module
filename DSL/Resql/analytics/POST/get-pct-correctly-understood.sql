@@ -2,8 +2,8 @@ WITH chatbot_messages AS (
     SELECT DISTINCT ON (message_id)
         message_event
     FROM denormalized_chat_messages_for_metrics
-    WHERE message_author_role = 'chatbot'
-      AND created IS NOT NULL AND created::date BETWEEN :start::date AND :end::date
+    WHERE message_author_role = 'buerokratt'
+      AND created IS NOT NULL AND created >= :start::date AND created < (:end::date + INTERVAL '1 day')
     ORDER BY message_id, timestamp DESC
 )
 SELECT 

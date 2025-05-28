@@ -6,7 +6,7 @@ FROM (
         chat_base_id,
         ended
     FROM denormalized_chat_messages_for_metrics
-    WHERE ended::date BETWEEN :start::date AND :end::date 
+    WHERE ended >= :start::date AND ended < (:end::date + INTERVAL '1 day')
     AND chat_status = 'ENDED'
     AND EXISTS (
         SELECT 1

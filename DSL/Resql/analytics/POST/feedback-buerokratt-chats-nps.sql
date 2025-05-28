@@ -12,7 +12,7 @@ WITH chat_buerokratt AS (
     )
     AND chat_status = 'ENDED'
     AND feedback_rating IS NOT NULL
-    AND ended::date BETWEEN :start::date AND :end::date
+    AND ended >= :start::date AND ended < (:end::date + INTERVAL '1 day')
     ORDER BY chat_base_id, feedback_rating, timestamp DESC
 ),
 point_nps AS (

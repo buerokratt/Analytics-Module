@@ -35,7 +35,7 @@ WITH customer_support_changes AS (
             ORDER BY updated
         ) AS prev_updated
     FROM chat
-    WHERE created::date BETWEEN :start::date AND :end::date
+    WHERE created >= :start::date AND created < (:end::date + INTERVAL '1 day')
 )
 SELECT COALESCE(
         AVG(
@@ -49,4 +49,4 @@ SELECT COALESCE(
 FROM customer_support_changes
 WHERE prev_support_id = ''
     AND customer_support_id <> ''
-    AND customer_support_id <> :botname;
+    AND customer_support_id <> 'chatbot';

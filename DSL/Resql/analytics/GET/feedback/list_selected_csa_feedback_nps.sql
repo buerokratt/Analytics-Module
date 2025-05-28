@@ -58,7 +58,7 @@ WITH chat_csas AS (
         WHERE dcm_inner.chat_base_id = denormalized_chat_messages_for_metrics.chat_base_id
           AND dcm_inner.message_author_role = 'end-user'
       )
-      AND created::date BETWEEN :start::date AND :end::date
+      AND created >= :start::date AND created < (:end::date + INTERVAL '1 day')
       AND customer_support_id NOT IN (:excluded_csas)
       AND chat_status = 'ENDED'
       AND feedback_rating IS NOT NULL

@@ -38,12 +38,12 @@ WITH event_counts AS (
     SELECT 
         chat_base_id,
         date_trunc('hour', ended) AS hour_ended,
-        MAX(CASE WHEN message_event = 'CLIENT_LEFT_WITH_ACCEPTED' THEN 1 ELSE NULL END) AS client_left_with_accepted,
-        MAX(CASE WHEN message_event = 'CLIENT_LEFT_WITH_NO_RESOLUTION' THEN 1 ELSE NULL END) AS client_left_with_no_resolution,
-        MAX(CASE WHEN message_event = 'HATE_SPEECH' THEN 1 ELSE NULL END) AS hate_speech,
-        MAX(CASE WHEN message_event = 'ACCEPTED' THEN 1 ELSE NULL END) AS accepted,
-        MAX(CASE WHEN message_event = 'OTHER' THEN 1 ELSE NULL END) AS other,
-        MAX(CASE WHEN message_event = 'RESPONSE_SENT_TO_CLIENT_EMAIL' THEN 1 ELSE NULL END) AS response_sent_to_client_email
+        MAX(CASE WHEN message_event = 'client_left_with_accepted' THEN 1 ELSE NULL END) AS client_left_with_accepted,
+        MAX(CASE WHEN message_event = 'client_left_with_no_resolution' THEN 1 ELSE NULL END) AS client_left_with_no_resolution,
+        MAX(CASE WHEN message_event = 'hate_speech' THEN 1 ELSE NULL END) AS hate_speech,
+        MAX(CASE WHEN message_event = 'accepted' THEN 1 ELSE NULL END) AS accepted,
+        MAX(CASE WHEN message_event = 'other' THEN 1 ELSE NULL END) AS other,
+        MAX(CASE WHEN message_event = 'response_sent_to_client_email' THEN 1 ELSE NULL END) AS response_sent_to_client_email
     FROM (
         SELECT DISTINCT ON (chat_base_id, message_id)
             chat_base_id,

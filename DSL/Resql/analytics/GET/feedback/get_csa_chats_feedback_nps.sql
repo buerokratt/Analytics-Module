@@ -52,7 +52,7 @@ WITH chat_csas AS (
         )
         AND chat_status = 'ENDED'
         AND feedback_rating IS NOT NULL
-        AND created::date BETWEEN :start::date AND :end::date
+        AND created >= :start::date AND created < (:end::date + INTERVAL '1 day')
     ORDER BY chat_base_id, feedback_rating, timestamp DESC
 ),
 point_nps AS (

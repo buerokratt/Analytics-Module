@@ -35,5 +35,5 @@ WHERE EXISTS
      WHERE message.chat_base_id = chat.chat_base_id
        AND message.message_author_role = 'buerokratt' OR message.message_author_role = 'Bürokratt')
 AND chat_status = 'ENDED'
-AND ended::date BETWEEN :start::date AND :end::date
+AND ended >= :start::date AND ended < (:end::date + INTERVAL '1 day')
 GROUP BY date_time

@@ -36,24 +36,23 @@ declaration:
         type: integer
         description: "Number of distinct ended chats with the specified event"
 */
-WITH chat_end_dates AS (
-    SELECT chat_base_id, MAX(ended) AS max_ended_date
+WITH ended_chats AS (
+    SELECT DISTINCT ON (chat_base_id)
+        chat_base_id,
+        ended AS max_ended_date
     FROM denormalized_chat_messages_for_metrics
-    GROUP BY chat_base_id
+    WHERE chat_status = 'ENDED'
+      AND ended >= :start::date 
+      AND ended < (:end::date + INTERVAL '1 day')
+    ORDER BY chat_base_id, timestamp DESC
 )
 SELECT 
-    DATE_TRUNC(:metric, (select max_ended_date from chat_end_dates  where chat_base_id = dcm.chat_base_id)) AS date_time,
+    DATE_TRUNC(:metric, ec.max_ended_date) AS date_time,
     dcm.message_event AS event,
     COUNT(DISTINCT dcm.chat_base_id) AS chat_count
 FROM denormalized_chat_messages_for_metrics dcm
+JOIN ended_chats ec ON dcm.chat_base_id = ec.chat_base_id
 WHERE dcm.message_event::event_type IN (:events)
- AND dcm.message_author_role = 'backoffice-user'
- AND EXISTS (
-      SELECT 1
-      FROM denormalized_chat_messages_for_metrics dcm_status
-      WHERE dcm_status.chat_base_id = dcm.chat_base_id
-        AND dcm_status.chat_status = 'ENDED'
-        AND chat.ended::date BETWEEN :start::date AND :end::date
-  )
+  AND dcm.message_author_role = 'backoffice-user'
 GROUP BY date_time, dcm.message_event
 ORDER BY event;

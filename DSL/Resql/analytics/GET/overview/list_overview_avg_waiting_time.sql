@@ -51,7 +51,7 @@ SELECT date_trunc(:group_period, timescale.ended) AS ended,
             )
         ) filter (
             WHERE prev_support_id = ''
-                AND customer_support_id <> '' AND customer_support_id <> :botname
+                AND customer_support_id <> '' AND customer_support_id <> 'chatbot'
         ),
         0
     ) AS metric_value

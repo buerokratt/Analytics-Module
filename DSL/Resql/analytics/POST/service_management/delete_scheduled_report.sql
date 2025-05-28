@@ -26,5 +26,5 @@ SELECT
   TRUE
 FROM scheduled_reports
 WHERE dataset_id = :id
-ORDER BY id DESC
+ORDER BY updated DESC
 LIMIT 1;

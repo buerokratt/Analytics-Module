@@ -43,7 +43,7 @@ WITH FinalData AS (
       AND message_author_id IS NOT NULL
       AND message_author_id <> ''
       AND message_author_id <> 'null'
-      AND created::date BETWEEN :start::date AND :end::date
+      AND created >= :start::date AND created < (:end::date + INTERVAL '1 day')
       AND message_author_id NOT IN (:excluded_csas)
     ORDER BY chat_base_id, timestamp DESC
 )

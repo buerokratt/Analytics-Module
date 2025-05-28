@@ -35,10 +35,10 @@ check_for_request_data:
       next: missing_params
 
 get_intents:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/get-intents"
-    body:
+    url: "[#ANALYTICS_RESQL]/byk/get-intents"
+    query:
       start: ${start}
       end: ${end}
       intent: ${intent}

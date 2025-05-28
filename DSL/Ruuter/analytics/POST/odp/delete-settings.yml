@@ -10,7 +10,7 @@ declaration:
 deleteOdpKey:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/delete-odp-settings"
+    url: "[#ANALYTICS_RESQL]/service_management/delete-odp-settings"
   result: delete
 
 return:

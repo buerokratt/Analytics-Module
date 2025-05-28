@@ -41,10 +41,10 @@ missing_parameter:
   next: end
 
 fetch:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat-avg-num-of-messages"
-    body:
+    url: "[#ANALYTICS_RESQL]/chat/chat-avg-num-of-messages"
+    query:
       period: ${period}
       start: ${start}
       end: ${end}

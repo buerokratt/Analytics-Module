@@ -8,9 +8,9 @@ declaration:
   namespace: analytics
 
 get_message:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/testing"
+    url: "[#ANALYTICS_RESQL]/service_management/testing"
   result: the_message
 
 return_value:

@@ -31,10 +31,10 @@ check_for_required_parameters:
   next: post_step
 
 post_step:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/feedback-chats-with-negative-feedback"
-    body:
+    url: "[#ANALYTICS_RESQL]/feedback/feedback-chats-with-negative-feedback"
+    query:
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
       page: ${incoming.body.page}

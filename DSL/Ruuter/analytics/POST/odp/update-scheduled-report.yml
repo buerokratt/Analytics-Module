@@ -61,9 +61,9 @@ declaration:
         description: "Body field 'updateIntervalUnit'"
 
 getKey:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/get-odp-settings"
+    url: "[#ANALYTICS_RESQL]/service_management/get-odp-settings"
   result: settings
   
 authenticate:
@@ -98,10 +98,10 @@ updateDataset:
   result: datasetUpdate  
 
 getJobDetails:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/get-scheduled-report"
-    body:
+    url: "[#ANALYTICS_RESQL]/service_management/get-scheduled-report"
+    query:
       datasetId: ${incoming.body.datasetId}
   result: jobDetails
 
@@ -115,7 +115,7 @@ removePreviousSchedule:
 saveJobInformation:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/add-scheduled-report"
+    url: "[#ANALYTICS_RESQL]/service_management/add-scheduled-report"
     body:
       name: ${incoming.body.nameEt}
       period: ${incoming.body.updateIntervalUnit}

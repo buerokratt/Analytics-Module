@@ -28,10 +28,10 @@ check_for_required_parameters:
   next: post_step
 
 post_step:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/feedback-selected-csa-feedback-nps"
-    body:
+    url: "[#ANALYTICS_RESQL]/feedback/feedback-selected-csa-feedback-nps"
+    query:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}

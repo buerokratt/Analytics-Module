@@ -28,10 +28,10 @@ check_for_required_parameters:
   next: post_step
 
 post_step:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/csa-avg-chat-time"
-    body:
+    url: "[#ANALYTICS_RESQL]/csa/csa-avg-chat-time"
+    query:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
@@ -49,9 +49,9 @@ mapCustomerSupportIds:
   result: customerSupportIdsResult
 
 getUsers:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/list_users_names_by_id_code"
+    url: "[#ANALYTICS_RESQL]/auth_users/list_users_names_by_id_code"
     query:
       idCodes: ${customerSupportIdsResult.response.body?.join(',') ?? ''}
   result: getUsersResults

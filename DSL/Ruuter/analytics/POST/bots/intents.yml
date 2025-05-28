@@ -55,10 +55,10 @@ empty_option1:
   next: check_option2
 
 fetch_option1:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/byk-intents-count"
-    body:
+    url: "[#ANALYTICS_RESQL]/byk/byk-intents-count"
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -79,10 +79,10 @@ empty_option2:
   next: check_option3
 
 fetch_option2:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/byk-new-intents"
-    body:
+    url: "[#ANALYTICS_RESQL]/byk/byk-new-intents"
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -103,10 +103,10 @@ empty_option3:
   next: check_option4
 
 fetch_option3:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/byk-modified-intents"
-    body:
+    url: "[#ANALYTICS_RESQL]/byk/byk-modified-intents"
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -127,10 +127,10 @@ empty_option4:
   next: respond
 
 fetch_option4:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/byk-avg-intents"
-    body:
+    url: "[#ANALYTICS_RESQL]/byk/byk-avg-intents"
+    query:
       period: ${period}
       start: ${start}
       end: ${end}

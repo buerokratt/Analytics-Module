@@ -55,10 +55,10 @@ empty_byk:
   next: check_csa
 
 byk:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat-count-only-chatbot"
-    body:
+    url: "[#ANALYTICS_RESQL]/chat/chat-count-only-chatbot"
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -79,10 +79,10 @@ empty_csa:
   next: check_total
 
 csa:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat-count-with-csa"
-    body:
+    url: "[#ANALYTICS_RESQL]/chat/chat-count-with-csa"
+    query:
       period: ${period}
       start: ${start}
       end: ${end}
@@ -103,10 +103,10 @@ empty_total:
   next: respond
 
 total:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat-count-with-csa-and-chatbot"
-    body:
+    url: "[#ANALYTICS_RESQL]/chat/chat-count-with-csa-and-chatbot"
+    query:
       period: ${period}
       start: ${start}
       end: ${end}

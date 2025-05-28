@@ -27,13 +27,13 @@ assign:
 deleteOdpKey:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/delete-odp-settings"
+    url: "[#ANALYTICS_RESQL]/service_management/delete-odp-settings"
   result: delete
 
 saveOdpKey:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/set-odp-settings"
+    url: "[#ANALYTICS_RESQL]/service_management/set-odp-settings"
     body:
       keyId: ${keyId}
       apiKey: ${apiKey}
@@ -41,9 +41,9 @@ saveOdpKey:
   result: save
 
 getKey:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/get-odp-settings"
+    url: "[#ANALYTICS_RESQL]/service_management/get-odp-settings"
   result: settings
   
 verify:
@@ -62,7 +62,7 @@ check_response:
 cleanupInvalidKey:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/delete-odp-settings"
+    url: "[#ANALYTICS_RESQL]/service_management/delete-odp-settings"
   result: delete
   next: return_error
 

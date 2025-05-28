@@ -41,10 +41,10 @@ missing_parameter:
   next: end
 
 byk-pct-correctly-understood:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/byk-pct-correctly-understood"
-    body:
+    url: "[#ANALYTICS_RESQL]/byk/byk-pct-correctly-understood"
+    query:
       period: ${period}
       start: ${start}
       end: ${end}

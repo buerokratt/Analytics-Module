@@ -94,97 +94,97 @@ check11:
   next: assignResponse        
 
 getTotalChatsDayResults:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview-total-chats"
-    body:
+    url: "[#ANALYTICS_RESQL]/overview/overview-total-chats"
+    query:
       group_period: 'day'
   result: res1
   next: check2
 
 getTotalChatsMonthResults:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview-total-chats"
-    body:
+    url: "[#ANALYTICS_RESQL]/overview/overview-total-chats"
+    query:
       group_period: 'month'
   result: res2
   next: check3
 
 getTotalChatsNoCSAResults:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview-total-chats-no-csa"
-    body:
+    url: "[#ANALYTICS_RESQL]/overview/overview-total-chats-no-csa"
+    query:
       group_period: 'day'
   result: res3
   next: check4
 
 getAvgChatsMonthResults:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview-avg-chats"
-    body:
+    url: "[#ANALYTICS_RESQL]/overview/overview-avg-chats"
+    query:
       group_period: 'month'
   result: res4
   next: check5
 
 getAvgChatsWeekResults:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview-avg-chats"
-    body:
+    url: "[#ANALYTICS_RESQL]/overview/overview-avg-chats"
+    query:
       group_period: 'week'
   result: res5
   next: check6
 
 getAvgChatsNoCSAMonthResult:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview-avg-chats-no-csa"
-    body:
+    url: "[#ANALYTICS_RESQL]/overview/overview-avg-chats-no-csa"
+    query:
       group_period: 'month'
   result: res6
   next: check7
 
 getAvgChatsNoCSAWeekResult:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview-avg-chats-no-csa"
-    body:
+    url: "[#ANALYTICS_RESQL]/overview/overview-avg-chats-no-csa"
+    query:
       group_period: 'week'
   result: res7
   next: check8
 
 getAvgWaitingTimeDayResult:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview-avg-waiting-time"
-    body:
+    url: "[#ANALYTICS_RESQL]/overview/overview-avg-waiting-time"
+    query:
       group_period: 'day'
   result: res8
   next: check9
 
 getAvgWaitingTimeWeekResult:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview-avg-waiting-time"
-    body:
+    url: "[#ANALYTICS_RESQL]/overview/overview-avg-waiting-time"
+    query:
       group_period: 'week'
   result: res9
   next: check10
 
 getTotalForwardedChatsResult:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview-total-forwarded-chats"
+    url: "[#ANALYTICS_RESQL]/overview/overview-total-forwarded-chats"
   result: res10
   next: check11
 
 getChatActivityResult:
-  call: http.post
+  call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview-chat-activity-chart"
+    url: "[#ANALYTICS_RESQL]/overview/overview-chat-activity-chart"
   result: res11
   next: assignResponse
 

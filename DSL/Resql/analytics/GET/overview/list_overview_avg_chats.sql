@@ -1,3 +1,25 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate the average number of chats per day over a dynamic period for chats that include at least one end-user message"
+  method: get
+  namespace: overview
+  returns: json
+  allowlist:
+    query:
+      - field: group_period
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time grouping interval (e.g., 'day', 'week', 'month')"
+  response:
+    fields:
+      - field: ended
+        type: date
+        description: "Grouped end timestamp based on the specified period"
+      - field: metric_value
+        type: number
+        description: "Average number of chats per period with at least one end-user message"
+*/
 WITH filtered_chats AS (
     SELECT 
         chat_base_id,

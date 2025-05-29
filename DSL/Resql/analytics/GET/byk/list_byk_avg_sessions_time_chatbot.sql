@@ -1,3 +1,31 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate average chat session duration (in minutes) over time for closed chats without backoffice-user involvement"
+  method: get
+  namespace: byk
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering chat sessions"
+      - field: end
+        type: date
+        description: "End date for filtering chat sessions"
+      - field: period
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time period for grouping session durations"
+  response:
+    fields:
+      - field: time
+        type: timestamp
+        description: "Truncated timestamp representing the period"
+      - field: avg_sesssion_time
+        type: number
+        description: "Average session time in minutes during the time period"
+*/
 WITH chat_stats AS (
     SELECT 
         chat_base_id,

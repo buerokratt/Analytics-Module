@@ -1,4 +1,32 @@
-SELECT 
+/*
+declaration:
+  version: 0.1
+  description: "Count ended chats that either had no backoffice-user and no takeover, or had both backoffice-user involvement and a 'taken-over' event, grouped by time"
+  method: get
+  namespace: chat
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering ended chats"
+      - field: end
+        type: date
+        description: "End date for filtering ended chats"
+      - field: period
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time granularity for grouping chat counts"
+  response:
+    fields:
+      - field: time
+        type: timestamp
+        description: "Truncated timestamp representing the grouped time period"
+      - field: sum_count
+        type: integer
+        description: "Total number of chats matching the conditions for the period"
+*/
+SELECT
     DATE_TRUNC(:period, ended) AS time,
     COUNT(DISTINCT chat_base_id) AS sum_count
 FROM (

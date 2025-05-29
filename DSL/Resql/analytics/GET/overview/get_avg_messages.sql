@@ -1,3 +1,24 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate the average number of messages per chat for chats that include at least one end-user message"
+  method: get
+  namespace: overview
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering messages"
+      - field: end
+        type: date
+        description: "End date for filtering messages"
+  response:
+    fields:
+      - field: avg_messages_per_chat
+        type: number
+        description: "Average number of messages per chat within the specified period"
+*/
 WITH chat_stats AS (
     SELECT 
         chat_base_id,

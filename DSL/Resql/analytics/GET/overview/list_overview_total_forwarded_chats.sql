@@ -1,3 +1,18 @@
+/*
+declaration:
+  version: 0.1
+  description: "Retrieve counts of redirected chats and chats with non-empty external IDs for the previous day"
+  method: get
+  namespace: overview
+  returns: json
+  allowlist:
+    query: []
+  response:
+    fields:
+      - field: metric_value
+        type: number
+        description: "Metric value representing either redirected chats or chats with external ID (two values returned via UNION ALL)"
+*/
 WITH forwarded_chats_by_csa AS (
     SELECT base_id, customer_support_id, customer_support_display_name, ended 
     FROM chat 

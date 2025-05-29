@@ -1,3 +1,39 @@
+/*
+declaration:
+  version: 0.1
+  description: "Count distinct chats per hour and categorize them by resolution-related events such as accepted, hate speech, client exit reasons, etc."
+  method: get
+  namespace: overview
+  returns: json
+  allowlist:
+    query: []
+  response:
+    fields:
+      - field: ended
+        type: date
+        description: "Hourly truncated timestamp for when the chat ended"
+      - field: metric_value
+        type: number
+        description: "Total number of distinct chats per hour"
+      - field: client_left_with_accepted
+        type: number
+        description: "Count of chats where the client left with an accepted resolution"
+      - field: client_left_with_no_resolution
+        type: number
+        description: "Count of chats where the client left with no resolution"
+      - field: hate_speech
+        type: number
+        description: "Count of chats flagged for hate speech"
+      - field: accepted
+        type: number
+        description: "Count of chats marked as accepted"
+      - field: other
+        type: number
+        description: "Count of chats labeled with 'OTHER' event"
+      - field: response_sent_to_client_email
+        type: number
+        description: "Count of chats with responses sent to client email"
+*/
 WITH event_counts AS (
     SELECT 
         chat_base_id,

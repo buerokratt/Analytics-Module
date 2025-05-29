@@ -1,3 +1,25 @@
+/*
+declaration:
+  version: 0.1
+  description: "Count distinct chats per period involving end-user and buerokratt, excluding backoffice-user"
+  method: get
+  namespace: overview
+  returns: json
+  allowlist:
+    query:
+      - field: group_period
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time grouping interval used in date_trunc and generate_series"
+  response:
+    fields:
+      - field: ended
+        type: date
+        description: "Truncated timestamp for the period end"
+      - field: metric_value
+        type: number
+        description: "Number of distinct chats involving end-user and buerokratt but no backoffice-user in the given period"
+*/
 WITH filtered_chats AS (
    SELECT 
        chat_base_id,

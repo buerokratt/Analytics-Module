@@ -1,3 +1,31 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate average chat session duration (in minutes) for chats closed with events like 'answered' or 'client-left'"
+  method: get
+  namespace: byk
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering chat sessions"
+      - field: end
+        type: date
+        description: "End date for filtering chat sessions"
+      - field: period
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time period for aggregating session durations"
+  response:
+    fields:
+      - field: time
+        type: timestamp
+        description: "Truncated timestamp representing the period"
+      - field: avg_sesssion_time
+        type: number
+        description: "Average session duration in minutes for the time period"
+*/
 WITH closed_chats AS (
     SELECT DISTINCT ON (chat_base_id)
         chat_base_id,

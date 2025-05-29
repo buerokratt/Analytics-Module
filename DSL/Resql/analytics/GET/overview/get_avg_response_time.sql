@@ -1,3 +1,24 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate the average chatbot response time (in seconds) to end-user messages within a specified period"
+  method: get
+  namespace: overview
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering message interactions"
+      - field: end
+        type: date
+        description: "End date for filtering message interactions"
+  response:
+    fields:
+      - field: avg
+        type: number
+        description: "Average response time in seconds from end-user to chatbot"
+*/
 WITH chat_responses AS (
     SELECT 
         dcm.chat_base_id,

@@ -1,3 +1,31 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate dynamic start and end dates based on selected reporting period or explicit dates"
+  method: get
+  namespace: service_management
+  returns: json
+  allowlist:
+    query:
+      - field: period
+        type: string
+        enum: ['day', 'week', 'month', 'quarter', 'year', 'never']
+        description: "Period type used to calculate reporting range"
+      - field: start
+        type: date
+        description: "Explicit start date (used only when period is 'never')"
+      - field: end
+        type: date
+        description: "Explicit end date (used only when period is 'never')"
+  response:
+    fields:
+      - field: start
+        type: timestamp
+        description: "Calculated start timestamp for the reporting range"
+      - field: end
+        type: timestamp
+        description: "Calculated end timestamp for the reporting range"
+*/
 WITH consts AS (
   SELECT 'day' AS cday,
          'week' AS cweek,

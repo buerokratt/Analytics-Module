@@ -1,4 +1,25 @@
-EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
+/*
+declaration:
+  version: 0.1
+  description: "Count distinct chats with at least one end-user message, grouped by a dynamic time period"
+  method: get
+  namespace: overview
+  returns: json
+  allowlist:
+    query:
+      - field: group_period
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time grouping interval used in date_trunc and generate_series"
+  response:
+    fields:
+      - field: ended
+        type: date
+        description: "Truncated end timestamp based on the specified grouping interval"
+      - field: metric_value
+        type: number
+        description: "Number of distinct chats with at least one end-user message in the given period"
+*/
 WITH filtered_chats AS (
    SELECT 
        chat_base_id,

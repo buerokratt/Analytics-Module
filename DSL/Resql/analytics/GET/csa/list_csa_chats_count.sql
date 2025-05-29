@@ -1,3 +1,37 @@
+/*
+declaration:
+  version: 0.1
+  description: "Count distinct chats handled by each CSA or end-user over time, excluding specified CSAs"
+  method: get
+  namespace: csa
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering chat messages"
+      - field: end
+        type: date
+        description: "End date for filtering chat messages"
+      - field: metric
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time granularity for grouping results"
+      - field: excluded_csas
+        type: string
+        description: "Comma-separated list of CSA IDs to exclude (array format)"
+  response:
+    fields:
+      - field: date_time
+        type: timestamp
+        description: "Truncated timestamp representing the grouped period"
+      - field: customer_support_id
+        type: string
+        description: "ID of the CSA or end-user who authored the message"
+      - field: count
+        type: integer
+        description: "Count of distinct chats handled by the author during the period"
+*/
 WITH FinalData AS (
     SELECT DISTINCT ON (chat_base_id)
         date_trunc(:metric, created) AS date_time,

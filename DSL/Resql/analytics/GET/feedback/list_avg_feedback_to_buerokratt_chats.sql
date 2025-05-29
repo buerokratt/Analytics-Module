@@ -1,3 +1,31 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate average feedback rating over time for chats involving the virtual assistant 'buerokratt'"
+  method: get
+  namespace: feedback
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering ended chats"
+      - field: end
+        type: date
+        description: "End date for filtering ended chats"
+      - field: metric
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time granularity for grouping average feedback ratings"
+  response:
+    fields:
+      - field: date_time
+        type: timestamp
+        description: "Truncated timestamp representing the grouped time period"
+      - field: avg
+        type: number
+        description: "Average feedback rating for the time period"
+*/
 SELECT date_trunc(:metric, ended) AS date_time,
        ROUND(1.0 * SUM(CASE WHEN feedback_rating IS NOT NULL THEN feedback_rating ELSE 0 END) / NULLIF(COUNT(DISTINCT chat_base_id), 0), 1) AS avg
 FROM denormalized_chat_messages_for_metrics chat

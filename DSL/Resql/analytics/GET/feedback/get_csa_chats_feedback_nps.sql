@@ -1,3 +1,42 @@
+/*
+declaration:
+  version: 0.1
+  description: "Calculate point-in-time and overall NPS (Net Promoter Score) based on feedback ratings from end-user chats with CSAs"
+  method: get
+  namespace: feedback
+  returns: json
+  allowlist:
+    query:
+      - field: start
+        type: date
+        description: "Start date for filtering feedback ratings"
+      - field: end
+        type: date
+        description: "End date for filtering feedback ratings"
+      - field: metric
+        type: string
+        enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
+        description: "Time granularity for grouping point NPS scores"
+  response:
+    fields:
+      - field: result
+        type: object
+        properties:
+          pointNps:
+            type: array
+            items:
+              type: object
+              properties:
+                dateTime:
+                  type: timestamp
+                nps:
+                  type: number
+          periodNps:
+            type: array
+            items:
+              type: number
+        description: "Contains both pointNps (list of {dateTime, nps}) and periodNps (overall NPS value)"
+*/
 WITH chat_csas AS (
     SELECT DISTINCT ON (chat_base_id, feedback_rating) 
         chat_base_id AS base_id,

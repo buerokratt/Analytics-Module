@@ -17,11 +17,8 @@ declaration:
       - field: page_results
         type: integer
         description: "Number of the page"
-      - field: created
-        type: timestamp
-        description: "Timestamp when the entry is created"
   response:
     fields: []
 */
-INSERT INTO user_page_preferences (user_id, page_name, page_results,created)
-VALUES (:user_id, :page_name, :page_results,:created::timestamp with time zone);
+INSERT INTO user_page_preferences (user_id, page_name, page_results)
+VALUES (:user_id, :page_name, :page_results);

@@ -26,15 +26,18 @@ declaration:
         type: number
         description: "Average number of intents per chat in the given time period"
 */
-WITH chat_intent_counts AS (
-    SELECT 
-        COUNT(intent) AS intent_count,
-        MIN(created) AS created
-    FROM message m
-    WHERE created >= :start::date AND created < (:end::date + INTERVAL '1 day')
-    AND intent IS NOT NULL
-    GROUP BY chat_base_id
-)
+WITH
+    chat_intent_counts AS (
+        SELECT
+            COUNT(intent) AS intent_count,
+            MIN(created) AS created
+        FROM message
+        WHERE created >= :start::DATE 
+          AND created < (:end::DATE + INTERVAL '1 day')
+          AND intent IS NOT NULL
+        GROUP BY chat_base_id
+    )
+
 SELECT
     DATE_TRUNC(:period, created) AS time,
     COALESCE(AVG(intent_count), 0) AS avg_num_of_intent

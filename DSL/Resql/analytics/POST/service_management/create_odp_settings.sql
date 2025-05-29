@@ -19,6 +19,6 @@ declaration:
   response:
     fields: []
 */
-INSERT INTO "configuration" ("key", "value") VALUES
-('odp_key', TRANSLATE(ENCODE((:keyId || ':' || :apiKey)::bytea, 'base64'), E'\n', '')),
+INSERT INTO configuration (key, value) VALUES
+('odp_key', TRANSLATE(ENCODE((:keyId || ':' || :apiKey)::BYTEA, 'base64'), E'\n', '')),
 ('odp_org_id', :orgId);

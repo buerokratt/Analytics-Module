@@ -29,17 +29,20 @@ declaration:
         type: integer
         description: "Number of times the intent occurred during the time period"
 */
-WITH chat_intent_counts AS (
-    SELECT 
-        intent,
-        COUNT(intent) AS intent_count,
-        MIN(created) AS created
-    FROM message m
-    WHERE created >= :start::date AND created < (:end::date + INTERVAL '1 day')
-    AND intent IS NOT NULL
-    GROUP BY intent
-    ORDER BY intent_count DESC
-)
+WITH
+    chat_intent_counts AS (
+        SELECT
+            intent,
+            COUNT(intent) AS intent_count,
+            MIN(created) AS created
+        FROM message
+        WHERE created >= :start::DATE
+          AND created < (:end::DATE + INTERVAL '1 day')
+          AND intent IS NOT NULL
+        GROUP BY intent
+        ORDER BY intent_count DESC
+    )
+
 SELECT
     DATE_TRUNC(:period, created) AS time,
     intent,

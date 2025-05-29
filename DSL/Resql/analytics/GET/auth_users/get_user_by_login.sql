@@ -49,4 +49,3 @@ WHERE
     AND ARRAY_LENGTH(authority_name, 1) > 0
 ORDER BY created DESC
 LIMIT 1;
-

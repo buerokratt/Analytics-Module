@@ -36,7 +36,13 @@ declaration:
           type: string
         description: "List of selected columns for the page"
 */
-SELECT id, user_id, page_name, page_results, created, selected_columns
+SELECT
+    id,
+    user_id,
+    page_name,
+    page_results,
+    created,
+    selected_columns
 FROM user_page_preferences
 WHERE
     user_id = :user_id

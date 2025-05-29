@@ -32,24 +32,28 @@ declaration:
         type: integer
         description: "Count of distinct chats handled by the author during the period"
 */
-WITH FinalData AS (
-    SELECT DISTINCT ON (chat_base_id)
-        date_trunc(:metric, created) AS date_time,
-        chat_base_id,
-        message_author_id,
-        message_author_id AS id_code
-    FROM denormalized_chat_messages_for_metrics
-    WHERE message_author_role IN ('backoffice-user', 'end-user')
-      AND message_author_id IS NOT NULL
-      AND message_author_id <> ''
-      AND message_author_id <> 'null'
-      AND created >= :start::date AND created < (:end::date + INTERVAL '1 day')
-      AND message_author_id NOT IN (:excluded_csas)
-    ORDER BY chat_base_id, timestamp DESC
-)
+WITH
+    final_data AS (
+        SELECT DISTINCT ON (chat_base_id)
+            DATE_TRUNC(:metric, created) AS date_time,
+            chat_base_id,
+            message_author_id,
+            message_author_id AS id_code
+        FROM denormalized_chat_messages_for_metrics
+        WHERE
+            message_author_role IN ('backoffice-user', 'end-user')
+            AND message_author_id IS NOT NULL
+            AND message_author_id <> ''
+            AND message_author_id <> 'null'
+            AND created >= :start::DATE
+            AND created < (:end::DATE + INTERVAL '1 day')
+            AND message_author_id NOT IN (:excluded_csas)
+        ORDER BY chat_base_id ASC, timestamp DESC
+    )
+
 SELECT
     date_time,
     MAX(id_code) AS customer_support_id,
     COUNT(DISTINCT chat_base_id) AS count
-FROM FinalData
+FROM final_data
 GROUP BY date_time, message_author_id;

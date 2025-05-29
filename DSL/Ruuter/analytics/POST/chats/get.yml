@@ -19,7 +19,7 @@ extractRequestData:
 getChatById:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat/get-chat-by-id"
+    url: "[#ANALYTICS_RESQL]/chat/get_chat_by_id"
     query:
       id: ${chatId}
   result: res

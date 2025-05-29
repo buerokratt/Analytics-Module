@@ -30,7 +30,7 @@ check_for_required_parameters:
 post_step:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/csa/csa-avg-chat-time"
+    url: "[#ANALYTICS_RESQL]/csa/list_csa_avg_chat_time"
     query:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}

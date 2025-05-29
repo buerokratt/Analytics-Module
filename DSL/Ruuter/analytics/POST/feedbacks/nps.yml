@@ -27,7 +27,7 @@ check_for_required_parameters:
 post_step:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/feedback/feedback-csa-chats-feedback-nps"
+    url: "[#ANALYTICS_RESQL]/feedback/get_csa_chats_feedback_nps"
     query:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}

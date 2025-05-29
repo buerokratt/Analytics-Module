@@ -57,7 +57,7 @@ empty_avg:
 avg:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat/chat-avg-waiting-time"
+    url: "[#ANALYTICS_RESQL]/chat/list_chat_avg_waiting_time"
     query:
       period: ${period}
       start: ${start}
@@ -81,7 +81,7 @@ empty_median:
 median:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat/chat-median-waiting-time"
+    url: "[#ANALYTICS_RESQL]/chat/list_chat_median_waiting_time"
     query:
       period: ${period}
       start: ${start}

@@ -28,7 +28,7 @@ set_variables:
 get-timescale:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/service_management/get-period-times"
+    url: "[#ANALYTICS_RESQL]/service_management/get_period_times"
     query:
       start: ${incoming.body.start}
       end: ${incoming.body.end}
@@ -48,7 +48,7 @@ empty-get-chat-count-total:
 get-chat-count-total:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat/get-chat-count-total"
+    url: "[#ANALYTICS_RESQL]/chat/get_chat_count_total"
     query:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -67,7 +67,7 @@ empty-get-chat-count-no-csa:
 get-chat-count-no-csa:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat/get-chat-count-no-csa"
+    url: "[#ANALYTICS_RESQL]/chat/get_chat_count_no_csa"
     query:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -86,7 +86,7 @@ empty-get-avg-waiting-time:
 get-avg-waiting-time:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview/get-avg-waiting-time"
+    url: "[#ANALYTICS_RESQL]/overview/get_avg_waiting_time"
     query:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -105,7 +105,7 @@ empty-get-avg-messages:
 get-avg-messages:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview/get-avg-messages"
+    url: "[#ANALYTICS_RESQL]/overview/get_avg_messages"
     query:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -124,7 +124,7 @@ empty-get-avg-time:
 get-avg-time:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview/get-avg-time"
+    url: "[#ANALYTICS_RESQL]/overview/get_avg_time"
     query:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -143,7 +143,7 @@ empty-get-avg-time-no-csa:
 get-avg-time-no-csa:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview/get-avg-time-no-csa"
+    url: "[#ANALYTICS_RESQL]/overview/get_avg_time_no_csa"
     query:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -162,7 +162,7 @@ empty-get-avg-time-csa:
 get-avg-time-csa:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview/get-avg-time-csa"
+    url: "[#ANALYTICS_RESQL]/overview/get_avg_time_csa"
     query:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -181,7 +181,7 @@ empty-get-avg-session-length-client-left:
 get-avg-session-length-client-left:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview/get-avg-session-length-client-left"
+    url: "[#ANALYTICS_RESQL]/overview/get_avg_session_length_client_left"
     query:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -200,7 +200,7 @@ empty-get-avg-session-length-csa:
 get-avg-session-length-csa:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview/get-avg-session-length-csa"
+    url: "[#ANALYTICS_RESQL]/overview/get_avg_session_length_csa"
     query:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -219,7 +219,7 @@ empty-get-avg-session-length-no-csa:
 get-avg-session-length-no-csa:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview/get-avg-session-length-no-csa"
+    url: "[#ANALYTICS_RESQL]/overview/get_avg_session_length_no_csa"
     query:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
@@ -238,7 +238,7 @@ empty-get-avg-response-time:
 get-avg-response-time:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview/get-avg-response-time"
+    url: "[#ANALYTICS_RESQL]/overview/get_avg_response_time"
     query:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}

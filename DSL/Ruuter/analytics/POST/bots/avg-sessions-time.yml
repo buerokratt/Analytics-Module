@@ -57,7 +57,7 @@ empty_byk:
 byk:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/byk/byk-avg-sessions-time-chatbot"
+    url: "[#ANALYTICS_RESQL]/byk/list_byk_avg_sessions_time_chatbot"
     query:
       period: ${period}
       start: ${start}
@@ -81,7 +81,7 @@ empty_csa:
 csa:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/byk/byk-avg-sessions-time-csa"
+    url: "[#ANALYTICS_RESQL]/byk/list_byk_avg_sessions_time_csa"
     query:
       period: ${period}
       start: ${start}
@@ -105,7 +105,7 @@ empty_customer:
 customer:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/byk/byk-avg-sessions-time-customer"
+    url: "[#ANALYTICS_RESQL]/byk/list_byk_avg_sessions_time_customer"
     query:
       period: ${period}
       start: ${start}

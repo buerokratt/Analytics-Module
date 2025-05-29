@@ -46,7 +46,7 @@ check_if_authorized:
 update_metrics_preferences:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/auth_users/update-overview-metric-preferences"
+    url: "[#ANALYTICS_RESQL]/auth_users/update_overview_metric_preferences"
     body:
       user_id_code: ${authority_result.idCode}
       active: ${active}
@@ -58,7 +58,7 @@ update_metrics_preferences:
 get_metrics_preferences:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/overview/overview-metric-preferences"
+    url: "[#ANALYTICS_RESQL]/overview/list_overview_metric_preferences"
     query:
       user_id_code: ${authority_result.idCode}
   result: metrics

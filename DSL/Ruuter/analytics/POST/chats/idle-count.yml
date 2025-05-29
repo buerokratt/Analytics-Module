@@ -43,7 +43,7 @@ missing_parameter:
 fetch:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat/chat-idle-count"
+    url: "[#ANALYTICS_RESQL]/chat/list_chat_idle_count"
     query:
       period: ${period}
       start: ${start}

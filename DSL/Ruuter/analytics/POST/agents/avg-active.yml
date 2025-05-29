@@ -27,7 +27,7 @@ check_for_required_parameters:
 post_step:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/csa/csa-avg-present-number"
+    url: "[#ANALYTICS_RESQL]/csa/list_csa_avg_present_number"
     query:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}

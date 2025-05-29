@@ -15,7 +15,7 @@ declaration:
 getKey:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/service_management/get-odp-settings"
+    url: "[#ANALYTICS_RESQL]/service_management/get_odp_settings"
   result: settings
   
 authenticate:

@@ -57,7 +57,7 @@ empty_byk:
 byk:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat/chat-count-only-chatbot"
+    url: "[#ANALYTICS_RESQL]/chat/list_chat_count_only_chatbot"
     query:
       period: ${period}
       start: ${start}
@@ -81,7 +81,7 @@ empty_csa:
 csa:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat/chat-count-with-csa"
+    url: "[#ANALYTICS_RESQL]/chat/list_chat_count_with_csa"
     query:
       period: ${period}
       start: ${start}
@@ -105,7 +105,7 @@ empty_total:
 total:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/chat/chat-count-with-csa-and-chatbot"
+    url: "[#ANALYTICS_RESQL]/chat/list_chat_count_with_csa_and_chatbot"
     query:
       period: ${period}
       start: ${start}

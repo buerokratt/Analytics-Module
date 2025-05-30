@@ -25,7 +25,7 @@ declaration:
 SELECT
     intent,
     COUNT(DISTINCT base_id) AS count
-FROM message
+FROM chat.message
 WHERE intent IS NOT NULL
   AND created >= :start::DATE
   AND created < (:end::DATE + INTERVAL '1 day')

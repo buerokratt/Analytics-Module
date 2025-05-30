@@ -35,7 +35,7 @@ WITH
             m.intent,
             COUNT(intent) AS intent_count,
             MIN(m.created) AS created
-        FROM message AS m
+        FROM chat.message AS m
             INNER JOIN intents AS i ON m.intent_base_id = i.base_id
         WHERE (m.created >= :start::DATE AND m.created < (:end::DATE + INTERVAL '1 day'))
           AND (i.modified >= :start::DATE AND i.modified < (:end::DATE + INTERVAL '1 day'))

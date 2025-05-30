@@ -77,7 +77,7 @@ declaration:
 SELECT
     DATE_TRUNC(:period, created) AS time,
     COUNT(DISTINCT chat_base_id) AS chat_count
-FROM denormalized_chat_messages_for_metrics AS dcm
+FROM chat.denormalized_chat_messages_for_metrics AS dcm
 WHERE created >= :start::DATE AND created < (:end::DATE + INTERVAL '1 day')
     AND (
     message_event = 'contact-information-fulfilled'
@@ -88,7 +88,7 @@ WHERE created >= :start::DATE AND created < (:end::DATE + INTERVAL '1 day')
 )
 AND EXISTS (
     SELECT 1
-    FROM denormalized_chat_messages_for_metrics AS dcm_inner
+    FROM chat.denormalized_chat_messages_for_metrics AS dcm_inner
     WHERE
         dcm.chat_base_id = dcm_inner.chat_base_id
         AND dcm_inner.message_event = 'unavailable_organization_ask_contacts'

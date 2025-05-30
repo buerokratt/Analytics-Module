@@ -62,7 +62,7 @@ FROM (
             PARTITION BY dataset_id
             ORDER BY updated DESC
         ) AS rn
-    FROM scheduled_reports
+    FROM analytics.scheduled_reports
     WHERE NOT deleted
 ) AS ranked
 WHERE rn = 1;

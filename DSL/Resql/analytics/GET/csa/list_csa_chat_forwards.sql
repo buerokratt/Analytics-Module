@@ -60,7 +60,7 @@ WITH
                     AND external_id <> 'null'
                     THEN chat_base_id
             END) AS forwarded_externally
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics
         WHERE 
             created >= :start::DATE
             AND created < (:end::DATE + INTERVAL '1 day')

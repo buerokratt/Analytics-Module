@@ -35,7 +35,7 @@ WITH
             chat_base_id AS base_id,
             created,
             feedback_rating
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics AS dcm
         WHERE
             chat_status = 'ENDED'
             AND feedback_rating IS NOT NULL
@@ -44,10 +44,9 @@ WITH
             AND (
                 (:chat_type = 'buerokratt' AND EXISTS (
                     SELECT 1
-                    FROM denormalized_chat_messages_for_metrics AS dcm_inner
+                    FROM chat.denormalized_chat_messages_for_metrics AS dcm_inner
                     WHERE
-                        dcm_inner.chat_base_id
-                        = denormalized_chat_messages_for_metrics.chat_base_id
+                        dcm_inner.chat_base_id = dcm.chat_base_id
                         AND dcm_inner.message_author_role = 'buerokratt'
                 ))
                 OR
@@ -55,18 +54,16 @@ WITH
                     :chat_type = 'csa' AND customer_support_id <> ''
                     AND EXISTS (
                         SELECT 1
-                        FROM denormalized_chat_messages_for_metrics AS dcm_inner
+                        FROM chat.denormalized_chat_messages_for_metrics AS dcm_inner
                         WHERE
-                            dcm_inner.chat_base_id
-                            = denormalized_chat_messages_for_metrics.chat_base_id
+                            dcm_inner.chat_base_id = dcm.chat_base_id
                             AND dcm_inner.message_author_role = 'backoffice-user'
                     )
                     AND EXISTS (
                         SELECT 1
-                        FROM denormalized_chat_messages_for_metrics AS dcm_inner
+                        FROM chat.denormalized_chat_messages_for_metrics AS dcm_inner
                         WHERE
-                            dcm_inner.chat_base_id
-                            = denormalized_chat_messages_for_metrics.chat_base_id
+                            dcm_inner.chat_base_id = dcm.chat_base_id
                             AND dcm_inner.message_author_role = 'end-user'
                     )
                 )

@@ -32,7 +32,7 @@ WITH
             chat_base_id,
             COUNT(*) AS num_of_messages,
             MIN(created) AS created
-        FROM message
+        FROM chat.message
         WHERE created >= :start::DATE AND created < (:end::DATE + INTERVAL '1 day')
         GROUP BY chat_base_id
     )

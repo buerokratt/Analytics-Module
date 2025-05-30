@@ -39,7 +39,7 @@ SELECT
             END
         )::FLOAT / COUNT(*)::FLOAT
     ) * 100 AS percentage_correctly_understood
-FROM message
+FROM chat.message
 WHERE created >= :start::DATE
   AND created < (:end::DATE + INTERVAL '1 day')
   AND author_role = 'buerokratt'

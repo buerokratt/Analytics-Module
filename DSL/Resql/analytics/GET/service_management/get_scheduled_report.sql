@@ -50,7 +50,7 @@ SELECT
     updated,
     start_date,
     end_date
-FROM scheduled_reports
+FROM analytics.scheduled_reports
 WHERE dataset_id = :datasetId
 ORDER BY updated DESC
 LIMIT 1;

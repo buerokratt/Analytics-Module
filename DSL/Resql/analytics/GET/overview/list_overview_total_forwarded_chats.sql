@@ -20,7 +20,7 @@ WITH
             customer_support_id,
             customer_support_display_name,
             ended
-        FROM chat
+        FROM chat.chat
         WHERE
             status = 'REDIRECTED'
             AND customer_support_id <> '' AND customer_support_id IS NOT NULL
@@ -37,6 +37,6 @@ SELECT
     COUNT(DISTINCT base_id) FILTER (
         WHERE external_id IS NOT NULL AND external_id <> ''
     ) AS metric_value
-FROM chat
+FROM chat.chat
 WHERE
     DATE_TRUNC('day', chat.ended) = DATE_TRUNC('day', CURRENT_DATE - '1 day'::INTERVAL)

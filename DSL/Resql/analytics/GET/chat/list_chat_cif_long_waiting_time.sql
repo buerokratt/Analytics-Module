@@ -40,20 +40,20 @@ WITH
                     ORDER BY message_created
                 )
             AS prev_message_time
-        FROM denormalized_chat_messages_for_metrics AS dcm_1
+        FROM chat.denormalized_chat_messages_for_metrics AS dcm_1
         WHERE
             message_author_role = 'end-user'
             AND message_created >= :start::DATE AND message_created < (:end::DATE + INTERVAL '1 day')
             AND EXISTS (
                 SELECT 1
-                FROM denormalized_chat_messages_for_metrics AS dcm_2
+                FROM chat.denormalized_chat_messages_for_metrics AS dcm_2
                 WHERE
                     dcm_1.chat_base_id = dcm_2.chat_base_id
                     AND dcm_2.message_author_role = 'backoffice-user'
             )
             AND EXISTS (
                 SELECT 1
-                FROM denormalized_chat_messages_for_metrics AS dcm_3
+                FROM chat.denormalized_chat_messages_for_metrics AS dcm_3
                 WHERE
                     dcm_1.chat_base_id = dcm_3.chat_base_id
                     AND (

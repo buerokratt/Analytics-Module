@@ -44,7 +44,7 @@ WITH
                 PARTITION BY base_id
                 ORDER BY updated
             ) AS prev_updated
-        FROM chat
+        FROM chat.chat
         WHERE created >= :start::DATE AND created < (:end::DATE + INTERVAL '1 day')
     )
 

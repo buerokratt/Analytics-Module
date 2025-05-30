@@ -24,7 +24,7 @@ WITH
         SELECT
             chat_base_id,
             COUNT(DISTINCT message_base_id) AS message_count
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics
         WHERE created >= :start::DATE AND created < (:end::DATE + INTERVAL '1 day')
         GROUP BY chat_base_id
         HAVING BOOL_OR(message_author_role = 'end-user') = true

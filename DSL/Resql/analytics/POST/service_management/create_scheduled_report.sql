@@ -58,7 +58,7 @@ declaration:
         type: boolean
         description: "Indicates whether the report is marked as deleted"
 */
-INSERT INTO scheduled_reports (
+INSERT INTO analytics.scheduled_reports (
     name, period, metrics, dataset_id, start_date, end_date
 )
 VALUES (:name, :period, ARRAY[:metrics], :dataset_id, :start_date, :end_date)

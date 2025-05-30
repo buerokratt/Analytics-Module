@@ -31,12 +31,12 @@ WITH
         SELECT DISTINCT ON (chat_base_id)
             chat_base_id,
             ended
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics
         WHERE ended >= :start::DATE AND ended < (:end::DATE + INTERVAL '1 day')
             AND chat_status = 'ENDED'
             AND NOT EXISTS (
                 SELECT 1
-                FROM denormalized_chat_messages_for_metrics AS dcm_inner
+                FROM chat.denormalized_chat_messages_for_metrics AS dcm_inner
                 WHERE
                     dcm_inner.chat_base_id
                     = denormalized_chat_messages_for_metrics.chat_base_id
@@ -44,7 +44,7 @@ WITH
             )
             AND NOT EXISTS (
                 SELECT 1
-                FROM denormalized_chat_messages_for_metrics AS dcm_inner
+                FROM chat.denormalized_chat_messages_for_metrics AS dcm_inner
                 WHERE
                     dcm_inner.chat_base_id
                     = denormalized_chat_messages_for_metrics.chat_base_id

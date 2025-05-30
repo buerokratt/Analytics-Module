@@ -32,8 +32,8 @@ WITH
             DATE_TRUNC(:period, m_1.created) AS time,
             m_1.chat_base_id,
             (m_2.created - m_1.created) AS waiting_time
-        FROM message AS m_1
-            INNER JOIN message AS m_2
+        FROM chat.message AS m_1
+            INNER JOIN chat.message AS m_2
                 ON m_1.chat_base_id = m_2.chat_base_id
         WHERE
             m_1.author_role = 'end-user'

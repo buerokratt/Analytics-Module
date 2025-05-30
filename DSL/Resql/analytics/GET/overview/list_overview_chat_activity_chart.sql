@@ -59,7 +59,7 @@ WITH
                 message_id,
                 ended,
                 message_event
-            FROM denormalized_chat_messages_for_metrics
+            FROM chat.denormalized_chat_messages_for_metrics
             WHERE ended >= DATE_TRUNC('hour', CURRENT_DATE)
             ORDER BY chat_base_id ASC, message_id ASC, timestamp DESC
         ) AS unique_messages

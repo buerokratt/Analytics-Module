@@ -27,7 +27,7 @@ SELECT
             WHEN key = 'odp_org_id' THEN value
         END
     ) AS odp_org_id
-FROM configuration
+FROM config.configuration
 WHERE
     key = 'odp_key'
     OR key = 'odp_org_id'

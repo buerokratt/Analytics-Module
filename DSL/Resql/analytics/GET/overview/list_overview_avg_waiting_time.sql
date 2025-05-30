@@ -38,7 +38,7 @@ WITH
                 PARTITION BY chat.base_id
                 ORDER BY chat.updated
             ) AS prev_updated
-        FROM chat
+        FROM chat.chat
         WHERE chat.created >= DATE_TRUNC(
             :group_period,
             CURRENT_DATE - CONCAT('1 ', :group_period)::INTERVAL

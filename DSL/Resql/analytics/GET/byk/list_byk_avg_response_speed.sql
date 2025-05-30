@@ -32,13 +32,13 @@ WITH
             created,
             (
                 SELECT MAX(created)
-                FROM message AS m_2
+                FROM chat.message AS m_2
                 WHERE
                     m_2.author_role <> 'buerokratt'
                     AND m_2.created < m.created
                     AND m_2.chat_base_id = m.chat_base_id
             ) AS previous_message_time
-        FROM message AS m
+        FROM chat.message AS m
         WHERE created >= :start::DATE
           AND created < (:end::DATE + INTERVAL '1 day')
           AND author_role = 'buerokratt'

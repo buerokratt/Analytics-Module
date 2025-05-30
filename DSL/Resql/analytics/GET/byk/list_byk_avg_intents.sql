@@ -31,7 +31,7 @@ WITH
         SELECT
             COUNT(intent) AS intent_count,
             MIN(created) AS created
-        FROM message
+        FROM chat.message
         WHERE created >= :start::DATE 
           AND created < (:end::DATE + INTERVAL '1 day')
           AND intent IS NOT NULL

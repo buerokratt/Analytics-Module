@@ -31,7 +31,7 @@ WITH
         SELECT
             DATE_TRUNC('hour', csa_created) AS created,
             COUNT(DISTINCT id_code) AS active_csas
-        FROM denormalized_user_data
+        FROM auth_users.denormalized_user_data
         WHERE
             csa_created IS NOT NULL
             AND csa_created >= :start::DATE 

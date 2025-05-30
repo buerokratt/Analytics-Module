@@ -25,12 +25,12 @@ WITH
         SELECT
             chat_base_id,
             DATE_TRUNC('month', ended) AS period_ended
-        FROM denormalized_chat_messages_for_metrics AS dcm
+        FROM chat.denormalized_chat_messages_for_metrics AS dcm
         WHERE
             ended >= DATE_TRUNC('month', CURRENT_DATE - CONCAT('1 ', 'month')::INTERVAL)
             AND EXISTS (
                 SELECT 1
-                FROM denormalized_chat_messages_for_metrics AS inner_dcm
+                FROM chat.denormalized_chat_messages_for_metrics AS inner_dcm
                 WHERE inner_dcm.chat_base_id = dcm.chat_base_id
                 GROUP BY inner_dcm.chat_base_id
                 HAVING

@@ -25,7 +25,7 @@ WITH
         SELECT
             chat_base_id,
             DATE_TRUNC(:group_period, ended) AS period_ended
-        FROM denormalized_chat_messages_for_metrics AS dcm
+        FROM chat.denormalized_chat_messages_for_metrics AS dcm
         WHERE
             ended IS NOT NULL
             AND ended
@@ -34,7 +34,7 @@ WITH
             )
             AND EXISTS (
                 SELECT 1
-                FROM denormalized_chat_messages_for_metrics AS inner_dcm
+                FROM chat.denormalized_chat_messages_for_metrics AS inner_dcm
                 WHERE inner_dcm.chat_base_id = dcm.chat_base_id
                 GROUP BY inner_dcm.chat_base_id
                 HAVING

@@ -39,7 +39,7 @@ WITH
             chat_base_id,
             message_author_id,
             message_author_id AS id_code
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics
         WHERE
             message_author_role IN ('backoffice-user', 'end-user')
             AND message_author_id IS NOT NULL

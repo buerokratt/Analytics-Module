@@ -33,25 +33,25 @@ FROM (
     SELECT DISTINCT ON (chat_base_id)
         chat_base_id,
         ended
-    FROM denormalized_chat_messages_for_metrics
+    FROM chat.denormalized_chat_messages_for_metrics AS dcm
     WHERE ended >= :start::DATE AND ended < (:end::DATE + INTERVAL '1 day')
         AND chat_status = 'ENDED'
         AND (
             (
                 NOT EXISTS (
                     SELECT 1
-                    FROM denormalized_chat_messages_for_metrics AS m_1
+                    FROM chat.denormalized_chat_messages_for_metrics AS m_1
                     WHERE
                         m_1.chat_base_id
-                        = denormalized_chat_messages_for_metrics.chat_base_id
+                        = dcm.chat_base_id
                         AND m_1.message_author_role = 'backoffice-user'
                 )
                 AND NOT EXISTS (
                     SELECT 1
-                    FROM denormalized_chat_messages_for_metrics AS m_2
+                    FROM chat.denormalized_chat_messages_for_metrics AS m_2
                     WHERE
                         m_2.chat_base_id
-                        = denormalized_chat_messages_for_metrics.chat_base_id
+                        = dcm.chat_base_id
                         AND m_2.message_event = 'taken-over'
                 )
             )
@@ -59,18 +59,18 @@ FROM (
             (
                 EXISTS (
                     SELECT 1
-                    FROM denormalized_chat_messages_for_metrics AS m_3
+                    FROM chat.denormalized_chat_messages_for_metrics AS m_3
                     WHERE
                         m_3.chat_base_id
-                        = denormalized_chat_messages_for_metrics.chat_base_id
+                        = dcm.chat_base_id
                         AND m_3.message_author_role = 'backoffice-user'
                 )
                 AND EXISTS (
                     SELECT 1
-                    FROM denormalized_chat_messages_for_metrics AS m_4
+                    FROM chat.denormalized_chat_messages_for_metrics AS m_4
                     WHERE
                         m_4.chat_base_id
-                        = denormalized_chat_messages_for_metrics.chat_base_id
+                        = dcm.chat_base_id
                         AND m_4.message_event = 'taken-over'
                 )
             )

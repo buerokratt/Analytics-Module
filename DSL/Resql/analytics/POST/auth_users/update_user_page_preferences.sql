@@ -20,5 +20,5 @@ declaration:
   response:
     fields: []
 */
-INSERT INTO user_page_preferences (user_id, page_name, page_results)
+INSERT INTO auth_users.user_page_preferences (user_id, page_name, page_results)
 VALUES (:user_id, :page_name, :page_results);

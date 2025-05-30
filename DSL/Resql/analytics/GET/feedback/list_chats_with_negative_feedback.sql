@@ -58,7 +58,7 @@ WITH
         SELECT DISTINCT ON (chat_base_id)
             chat_base_id,
             customer_support_id AS latest_open_csa
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics
         WHERE chat_status = 'OPEN'
         ORDER BY chat_base_id ASC, timestamp DESC
     ),
@@ -110,15 +110,14 @@ WITH
                             )
                         )
                     )
-                FROM denormalized_chat_messages_for_metrics AS dcm_inner
+                FROM chat.denormalized_chat_messages_for_metrics AS dcm_inner
                 WHERE
-                    dcm_inner.chat_base_id
-                    = denormalized_chat_messages_for_metrics.chat_base_id
+                    dcm_inner.chat_base_id = dcm.chat_base_id
                     AND dcm_inner.customer_support_id IS NOT NULL
                     AND dcm_inner.customer_support_id <> ''
             ) AS all_csa_names,
             CEIL(COUNT(*) OVER () / :page_size::DECIMAL) AS total_pages
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics AS dcm
         WHERE chat_status = 'ENDED'
         AND created >= :start::DATE
         AND created < (:end::DATE + INTERVAL '1 day')

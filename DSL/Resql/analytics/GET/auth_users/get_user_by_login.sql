@@ -42,7 +42,7 @@ SELECT
     id_code,
     display_name,
     authority_name AS authorities
-FROM denormalized_user_data
+FROM auth_users.denormalized_user_data
 WHERE
     id_code = :userIdCode
     AND password_hash = :password

@@ -15,7 +15,7 @@ declaration:
     fields: []
 */
 
-INSERT INTO scheduled_reports (
+INSERT INTO analytics.scheduled_reports (
     name, period, metrics, dataset_id, start_date, end_date, deleted
 )
 SELECT
@@ -26,7 +26,7 @@ SELECT
     start_date,
     end_date,
     TRUE
-FROM scheduled_reports
+FROM analytics.scheduled_reports
 WHERE dataset_id = :id
 ORDER BY updated DESC
 LIMIT 1;

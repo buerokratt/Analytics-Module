@@ -26,34 +26,37 @@ declaration:
         type: timestamp
         description: "Calculated end timestamp for the reporting range"
 */
-WITH consts AS (
-  SELECT 'day' AS cday,
-         'week' AS cweek,
-         'month' AS cmonth,
-         'quarter' AS cquarter,
-         'year' AS cyear,
-         'never' AS cnever,
-         INTERVAL '1 day' AS oneDay,
-         INTERVAL '1 week' AS oneWeek,
-         INTERVAL '1 month' AS oneMonth,
-         INTERVAL '3 month' AS threeMonth,
-         INTERVAL '1 year' AS oneYear
-)
+WITH
+    consts AS (
+        SELECT
+            'day' AS cday,
+            'week' AS cweek,
+            'month' AS cmonth,
+            'quarter' AS cquarter,
+            'year' AS cyear,
+            'never' AS cnever,
+            INTERVAL '1 day' AS one_day,
+            INTERVAL '1 week' AS one_week,
+            INTERVAL '1 month' AS one_month,
+            INTERVAL '3 month' AS three_month,
+            INTERVAL '1 year' AS one_year
+    )
+
 SELECT
-  CASE
-    WHEN (:period = cday) THEN date_trunc(cday, NOW() - oneDay)
-    WHEN (:period = cweek) THEN date_trunc(cweek, NOW() - oneWeek)
-    WHEN (:period = cmonth) THEN date_trunc(cmonth, NOW() - oneMonth)
-    WHEN (:period = cquarter) THEN date_trunc(cquarter, NOW() - threeMonth)
-    WHEN (:period = cyear) THEN date_trunc(cyear, NOW() - oneYear)
-    WHEN (:period = cnever) THEN date_trunc(cday, :start::date)
-  END AS "start",
-  CASE
-    WHEN (:period = cday) THEN date_trunc(cday, NOW()) - oneDay
-    WHEN (:period = cweek) THEN date_trunc(cweek, NOW()) - oneDay
-    WHEN (:period = cmonth) THEN date_trunc(cmonth, NOW()) - oneDay
-    WHEN (:period = cquarter) THEN date_trunc(cquarter, NOW()) - oneDay
-    WHEN (:period = cyear) THEN date_trunc(cyear, NOW()) -  oneDay
-    WHEN (:period = cnever) THEN date_trunc(cday, :end::date)
-  END AS "end"
-FROM consts;   
+    CASE
+        WHEN (:period = cday) THEN DATE_TRUNC(cday, NOW() - one_day)
+        WHEN (:period = cweek) THEN DATE_TRUNC(cweek, NOW() - one_week)
+        WHEN (:period = cmonth) THEN DATE_TRUNC(cmonth, NOW() - one_month)
+        WHEN (:period = cquarter) THEN DATE_TRUNC(cquarter, NOW() - three_month)
+        WHEN (:period = cyear) THEN DATE_TRUNC(cyear, NOW() - one_year)
+        WHEN (:period = cnever) THEN date_trunc(cday, :start::DATE)
+    END AS start,
+    CASE
+        WHEN (:period = cday) THEN DATE_TRUNC(cday, NOW()) - one_day
+        WHEN (:period = cweek) THEN DATE_TRUNC(cweek, NOW()) - one_day
+        WHEN (:period = cmonth) THEN DATE_TRUNC(cmonth, NOW()) - one_day
+        WHEN (:period = cquarter) THEN DATE_TRUNC(cquarter, NOW()) - one_day
+        WHEN (:period = cyear) THEN DATE_TRUNC(cyear, NOW()) - one_day
+        WHEN (:period = cnever) THEN date_trunc(cday, :end::DATE)
+    END AS "end"
+FROM consts;

@@ -111,7 +111,7 @@ SELECT
     c.last_message_including_empty_content,
     c.last_message_timestamp,
     c.csa_title
-FROM denormalized_chat c
-WHERE chat_id = :id
-ORDER BY denormalized_record_created DESC
+FROM denormalized_chat AS c
+WHERE c.chat_id = :id
+ORDER BY c.denormalized_record_created DESC
 LIMIT 1;

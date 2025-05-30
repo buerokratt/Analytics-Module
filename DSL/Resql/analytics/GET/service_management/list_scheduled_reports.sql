@@ -38,17 +38,6 @@ declaration:
         description: "End date of the reporting range"
 */
 SELECT
-  id,
-  name,
-  dataset_id,
-  period,
-  metrics,
-  created,
-  updated,
-  start_date,
-  end_date
-FROM (
-  SELECT 
     id,
     name,
     dataset_id,
@@ -57,9 +46,23 @@ FROM (
     created,
     updated,
     start_date,
-    end_date,
-    ROW_NUMBER() OVER (PARTITION BY dataset_id ORDER BY updated DESC) as rn
-  FROM scheduled_reports
-  WHERE NOT deleted
-) ranked
+    end_date
+FROM (
+    SELECT
+        id,
+        name,
+        dataset_id,
+        period,
+        metrics,
+        created,
+        updated,
+        start_date,
+        end_date,
+        ROW_NUMBER() OVER (
+            PARTITION BY dataset_id
+            ORDER BY updated DESC
+        ) AS rn
+    FROM scheduled_reports
+    WHERE NOT deleted
+) AS ranked
 WHERE rn = 1;

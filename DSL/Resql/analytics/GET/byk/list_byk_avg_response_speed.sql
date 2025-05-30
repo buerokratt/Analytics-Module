@@ -26,21 +26,25 @@ declaration:
         type: number
         description: "Average chatbot response time in seconds for the time period"
 */
-WITH chatbot_messages AS (
-    SELECT 
-        created,
-        (
-            SELECT MAX(created) 
-            FROM message m2 
-            WHERE m2.author_role <> 'buerokratt'
-            AND m2.created < m.created
-            AND m2.chat_base_id = m.chat_base_id
-        ) AS previous_message_time
-    FROM message m
-    WHERE created >= :start::date AND created < (:end::date + INTERVAL '1 day')
-    AND author_role = 'buerokratt'
-) 
-SELECT 
+WITH
+    chatbot_messages AS (
+        SELECT
+            created,
+            (
+                SELECT MAX(created)
+                FROM message AS m_2
+                WHERE
+                    m_2.author_role <> 'buerokratt'
+                    AND m_2.created < m.created
+                    AND m_2.chat_base_id = m.chat_base_id
+            ) AS previous_message_time
+        FROM message AS m
+        WHERE created >= :start::DATE
+          AND created < (:end::DATE + INTERVAL '1 day')
+          AND author_role = 'buerokratt'
+    )
+
+SELECT
     DATE_TRUNC(:period, created) AS time,
     AVG(
         EXTRACT(EPOCH FROM created) - EXTRACT(EPOCH FROM previous_message_time)

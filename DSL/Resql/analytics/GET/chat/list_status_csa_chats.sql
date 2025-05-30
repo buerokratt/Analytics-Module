@@ -42,8 +42,8 @@ WITH ended_chats AS (
         ended AS max_ended_date
     FROM denormalized_chat_messages_for_metrics
     WHERE chat_status = 'ENDED'
-      AND ended >= :start::date 
-      AND ended < (:end::date + INTERVAL '1 day')
+      AND ended >= :start::DATE 
+      AND ended < (:end::DATE + INTERVAL '1 day')
     ORDER BY chat_base_id, timestamp DESC
 )
 SELECT 

@@ -27,19 +27,21 @@ declaration:
         description: "Percentage of chatbot messages correctly understood in the given time period"
 */
 SELECT
-    DATE_TRUNC(:period, created) as time,
+    DATE_TRUNC(:period, created) AS time,
     (
         SUM(
             CASE
-                WHEN author_role != 'buerokratt'
-                AND event != 'not-confident'
-                THEN 1
+                WHEN
+                    author_role != 'buerokratt'
+                    AND event != 'not-confident'
+                    THEN 1
                 ELSE 0
             END
-        )::float / COUNT(*)::float 
+        )::FLOAT / COUNT(*)::FLOAT
     ) * 100 AS percentage_correctly_understood
-FROM message 
-WHERE created >= :start::date AND created < (:end::date + INTERVAL '1 day')
-AND author_role = 'buerokratt'
+FROM message
+WHERE created >= :start::DATE
+  AND created < (:end::DATE + INTERVAL '1 day')
+  AND author_role = 'buerokratt'
 GROUP BY time
 ORDER BY time

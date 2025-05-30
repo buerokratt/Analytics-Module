@@ -26,25 +26,44 @@ declaration:
         type: number
         description: "Average waiting time in minutes before a response from a backoffice-user"
 */
-WITH user_messages AS (
-  SELECT 
-    chat_base_id, 
-    author_role,
-    created, 
-    LAG(created) OVER (PARTITION BY chat_base_id, author_role ORDER BY created) AS prev_message_time
-  FROM message
-  WHERE author_role = 'end-user' 
-  AND created >= :start::date AND created < (:end::date + INTERVAL '1 day')
-),
-average_waiting_time AS (
-  SELECT 
-    DATE_TRUNC(:period, m.created) AS time, 
-    COALESCE(AVG(EXTRACT(epoch FROM (m.created - prev_message_time))::integer / 60.0), 0) AS average_waiting_time
-  FROM user_messages m
-  JOIN message byk
-  ON m.chat_base_id = byk.chat_base_id
-  AND byk.author_role = 'backoffice-user'
-  GROUP BY time
-)
-SELECT time, average_waiting_time FROM average_waiting_time
+WITH
+    user_messages AS (
+        SELECT
+            chat_base_id,
+            author_role,
+            created,
+            LAG(created)
+                OVER (
+                    PARTITION BY chat_base_id, author_role
+                    ORDER BY created
+                )
+            AS prev_message_time
+        FROM message
+        WHERE 
+            author_role = 'end-user'
+            AND created >= :start::DATE
+            AND created < (:end::DATE + INTERVAL '1 day')
+    ),
+
+    average_waiting_time AS (
+        SELECT
+            DATE_TRUNC(:period, m.created) AS time,
+            COALESCE(
+                AVG(
+                    EXTRACT(EPOCH FROM (m.created - prev_message_time))::INTEGER / 60.0
+                ),
+                0
+            ) AS average_waiting_time
+        FROM user_messages AS m
+            INNER JOIN message AS byk
+                ON
+                    m.chat_base_id = byk.chat_base_id
+                    AND byk.author_role = 'backoffice-user'
+        GROUP BY time
+    )
+
+SELECT
+    time,
+    average_waiting_time
+FROM average_waiting_time
 ORDER BY time ASC;

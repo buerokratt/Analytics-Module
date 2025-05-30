@@ -26,22 +26,30 @@ declaration:
         type: number
         description: "Median waiting time in minutes before a response from a backoffice-user"
 */
-WITH waiting_times AS (
-    SELECT 
-        DATE_TRUNC(:period, m1.created) AS time,
-        m1.chat_base_id,
-        (m2.created - m1.created) AS waiting_time
-    FROM message m1
-    JOIN message m2
-    ON m1.chat_base_id = m2.chat_base_id
-    WHERE m1.author_role = 'end-user'
-    AND m2.author_role = 'backoffice-user'
-    AND m2.created > m1.created
-    AND m1.created >= :start::date AND m1.created < (:end::date + INTERVAL '1 day')
-)
-SELECT 
-    time, 
-    ROUND(EXTRACT(epoch FROM (PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY waiting_time)))::numeric / 60, 2) AS median_waiting_time
+WITH
+    waiting_times AS (
+        SELECT
+            DATE_TRUNC(:period, m_1.created) AS time,
+            m_1.chat_base_id,
+            (m_2.created - m_1.created) AS waiting_time
+        FROM message AS m_1
+            INNER JOIN message AS m_2
+                ON m_1.chat_base_id = m_2.chat_base_id
+        WHERE
+            m_1.author_role = 'end-user'
+            AND m_2.author_role = 'backoffice-user'
+            AND m_2.created > m_1.created
+            AND m_1.created >= :start::DATE
+            AND m_1.created < (:end::DATE + INTERVAL '1 day')
+    )
+
+SELECT
+    time,
+    ROUND(
+        EXTRACT(EPOCH FROM (PERCENTILE_CONT(0.5) WITHIN GROUP (
+            ORDER BY waiting_time
+        )))::NUMERIC / 60, 2
+    ) AS median_waiting_time
 FROM waiting_times
 GROUP BY time
 ORDER BY time

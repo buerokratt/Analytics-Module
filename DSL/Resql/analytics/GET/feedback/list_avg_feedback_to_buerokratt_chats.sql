@@ -26,14 +26,26 @@ declaration:
         type: number
         description: "Average feedback rating for the time period"
 */
-SELECT date_trunc(:metric, ended) AS date_time,
-       ROUND(1.0 * SUM(CASE WHEN feedback_rating IS NOT NULL THEN feedback_rating ELSE 0 END) / NULLIF(COUNT(DISTINCT chat_base_id), 0), 1) AS avg
-FROM denormalized_chat_messages_for_metrics chat
-WHERE EXISTS
-    (SELECT 1
-     FROM denormalized_chat_messages_for_metrics message
-     WHERE message.chat_base_id = chat.chat_base_id
-       AND message.message_author_role = 'buerokratt' OR message.message_author_role = 'Bürokratt')
-AND chat_status = 'ENDED'
-AND ended >= :start::date AND ended < (:end::date + INTERVAL '1 day')
+SELECT
+    DATE_TRUNC(:metric, ended) AS date_time,
+    ROUND(
+        1.0
+        * SUM(COALESCE(feedback_rating, 0))
+        / NULLIF(COUNT(DISTINCT chat_base_id), 0),
+        1
+    ) AS avg
+FROM denormalized_chat_messages_for_metrics AS chat
+WHERE
+    EXISTS
+    (
+        SELECT 1
+        FROM denormalized_chat_messages_for_metrics AS message
+        WHERE
+            message.chat_base_id = chat.chat_base_id
+            AND message.message_author_role = 'buerokratt'
+            OR message.message_author_role = 'Bürokratt'
+    )
+    AND chat_status = 'ENDED'
+    AND ended >= :start::DATE
+    AND ended < (:end::DATE + INTERVAL '1 day')
 GROUP BY date_time

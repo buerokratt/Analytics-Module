@@ -17,9 +17,6 @@ declaration:
         type: string
         enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
         description: "Time granularity for grouping results"
-      - field: botname
-        type: string
-        description: "Bot name to exclude from received chat filtering"
   response:
     fields:
       - field: date_time

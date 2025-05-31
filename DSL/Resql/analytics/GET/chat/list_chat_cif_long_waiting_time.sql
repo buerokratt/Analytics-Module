@@ -84,6 +84,6 @@ SELECT
     DATE_TRUNC(:period, created) AS time,
     COUNT(*) AS long_waiting_time
 FROM waiting_times
-WHERE waiting_time_seconds > :threshold_seconds
+WHERE waiting_time_seconds > :threshold_seconds::INTEGER
 GROUP BY time
 ORDER BY time;

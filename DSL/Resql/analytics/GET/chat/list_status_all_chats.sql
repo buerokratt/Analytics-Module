@@ -53,6 +53,6 @@ SELECT
     COUNT(DISTINCT dcm.chat_base_id) AS chat_count
 FROM chat.denormalized_chat_messages_for_metrics AS dcm
     INNER JOIN ended_chats AS ec ON dcm.chat_base_id = ec.chat_base_id
-WHERE dcm.message_event IN (:events)
+WHERE dcm.message_event = ANY(STRING_TO_ARRAY(:events, ',')::event_type[])
 GROUP BY date_time, dcm.message_event
 ORDER BY event;

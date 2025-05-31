@@ -63,7 +63,7 @@ WITH
             )
             AND created >= :start::DATE
             AND created < (:end::DATE + INTERVAL '1 day')
-            AND customer_support_id NOT IN (:excluded_csas)
+            AND customer_support_id <> ALL(STRING_TO_ARRAY(:excluded_csas, ','))
             AND chat_status = 'ENDED'
             AND feedback_rating IS NOT NULL
         ORDER BY chat_base_id ASC, timestamp DESC

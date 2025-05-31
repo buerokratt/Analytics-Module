@@ -3,7 +3,7 @@ declaration:
   version: 0.1
   description: "Mark all ODP-related configuration keys as deleted"
   method: post
-  namespace: service_management
+  namespace: config
   returns: json
   accepts: json
   allowlist:

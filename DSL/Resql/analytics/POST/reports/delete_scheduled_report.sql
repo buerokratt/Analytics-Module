@@ -3,7 +3,7 @@ declaration:
   version: 0.1
   description: "Mark the most recent scheduled report for a dataset as deleted by duplicating it with the deleted flag"
   method: post
-  namespace: service_management
+  namespace: reports
   returns: json
   accepts: json
   allowlist:

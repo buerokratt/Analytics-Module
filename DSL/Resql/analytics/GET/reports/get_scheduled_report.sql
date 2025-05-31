@@ -1,12 +1,15 @@
 /*
 declaration:
   version: 0.1
-  description: "Fetch the latest non-deleted scheduled report for each dataset"
+  description: "Fetch the most recent scheduled report for a specific dataset"
   method: get
-  namespace: service_management
+  namespace: reports
   returns: json
   allowlist:
-    query: []
+    query:
+      - field: datasetId
+        type: string
+        description: "Identifier of the dataset for which to retrieve the latest scheduled report"
   response:
     fields:
       - field: id
@@ -37,6 +40,24 @@ declaration:
         type: date
         description: "End date of the reporting range"
 */
+WITH
+    latest_report AS (
+        SELECT DISTINCT ON (dataset_id)
+            id,
+            name,
+            dataset_id,
+            period,
+            metrics,
+            created,
+            updated,
+            start_date,
+            end_date,
+            deleted
+        FROM analytics.scheduled_reports
+        WHERE dataset_id = :datasetId
+        ORDER BY dataset_id ASC, updated DESC
+    )
+
 SELECT
     id,
     name,
@@ -47,22 +68,5 @@ SELECT
     updated,
     start_date,
     end_date
-FROM (
-    SELECT
-        id,
-        name,
-        dataset_id,
-        period,
-        metrics,
-        created,
-        updated,
-        start_date,
-        end_date,
-        ROW_NUMBER() OVER (
-            PARTITION BY dataset_id
-            ORDER BY updated DESC
-        ) AS rn
-    FROM analytics.scheduled_reports
-    WHERE NOT deleted
-) AS ranked
-WHERE rn = 1;
+FROM latest_report
+WHERE (deleted IS NULL OR deleted = FALSE);

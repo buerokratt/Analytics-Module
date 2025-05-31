@@ -47,7 +47,7 @@ WITH
             AND message_author_id <> 'null'
             AND created >= :start::DATE
             AND created < (:end::DATE + INTERVAL '1 day')
-            AND message_author_id NOT IN (:excluded_csas)
+            AND message_author_id <> ALL(STRING_TO_ARRAY(:excluded_csas, ','))
         ORDER BY chat_base_id ASC, timestamp DESC
     )
 

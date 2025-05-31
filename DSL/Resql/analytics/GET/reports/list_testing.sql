@@ -3,7 +3,7 @@ declaration:
   version: 0.1
   description: "Fetch all user-defined tables with their schema and owner information"
   method: get
-  namespace: service_management
+  namespace: reports
   returns: json
   allowlist:
     query: []

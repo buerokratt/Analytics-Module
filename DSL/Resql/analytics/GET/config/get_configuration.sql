@@ -3,7 +3,7 @@ declaration:
   version: 0.1
   description: "Fetch the latest non-deleted configuration entry by key"
   method: get
-  namespace: service_management
+  namespace: config
   returns: json
   allowlist:
     query:

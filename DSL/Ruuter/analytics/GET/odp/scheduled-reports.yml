@@ -10,7 +10,7 @@ declaration:
 getScheduledReports:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/service_management/list_scheduled_reports"
+    url: "[#ANALYTICS_RESQL]/reports/list_scheduled_reports"
   result: scheduledReports
 
 return:

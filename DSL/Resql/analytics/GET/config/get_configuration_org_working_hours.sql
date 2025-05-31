@@ -1,3 +1,63 @@
+/*
+declaration:
+  version: 0.1
+  description: "Retrieve organization working hours configuration from the latest non-deleted configuration entries"
+  method: get
+  namespace: config
+  returns: json
+  allowlist:
+    query: []
+  response:
+    fields:
+      - field: workingTimeStart
+        type: integer
+        description: "Default working hours start (0-23)"
+      - field: workingTimeEnd
+        type: integer
+        description: "Default working hours end (0-23)"
+      - field: sundayWorkingTimeStart
+        type: integer
+        description: "Sunday working hours start"
+      - field: sundayWorkingTimeEnd
+        type: integer
+        description: "Sunday working hours end"
+      - field: mondayWorkingTimeStart
+        type: integer
+        description: "Monday working hours start"
+      - field: mondayWorkingTimeEnd
+        type: integer
+        description: "Monday working hours end"
+      - field: tuesdayWorkingTimeStart
+        type: integer
+        description: "Tuesday working hours start"
+      - field: tuesdayWorkingTimeEnd
+        type: integer
+        description: "Tuesday working hours end"
+      - field: wednesdayWorkingTimeStart
+        type: integer
+        description: "Wednesday working hours start"
+      - field: wednesdayWorkingTimeEnd
+        type: integer
+        description: "Wednesday working hours end"
+      - field: thursdayWorkingTimeStart
+        type: integer
+        description: "Thursday working hours start"
+      - field: thursdayWorkingTimeEnd
+        type: integer
+        description: "Thursday working hours end"
+      - field: fridayWorkingTimeStart
+        type: integer
+        description: "Friday working hours start"
+      - field: fridayWorkingTimeEnd
+        type: integer
+        description: "Friday working hours end"
+      - field: saturdayWorkingTimeStart
+        type: integer
+        description: "Saturday working hours start"
+      - field: saturdayWorkingTimeEnd
+        type: integer
+        description: "Saturday working hours end"
+*/
 SELECT 
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 

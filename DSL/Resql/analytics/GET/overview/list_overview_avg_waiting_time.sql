@@ -11,9 +11,6 @@ declaration:
         type: string
         enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
         description: "Time grouping interval used in date_trunc"
-      - field: botname
-        type: string
-        description: "Name of the bot to exclude from customer support assignment evaluation"
   response:
     fields:
       - field: ended

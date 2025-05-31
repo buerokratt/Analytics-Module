@@ -95,55 +95,55 @@ AND EXISTS (
         AND dcm_inner.message_author_id = 'buerokratt'
 )
 AND (
-    EXTRACT(HOUR FROM timestamp) < :workingTimeStart
-    OR EXTRACT(HOUR FROM timestamp) > :workingTimeEnd
+    EXTRACT(HOUR FROM timestamp) < :workingTimeStart::INTEGER
+    OR EXTRACT(HOUR FROM timestamp) > :workingTimeEnd::INTEGER
     OR (
         EXTRACT(DOW FROM timestamp) = 0
         AND (
-            EXTRACT(HOUR FROM timestamp) < :sundayWorkingTimeStart
-            OR EXTRACT(HOUR FROM timestamp) > :sundayWorkingTimeEnd
+            EXTRACT(HOUR FROM timestamp) < :sundayWorkingTimeStart::INTEGER
+            OR EXTRACT(HOUR FROM timestamp) > :sundayWorkingTimeEnd::INTEGER
         )
     )
     OR (
         EXTRACT(DOW FROM timestamp) = 1
         AND (
-            EXTRACT(HOUR FROM timestamp) < :mondayWorkingTimeStart
-            OR EXTRACT(HOUR FROM timestamp) > :mondayWorkingTimeEnd
+            EXTRACT(HOUR FROM timestamp) < :mondayWorkingTimeStart::INTEGER
+            OR EXTRACT(HOUR FROM timestamp) > :mondayWorkingTimeEnd::INTEGER
         )
     )
     OR (
         EXTRACT(DOW FROM timestamp) = 2
         AND (
-            EXTRACT(HOUR FROM timestamp) < :tuesdayWorkingTimeStart
-            OR EXTRACT(HOUR FROM timestamp) > :tuesdayWorkingTimeEnd
+            EXTRACT(HOUR FROM timestamp) < :tuesdayWorkingTimeStart::INTEGER
+            OR EXTRACT(HOUR FROM timestamp) > :tuesdayWorkingTimeEnd::INTEGER
         )
     )
     OR (
         EXTRACT(DOW FROM timestamp) = 3
         AND (
-            EXTRACT(HOUR FROM timestamp) < :wednesdayWorkingTimeStart
-            OR EXTRACT(HOUR FROM timestamp) > :wednesdayWorkingTimeEnd
+            EXTRACT(HOUR FROM timestamp) < :wednesdayWorkingTimeStart::INTEGER
+            OR EXTRACT(HOUR FROM timestamp) > :wednesdayWorkingTimeEnd::INTEGER
         )
     )
     OR (
         EXTRACT(DOW FROM timestamp) = 4
         AND (
-            EXTRACT(HOUR FROM timestamp) < :thursdayWorkingTimeStart
-            OR EXTRACT(HOUR FROM timestamp) > :thursdayWorkingTimeEnd
+            EXTRACT(HOUR FROM timestamp) < :thursdayWorkingTimeStart::INTEGER
+            OR EXTRACT(HOUR FROM timestamp) > :thursdayWorkingTimeEnd::INTEGER
         )
     )
     OR (
         EXTRACT(DOW FROM timestamp) = 5
         AND (
-            EXTRACT(HOUR FROM timestamp) < :fridayWorkingTimeStart
-            OR EXTRACT(HOUR FROM timestamp) > :fridayWorkingTimeEnd
+            EXTRACT(HOUR FROM timestamp) < :fridayWorkingTimeStart::INTEGER
+            OR EXTRACT(HOUR FROM timestamp) > :fridayWorkingTimeEnd::INTEGER
         )
     )
     OR (
         EXTRACT(DOW FROM timestamp) = 6
         AND (
-            EXTRACT(HOUR FROM timestamp) < :saturdayWorkingTimeStart
-            OR EXTRACT(HOUR FROM timestamp) > :saturdayWorkingTimeEnd
+            EXTRACT(HOUR FROM timestamp) < :saturdayWorkingTimeStart::INTEGER
+            OR EXTRACT(HOUR FROM timestamp) > :saturdayWorkingTimeEnd::INTEGER
         )
     )
 )

@@ -3,7 +3,7 @@ declaration:
   version: 0.1
   description: "Create a new scheduled report and return its metadata"
   method: post
-  namespace: service_management
+  namespace: reports
   returns: json
   allowlist:
     query:

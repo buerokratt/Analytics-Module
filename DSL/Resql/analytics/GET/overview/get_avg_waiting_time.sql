@@ -13,9 +13,6 @@ declaration:
       - field: end
         type: date
         description: "End date for filtering chat creation"
-      - field: botname
-        type: string
-        description: "Name of the bot to exclude from customer support assignments"
   response:
     fields:
       - field: avg_waiting_time_seconds
@@ -37,7 +34,7 @@ WITH
                 ORDER BY updated
             ) AS prev_updated
         FROM chat.chat
-        WHERE created >= :start::dateAND created < (:end::DATE + INTERVAL '1 day')
+        WHERE created >= :start::date AND created < (:end::DATE + INTERVAL '1 day')
     )
 
 SELECT

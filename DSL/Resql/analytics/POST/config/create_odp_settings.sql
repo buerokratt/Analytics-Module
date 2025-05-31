@@ -3,7 +3,7 @@ declaration:
   version: 0.1
   description: "Insert ODP configuration settings including encoded API key and organization ID"
   method: post
-  namespace: service_management
+  namespace: config
   returns: json
   allowlist:
     query:

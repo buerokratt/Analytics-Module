@@ -10,7 +10,7 @@ declaration:
 get_message:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/service_management/list_testing"
+    url: "[#ANALYTICS_RESQL]/reports/list_testing"
   result: the_message
 
 return_value:

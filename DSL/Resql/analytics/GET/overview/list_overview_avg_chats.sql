@@ -25,7 +25,7 @@ WITH
         SELECT
             chat_base_id,
             MAX(ended) AS max_ended
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics
         GROUP BY chat_base_id
         HAVING
             MAX(CASE WHEN message_author_role = 'end-user' THEN 1 ELSE 0 END) > 0

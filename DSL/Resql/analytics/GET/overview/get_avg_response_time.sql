@@ -42,7 +42,7 @@ WITH
                 message_author_role,
                 message_created,
                 created
-            FROM denormalized_chat_messages_for_metrics
+            FROM chat.denormalized_chat_messages_for_metrics
             WHERE 
                 created IS NOT NULL
                 AND created >= :start::DATE

@@ -3,7 +3,7 @@ declaration:
   version: 0.1
   description: "Fetch the most recent scheduled report for a specific dataset"
   method: get
-  namespace: service_management
+  namespace: reports
   returns: json
   allowlist:
     query:
@@ -40,6 +40,24 @@ declaration:
         type: date
         description: "End date of the reporting range"
 */
+WITH
+    latest_report AS (
+        SELECT DISTINCT ON (dataset_id)
+            id,
+            name,
+            dataset_id,
+            period,
+            metrics,
+            created,
+            updated,
+            start_date,
+            end_date,
+            deleted
+        FROM analytics.scheduled_reports
+        WHERE dataset_id = :datasetId
+        ORDER BY dataset_id ASC, updated DESC
+    )
+
 SELECT
     id,
     name,
@@ -50,7 +68,5 @@ SELECT
     updated,
     start_date,
     end_date
-FROM scheduled_reports
-WHERE dataset_id = :datasetId
-ORDER BY updated DESC
-LIMIT 1;
+FROM latest_report
+WHERE (deleted IS NULL OR deleted = FALSE);

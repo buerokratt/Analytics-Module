@@ -3,7 +3,7 @@ declaration:
   version: 0.1
   description: "Calculate dynamic start and end dates based on selected reporting period or explicit dates"
   method: get
-  namespace: service_management
+  namespace: config
   returns: json
   allowlist:
     query:

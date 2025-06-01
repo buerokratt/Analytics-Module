@@ -63,9 +63,9 @@ declaration:
 getKey:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/service_management/get_odp_settings"
+    url: "[#ANALYTICS_RESQL]/config/get_odp_settings"
   result: settings
-  
+
 authenticate:
   call: http.post
   args:
@@ -95,12 +95,12 @@ updateDataset:
       licenceId: ${incoming.body.licenceId}
     headers:
       Authorization: ${'Bearer ' + apiToken.response.body.data.accessToken}
-  result: datasetUpdate  
+  result: datasetUpdate
 
 getJobDetails:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/service_management/get_scheduled_report"
+    url: "[#ANALYTICS_RESQL]/reports/get_scheduled_report"
     query:
       datasetId: ${incoming.body.datasetId}
   result: jobDetails
@@ -115,7 +115,7 @@ removePreviousSchedule:
 saveJobInformation:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/service_management/create_scheduled_report"
+    url: "[#ANALYTICS_RESQL]/reports/create_scheduled_report"
     body:
       name: ${incoming.body.nameEt}
       period: ${incoming.body.updateIntervalUnit}
@@ -144,7 +144,7 @@ refreshCronManagerIfChanged:
   call: http.post
   args:
     url: "[#CRON_MANAGER]/reload/CronManager"
-  result: cronResult 
+  result: cronResult
   next: return_post_schedule
 
 return_post_schedule:

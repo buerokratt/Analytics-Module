@@ -29,7 +29,7 @@ declaration:
 SELECT
     DATE_TRUNC(:period, created) AS time,
     COUNT(DISTINCT base_id)
-FROM chat
+FROM chat.chat
 WHERE created >= :start::DATE AND created < (:end::DATE + INTERVAL '1 day') AND status = 'IDLE'
 GROUP BY time
 ORDER BY time

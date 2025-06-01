@@ -17,9 +17,6 @@ declaration:
         type: string
         enum: ['microseconds', 'milliseconds', 'second', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 'century', 'millennium']
         description: "Time granularity for grouping results"
-      - field: botname
-        type: string
-        description: "Identifier of the bot to exclude from CSA assignment"
   response:
     fields:
       - field: date_time
@@ -44,7 +41,7 @@ WITH
                 PARTITION BY base_id
                 ORDER BY updated
             ) AS prev_updated
-        FROM chat
+        FROM chat.chat
         WHERE created >= :start::DATE AND created < (:end::DATE + INTERVAL '1 day')
     )
 

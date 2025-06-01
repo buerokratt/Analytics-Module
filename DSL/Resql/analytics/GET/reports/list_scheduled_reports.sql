@@ -3,7 +3,7 @@ declaration:
   version: 0.1
   description: "Fetch the latest non-deleted scheduled report for each dataset"
   method: get
-  namespace: service_management
+  namespace: reports
   returns: json
   allowlist:
     query: []
@@ -58,11 +58,11 @@ FROM (
         updated,
         start_date,
         end_date,
+        deleted,
         ROW_NUMBER() OVER (
             PARTITION BY dataset_id
             ORDER BY updated DESC
         ) AS rn
-    FROM scheduled_reports
-    WHERE NOT deleted
+    FROM analytics.scheduled_reports
 ) AS ranked
-WHERE rn = 1;
+WHERE rn = 1 AND (deleted IS NULL OR deleted = FALSE);

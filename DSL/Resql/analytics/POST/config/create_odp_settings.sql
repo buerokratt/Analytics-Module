@@ -3,7 +3,7 @@ declaration:
   version: 0.1
   description: "Insert ODP configuration settings including encoded API key and organization ID"
   method: post
-  namespace: service_management
+  namespace: config
   returns: json
   allowlist:
     query:
@@ -19,6 +19,6 @@ declaration:
   response:
     fields: []
 */
-INSERT INTO configuration (key, value) VALUES
+INSERT INTO config.configuration (key, value) VALUES
 ('odp_key', TRANSLATE(ENCODE((:keyId || ':' || :apiKey)::BYTEA, 'base64'), E'\n', '')),
 ('odp_org_id', :orgId);

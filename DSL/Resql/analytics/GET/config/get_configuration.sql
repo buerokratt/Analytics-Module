@@ -3,7 +3,7 @@ declaration:
   version: 0.1
   description: "Fetch the latest non-deleted configuration entry by key"
   method: get
-  namespace: service_management
+  namespace: config
   returns: json
   allowlist:
     query:
@@ -26,11 +26,11 @@ SELECT
     id,
     key,
     value
-FROM configuration
+FROM config.configuration
 WHERE
     key = :key
     AND created IN (
-        SELECT MAX(created) FROM configuration
+        SELECT MAX(created) FROM config.configuration
         GROUP BY key
     )
     AND NOT deleted;

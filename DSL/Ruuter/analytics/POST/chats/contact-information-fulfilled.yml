@@ -47,12 +47,19 @@ missing_parameter:
 check_outside_working_hours:
   switch:
     - condition: ${options.includes('outside-working-hours')}
-      next: outside_working_hours
+      next: get_organization_working_hours
 
 empty_outside_working_hours:
   assign:
     outside_working_hours_result: ${[]}
   next: check_long_waiting_time
+
+get_organization_working_hours:
+  call: http.get
+  args:
+    url: "[#ANALYTICS_RESQL]/config/get_configuration_org_working_hours"
+  result: org_working_hours_result
+  next: outside_working_hours
 
 outside_working_hours:
   call: http.get
@@ -62,6 +69,22 @@ outside_working_hours:
       period: ${period}
       start: ${start}
       end: ${end}
+      workingTimeStart: ${org_working_hours_result.response.body[0]?.workingTimeStart}
+      workingTimeEnd: ${org_working_hours_result.response.body[0]?.workingTimeEnd}
+      sundayWorkingTimeStart: ${org_working_hours_result.response.body[0]?.sundayWorkingTimeStart}
+      sundayWorkingTimeEnd: ${org_working_hours_result.response.body[0]?.sundayWorkingTimeEnd}
+      mondayWorkingTimeStart: ${org_working_hours_result.response.body[0]?.mondayWorkingTimeStart}
+      mondayWorkingTimeEnd: ${org_working_hours_result.response.body[0]?.mondayWorkingTimeEnd}
+      tuesdayWorkingTimeStart: ${org_working_hours_result.response.body[0]?.tuesdayWorkingTimeStart}
+      tuesdayWorkingTimeEnd: ${org_working_hours_result.response.body[0]?.tuesdayWorkingTimeEnd}
+      wednesdayWorkingTimeStart: ${org_working_hours_result.response.body[0]?.wednesdayWorkingTimeStart}
+      wednesdayWorkingTimeEnd: ${org_working_hours_result.response.body[0]?.wednesdayWorkingTimeEnd}
+      thursdayWorkingTimeStart: ${org_working_hours_result.response.body[0]?.thursdayWorkingTimeStart}
+      thursdayWorkingTimeEnd: ${org_working_hours_result.response.body[0]?.thursdayWorkingTimeEnd}
+      fridayWorkingTimeStart: ${org_working_hours_result.response.body[0]?.fridayWorkingTimeStart}
+      fridayWorkingTimeEnd: ${org_working_hours_result.response.body[0]?.fridayWorkingTimeEnd}
+      saturdayWorkingTimeStart: ${org_working_hours_result.response.body[0]?.saturdayWorkingTimeStart}
+      saturdayWorkingTimeEnd: ${org_working_hours_result.response.body[0]?.saturdayWorkingTimeEnd}
   result: results
 
 assign_outside_working_hours:
@@ -135,6 +158,22 @@ outside_working_hours_for_total:
       period: ${period}
       start: ${start}
       end: ${end}
+      workingTimeStart: ${org_working_hours_result.response.body[0]?.workingTimeStart}
+      workingTimeEnd: ${org_working_hours_result.response.body[0]?.workingTimeEnd}
+      sundayWorkingTimeStart: ${org_working_hours_result.response.body[0]?.sundayWorkingTimeStart}
+      sundayWorkingTimeEnd: ${org_working_hours_result.response.body[0]?.sundayWorkingTimeEnd}
+      mondayWorkingTimeStart: ${org_working_hours_result.response.body[0]?.mondayWorkingTimeStart}
+      mondayWorkingTimeEnd: ${org_working_hours_result.response.body[0]?.mondayWorkingTimeEnd}
+      tuesdayWorkingTimeStart: ${org_working_hours_result.response.body[0]?.tuesdayWorkingTimeStart}
+      tuesdayWorkingTimeEnd: ${org_working_hours_result.response.body[0]?.tuesdayWorkingTimeEnd}
+      wednesdayWorkingTimeStart: ${org_working_hours_result.response.body[0]?.wednesdayWorkingTimeStart}
+      wednesdayWorkingTimeEnd: ${org_working_hours_result.response.body[0]?.wednesdayWorkingTimeEnd}
+      thursdayWorkingTimeStart: ${org_working_hours_result.response.body[0]?.thursdayWorkingTimeStart}
+      thursdayWorkingTimeEnd: ${org_working_hours_result.response.body[0]?.thursdayWorkingTimeEnd}
+      fridayWorkingTimeStart: ${org_working_hours_result.response.body[0]?.fridayWorkingTimeStart}
+      fridayWorkingTimeEnd: ${org_working_hours_result.response.body[0]?.fridayWorkingTimeEnd}
+      saturdayWorkingTimeStart: ${org_working_hours_result.response.body[0]?.saturdayWorkingTimeStart}
+      saturdayWorkingTimeEnd: ${org_working_hours_result.response.body[0]?.saturdayWorkingTimeEnd}
   result: outside_working_hours_for_total_results
 
 long_waiting_time_for_total:

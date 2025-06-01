@@ -30,6 +30,6 @@ SELECT DISTINCT ON (id_code)
     display_name,
     first_name,
     last_name
-FROM "user"
+FROM auth_users."user"
 WHERE id_code = ANY(STRING_TO_ARRAY(:idCodes, ','))
 ORDER BY id_code ASC, created DESC;

@@ -28,7 +28,7 @@ WITH
                 WHERE message_event = 'client-left'
             ) AS client_left_time,
             BOOL_OR(message_author_role = 'end-user') AS has_end_user
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics
         WHERE 
             created IS NOT NULL
             AND created >= :start::DATE

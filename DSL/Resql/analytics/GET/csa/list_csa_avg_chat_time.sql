@@ -39,7 +39,7 @@ WITH
             DATE_TRUNC(:metric, created) AS date_time,
             message_author_id AS author_id,
             AGE(last_message_timestamp, first_message_timestamp) AS chat_length
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics
         WHERE
             created IS NOT NULL
             AND created >= :start::DATE AND created < (:end::DATE + INTERVAL '1 day')
@@ -47,7 +47,7 @@ WITH
             AND message_author_id IS NOT NULL
             AND message_author_id <> ''
             AND message_author_id <> 'null'
-            AND message_author_id NOT IN (:excluded_csas)
+            AND message_author_id <> ALL(STRING_TO_ARRAY(:excluded_csas, ','))
         ORDER BY chat_base_id ASC, message_author_id ASC, timestamp DESC
     )
 

@@ -38,7 +38,7 @@ WITH
                     ORDER BY created
                 )
             AS prev_message_time
-        FROM message
+        FROM chat.message
         WHERE 
             author_role = 'end-user'
             AND created >= :start::DATE
@@ -55,7 +55,7 @@ WITH
                 0
             ) AS average_waiting_time
         FROM user_messages AS m
-            INNER JOIN message AS byk
+            INNER JOIN chat.message AS byk
                 ON
                     m.chat_base_id = byk.chat_base_id
                     AND byk.author_role = 'backoffice-user'

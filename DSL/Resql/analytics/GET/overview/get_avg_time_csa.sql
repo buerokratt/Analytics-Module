@@ -26,7 +26,7 @@ WITH
             EXTRACT(
                 EPOCH FROM (MAX(message_created) - MIN(message_created))
             ) AS chat_length
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics
         WHERE 
             created IS NOT NULL
             AND created >= :start::DATE

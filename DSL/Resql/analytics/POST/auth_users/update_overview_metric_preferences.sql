@@ -28,7 +28,7 @@ declaration:
 WITH
     old_value AS (
         SELECT ordinality
-        FROM user_overview_metric_preference
+        FROM auth_users.user_overview_metric_preference
         WHERE
             user_id_code = :user_id_code
             AND metric = :metric::OVERVIEW_METRIC
@@ -43,7 +43,7 @@ WITH
                 PARTITION BY u.metric
                 ORDER BY u.created DESC
             ) AS rn
-        FROM user_overview_metric_preference AS u
+        FROM auth_users.user_overview_metric_preference AS u
             CROSS JOIN old_value
         WHERE
             user_id_code = :user_id_code
@@ -58,13 +58,13 @@ WITH
         WHERE rn = 1
     )
 
-INSERT INTO user_overview_metric_preference (user_id_code, metric, ordinality, active)
+INSERT INTO auth_users.user_overview_metric_preference (user_id_code, metric, ordinality, active)
 SELECT
     user_id_code,
     metric,
     ordinality + 1,
     active
-FROM user_overview_metric_preference
+FROM auth_users.user_overview_metric_preference
 WHERE id IN (SELECT id FROM latest_metrics);
 
 -- Query 2: Decrement ordinality for metrics that need to shift down  
@@ -72,7 +72,7 @@ WHERE id IN (SELECT id FROM latest_metrics);
 WITH
     old_value AS (
         SELECT ordinality
-        FROM user_overview_metric_preference
+        FROM auth_users.user_overview_metric_preference
         WHERE
             user_id_code = :user_id_code
             AND metric = :metric::OVERVIEW_METRIC
@@ -87,7 +87,7 @@ WITH
                 PARTITION BY u.metric
                 ORDER BY u.created DESC
             ) AS rn
-        FROM user_overview_metric_preference AS u
+        FROM auth_users.user_overview_metric_preference AS u
             CROSS JOIN old_value
         WHERE
             user_id_code = :user_id_code
@@ -102,15 +102,15 @@ WITH
         WHERE rn = 1
     )
 
-INSERT INTO user_overview_metric_preference (user_id_code, metric, ordinality, active)
+INSERT INTO auth_users.user_overview_metric_preference (user_id_code, metric, ordinality, active)
 SELECT
     user_id_code,
     metric,
     ordinality - 1,
     active
-FROM user_overview_metric_preference
+FROM auth_users.user_overview_metric_preference
 WHERE id IN (SELECT id FROM latest_metrics);
 
 -- Query 3: Insert the new metric preference at the specified ordinality
-INSERT INTO user_overview_metric_preference (user_id_code, metric, ordinality, active)
+INSERT INTO auth_users.user_overview_metric_preference (user_id_code, metric, ordinality, active)
 VALUES (:user_id_code, :metric::OVERVIEW_METRIC, :ordinality, :active);

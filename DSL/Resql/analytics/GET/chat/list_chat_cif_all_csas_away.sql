@@ -29,7 +29,7 @@ declaration:
 WITH
     contact_info_chats AS (
         SELECT DISTINCT chat_base_id
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics
         WHERE
             message_event = 'unavailable-contact-information-fulfilled'
             AND (
@@ -41,7 +41,7 @@ WITH
 
     asked_contacts_chats AS (
         SELECT DISTINCT chat_base_id
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics
         WHERE
             message_event = 'unavailable_csas_ask_contacts'
             AND message_author_role = 'buerokratt'
@@ -50,7 +50,7 @@ WITH
 SELECT
     DATE_TRUNC(:period, created) AS time,
     COUNT(DISTINCT chat_base_id) AS chat_count
-FROM denormalized_chat_messages_for_metrics
+FROM chat.denormalized_chat_messages_for_metrics
 WHERE
     created >= :start::DATE AND created < (:end::DATE + INTERVAL '1 day')
     AND chat_base_id IN (SELECT chat_base_id FROM contact_info_chats)

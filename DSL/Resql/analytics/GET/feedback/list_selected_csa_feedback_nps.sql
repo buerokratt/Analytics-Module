@@ -51,20 +51,19 @@ WITH
             customer_support_first_name,
             customer_support_last_name,
             feedback_rating
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics AS dcm
         WHERE
             customer_support_id NOT IN ('', 'chatbot')
             AND EXISTS (
                 SELECT 1
-                FROM denormalized_chat_messages_for_metrics AS dcm_inner
+                FROM chat.denormalized_chat_messages_for_metrics AS dcm_inner
                 WHERE
-                    dcm_inner.chat_base_id
-                    = denormalized_chat_messages_for_metrics.chat_base_id
+                    dcm_inner.chat_base_id = dcm.chat_base_id
                     AND dcm_inner.message_author_role = 'end-user'
             )
             AND created >= :start::DATE
             AND created < (:end::DATE + INTERVAL '1 day')
-            AND customer_support_id NOT IN (:excluded_csas)
+            AND customer_support_id <> ALL(STRING_TO_ARRAY(:excluded_csas, ','))
             AND chat_status = 'ENDED'
             AND feedback_rating IS NOT NULL
         ORDER BY chat_base_id ASC, timestamp DESC

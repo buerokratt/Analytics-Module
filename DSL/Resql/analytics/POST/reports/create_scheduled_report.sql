@@ -3,7 +3,7 @@ declaration:
   version: 0.1
   description: "Create a new scheduled report and return its metadata"
   method: post
-  namespace: service_management
+  namespace: reports
   returns: json
   allowlist:
     query:
@@ -58,7 +58,7 @@ declaration:
         type: boolean
         description: "Indicates whether the report is marked as deleted"
 */
-INSERT INTO scheduled_reports (
+INSERT INTO analytics.scheduled_reports (
     name, period, metrics, dataset_id, start_date, end_date
 )
 VALUES (:name, :period, ARRAY[:metrics], :dataset_id, :start_date, :end_date)

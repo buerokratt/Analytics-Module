@@ -24,7 +24,7 @@ WITH
         SELECT
             chat_base_id,
             EXTRACT(EPOCH FROM (MAX(ended) - MIN(message_created))) AS chat_length
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics
         WHERE 
             created IS NOT NULL
             AND created >= :start::DATE

@@ -10,9 +10,8 @@ declaration:
 checkOdpKey:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/service_management/get_odp_settings"
+    url: "[#ANALYTICS_RESQL]/config/get_odp_settings"
   result: odpsettings
 
 return:
   return: ${odpsettings.response.body[0]}
-

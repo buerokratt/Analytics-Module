@@ -3,7 +3,7 @@ declaration:
   version: 0.1
   description: "Mark all ODP-related configuration keys as deleted"
   method: post
-  namespace: service_management
+  namespace: config
   returns: json
   accepts: json
   allowlist:
@@ -11,10 +11,10 @@ declaration:
   response:
     fields: []
 */
-INSERT INTO configuration (key, value, deleted)
+INSERT INTO config.configuration (key, value, deleted)
 SELECT
     key,
     NULL AS value,
     TRUE AS deleted
-FROM configuration
+FROM config.configuration
 WHERE key LIKE 'odp_%'

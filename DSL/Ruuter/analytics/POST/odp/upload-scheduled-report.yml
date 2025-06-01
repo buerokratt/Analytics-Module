@@ -18,7 +18,7 @@ declaration:
 getJobDetails:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/service_management/get_scheduled_report"
+    url: "[#ANALYTICS_RESQL]/reports/get_scheduled_report"
     query:
       datasetId: ${incoming.params.datasetId}
   result: jobDetails
@@ -42,4 +42,3 @@ uploadImmediately:
 return_result:
   return: "Dataset uploaded successfully"
   next: end
-

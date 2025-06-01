@@ -34,12 +34,12 @@ SELECT
         / NULLIF(COUNT(DISTINCT chat_base_id), 0),
         1
     ) AS avg
-FROM denormalized_chat_messages_for_metrics AS chat
+FROM chat.denormalized_chat_messages_for_metrics AS chat
 WHERE
     EXISTS
     (
         SELECT 1
-        FROM denormalized_chat_messages_for_metrics AS message
+        FROM chat.denormalized_chat_messages_for_metrics AS message
         WHERE
             message.chat_base_id = chat.chat_base_id
             AND message.message_author_role = 'buerokratt'

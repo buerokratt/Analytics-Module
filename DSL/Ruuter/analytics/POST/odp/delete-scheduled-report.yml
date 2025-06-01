@@ -15,7 +15,7 @@ declaration:
 getJobDetails:
   call: http.get
   args:
-    url: "[#ANALYTICS_RESQL]/service_management/get_scheduled_report"
+    url: "[#ANALYTICS_RESQL]/reports/get_scheduled_report"
     query:
       datasetId: ${incoming.body.datasetId}
   result: jobDetails
@@ -31,7 +31,7 @@ removeCronjobIfExists:
 deleteScheduledReport:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/service_management/delete_scheduled_report"
+    url: "[#ANALYTICS_RESQL]/reports/delete_scheduled_report"
     body:
       id: ${incoming.body.datasetId}
   result: delete

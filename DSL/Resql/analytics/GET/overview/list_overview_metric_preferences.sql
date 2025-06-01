@@ -35,7 +35,7 @@ FROM (
             PARTITION BY metric
             ORDER BY created DESC
         ) AS rn
-    FROM user_overview_metric_preference
+    FROM auth_users.user_overview_metric_preference
     WHERE user_id_code = :user_id_code
 ) AS ranked
 WHERE rn = 1

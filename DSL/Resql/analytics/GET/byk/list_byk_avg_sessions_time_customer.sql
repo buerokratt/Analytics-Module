@@ -32,11 +32,11 @@ WITH
             chat_base_id,
             created,
             (last_message_timestamp - first_message_timestamp) AS duration
-        FROM denormalized_chat_messages_for_metrics AS dcm
+        FROM chat.denormalized_chat_messages_for_metrics AS dcm
         WHERE
             EXISTS (
                 SELECT 1
-                FROM denormalized_chat_messages_for_metrics AS dcm_inner
+                FROM chat.denormalized_chat_messages_for_metrics AS dcm_inner
                 WHERE
                     dcm.chat_base_id = dcm_inner.chat_base_id
                     AND dcm_inner.message_event IN ('answered', 'client-left')

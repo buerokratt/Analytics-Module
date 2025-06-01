@@ -22,7 +22,7 @@ declaration:
 SELECT COUNT(DISTINCT chat_base_id)
 FROM (
     SELECT chat_base_id
-    FROM denormalized_chat_messages_for_metrics
+    FROM chat.denormalized_chat_messages_for_metrics
     WHERE created >= :start::DATE AND created < (:end::DATE + INTERVAL '1 day')
     GROUP BY chat_base_id
     HAVING

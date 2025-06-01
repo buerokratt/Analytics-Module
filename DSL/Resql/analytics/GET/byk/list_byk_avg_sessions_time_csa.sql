@@ -34,7 +34,7 @@ WITH
             MAX(last_message_timestamp - first_message_timestamp) AS duration,
             BOOL_OR(chat_status = 'ENDED') AS has_ended_status,
             BOOL_OR(message_author_role = 'backoffice-user') AS has_backoffice
-        FROM denormalized_chat_messages_for_metrics
+        FROM chat.denormalized_chat_messages_for_metrics
         WHERE created >= :start::DATE AND created < (:end::DATE + INTERVAL '1 day')
         GROUP BY chat_base_id
     ),

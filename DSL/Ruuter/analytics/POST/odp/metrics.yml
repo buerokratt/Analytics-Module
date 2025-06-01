@@ -39,10 +39,6 @@ check-get-chat-count-total:
   switch:
     - condition: ${metrics.includes('get-chat-count-total')}
       next: get-chat-count-total
-
-empty-get-chat-count-total:
-  assign:
-    get_chat_count_total_result: ${[]}
   next: check-get-chat-count-no-csa
 
 get-chat-count-total:
@@ -58,10 +54,6 @@ check-get-chat-count-no-csa:
   switch:
     - condition: ${metrics.includes('get-chat-count-no-csa')}
       next: get-chat-count-no-csa
-
-empty-get-chat-count-no-csa:
-  assign:
-    get_chat_count_no_csa_result: ${[]}
   next: check-get-avg-waiting-time
 
 get-chat-count-no-csa:
@@ -77,10 +69,6 @@ check-get-avg-waiting-time:
   switch:
     - condition: ${metrics.includes('get-avg-waiting-time')}
       next: get-avg-waiting-time
-
-empty-get-avg-waiting-time:
-  assign:
-    get_avg_waiting_time_result: ${[]}
   next: check-get-avg-messages
 
 get-avg-waiting-time:
@@ -96,10 +84,6 @@ check-get-avg-messages:
   switch:
     - condition: ${metrics.includes('get-avg-messages')}
       next: get-avg-messages
-
-empty-get-avg-messages:
-  assign:
-    get_avg_messages_result: ${[]}
   next: check-get-avg-time
 
 get-avg-messages:
@@ -115,10 +99,6 @@ check-get-avg-time:
   switch:
     - condition: ${metrics.includes('get-avg-time')}
       next: get-avg-time
-
-empty-get-avg-time:
-  assign:
-    get_avg_time_result: ${[]}
   next: check-get-avg-time-no-csa
 
 get-avg-time:
@@ -134,10 +114,6 @@ check-get-avg-time-no-csa:
   switch:
     - condition: ${metrics.includes('get-avg-time-no-csa')}
       next: get-avg-time-no-csa
-
-empty-get-avg-time-no-csa:
-  assign:
-    get_avg_time_no_csa_result: ${[]}
   next: check-get-avg-time-csa
 
 get-avg-time-no-csa:
@@ -153,10 +129,6 @@ check-get-avg-time-csa:
   switch:
     - condition: ${metrics.includes('get-avg-time-csa')}
       next: get-avg-time-csa
-
-empty-get-avg-time-csa:
-  assign:
-    get_avg_time_csa_result: ${[]}
   next: check-get-avg-session-length-client-left
 
 get-avg-time-csa:
@@ -172,10 +144,6 @@ check-get-avg-session-length-client-left:
   switch:
     - condition: ${metrics.includes('get-avg-session-length-client-left')}
       next: get-avg-session-length-client-left
-
-empty-get-avg-session-length-client-left:
-  assign:
-    get_avg_session_length_client_left_result: ${[]}
   next: check-get-avg-session-length-csa
 
 get-avg-session-length-client-left:
@@ -191,10 +159,6 @@ check-get-avg-session-length-csa:
   switch:
     - condition: ${metrics.includes('get-avg-session-length-csa')}
       next: get-avg-session-length-csa
-
-empty-get-avg-session-length-csa:
-  assign:
-    get_avg_session_length_csa_result: ${[]}
   next: check-get-avg-session-length-no-csa
 
 get-avg-session-length-csa:
@@ -210,10 +174,6 @@ check-get-avg-session-length-no-csa:
   switch:
     - condition: ${metrics.includes('get-avg-session-length-no-csa')}
       next: get-avg-session-length-no-csa
-
-empty-get-avg-session-length-no-csa:
-  assign:
-    get_avg_session_length_no_csa_result: ${[]}
   next: check-get-avg-response-time
 
 get-avg-session-length-no-csa:
@@ -229,10 +189,6 @@ check-get-avg-response-time:
   switch:
     - condition: ${metrics.includes('get-avg-response-time')}
       next: get-avg-response-time
-
-empty-get-avg-response-time:
-  assign:
-    get_avg_response_time_result: ${[]}
   next: gather_responses
 
 get-avg-response-time:
@@ -246,7 +202,7 @@ get-avg-response-time:
 
 gather_responses:
   assign:
-    results: ${[ get_chat_count_total_result.response.body, get_chat_count_no_csa_result.response.body, get_avg_waiting_time_result.response.body, get_avg_messages_result.response.body, get_avg_time_result.response.body, get_avg_time_no_csa_result.response.body, get_avg_time_csa_result.response.body, get_avg_session_length_client_left_result.response.body, get_avg_session_length_csa_result.response.body, get_avg_session_length_no_csa_result.response.body, get_avg_response_time_result.response.body ]}
+    results: ${[(metrics.includes('get-chat-count-total') && get_chat_count_total_result.response.body) ?? "", (metrics.includes('get-chat-count-no-csa') && get_chat_count_no_csa_result.response.body) ?? "", (metrics.includes('get-avg-waiting-time') && get_avg_waiting_time_result.response.body) ?? "", (metrics.includes('get-avg-messages') && get_avg_messages_result.response.body) ?? "", (metrics.includes('get-avg-time') && get_avg_time_result.response.body) ?? "", (metrics.includes('get-avg-time-no-csa') && get_avg_time_no_csa_result.response.body) ?? "", (metrics.includes('get-avg-time-csa') && get_avg_time_csa_result.response.body) ?? "", (metrics.includes('get-avg-session-length-client-left') && get_avg_session_length_client_left_result.response.body) ?? "", (metrics.includes('get-avg-session-length-csa') && get_avg_session_length_csa_result.response.body) ?? "", (metrics.includes('get-avg-session-length-no-csa') && get_avg_session_length_no_csa_result.response.body) ?? "", (metrics.includes('get-avg-response-time') && get_avg_response_time_result.response.body) ?? ""].filter(item => item !== "" && item !== false)}
 
 return:
   return: ${results}

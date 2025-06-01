@@ -20,43 +20,28 @@ declaration:
   response:
     fields:
       - field: start
-        type: timestamp
-        description: "Calculated start timestamp for the reporting range"
+        type: string
+        description: "Calculated start date for the reporting range (YYYY-MM-DD format)"
       - field: end
-        type: timestamp
-        description: "Calculated end timestamp for the reporting range"
+        type: string
+        description: "Calculated end date for the reporting range (YYYY-MM-DD format)"
 */
-WITH
-    consts AS (
-        SELECT
-            'day' AS cday,
-            'week' AS cweek,
-            'month' AS cmonth,
-            'quarter' AS cquarter,
-            'year' AS cyear,
-            'never' AS cnever,
-            INTERVAL '1 day' AS one_day,
-            INTERVAL '1 week' AS one_week,
-            INTERVAL '1 month' AS one_month,
-            INTERVAL '3 month' AS three_month,
-            INTERVAL '1 year' AS one_year
-    )
-
 SELECT
     CASE
-        WHEN (:period = cday) THEN DATE_TRUNC(cday, NOW() - one_day)
-        WHEN (:period = cweek) THEN DATE_TRUNC(cweek, NOW() - one_week)
-        WHEN (:period = cmonth) THEN DATE_TRUNC(cmonth, NOW() - one_month)
-        WHEN (:period = cquarter) THEN DATE_TRUNC(cquarter, NOW() - three_month)
-        WHEN (:period = cyear) THEN DATE_TRUNC(cyear, NOW() - one_year)
-        WHEN (:period = cnever) THEN date_trunc(cday, :start::DATE)
+        WHEN :period = 'day' THEN TO_CHAR(DATE_TRUNC('day', NOW() - INTERVAL '1 day'), 'YYYY-MM-DD')
+        WHEN :period = 'week' THEN TO_CHAR(DATE_TRUNC('week', NOW() - INTERVAL '1 week'), 'YYYY-MM-DD')
+        WHEN :period = 'month' THEN TO_CHAR(DATE_TRUNC('month', NOW() - INTERVAL '1 month'), 'YYYY-MM-DD')
+        WHEN :period = 'quarter' THEN TO_CHAR(DATE_TRUNC('quarter', NOW() - INTERVAL '3 months'), 'YYYY-MM-DD')
+        WHEN :period = 'year' THEN TO_CHAR(DATE_TRUNC('year', NOW() - INTERVAL '1 year'), 'YYYY-MM-DD')
+        WHEN :period = 'never' THEN :start
+        ELSE TO_CHAR(DATE_TRUNC('day', NOW() - INTERVAL '1 day'), 'YYYY-MM-DD')
     END AS start,
     CASE
-        WHEN (:period = cday) THEN DATE_TRUNC(cday, NOW()) - one_day
-        WHEN (:period = cweek) THEN DATE_TRUNC(cweek, NOW()) - one_day
-        WHEN (:period = cmonth) THEN DATE_TRUNC(cmonth, NOW()) - one_day
-        WHEN (:period = cquarter) THEN DATE_TRUNC(cquarter, NOW()) - one_day
-        WHEN (:period = cyear) THEN DATE_TRUNC(cyear, NOW()) - one_day
-        WHEN (:period = cnever) THEN date_trunc(cday, :end::DATE)
-    END AS "end"
-FROM consts;
+        WHEN :period = 'day' THEN TO_CHAR(DATE_TRUNC('day', NOW()), 'YYYY-MM-DD')
+        WHEN :period = 'week' THEN TO_CHAR(DATE_TRUNC('week', NOW()), 'YYYY-MM-DD')
+        WHEN :period = 'month' THEN TO_CHAR(DATE_TRUNC('month', NOW()), 'YYYY-MM-DD')
+        WHEN :period = 'quarter' THEN TO_CHAR(DATE_TRUNC('quarter', NOW()), 'YYYY-MM-DD')
+        WHEN :period = 'year' THEN TO_CHAR(DATE_TRUNC('year', NOW()), 'YYYY-MM-DD')
+        WHEN :period = 'never' THEN :end
+        ELSE TO_CHAR(DATE_TRUNC('day', NOW()), 'YYYY-MM-DD')
+    END AS "end";

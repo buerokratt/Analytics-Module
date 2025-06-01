@@ -9,52 +9,52 @@ declaration:
     query: []
   response:
     fields:
-      - field: workingTimeStart
+      - field: working_time_start
         type: integer
         description: "Default working hours start (0-23)"
-      - field: workingTimeEnd
+      - field: working_time_end
         type: integer
         description: "Default working hours end (0-23)"
-      - field: sundayWorkingTimeStart
+      - field: sunday_working_time_start
         type: integer
         description: "Sunday working hours start"
-      - field: sundayWorkingTimeEnd
+      - field: sunday_working_time_end
         type: integer
         description: "Sunday working hours end"
-      - field: mondayWorkingTimeStart
+      - field: monday_working_time_start
         type: integer
         description: "Monday working hours start"
-      - field: mondayWorkingTimeEnd
+      - field: monday_working_time_end
         type: integer
         description: "Monday working hours end"
-      - field: tuesdayWorkingTimeStart
+      - field: tuesday_working_time_start
         type: integer
         description: "Tuesday working hours start"
-      - field: tuesdayWorkingTimeEnd
+      - field: tuesday_working_time_end
         type: integer
         description: "Tuesday working hours end"
-      - field: wednesdayWorkingTimeStart
+      - field: wednesday_working_time_start
         type: integer
         description: "Wednesday working hours start"
-      - field: wednesdayWorkingTimeEnd
+      - field: wednesday_working_time_end
         type: integer
         description: "Wednesday working hours end"
-      - field: thursdayWorkingTimeStart
+      - field: thursday_working_time_start
         type: integer
         description: "Thursday working hours start"
-      - field: thursdayWorkingTimeEnd
+      - field: thursday_working_time_end
         type: integer
         description: "Thursday working hours end"
-      - field: fridayWorkingTimeStart
+      - field: friday_working_time_start
         type: integer
         description: "Friday working hours start"
-      - field: fridayWorkingTimeEnd
+      - field: friday_working_time_end
         type: integer
         description: "Friday working hours end"
-      - field: saturdayWorkingTimeStart
+      - field: saturday_working_time_start
         type: integer
         description: "Saturday working hours start"
-      - field: saturdayWorkingTimeEnd
+      - field: saturday_working_time_end
         type: integer
         description: "Saturday working hours end"
 */
@@ -63,94 +63,94 @@ SELECT
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationWorkingTimeStartISO' AND deleted IS false)
      AND key = 'organizationWorkingTimeStartISO'
-    ) AS "workingTimeStart",
+    ) AS working_time_start,
     
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationWorkingTimeEndISO' AND deleted IS false)
      AND key = 'organizationWorkingTimeEndISO'
-    ) AS "workingTimeEnd",
+    ) AS working_time_end,
     
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationSundayWorkingTimeStartISO' AND deleted IS false)
      AND key = 'organizationSundayWorkingTimeStartISO'
-    ) AS "sundayWorkingTimeStart",
+    ) AS sunday_working_time_start,
     
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationSundayWorkingTimeEndISO' AND deleted IS false)
      AND key = 'organizationSundayWorkingTimeEndISO'
-    ) AS "sundayWorkingTimeEnd",
+    ) AS sunday_working_time_end,
     
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationMondayWorkingTimeStartISO' AND deleted IS false)
      AND key = 'organizationMondayWorkingTimeStartISO'
-    ) AS "mondayWorkingTimeStart",
+    ) AS monday_working_time_start,
     
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationMondayWorkingTimeEndISO' AND deleted IS false)
      AND key = 'organizationMondayWorkingTimeEndISO'
-    ) AS "mondayWorkingTimeEnd",
+    ) AS monday_working_time_end,
     
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationTuesdayWorkingTimeStartISO' AND deleted IS false)
      AND key = 'organizationTuesdayWorkingTimeStartISO'
-    ) AS "tuesdayWorkingTimeStart",
+    ) AS tuesday_working_time_start,
     
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationTuesdayWorkingTimeEndISO' AND deleted IS false)
      AND key = 'organizationTuesdayWorkingTimeEndISO'
-    ) AS "tuesdayWorkingTimeEnd",
+    ) AS tuesday_working_time_end,
     
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationWednesdayWorkingTimeStartISO' AND deleted IS false)
      AND key = 'organizationWednesdayWorkingTimeStartISO'
-    ) AS "wednesdayWorkingTimeStart",
+    ) AS wednesday_working_time_start,
     
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationWednesdayWorkingTimeEndISO' AND deleted IS false)
      AND key = 'organizationWednesdayWorkingTimeEndISO'
-    ) AS "wednesdayWorkingTimeEnd",
+    ) AS wednesday_working_time_end,
     
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationThursdayWorkingTimeStartISO' AND deleted IS false)
      AND key = 'organizationThursdayWorkingTimeStartISO'
-    ) AS "thursdayWorkingTimeStart",
+    ) AS thursday_working_time_start,
     
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationThursdayWorkingTimeEndISO' AND deleted IS false)
      AND key = 'organizationThursdayWorkingTimeEndISO'
-    ) AS "thursdayWorkingTimeEnd",
+    ) AS thursday_working_time_end,
     
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationFridayWorkingTimeStartISO' AND deleted IS false)
      AND key = 'organizationFridayWorkingTimeStartISO'
-    ) AS "fridayWorkingTimeStart",
+    ) AS friday_working_time_start,
     
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationFridayWorkingTimeEndISO' AND deleted IS false)
      AND key = 'organizationFridayWorkingTimeEndISO'
-    ) AS "fridayWorkingTimeEnd",
+    ) AS friday_working_time_end,
 
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationSaturdayWorkingTimeStartISO' AND deleted IS false)
      AND key = 'organizationSaturdayWorkingTimeStartISO'
-    ) AS "saturdayWorkingTimeStart",
+    ) AS saturday_working_time_start,
     
     (SELECT EXTRACT(HOUR FROM value::timestamp) 
      FROM config.configuration 
      WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationSaturdayWorkingTimeEndISO' AND deleted IS false)
      AND key = 'organizationSaturdayWorkingTimeEndISO'
-    ) AS "saturdayWorkingTimeEnd"
+    ) AS saturday_working_time_end

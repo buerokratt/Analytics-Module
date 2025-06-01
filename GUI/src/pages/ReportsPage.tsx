@@ -93,7 +93,10 @@ const ReportsPage = () => {
           start: options?.start,
           end: options?.end,
           metrics: options?.options,
-          metric_names: openDataOptions.flatMap((o) => o.subOptions?.map((s) => t(s.labelKey)) ?? []),
+          metric_names: openDataOptions
+            .flatMap((o) => o.subOptions || [])
+            .filter((sub) => options?.options.includes(sub.id))
+            .map((sub) => t(sub.labelKey)),
           date_rows: [
             [t('global.startDate'), options?.start && formatTimestamp(options.start)],
             [t('global.endDate'), options?.end && formatTimestamp(options.end)],

@@ -48,6 +48,14 @@ mapCustomerSupportIds:
       chats: ${result.response.body}
   result: customerSupportIdsResult
 
+getUsers:
+  call: http.get
+  args:
+    url: "[#ANALYTICS_RESQL]/auth_users/list_users_names_by_id_code"
+    query:
+      idCodes: ${customerSupportIdsResult.response.body?.join(',') ?? ''}
+  result: getUsersResults
+
 enrich_result_with_customer_support_name_fields:
   call: http.post
   args:
@@ -58,14 +66,6 @@ enrich_result_with_customer_support_name_fields:
       chatMessagesRes: ${result.response.body}
       users: ${getUsersResults.response.body}
   result: result
-
-getUsers:
-  call: http.get
-  args:
-    url: "[#ANALYTICS_RESQL]/auth_users/list_users_names_by_id_code"
-    query:
-      idCodes: ${customerSupportIdsResult.response.body?.join(',') ?? ''}
-  result: getUsersResults
 
 return_value:
   return: ${result.response.body}

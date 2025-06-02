@@ -45,14 +45,14 @@ check_for_csa_events:
   switch:
     - condition: ${incoming.body.csa_events != null}
       next: call_csa_chats
-  next: return_response  
+  next: return_response
 
 call_all_chats:
   call: http.get
   args:
     url: "[#ANALYTICS_RESQL]/chat/list_status_all_chats"
     query:
-      events: ${incoming.body.events}
+      events: ${incoming.body.events?.join(',') ?? ''}
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
@@ -64,7 +64,7 @@ call_csa_chats:
   args:
     url: "[#ANALYTICS_RESQL]/chat/list_status_csa_chats"
     query:
-      events: ${incoming.body.csa_events}
+      events: ${incoming.body.csa_events?.join(',') ?? ''}
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
@@ -78,20 +78,20 @@ return_response:
     - condition: ${result != null && csa_result == null}
       next: return_only_events
     - condition: ${result == null && csa_result != null}
-      next: return_only_csa_events  
+      next: return_only_csa_events
   next: return_empty_response
 
 return_both_events:
-   return: ${[result.response.body, csa_result.response.body]}
-   next: end
+  return: ${[result.response.body, csa_result.response.body]}
+  next: end
 
 return_only_events:
-   return: ${[result.response.body]}
-   next: end
+  return: ${[result.response.body]}
+  next: end
 
 return_only_csa_events:
-   return: ${[csa_result.response.body]}
-   next: end
+  return: ${[csa_result.response.body]}
+  next: end
 
 return_empty_response:
   return: ${[]}
@@ -99,5 +99,5 @@ return_empty_response:
 
 return_incorrect_request:
   status: 400
-  return: 'missing parameters'
+  return: "missing parameters"
   next: end

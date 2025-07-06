@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@buerokratt-ria/header": "^0.1.36",
+    "@buerokratt-ria/header": "^0.1.37",
     "@buerokratt-ria/menu": "^0.2.6",
     "@buerokratt-ria/styles": "^0.0.1",
     "@buerokratt-ria/common-gui-components": "^0.0.20",

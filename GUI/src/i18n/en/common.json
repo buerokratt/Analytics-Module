@@ -52,6 +52,9 @@
     "closeMenu": "Close menu",
     "openMenu": "Open menu"
   },
+  "multiDomains": {
+    "selectDomains": "Select Domains"
+  },
   "general": {
     "selectAll": "Select All",
     "period": "Period",

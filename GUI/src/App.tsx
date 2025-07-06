@@ -9,6 +9,7 @@ import { UserInfo } from './types/userInfo';
 import useStore from './store/user/store';
 import { useQuery } from '@tanstack/react-query';
 import { PeriodStatisticsProvider } from 'components/context/PeriodStatisticsContext';
+import {getWidgetData} from "./components/services/user";
 
 const App: React.FC = () => {
   useQuery<UserInfo>({
@@ -20,6 +21,20 @@ const App: React.FC = () => {
       if (import.meta.env.REACT_APP_LOCAL != 'true') {
         localStorage.setItem('exp', res.response.JWTExpirationTimestamp);
       }
+
+      getWidgetData(res.response.idCode)
+          .then((domains) => {
+            const selectedDomains = domains
+                .filter(d => d.selected)
+                .map(d => d.url)
+                .filter(Boolean);
+
+            useStore.getState().setUserDomains(selectedDomains);
+          })
+          .catch((e) => {
+            console.error('Failed to fetch widget data:', e);
+          });
+
       return useStore.getState().setUserInfo(res.response);
     },
   });

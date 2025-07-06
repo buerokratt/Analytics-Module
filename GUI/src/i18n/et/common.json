@@ -52,6 +52,9 @@
     "closeMenu": "Kitsendan menüü",
     "openMenu": "Ava menüü"
   },
+  "multiDomains": {
+    "selectDomains": "Vali Domeenid"
+  },
   "general": {
     "selectAll": "Vali kõik",
     "period": "Periood",

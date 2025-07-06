@@ -153,7 +153,7 @@ const FeedbackPage: React.FC = () => {
         return () => {
             subscription.unsubscribe();
         };
-    }, []);
+    }, [useStore.getState().userDomains.values()]);
 
     useEffect(() => {
         if (currentConfigs) {
@@ -166,6 +166,7 @@ const FeedbackPage: React.FC = () => {
         let chartData = {};
         const events = config.options;
         try {
+            const urls = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN.toLowerCase() === 'true' ? useStore.getState().userDomains : [];
             const result: any = await request({
                 url: getChatsStatuses(),
                 method: Methods.post,
@@ -176,6 +177,7 @@ const FeedbackPage: React.FC = () => {
                     end_date: config?.end,
                     events: events.length > 0 ? events : null,
                     csa_events: events.length > 0 ? events : null,
+                    urls: urls
                 },
             });
 

@@ -5,6 +5,7 @@ import { reorderItem } from '../../../util/reorder-array';
 import DraggableCard from '../DraggableCard';
 import './styles.scss';
 import { request } from '../../../util/axios-client';
+import useStore from "../../../store/user/store";
 
 type Props = {
   metricPreferences: OverviewMetricPreference[];
@@ -13,6 +14,8 @@ type Props = {
 
 const MainMetricsArea = ({ metricPreferences, saveReorderedMetric }: Props) => {
   const [metrics, setMetrics] = useState<OverviewMetricData[]>([]);
+  const userDomains = useStore.getState().userDomains ?? [null];
+  const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN.toLowerCase() === 'true';
 
   useEffect(() => {
     if (metricPreferences.length > 0) fetchMetrics(metricPreferences);
@@ -39,7 +42,7 @@ const MainMetricsArea = ({ metricPreferences, saveReorderedMetric }: Props) => {
     }
 
     const metricsResponse: any = await request({
-      url: overviewMetrics(metricsToFetch.map((e) => e.metric).join(',')),
+      url: overviewMetrics(metricsToFetch.map((e) => e.metric).join(','), multiDomainEnabled ? userDomains : []),
       withCredentials: true,
     });
     const results = metricsResponse.response;

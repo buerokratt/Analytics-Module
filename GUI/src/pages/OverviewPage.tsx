@@ -14,6 +14,7 @@ import { formatDate } from '../util/charts-utils';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { ChartData } from 'types/chart';
+import useStore from "../store/user/store";
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([]);
@@ -22,6 +23,19 @@ const OverviewPage: React.FC = () => {
     colors: [],
   });
   const [drawerIsHidden, setDrawerIsHidden] = useState(true);
+  const [updateKey, setUpdateKey] = useState<number>(0)
+  const userDomains = useStore.getState().userDomains;
+  const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN.toLowerCase() === 'true';
+
+
+  if(multiDomainEnabled) {
+    useStore.subscribe((state, prevState) => {
+      if(JSON.stringify(state.userDomains) !== JSON.stringify(prevState.userDomains)) {
+        setUpdateKey(prevState => prevState + 1);
+      }
+    });
+  }
+
 
   const { t } = useTranslation();
 
@@ -31,7 +45,7 @@ const OverviewPage: React.FC = () => {
 
     const interval = setInterval(() => fetchChartData(), 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [updateKey]);
 
   const fetchMetricPreferences = async () => {
     const result: any = await request({ url: overviewMetricPreferences(), withCredentials: true });
@@ -40,7 +54,7 @@ const OverviewPage: React.FC = () => {
   };
 
   const fetchChartData = async () => {
-    const result: any = await request({ url: overviewMetrics('chat-activity'), withCredentials: true });
+    const result: any = await request({ url: overviewMetrics('chat-activity', userDomains || [null]), withCredentials: true });
 
     const response = result.response['chat-activity'].map((entry: any) => ({
       ...translateChartKeys(entry),

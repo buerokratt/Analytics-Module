@@ -57,6 +57,18 @@ const FeedbackPage: React.FC = () => {
     const [unit, setUnit] = useState('');
     const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
     const {setPeriodStatistics} = usePeriodStatisticsContext();
+    const [updateKey, setUpdateKey] = useState<number>(0)
+    const userDomains = useStore.getState().userDomains;
+    const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN.toLowerCase() === 'true';
+
+
+    if(multiDomainEnabled) {
+        useStore.subscribe((state, prevState) => {
+            if(JSON.stringify(state.userDomains) !== JSON.stringify(prevState.userDomains)) {
+                setUpdateKey(prevState => prevState + 1);
+            }
+        });
+    }
 
     useEffect(() => {
         setAdvisorsList(advisors.current);
@@ -153,20 +165,14 @@ const FeedbackPage: React.FC = () => {
         return () => {
             subscription.unsubscribe();
         };
-    }, [useStore.getState().userDomains.values()]);
-
-    useEffect(() => {
-        if (currentConfigs) {
-            configsSubject.next(currentConfigs);
-        }
-    }, [currentConfigs]);
+    }, [updateKey]);
 
     const fetchChatsStatuses = async (config: MetricOptionsState) => {
         setShowSelectAll(false);
         let chartData = {};
+        const urls = multiDomainEnabled ? userDomains || [null] : []
         const events = config.options;
         try {
-            const urls = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN.toLowerCase() === 'true' ? useStore.getState().userDomains : [];
             const result: any = await request({
                 url: getChatsStatuses(),
                 method: Methods.post,
@@ -223,7 +229,7 @@ const FeedbackPage: React.FC = () => {
 
             chartData = {
                 chartData: response,
-                colors: [{id: 'average', color: '#FFB511'}],
+                colors: [{ id: 'average', color: '#FFB511' }],
                 minPointSize: 3,
             };
             setUnit(t('units.minutes') ?? 'chats');
@@ -254,6 +260,7 @@ const FeedbackPage: React.FC = () => {
         setShowSelectAll(false);
         let chartData = {};
         try {
+            const urls = multiDomainEnabled ? userDomains || [null] : []
             const result: any = await request({
                 url: getDistributionOnBuerokrattChatsFeedback(),
                 method: Methods.post,
@@ -261,6 +268,7 @@ const FeedbackPage: React.FC = () => {
                 data: {
                     start_date: config?.start,
                     end_date: config?.end,
+                    urls: urls
                 },
             });
 
@@ -292,6 +300,7 @@ const FeedbackPage: React.FC = () => {
         setShowSelectAll(false);
         let chartData = {};
         try {
+            const urls = multiDomainEnabled ? userDomains || [null] : []
             const result: any = await request({
                 url: getDistributionOnCSAChatsFeedback(),
                 method: Methods.post,
@@ -299,6 +308,7 @@ const FeedbackPage: React.FC = () => {
                 data: {
                     start_date: config?.start,
                     end_date: config?.end,
+                    urls: urls
                 },
             });
 
@@ -314,6 +324,7 @@ const FeedbackPage: React.FC = () => {
         let chartData = {};
         try {
             const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
+            const urls = multiDomainEnabled ? userDomains || [null] : []
             const result: any = await request({
                 url: getNpsOnSelectedCSAChatsFeedback(),
                 method: Methods.post,
@@ -323,6 +334,7 @@ const FeedbackPage: React.FC = () => {
                     start_date: config?.start,
                     end_date: config?.end,
                     excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
+                    urls: urls
                 },
             });
 
@@ -330,11 +342,19 @@ const FeedbackPage: React.FC = () => {
 
             const advisorsList = getAdvisorsList(res);
 
-            const updatedMetrics = [...feedbackMetrics];
-            updatedMetrics[3].subOptions = advisorsList;
-            advisors.current = advisorsList;
-            setFeedbackMetrics(updatedMetrics);
-            setAdvisorsList(advisors.current);
+            if (advisorsList.length > advisors.current.length) {
+                const updatedMetrics = [...feedbackMetrics];
+                updatedMetrics[3].subOptions = advisorsList;
+                advisors.current = advisorsList;
+                setFeedbackMetrics(updatedMetrics);
+                setAdvisorsList(advisors.current);
+            } else if (advisors.current.length === 0) {
+                const updatedMetrics = [...feedbackMetrics];
+                updatedMetrics[3].subOptions = [];
+                advisors.current = [];
+                setFeedbackMetrics(updatedMetrics);
+                setAdvisorsList([]);
+            }
 
             chartData = {
                 chartData: getAdvisorChartData(res, advisorsList),
@@ -356,6 +376,7 @@ const FeedbackPage: React.FC = () => {
         urlFunction: () => string,
         config: { groupByPeriod?: string; start?: string; end?: string }
     ) => {
+        const urls = multiDomainEnabled ? userDomains || [null] : []
         const result: any = await request({
             url: urlFunction(),
             method: Methods.post,
@@ -364,6 +385,7 @@ const FeedbackPage: React.FC = () => {
                 metric: config?.groupByPeriod ?? 'day',
                 start_date: config?.start,
                 end_date: config?.end,
+                urls: urls
             },
         });
 
@@ -394,12 +416,6 @@ const FeedbackPage: React.FC = () => {
         };
     };
 
-    const configsAreEqual = (a: MetricOptionsState, b: MetricOptionsState | undefined) => {
-        const {options: _, ...restA} = a ?? {};
-        const {options: __, ...restB} = b ?? {};
-        return JSON.stringify(restA) === JSON.stringify(restB);
-    };
-
     return (
         <>
             <h1>{t('menu.feedback')}</h1>
@@ -408,15 +424,15 @@ const FeedbackPage: React.FC = () => {
                 enableSelectAll={showSelectAll}
                 dateFormat="yyyy-MM-dd"
                 onChange={(config) => {
-                    if (!configsAreEqual(config, currentConfigs)) {
                         setCurrentConfigs(config);
+                        configsSubject.next(config);
                         setCurrentMetric(`feedback.${config.metric}`);
 
                         const selectedOption = feedbackMetrics.find((x) => x.id === config.metric);
                         if (!selectedOption) return;
                         setUnit(selectedOption.unit ?? '');
                     }
-                }}
+                }
             />
             {currentConfigs?.metric != 'negative_feedback' && (
                 <MetricsCharts

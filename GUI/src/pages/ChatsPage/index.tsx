@@ -11,6 +11,7 @@ import { chatOptions } from './options';
 import withAuthorization, { ROLES } from '../../hoc/with-authorization';
 import { ChartData } from 'types/chart';
 import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
+import useStore from "../../store/user/store";
 
 const ChatsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -22,10 +23,21 @@ const ChatsPage: React.FC = () => {
     colors: [],
   });
   const { setPeriodStatistics } = usePeriodStatisticsContext();
+  const [updateKey, setUpdateKey] = useState<number>(0)
+  const userDomains = useStore.getState().userDomains;
+  const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN.toLowerCase() === 'true';
+
+  if(multiDomainEnabled) {
+    useStore.subscribe((state, prevState) => {
+        if(JSON.stringify(state.userDomains) !== JSON.stringify(prevState.userDomains)) {
+            setUpdateKey(prevState => prevState + 1);
+        }
+    });
+  }
 
   useEffect(() => {
     setPeriodStatistics(chartData, unit);
-  }, [chartData, unit]);
+  }, [chartData, unit, updateKey]);
 
   const [configsSubject] = useState(() => new Subject());
   useEffect(() => {
@@ -36,7 +48,7 @@ const ChatsPage: React.FC = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [updateKey]);
 
   return (
     <>
@@ -45,6 +57,7 @@ const ChatsPage: React.FC = () => {
         metricOptions={chatOptions}
         dateFormat={chartDateFormat}
         onChange={(config) => {
+          config.urls = userDomains ?? [];
           setConfigs(config);
           configsSubject.next(config);
           const selectedOption = chatOptions.find((x) => x.id === config.metric);

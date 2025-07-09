@@ -21,6 +21,7 @@ import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { formatTimestamp } from '../util/charts-utils';
 import { CgSpinner } from 'react-icons/cg';
 import { saveFile } from 'util/file';
+import useStore from "../store/user/store";
 
 type ScheduledDataset = {
   datasetId: string;
@@ -37,6 +38,9 @@ const ReportsPage = () => {
   const [apiSettings, setApiSettings] = useState<ODPSettings>({ odpKey: null, orgId: null });
   const [datasets, setDatasets] = useState<ScheduledDataset[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const userDomains = useStore.getState().userDomains;
+  const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN.toLowerCase() === 'true';
 
   const [isSettingsConfirmationVisible, setIsSettingsConfirmationVisible] = useState(false);
 
@@ -74,6 +78,7 @@ const ReportsPage = () => {
     setLoading(true);
 
     try {
+      const urls = multiDomainEnabled ? userDomains || [null] : []
       const result = await request<
         {
           start: string;
@@ -81,6 +86,7 @@ const ReportsPage = () => {
           metrics: string[];
           metric_names: string[];
           date_rows: string[][];
+          urls: string[];
         },
         {
           base64String: string;
@@ -99,6 +105,7 @@ const ReportsPage = () => {
             [t('global.endDate'), options?.end && formatTimestamp(options.end)],
             [],
           ],
+          urls: urls
         },
       });
 

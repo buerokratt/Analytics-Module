@@ -23,6 +23,7 @@ import { Methods, request } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { ChartData } from 'types/chart';
 import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
+import useStore from "../store/user/store";
 
 const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -69,6 +70,18 @@ const AdvisorsPage: React.FC = () => {
     },
   ]);
   const { setPeriodStatistics } = usePeriodStatisticsContext();
+  const [updateKey, setUpdateKey] = useState<number>(0)
+  const userDomains = useStore.getState().userDomains;
+  const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN.toLowerCase() === 'true';
+
+
+  if(multiDomainEnabled) {
+    useStore.subscribe((state, prevState) => {
+      if(JSON.stringify(state.userDomains) !== JSON.stringify(prevState.userDomains)) {
+        setUpdateKey(prevState => prevState + 1);
+      }
+    });
+  }
 
   useEffect(() => {
     setAdvisorsList(advisors.current);
@@ -112,10 +125,11 @@ const AdvisorsPage: React.FC = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [updateKey]);
 
   const fetchChatsForwards = async (config: any) => {
     let chartData = {};
+    const urls = multiDomainEnabled ? userDomains || [null] : []
     setShowSelectAll(false);
     try {
       const result: any = await request({
@@ -126,6 +140,7 @@ const AdvisorsPage: React.FC = () => {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
           end_date: config?.end,
+          urls: urls
         },
       });
 
@@ -168,6 +183,7 @@ const AdvisorsPage: React.FC = () => {
   const fetchAverageChatPickUpTime = async (config: any) => {
     setShowSelectAll(false);
     let chartData = {};
+    const urls = multiDomainEnabled ? userDomains || [null] : []
     try {
       const result: any = await request({
         url: getAvgPickTime(),
@@ -177,6 +193,7 @@ const AdvisorsPage: React.FC = () => {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
           end_date: config?.end,
+          urls: urls
         },
       });
 
@@ -230,6 +247,7 @@ const AdvisorsPage: React.FC = () => {
   const fetchTotalCsaChats = async (config: any) => {
     setShowSelectAll(true);
     let chartData = {};
+    const urls = multiDomainEnabled ? userDomains || [null] : []
     try {
       const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
       const result: any = await request({
@@ -241,6 +259,7 @@ const AdvisorsPage: React.FC = () => {
           start_date: config?.start,
           end_date: config?.end,
           excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
+          urls: urls
         },
       });
 
@@ -271,6 +290,7 @@ const AdvisorsPage: React.FC = () => {
 
   const fetchAverageCsaChatTime = async (config: any) => {
     setShowSelectAll(true);
+    const urls = multiDomainEnabled ? userDomains || [null] : []
     let chartData = {};
     try {
       const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
@@ -283,6 +303,7 @@ const AdvisorsPage: React.FC = () => {
           start_date: config?.start,
           end_date: config?.end,
           excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
+          urls: urls
         },
       });
 

@@ -17,6 +17,9 @@ declaration:
       - field: start_date
         type: string
         description: "Body field 'start_date'"
+      - field: urls
+        type: string
+        description: "Body field 'urls'"
 
 check_for_required_parameters:
   switch:
@@ -32,6 +35,7 @@ post_step:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
+      urls: ${incoming.body.urls}
   result: result
 
 get_nps_object:

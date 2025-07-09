@@ -49,7 +49,6 @@ const OverviewPage: React.FC = () => {
 
   const fetchMetricPreferences = async () => {
     const result: any = await request({ url: overviewMetricPreferences(), withCredentials: true });
-
     setMetricPreferences(result.response);
   };
 
@@ -153,6 +152,7 @@ const OverviewPage: React.FC = () => {
       </Drawer>
 
       <MainMetricsArea
+        updateKey={updateKey}
         metricPreferences={metricPreferences}
         saveReorderedMetric={saveReorderedMetric}
       />

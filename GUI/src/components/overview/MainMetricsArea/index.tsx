@@ -9,26 +9,28 @@ import useStore from "../../../store/user/store";
 
 type Props = {
   metricPreferences: OverviewMetricPreference[];
+  updateKey: number;
   saveReorderedMetric: (metric: OverviewMetricPreference, newIndex: number) => void;
 };
 
-const MainMetricsArea = ({ metricPreferences, saveReorderedMetric }: Props) => {
+const MainMetricsArea = ({ metricPreferences, updateKey,saveReorderedMetric }: Props) => {
   const [metrics, setMetrics] = useState<OverviewMetricData[]>([]);
   const userDomains = useStore.getState().userDomains ?? [null];
+  const [currentKey, setCurrentKey] = useState<number>(0);
   const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN.toLowerCase() === 'true';
 
   useEffect(() => {
-    if (metricPreferences.length > 0) fetchMetrics(metricPreferences);
+    if (metricPreferences.length > 0 && updateKey > currentKey) fetchMetrics(metricPreferences);
     const interval = setInterval(() => fetchMetrics(metricPreferences), 30000);
     return () => clearInterval(interval);
-  }, [metricPreferences]);
+  }, [metricPreferences,updateKey]);
 
   const fetchMetrics = async (metricPreferences: OverviewMetricPreference[]) => {
     const metricsToFetch = metricPreferences.filter((m) => m.active);
 
     const noRemovedMetrics = metrics.every((m) => metricsToFetch.find((mf) => mf.metric === m.metric));
     const noNewMetrics = metricsToFetch.every((mf) => metrics.find((m) => mf.metric === m.metric));
-    if (noRemovedMetrics && noNewMetrics) {
+    if (noRemovedMetrics && noNewMetrics && updateKey < currentKey) {
       setMetrics(
         metricsToFetch.map((r) => ({
           metric: r.metric,
@@ -46,6 +48,7 @@ const MainMetricsArea = ({ metricPreferences, saveReorderedMetric }: Props) => {
       withCredentials: true,
     });
     const results = metricsResponse.response;
+    setCurrentKey(updateKey);
 
     setMetrics(
       metricsToFetch.map((e) => {

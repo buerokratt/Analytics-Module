@@ -202,7 +202,7 @@ const ChatsTable = (props: Props) => {
               <HistoricalChat
                 header_link={selectedChat.endUserUrl}
                 chat={selectedChat}
-                trigger={true}
+                onCommentChange={handleCommentChange}
               />
             </Drawer>
           </div>

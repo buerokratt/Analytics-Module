@@ -23,6 +23,9 @@ declaration:
       - field: sorting
         type: string
         description: "Body field 'sorting'"
+      - field: customerSupportIds
+        type: array
+        description: "Body field 'customerSupportIds'"
 
 check_for_required_parameters:
   switch:
@@ -40,6 +43,7 @@ post_step:
       page: ${incoming.body.page}
       page_size: ${incoming.body.page_size}
       sorting: ${incoming.body.sorting}
+      customerSupportIds: ${incoming.body.customerSupportIds?.join(',') ?? ''}
   result: result
 
 return_value:

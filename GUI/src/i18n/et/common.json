@@ -45,7 +45,8 @@
     "forward": "Suuna",
     "chosen": "Valitud",
     "read": "Loetud",
-    "dateTime": "Kuupäev"
+    "dateTime": "Kuupäev",
+    "statusClarification": "Staatuse täpsustus"
   },
   "mainMenu": {
     "closeMenu": "Kitsendan menüü",
@@ -106,6 +107,7 @@
   "feedback": {
     "statuses": "Lõpetatud staatused / vestluste arv",
     "burokratt_chats": "Tagasiside bürokrati vestlustele",
+    "feedback": "Tagasiside",
     "advisor_chats": "Tagasiside nõustajate vestlustele",
     "selected_advisor_chats": "Tagasiside valitud nõustajale",
     "negative_feedback": "Negatiivse tagasisidega vestlused",
@@ -178,6 +180,8 @@
     "event": "Sündmus",
     "avg": "Keskmine",
     "nps": "NPS",
+    "avgWaitingTimeSeconds": "Keskmine (Sec)",
+    "customerSupportFullName": "CSA Full Name",
     "id": "Id",
     "baseId": "Id",
     "rating": "Hinnang",
@@ -262,7 +266,7 @@
     "incorrect_apikey_message": "API võti või API võtme ID ei olnud õiged",
     "correct_apikey_title": "API seaded salvestatud",
     "correct_apikey_message": "API võti ja API võtme ID kinnitatud",
-    "avgWaitingTimeSeconds": "Average (Sec)",
+    "avgWaitingTimeSeconds": "Keskmine (Sec)",
     "receivedChats": "receivedChats",
     "forwardedChats": "forwardedChats",
     "forwardedExternally": "forwardedExternally",
@@ -307,7 +311,8 @@
       "newValidationMessage": "Uus teade kinnitamiseks",
       "useAutocorrect": "Teksti autokorrektor",
       "required": "Nõutud",
-      "invalidemail": "Kehtetu e-posti"
+      "invalidemail": "Kehtetu e-posti",
+      "statusCommentUpdated": "Staatuse täpsustus uuendatud"
     }
   },
   "roles": {
@@ -389,6 +394,8 @@
       "forwarded": "Suunatud",
       "addACommentToTheConversation": "Lisa vestlusele kommentaar",
       "rating": "Hinnang",
+      "chosenCsa": "Valitud nõustaja(d)",
+      "chosenColumn": "Valitud tulba(d)",
       "feedback": "Tagasiside"
     },
     "plainEvents": {

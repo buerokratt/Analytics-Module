@@ -395,6 +395,8 @@
       "forwarded": "Suunatud",
       "addACommentToTheConversation": "Lisa vestlusele kommentaar",
       "rating": "Hinnang",
+      "chosenCsa": "Valitud nõustaja(d)",
+      "chosenColumn": "Valitud tulba(d)",
       "feedback": "Tagasiside"
     },
     "plainEvents": {

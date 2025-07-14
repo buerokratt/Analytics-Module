@@ -357,7 +357,7 @@ const FeedbackPage: React.FC = () => {
             }
 
             chartData = {
-                chartData: getAdvisorChartData(res, advisorsList),
+                chartData: getAdvisorChartData(res, advisorsList,'chart.nps'),
                 colors: feedbackMetrics[3].subOptions!.map(({labelKey, color}) => {
                     return {
                         id: labelKey,

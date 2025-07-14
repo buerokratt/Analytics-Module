@@ -274,7 +274,7 @@ const AdvisorsPage: React.FC = () => {
       setAdvisorsList(advisors.current);
 
       chartData = {
-        chartData: getAdvisorChartData(res, advisorsList),
+        chartData: getAdvisorChartData(res, advisorsList,'chart.count'),
         colors: advisorsMetrics[3].subOptions!.map(({ labelKey, color }) => {
           return {
             id: labelKey,
@@ -318,7 +318,7 @@ const AdvisorsPage: React.FC = () => {
       setAdvisorsList(advisors.current);
 
       chartData = {
-        chartData: getAdvisorChartData(res, advisorsList),
+        chartData: getAdvisorChartData(res, advisorsList, 'chart.count'),
         colors: advisorsMetrics[4].subOptions!.map(({ labelKey, color }) => {
           return {
             id: labelKey,

@@ -56,6 +56,6 @@ SELECT
     MAX(author_id) AS customer_support_id,
     ROUND(
         EXTRACT(EPOCH FROM COALESCE(AVG(chat_length), '0 seconds'::INTERVAL)) / 60
-    ) AS avg_min
+    ) AS count
 FROM distinct_chats
 GROUP BY date_time, author_id;

@@ -50,6 +50,7 @@ export const fetchChartData = async (url: string, config: any, resultId: string,
         start_date: config?.start,
         end_date: config?.end,
         period: config?.groupByPeriod ?? 'day',
+        urls: config?.urls
       },
     });
 

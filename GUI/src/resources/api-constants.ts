@@ -33,7 +33,7 @@ export const overviewMetricPreferences = (): string => {
   return baseUrl + '/overview/preferences';
 };
 
-export const overviewMetrics = (metrics: string, urls: string[]): string => {
+export const overviewMetrics = (metrics: string, urls: string[] | null[]): string => {
   return baseUrl + `/overview/metrics?metrics=${metrics}&urls=${urls}`;
 };
 

@@ -8,12 +8,10 @@ import {
 } from '../../resources/api-constants';
 import { fetchChartData, fetchChartDataWithSubOptions } from '../../util/api-response-handler';
 import { chatOptions } from './options';
-import useStore from "../../store/user/store";
+import {getDomainsArray} from "../../util/multiDomain-utils";
 
 export const fetchData = (config: any) => {
-  const userDomains = useStore.getState().userDomains;
-  const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN.toLowerCase() === 'true';
-  config.urls = multiDomainEnabled ? userDomains || [null] : [];
+  config.urls = getDomainsArray();
 
   switch (config.metric) {
     case 'total':

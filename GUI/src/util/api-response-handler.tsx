@@ -14,6 +14,7 @@ export const fetchChartDataWithSubOptions = async (url: string, config: any, sub
         end_date: config?.end,
         period: config?.groupByPeriod ?? 'day',
         options: config?.options.join(',') ?? '',
+        urls: config?.urls
       },
     });
 

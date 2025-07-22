@@ -24,6 +24,7 @@ import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { ChartData } from 'types/chart';
 import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 import useStore from "../store/user/store";
+import {getDomainsArray} from "../util/multiDomain-utils";
 
 const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -129,7 +130,6 @@ const AdvisorsPage: React.FC = () => {
 
   const fetchChatsForwards = async (config: any) => {
     let chartData = {};
-    const urls = multiDomainEnabled ? userDomains || [null] : []
     setShowSelectAll(false);
     try {
       const result: any = await request({
@@ -140,7 +140,7 @@ const AdvisorsPage: React.FC = () => {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
           end_date: config?.end,
-          urls: urls
+          urls: getDomainsArray()
         },
       });
 
@@ -183,7 +183,6 @@ const AdvisorsPage: React.FC = () => {
   const fetchAverageChatPickUpTime = async (config: any) => {
     setShowSelectAll(false);
     let chartData = {};
-    const urls = multiDomainEnabled ? userDomains || [null] : []
     try {
       const result: any = await request({
         url: getAvgPickTime(),
@@ -193,7 +192,7 @@ const AdvisorsPage: React.FC = () => {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
           end_date: config?.end,
-          urls: urls
+          urls: getDomainsArray()
         },
       });
 
@@ -247,7 +246,6 @@ const AdvisorsPage: React.FC = () => {
   const fetchTotalCsaChats = async (config: any) => {
     setShowSelectAll(true);
     let chartData = {};
-    const urls = multiDomainEnabled ? userDomains || [null] : []
     try {
       const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
       const result: any = await request({
@@ -259,7 +257,7 @@ const AdvisorsPage: React.FC = () => {
           start_date: config?.start,
           end_date: config?.end,
           excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
-          urls: urls
+          urls: getDomainsArray()
         },
       });
 
@@ -290,7 +288,6 @@ const AdvisorsPage: React.FC = () => {
 
   const fetchAverageCsaChatTime = async (config: any) => {
     setShowSelectAll(true);
-    const urls = multiDomainEnabled ? userDomains || [null] : []
     let chartData = {};
     try {
       const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
@@ -303,7 +300,7 @@ const AdvisorsPage: React.FC = () => {
           start_date: config?.start,
           end_date: config?.end,
           excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
-          urls: urls
+          urls: getDomainsArray()
         },
       });
 

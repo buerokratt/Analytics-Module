@@ -25,7 +25,10 @@ csa_chats AS (
         DATE_TRUNC(:period, ended) AS time,
         COUNT(DISTINCT base_id) AS count
     FROM chat
-    WHERE ended::date BETWEEN :start::date AND :end::date AND status = 'ENDED'
+    WHERE (
+    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+       OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+    ) AND ended::date BETWEEN :start::date AND :end::date AND status = 'ENDED'
     AND EXISTS (
         SELECT 1
         FROM message

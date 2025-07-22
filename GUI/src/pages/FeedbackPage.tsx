@@ -29,6 +29,7 @@ import {ChartData} from 'types/chart';
 import {usePeriodStatisticsContext} from 'hooks/usePeriodStatisticsContext';
 import {ChatHistory} from "@buerokratt-ria/common-gui-components";
 import {useToast} from "../hooks/useToast";
+import {getDomainsArray} from "../util/multiDomain-utils";
 
 const statusOptions = [
     'CLIENT_LEFT_WITH_ACCEPTED',
@@ -170,7 +171,6 @@ const FeedbackPage: React.FC = () => {
     const fetchChatsStatuses = async (config: MetricOptionsState) => {
         setShowSelectAll(false);
         let chartData = {};
-        const urls = multiDomainEnabled ? userDomains || [null] : []
         const events = config.options;
         try {
             const result: any = await request({
@@ -183,7 +183,7 @@ const FeedbackPage: React.FC = () => {
                     end_date: config?.end,
                     events: events.length > 0 ? events : null,
                     csa_events: events.length > 0 ? events : null,
-                    urls: urls
+                    urls: getDomainsArray()
                 },
             });
 
@@ -260,7 +260,6 @@ const FeedbackPage: React.FC = () => {
         setShowSelectAll(false);
         let chartData = {};
         try {
-            const urls = multiDomainEnabled ? userDomains || [null] : []
             const result: any = await request({
                 url: getDistributionOnBuerokrattChatsFeedback(),
                 method: Methods.post,
@@ -268,7 +267,7 @@ const FeedbackPage: React.FC = () => {
                 data: {
                     start_date: config?.start,
                     end_date: config?.end,
-                    urls: urls
+                    urls: getDomainsArray()
                 },
             });
 
@@ -300,7 +299,6 @@ const FeedbackPage: React.FC = () => {
         setShowSelectAll(false);
         let chartData = {};
         try {
-            const urls = multiDomainEnabled ? userDomains || [null] : []
             const result: any = await request({
                 url: getDistributionOnCSAChatsFeedback(),
                 method: Methods.post,
@@ -308,7 +306,7 @@ const FeedbackPage: React.FC = () => {
                 data: {
                     start_date: config?.start,
                     end_date: config?.end,
-                    urls: urls
+                    urls: getDomainsArray()
                 },
             });
 
@@ -324,7 +322,6 @@ const FeedbackPage: React.FC = () => {
         let chartData = {};
         try {
             const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
-            const urls = multiDomainEnabled ? userDomains || [null] : []
             const result: any = await request({
                 url: getNpsOnSelectedCSAChatsFeedback(),
                 method: Methods.post,
@@ -334,7 +331,7 @@ const FeedbackPage: React.FC = () => {
                     start_date: config?.start,
                     end_date: config?.end,
                     excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
-                    urls: urls
+                    urls: getDomainsArray()
                 },
             });
 
@@ -376,7 +373,6 @@ const FeedbackPage: React.FC = () => {
         urlFunction: () => string,
         config: { groupByPeriod?: string; start?: string; end?: string }
     ) => {
-        const urls = multiDomainEnabled ? userDomains || [null] : []
         const result: any = await request({
             url: urlFunction(),
             method: Methods.post,
@@ -385,7 +381,7 @@ const FeedbackPage: React.FC = () => {
                 metric: config?.groupByPeriod ?? 'day',
                 start_date: config?.start,
                 end_date: config?.end,
-                urls: urls
+                urls: getDomainsArray()
             },
         });
 
@@ -454,6 +450,7 @@ const FeedbackPage: React.FC = () => {
                     delegatedEndDate={currentConfigs?.end}
                     delegatedStartDate={currentConfigs?.start}
                     user={useStore.getState().userInfo}
+                    userDomains={useStore}
                 />
             }
         </>

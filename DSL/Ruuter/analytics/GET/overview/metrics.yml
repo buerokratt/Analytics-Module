@@ -12,7 +12,7 @@ declaration:
         type: string
         description: "Parameter 'metrics'"
       - field: urls
-        type: string
+        type: array
         description: "Parameter 'urls'"
 
 extract_request_data:

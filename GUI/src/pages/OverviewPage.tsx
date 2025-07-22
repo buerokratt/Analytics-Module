@@ -15,6 +15,7 @@ import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { ChartData } from 'types/chart';
 import useStore from "../store/user/store";
+import {getDomainsArray} from "../util/multiDomain-utils";
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([]);
@@ -53,7 +54,7 @@ const OverviewPage: React.FC = () => {
   };
 
   const fetchChartData = async () => {
-    const result: any = await request({ url: overviewMetrics('chat-activity', userDomains || [null]), withCredentials: true });
+    const result: any = await request({ url: overviewMetrics('chat-activity', getDomainsArray()), withCredentials: true });
 
     const response = result.response['chat-activity'].map((entry: any) => ({
       ...translateChartKeys(entry),

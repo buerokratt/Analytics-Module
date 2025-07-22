@@ -22,6 +22,7 @@ import { formatTimestamp } from '../util/charts-utils';
 import { CgSpinner } from 'react-icons/cg';
 import { saveFile } from 'util/file';
 import useStore from "../store/user/store";
+import {getDomainsArray} from "../util/multiDomain-utils";
 
 type ScheduledDataset = {
   datasetId: string;
@@ -78,7 +79,6 @@ const ReportsPage = () => {
     setLoading(true);
 
     try {
-      const urls = multiDomainEnabled ? userDomains || [null] : []
       const result = await request<
         {
           start: string;
@@ -105,7 +105,7 @@ const ReportsPage = () => {
             [t('global.endDate'), options?.end && formatTimestamp(options.end)],
             [],
           ],
-          urls: urls
+          urls: getDomainsArray()
         },
       });
 

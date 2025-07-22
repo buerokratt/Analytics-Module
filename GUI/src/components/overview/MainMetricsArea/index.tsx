@@ -6,6 +6,7 @@ import DraggableCard from '../DraggableCard';
 import './styles.scss';
 import { request } from '../../../util/axios-client';
 import useStore from "../../../store/user/store";
+import {getDomainsArray} from "../../../util/multiDomain-utils";
 
 type Props = {
   metricPreferences: OverviewMetricPreference[];
@@ -44,7 +45,7 @@ const MainMetricsArea = ({ metricPreferences, updateKey,saveReorderedMetric }: P
     }
 
     const metricsResponse: any = await request({
-      url: overviewMetrics(metricsToFetch.map((e) => e.metric).join(','), multiDomainEnabled ? userDomains : []),
+      url: overviewMetrics(metricsToFetch.map((e) => e.metric).join(','), getDomainsArray()),
       withCredentials: true,
     });
     const results = metricsResponse.response;

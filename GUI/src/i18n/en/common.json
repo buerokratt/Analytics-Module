@@ -75,6 +75,11 @@
     "advisors": "Advisors",
     "reports": "Open Data"
   },
+  "toast": {
+    "success": {
+      "chatCommentChanged": "Chat comment changed"
+    }
+  },
   "burokratt": {
     "intents": "Intents",
     "sessions": "Sessions",
@@ -114,6 +119,7 @@
     "advisor_chats": "Feedback on advisor conversations",
     "selected_advisor_chats": "Feedback to selected advisor",
     "negative_feedback": "Conversations with negative feedback",
+    "chosen_csas": "Chosen csa(s)",
     "no_negative_feedback_chats": "There are no conversations",
     "status_options": {
       "client_left_with_accepted": "Bureaucrat - the client left with an answer",
@@ -147,7 +153,8 @@
     "status": "Status",
     "ended": "Ended",
     "view": "View",
-    "comment": "Comment"
+    "comment": "Comment",
+    "feedback": "Feedback"
   },
   "chats": {
     "total": "Total number of chats",
@@ -191,6 +198,7 @@
     "ended": "Ended",
     "customerSupportId": "Customer Support Id",
     "customerSupportDisplayName": "Customer Support Display Name",
+    "customerSupportFullName": "Customer Support Full Name",
     "barChart": "Bar Chart",
     "pieChart": "Pie Chart",
     "lineChart": "Line Chart",
@@ -206,7 +214,12 @@
     "value": "Value",
     "promoters": "Promoters",
     "passives": "Passives",
-    "detractors": "Detractors"
+    "detractors": "Detractors",
+    "totalPages": "Total Pages",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "comment": "Comment",
+    "feebackText": "Feedback"
   },
   "reports": {
     "get-chat-count-total": "Total chat count",

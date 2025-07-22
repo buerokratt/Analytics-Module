@@ -138,3 +138,7 @@ export const getDurationChats = (): string => {
 export const getIdleChats = (): string => {
   return baseUrl + '/chats/idle-count';
 };
+
+export const getBykEndedChats = (): string => {
+  return baseUrl + '/chats/byk-ended-count';
+};

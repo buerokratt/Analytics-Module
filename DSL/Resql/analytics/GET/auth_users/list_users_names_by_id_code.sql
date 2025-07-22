@@ -24,12 +24,16 @@ declaration:
       - field: last_name
         type: string
         description: "User's last name"
+      - field: full_name
+        type: string
+        description: "User's full name (first + last)"
 */
 SELECT DISTINCT ON (id_code)
     id_code,
     display_name,
     first_name,
-    last_name
+    last_name,
+    CONCAT(first_name, ' ', last_name) AS full_name
 FROM auth_users."user"
 WHERE id_code = ANY(STRING_TO_ARRAY(:idCodes, ','))
 ORDER BY id_code ASC, created DESC;

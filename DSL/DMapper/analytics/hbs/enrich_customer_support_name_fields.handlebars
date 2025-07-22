@@ -6,26 +6,31 @@
       {{/each}}
       
       {{#if ../users}}
-
         {{#if (eq this.customerSupportId null)}}
           "customerSupportDisplayName": null,
           "customerSupportFirstName": null,
-          "customerSupportLastName": null
+          "customerSupportLastName": null,
+          "customerSupportFullName": null
         {{else}}
-            {{#if (eq (getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "displayName") null) }}
+          {{#if (eq (getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "displayName") null) }}
             "customerSupportDisplayName": null,
-            {{else}}
+          {{else}}
             "customerSupportDisplayName": "{{getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "displayName"}}",
           {{/if}}
           {{#if (eq (getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "firstName") null) }}
             "customerSupportFirstName": null,
-            {{else}}
+          {{else}}
             "customerSupportFirstName": "{{getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "firstName"}}",
           {{/if}}
           {{#if (eq (getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "lastName") null) }}
-            "customerSupportLastName": null
-            {{else}}
-            "customerSupportLastName": "{{getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "firstName"}}"
+            "customerSupportLastName": null,
+          {{else}}
+            "customerSupportLastName": "{{getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "lastName"}}",
+          {{/if}}
+          {{#if (eq (getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "fullName") null) }}
+            "customerSupportFullName": null
+          {{else}}
+            "customerSupportFullName": "{{getObjectKeyFromObjectArray ../users "idCode" this.customerSupportId "fullName"}}"
           {{/if}}
         {{/if}}  
       {{/if}}

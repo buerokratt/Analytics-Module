@@ -63,6 +63,31 @@ WITH
         ORDER BY chat_base_id ASC, timestamp DESC
     ),
 
+    -- Get unique CSA names per chat
+    unique_csa_per_chat AS (
+        SELECT DISTINCT ON (chat_base_id, customer_support_id)
+            chat_base_id,
+            customer_support_id,
+            TRIM(
+                CASE
+                    WHEN customer_support_id = 'chatbot'
+                        THEN customer_support_display_name
+                    ELSE COALESCE(
+                        NULLIF(
+                            TRIM(customer_support_first_name || ' ' || customer_support_last_name),
+                            ''
+                        ),
+                        customer_support_display_name
+                    )
+                END
+            ) AS csa_name
+        FROM chat.denormalized_chat_messages_for_metrics
+        WHERE 
+            customer_support_id IS NOT NULL
+            AND customer_support_id <> ''
+        ORDER BY chat_base_id, customer_support_id, timestamp DESC
+    ),
+
     rated_chats AS (
         SELECT
             chat_base_id AS base_id,
@@ -75,46 +100,26 @@ WITH
             customer_support_last_name AS last_name,
             (
                 SELECT
-                    ARRAY_AGG(DISTINCT TRIM(
-                        CASE
-                            WHEN
-                                dcm_inner.customer_support_id = 'chatbot'
-                                THEN dcm_inner.customer_support_display_name
-                            ELSE COALESCE(
-                                NULLIF(
-                                    TRIM(
-                                        dcm_inner.customer_support_first_name
-                                        || ' '
-                                        || dcm_inner.customer_support_last_name
-                                    ),
-                                    ''
-                                ),
-                                dcm_inner.customer_support_display_name
-                            )
-                        END
-                    ))
+                    ARRAY_AGG(ucpc.csa_name)
                     FILTER (
                         WHERE NOT (
-                            dcm_inner.customer_support_id = 'chatbot'
+                            ucpc.customer_support_id = 'chatbot'
                             AND (
                                 (
                                     SELECT latest_open_csa FROM latest_open_chats
-                                    WHERE chat_base_id = dcm_inner.chat_base_id
+                                    WHERE chat_base_id = ucpc.chat_base_id
                                 ) IS NULL
                                 OR
                                 (
                                     SELECT latest_open_csa FROM latest_open_chats
-                                    WHERE chat_base_id = dcm_inner.chat_base_id
+                                    WHERE chat_base_id = ucpc.chat_base_id
                                 )
                                 <> 'chatbot'
                             )
                         )
                     )
-                FROM chat.denormalized_chat_messages_for_metrics AS dcm_inner
-                WHERE
-                    dcm_inner.chat_base_id = dcm.chat_base_id
-                    AND dcm_inner.customer_support_id IS NOT NULL
-                    AND dcm_inner.customer_support_id <> ''
+                FROM unique_csa_per_chat ucpc
+                WHERE ucpc.chat_base_id = dcm.chat_base_id
             ) AS all_csa_names,
             CEIL(COUNT(*) OVER () / :page_size::DECIMAL) AS total_pages
         FROM chat.denormalized_chat_messages_for_metrics AS dcm

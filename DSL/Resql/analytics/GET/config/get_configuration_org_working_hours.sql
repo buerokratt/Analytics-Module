@@ -59,98 +59,130 @@ declaration:
         description: "Saturday working hours end"
 */
 SELECT 
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationWorkingTimeStartISO' AND deleted IS false)
-     AND key = 'organizationWorkingTimeStartISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationWorkingTimeStartISO' AND deleted IS false)
+         AND key = 'organizationWorkingTimeStartISO'
+        ), -1
     ) AS working_time_start,
     
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationWorkingTimeEndISO' AND deleted IS false)
-     AND key = 'organizationWorkingTimeEndISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationWorkingTimeEndISO' AND deleted IS false)
+         AND key = 'organizationWorkingTimeEndISO'
+        ), 24
     ) AS working_time_end,
     
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationSundayWorkingTimeStartISO' AND deleted IS false)
-     AND key = 'organizationSundayWorkingTimeStartISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationSundayWorkingTimeStartISO' AND deleted IS false)
+         AND key = 'organizationSundayWorkingTimeStartISO'
+        ), -1
     ) AS sunday_working_time_start,
     
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationSundayWorkingTimeEndISO' AND deleted IS false)
-     AND key = 'organizationSundayWorkingTimeEndISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationSundayWorkingTimeEndISO' AND deleted IS false)
+         AND key = 'organizationSundayWorkingTimeEndISO'
+        ), 24
     ) AS sunday_working_time_end,
     
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationMondayWorkingTimeStartISO' AND deleted IS false)
-     AND key = 'organizationMondayWorkingTimeStartISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationMondayWorkingTimeStartISO' AND deleted IS false)
+         AND key = 'organizationMondayWorkingTimeStartISO'
+        ), -1
     ) AS monday_working_time_start,
     
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationMondayWorkingTimeEndISO' AND deleted IS false)
-     AND key = 'organizationMondayWorkingTimeEndISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationMondayWorkingTimeEndISO' AND deleted IS false)
+         AND key = 'organizationMondayWorkingTimeEndISO'
+        ), 24
     ) AS monday_working_time_end,
     
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationTuesdayWorkingTimeStartISO' AND deleted IS false)
-     AND key = 'organizationTuesdayWorkingTimeStartISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationTuesdayWorkingTimeStartISO' AND deleted IS false)
+         AND key = 'organizationTuesdayWorkingTimeStartISO'
+        ), -1
     ) AS tuesday_working_time_start,
     
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationTuesdayWorkingTimeEndISO' AND deleted IS false)
-     AND key = 'organizationTuesdayWorkingTimeEndISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationTuesdayWorkingTimeEndISO' AND deleted IS false)
+         AND key = 'organizationTuesdayWorkingTimeEndISO'
+        ), 24
     ) AS tuesday_working_time_end,
     
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationWednesdayWorkingTimeStartISO' AND deleted IS false)
-     AND key = 'organizationWednesdayWorkingTimeStartISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationWednesdayWorkingTimeStartISO' AND deleted IS false)
+         AND key = 'organizationWednesdayWorkingTimeStartISO'
+        ), -1
     ) AS wednesday_working_time_start,
     
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationWednesdayWorkingTimeEndISO' AND deleted IS false)
-     AND key = 'organizationWednesdayWorkingTimeEndISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationWednesdayWorkingTimeEndISO' AND deleted IS false)
+         AND key = 'organizationWednesdayWorkingTimeEndISO'
+        ), 24
     ) AS wednesday_working_time_end,
     
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationThursdayWorkingTimeStartISO' AND deleted IS false)
-     AND key = 'organizationThursdayWorkingTimeStartISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationThursdayWorkingTimeStartISO' AND deleted IS false)
+         AND key = 'organizationThursdayWorkingTimeStartISO'
+        ), -1
     ) AS thursday_working_time_start,
     
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationThursdayWorkingTimeEndISO' AND deleted IS false)
-     AND key = 'organizationThursdayWorkingTimeEndISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationThursdayWorkingTimeEndISO' AND deleted IS false)
+         AND key = 'organizationThursdayWorkingTimeEndISO'
+        ), 24
     ) AS thursday_working_time_end,
     
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationFridayWorkingTimeStartISO' AND deleted IS false)
-     AND key = 'organizationFridayWorkingTimeStartISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationFridayWorkingTimeStartISO' AND deleted IS false)
+         AND key = 'organizationFridayWorkingTimeStartISO'
+        ), -1
     ) AS friday_working_time_start,
     
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationFridayWorkingTimeEndISO' AND deleted IS false)
-     AND key = 'organizationFridayWorkingTimeEndISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationFridayWorkingTimeEndISO' AND deleted IS false)
+         AND key = 'organizationFridayWorkingTimeEndISO'
+        ), 24
     ) AS friday_working_time_end,
 
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationSaturdayWorkingTimeStartISO' AND deleted IS false)
-     AND key = 'organizationSaturdayWorkingTimeStartISO'
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationSaturdayWorkingTimeStartISO' AND deleted IS false)
+         AND key = 'organizationSaturdayWorkingTimeStartISO'
+        ), -1
     ) AS saturday_working_time_start,
     
-    (SELECT EXTRACT(HOUR FROM value::timestamp) 
-     FROM config.configuration 
-     WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationSaturdayWorkingTimeEndISO' AND deleted IS false)
-     AND key = 'organizationSaturdayWorkingTimeEndISO'
-    ) AS saturday_working_time_end
+    COALESCE(
+        (SELECT EXTRACT(HOUR FROM value::timestamp) 
+         FROM config.configuration 
+         WHERE created = (SELECT MAX(created) FROM config.configuration WHERE key = 'organizationSaturdayWorkingTimeEndISO' AND deleted IS false)
+         AND key = 'organizationSaturdayWorkingTimeEndISO'
+        ), 24
+    ) AS saturday_working_time_end;

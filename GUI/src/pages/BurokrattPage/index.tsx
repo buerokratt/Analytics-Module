@@ -18,7 +18,7 @@ const BurokrattPage: React.FC = () => {
     const [chartData, setChartData] = useState([])
     const [unit, setUnit] = useState(metricOptions[0].unit)
     const [updateKey, setUpdateKey] = useState<number>(0)
-    const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN.toLowerCase() === 'true';
+    const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
     if (multiDomainEnabled) {
         useStore.subscribe((state, prevState) => {

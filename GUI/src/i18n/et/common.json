@@ -46,14 +46,16 @@
     "chosen": "Valitud",
     "read": "Loetud",
     "dateTime": "Kuupäev",
-    "statusClarification": "Staatuse täpsustus"
+    "statusClarification": "Staatuse täpsustus",
+    "selectAll": "Vali kõik"
   },
   "mainMenu": {
     "closeMenu": "Kitsendan menüü",
     "openMenu": "Ava menüü"
   },
   "multiDomains": {
-    "selectDomains": "Vali Domeenid"
+    "selectDomains": "Vali Domeenid",
+    "noDomains": "Domeene ei ole saadaval. Palun võtke ühendust süsteemiadministraatoriga."
   },
   "general": {
     "selectAll": "Vali kõik",

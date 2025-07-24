@@ -25,8 +25,7 @@ const OverviewPage: React.FC = () => {
   });
   const [drawerIsHidden, setDrawerIsHidden] = useState(true);
   const [updateKey, setUpdateKey] = useState<number>(0)
-  const userDomains = useStore.getState().userDomains;
-  const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN.toLowerCase() === 'true';
+  const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
 
   if(multiDomainEnabled) {

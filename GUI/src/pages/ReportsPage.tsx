@@ -40,9 +40,6 @@ const ReportsPage = () => {
   const [datasets, setDatasets] = useState<ScheduledDataset[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const userDomains = useStore.getState().userDomains;
-  const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN.toLowerCase() === 'true';
-
   const [isSettingsConfirmationVisible, setIsSettingsConfirmationVisible] = useState(false);
 
   useEffect(() => {

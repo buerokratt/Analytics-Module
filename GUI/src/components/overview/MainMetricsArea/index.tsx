@@ -16,9 +16,7 @@ type Props = {
 
 const MainMetricsArea = ({ metricPreferences, updateKey,saveReorderedMetric }: Props) => {
   const [metrics, setMetrics] = useState<OverviewMetricData[]>([]);
-  const userDomains = useStore.getState().userDomains ?? [null];
   const [currentKey, setCurrentKey] = useState<number>(0);
-  const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN.toLowerCase() === 'true';
 
   useEffect(() => {
     if (metricPreferences.length > 0 && updateKey > currentKey) fetchMetrics(metricPreferences);

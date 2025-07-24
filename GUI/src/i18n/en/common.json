@@ -46,14 +46,16 @@
     "chosen": "Chosen",
     "read": "Read",
     "dateTime": "Date",
-    "statusClarification": "Status clarification"
+    "statusClarification": "Status clarification",
+    "selectAll": "Select all"
   },
   "mainMenu": {
     "closeMenu": "Close menu",
     "openMenu": "Open menu"
   },
   "multiDomains": {
-    "selectDomains": "Select Domains"
+    "selectDomains": "Select Domains",
+    "noDomains": "No domains available. Please contact your system administrator."
   },
   "general": {
     "selectAll": "Select All",

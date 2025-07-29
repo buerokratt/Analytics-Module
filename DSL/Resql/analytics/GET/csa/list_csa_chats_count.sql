@@ -45,6 +45,7 @@ WITH
             AND message_author_id IS NOT NULL
             AND message_author_id <> ''
             AND message_author_id <> 'null'
+            AND message_author_id <> 'chatbot'
             AND created >= :start::DATE
             AND created < (:end::DATE + INTERVAL '1 day')
             AND message_author_id <> ALL(STRING_TO_ARRAY(:excluded_csas, ','))

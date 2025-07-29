@@ -47,6 +47,7 @@ WITH
             AND message_author_id IS NOT NULL
             AND message_author_id <> ''
             AND message_author_id <> 'null'
+            AND message_author_id <> 'chatbot'
             AND message_author_id <> ALL(STRING_TO_ARRAY(:excluded_csas, ','))
         ORDER BY chat_base_id ASC, message_author_id ASC, timestamp DESC
     )

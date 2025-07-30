@@ -155,4 +155,4 @@ ORDER BY
    CASE WHEN :sorting = 'rating desc' THEN feedback_rating END DESC,
    CASE WHEN :sorting = 'rating asc' THEN feedback_rating END ASC
 OFFSET ((GREATEST(:page::INTEGER, 1) - 1) * :page_size::INTEGER) 
-LIMIT :page_size::INTEGER;RetryClaude can make mistakes. Please double-check responses.
+LIMIT :page_size::INTEGER;

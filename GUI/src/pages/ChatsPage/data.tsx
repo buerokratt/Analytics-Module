@@ -3,7 +3,7 @@ import {
   getAvgMessagesInChats,
   getCipChats,
   getDurationChats,
-  getIdleChats,
+  getBykEndedChats,
   getTotalChats,
 } from '../../resources/api-constants';
 import { fetchChartData, fetchChartDataWithSubOptions } from '../../util/api-response-handler';
@@ -22,7 +22,7 @@ export const fetchData = (config: any) => {
     case 'avgNumOfMessages':
       return fetchChartData(getAvgMessagesInChats(), config, chatOptions[4].labelKey);
     case 'idle':
-      return fetchChartData(getIdleChats(), config, chatOptions[5].labelKey);
+      return fetchChartData(getBykEndedChats(), config, chatOptions[5].labelKey);
     default:
       return [];
   }

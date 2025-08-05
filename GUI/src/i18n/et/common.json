@@ -72,6 +72,11 @@
     "advisors": "Nõustajad",
     "reports": "Avaandmed"
   },
+  "toast": {
+    "success": {
+      "chatCommentChanged": "Vestluse kommentaar muudetud"
+    }
+  },
   "burokratt": {
     "intents": "Teemad",
     "sessions": "Sessioonid",
@@ -111,6 +116,7 @@
     "advisor_chats": "Tagasiside nõustajate vestlustele",
     "selected_advisor_chats": "Tagasiside valitud nõustajale",
     "negative_feedback": "Negatiivse tagasisidega vestlused",
+    "chosen_csas": "Valitud nõustaja(d)",
     "no_negative_feedback_chats": "Vestlused puuduvad",
     "status_options": {
       "client_left_with_accepted": "Bürokratt - klient lahkus vastusega",
@@ -144,7 +150,8 @@
     "status": "Staatus",
     "ended": "Lõppenud",
     "view": "Vaata",
-    "comment": "Kommentaar"
+    "comment": "Kommentaar",
+    "feedback": "Tagasiside"
   },
   "chats": {
     "total": "Vestluste koguarv",
@@ -191,6 +198,7 @@
     "avgMin": "Keskmine (min)",
     "customerSupportId": "Nõustaja Id",
     "customerSupportDisplayName": "Nõustaja nimi",
+    "customerSupportFullName": "Nõustaja nimi",
     "barChart": "Tulpdiagramm",
     "pieChart": "Sektordiagramm",
     "lineChart": "Joondiagramm",
@@ -203,7 +211,12 @@
     "value": "Väärtus",
     "promoters": "Soovitajad",
     "passives": "Neutraalsed",
-    "detractors": "Kriitikud"
+    "detractors": "Kriitikud",
+    "totalPages": "Total Pages",
+    "firstName": "Ees nimi",
+    "lastName": "Perekonnanimi",
+    "comment": "Kommentaar",
+    "feebackText": "Tagasiside"
   },
   "reports": {
     "get-chat-count-total": "Vestluste koguarv",

@@ -5,7 +5,6 @@ import { reorderItem } from '../../../util/reorder-array';
 import DraggableCard from '../DraggableCard';
 import './styles.scss';
 import { request } from '../../../util/axios-client';
-import useStore from "../../../store/user/store";
 import {getDomainsArray} from "../../../util/multiDomain-utils";
 
 type Props = {

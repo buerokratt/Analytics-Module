@@ -38,7 +38,10 @@ WITH chat_stats AS (
                 AND "event" = 'RESPONSE_SENT_TO_CLIENT_EMAIL'
         ) AS response_sent_to_client_email
     FROM chat
-    WHERE ended >= date_trunc('hour', CURRENT_DATE)
+    WHERE (
+    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+    OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+    ) AND ended >= date_trunc('hour', CURRENT_DATE)
 )
 SELECT timescale.ended AS ended,
     COUNT(DISTINCT base_id) AS metric_value,

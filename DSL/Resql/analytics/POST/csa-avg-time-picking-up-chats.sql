@@ -17,7 +17,10 @@ WITH botname AS (
             ORDER BY updated
         ) AS prev_updated
     FROM chat
-    WHERE created::date BETWEEN :start::date AND :end::date
+    WHERE (
+    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+       OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+    ) AND created::date BETWEEN :start::date AND :end::date
 )
 SELECT date_time, ROUND(COALESCE(
         AVG(

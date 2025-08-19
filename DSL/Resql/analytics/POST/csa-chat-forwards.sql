@@ -14,7 +14,10 @@ chatsList AS (
   FROM chat
   JOIN message ON chat.base_id = message.chat_base_id
   CROSS JOIN botname
-  WHERE chat.created::date BETWEEN :start::date AND :end::date
+  WHERE (
+    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+        OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+  ) AND chat.created::date BETWEEN :start::date AND :end::date
   AND chat.received_from <> botname.value
 ),
 forwardedChats AS (

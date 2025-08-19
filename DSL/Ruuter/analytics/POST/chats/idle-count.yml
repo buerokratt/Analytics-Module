@@ -17,6 +17,9 @@ declaration:
       - field: start_date
         type: string
         description: "Body field 'start_date'"
+      - field: urls
+        type: array
+        description: "Body field 'urls'"
 
 check_for_body:
   switch:
@@ -28,6 +31,7 @@ extract_request_data:
     start: ${incoming.body.start_date}
     end: ${incoming.body.end_date}
     period: ${incoming.body.period}
+    urls: ${incoming.body.urls}
 
 check_for_required_parameters:
   switch:
@@ -48,6 +52,7 @@ fetch:
       period: ${period}
       start: ${start}
       end: ${end}
+      urls: ${urls}
   result: results
 
 respond:

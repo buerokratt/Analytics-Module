@@ -23,6 +23,8 @@ import { Methods, request } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { ChartData } from 'types/chart';
 import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
+import useStore from "../store/user/store";
+import {getDomainsArray} from "../util/multiDomain-utils";
 
 const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -69,6 +71,17 @@ const AdvisorsPage: React.FC = () => {
     },
   ]);
   const { setPeriodStatistics } = usePeriodStatisticsContext();
+  const [updateKey, setUpdateKey] = useState<number>(0)
+  const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
+
+
+  if(multiDomainEnabled) {
+    useStore.subscribe((state, prevState) => {
+      if(JSON.stringify(state.userDomains) !== JSON.stringify(prevState.userDomains)) {
+        setUpdateKey(prevState => prevState + 1);
+      }
+    });
+  }
 
   useEffect(() => {
     setAdvisorsList(advisors.current);
@@ -112,7 +125,7 @@ const AdvisorsPage: React.FC = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [updateKey]);
 
   const fetchChatsForwards = async (config: any) => {
     let chartData = {};
@@ -126,6 +139,7 @@ const AdvisorsPage: React.FC = () => {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
           end_date: config?.end,
+          urls: getDomainsArray()
         },
       });
 
@@ -177,6 +191,7 @@ const AdvisorsPage: React.FC = () => {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
           end_date: config?.end,
+          urls: getDomainsArray()
         },
       });
 
@@ -241,6 +256,7 @@ const AdvisorsPage: React.FC = () => {
           start_date: config?.start,
           end_date: config?.end,
           excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
+          urls: getDomainsArray()
         },
       });
 
@@ -283,6 +299,7 @@ const AdvisorsPage: React.FC = () => {
           start_date: config?.start,
           end_date: config?.end,
           excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
+          urls: getDomainsArray()
         },
       });
 

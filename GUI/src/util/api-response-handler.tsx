@@ -14,6 +14,7 @@ export const fetchChartDataWithSubOptions = async (url: string, config: any, sub
         end_date: config?.end,
         period: config?.groupByPeriod ?? 'day',
         options: config?.options.join(',') ?? '',
+        urls: config?.urls
       },
     });
 
@@ -34,8 +35,8 @@ export const fetchChartDataWithSubOptions = async (url: string, config: any, sub
     const colors = subOptions.map((x) => ({ id: t(x.labelKey), color: x.color }));
 
     return { chartData, colors };
-  } catch (_) {
-    return {};
+  } catch (error) {
+    console.error('Failed to fetch chart data with options')
   }
 };
 
@@ -49,6 +50,7 @@ export const fetchChartData = async (url: string, config: any, resultId: string,
         start_date: config?.start,
         end_date: config?.end,
         period: config?.groupByPeriod ?? 'day',
+        urls: config?.urls
       },
     });
 
@@ -73,7 +75,7 @@ export const fetchChartData = async (url: string, config: any, resultId: string,
       colors: [{ id: t(resultId), color: resultColor }],
       minPointSize: minPointSize,
     };
-  } catch (_) {
-    return {};
+  } catch (error) {
+      console.error('Failed to fetch chart data')
   }
 };

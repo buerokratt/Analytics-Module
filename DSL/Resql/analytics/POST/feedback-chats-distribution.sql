@@ -10,7 +10,10 @@ WITH chats_filtered AS (
             ORDER BY updated
         ) AS feedback_rating
     FROM chat
-    WHERE STATUS = 'ENDED'
+    WHERE (
+        array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+            OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+        ) AND STATUS = 'ENDED'
         AND feedback_rating IS NOT NULL
         AND created::date BETWEEN :start::date AND :end::date
         AND (

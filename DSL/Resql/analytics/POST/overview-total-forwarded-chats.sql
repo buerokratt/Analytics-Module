@@ -2,6 +2,10 @@ WITH forwarded_chats_by_csa AS (
     SELECT base_id, customer_support_id, customer_support_display_name, ended 
     FROM chat 
     WHERE status = 'REDIRECTED'
+      AND (
+        array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+            OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+        )
     AND customer_support_id <> '' AND customer_support_id IS NOT NULL
     GROUP BY base_id, customer_support_id, customer_support_display_name, ended
 )

@@ -56,6 +56,7 @@ call_all_chats:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
+      urls: ${incoming.body.urls}
   result: result
   next: check_for_csa_events
 
@@ -68,6 +69,7 @@ call_csa_chats:
       metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
+      urls: ${incoming.body.urls}
   result: csa_result
   next: return_response
 

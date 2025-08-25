@@ -7,8 +7,11 @@ import {
 } from '../../resources/api-constants';
 import { fetchChartData, fetchChartDataWithSubOptions } from '../../util/api-response-handler';
 import { metricOptions } from './options';
+import {getDomainsArray} from "../../util/multiDomain-utils";
 
 export const fetchData = (config: any) => {
+    config.urls = getDomainsArray();
+
     switch (config.metric) {
         case 'intents':
             return fetchChartDataWithSubOptions(getBykIntents(), config, metricOptions[0].subOptions!)

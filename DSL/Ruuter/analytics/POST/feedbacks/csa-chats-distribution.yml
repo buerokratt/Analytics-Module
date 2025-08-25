@@ -14,6 +14,9 @@ declaration:
       - field: start_date
         type: string
         description: "Body field 'start_date'"
+      - field: urls
+        type: array
+        description: "Body field 'urls'"
 
 check_for_required_parameters:
   switch:
@@ -28,6 +31,7 @@ post_step:
     body:
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
+      urls: ${incoming.body.urls}
       chat_type: "csa"
   result: result
 

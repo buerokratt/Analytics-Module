@@ -8,8 +8,11 @@ import {
 } from '../../resources/api-constants';
 import { fetchChartData, fetchChartDataWithSubOptions } from '../../util/api-response-handler';
 import { chatOptions } from './options';
+import {getDomainsArray} from "../../util/multiDomain-utils";
 
 export const fetchData = (config: any) => {
+  config.urls = getDomainsArray();
+
   switch (config.metric) {
     case 'total':
       return fetchChartDataWithSubOptions(getTotalChats(), config, chatOptions[0].subOptions!);

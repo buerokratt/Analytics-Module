@@ -1,5 +1,3 @@
-
-
 WITH chat_buerokratt AS (
     SELECT DISTINCT base_id,
         first_value(ended) OVER (
@@ -13,7 +11,10 @@ WITH chat_buerokratt AS (
             ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
         ) AS feedback_rating
     FROM chat
-    WHERE EXISTS (
+    WHERE (
+        array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+            OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+        ) AND EXISTS (
         SELECT 1
         FROM message
         WHERE message.chat_base_id = chat.base_id

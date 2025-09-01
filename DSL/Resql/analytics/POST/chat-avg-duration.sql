@@ -6,6 +6,8 @@ WITH chat_durations AS (
     FROM chat
     JOIN message ON chat.base_id = message.chat_base_id
     WHERE chat.status = 'ENDED'
+    AND (array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+        OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[]))
     AND chat.created::date BETWEEN :start::date AND :end::date
     GROUP BY chat.base_id
 )

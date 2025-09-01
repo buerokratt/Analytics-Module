@@ -28,7 +28,10 @@ AND 0 < (
   SELECT 1
   FROM message m
   JOIN chat c ON m.chat_base_id = c.base_id
-  WHERE m.chat_base_id = w.chat_base_id
+  WHERE (
+    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+   OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+    ) AND m.chat_base_id = w.chat_base_id
   AND (
     m.event LIKE '%contact-information-fulfilled'  OR
     (c.end_user_email IS NOT NULL AND c.end_user_email <> '') OR

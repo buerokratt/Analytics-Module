@@ -19,7 +19,10 @@ SELECT
   COUNT(DISTINCT c.base_id) AS chat_count
 FROM chat c
     JOIN message m ON c.base_id = m.chat_base_id
-WHERE c.created::date BETWEEN :start::date AND :end::date
+WHERE  (
+    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+   OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+    ) AND c.created::date BETWEEN :start::date AND :end::date
 AND (
     m.event = 'unavailable-contact-information-fulfilled'
     AND (

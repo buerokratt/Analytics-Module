@@ -29,6 +29,7 @@ import {ChartData} from 'types/chart';
 import {usePeriodStatisticsContext} from 'hooks/usePeriodStatisticsContext';
 import {ChatHistory} from "@buerokratt-ria/common-gui-components";
 import {useToast} from "../hooks/useToast";
+import {getDomainsArray} from "../util/multiDomain-utils";
 
 const statusOptions = [
     'CLIENT_LEFT_WITH_ACCEPTED',
@@ -57,6 +58,17 @@ const FeedbackPage: React.FC = () => {
     const [unit, setUnit] = useState('');
     const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
     const {setPeriodStatistics} = usePeriodStatisticsContext();
+    const [updateKey, setUpdateKey] = useState<number>(0)
+    const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
+
+
+    if(multiDomainEnabled) {
+        useStore.subscribe((state, prevState) => {
+            if(JSON.stringify(state.userDomains) !== JSON.stringify(prevState.userDomains)) {
+                setUpdateKey(prevState => prevState + 1);
+            }
+        });
+    }
 
     useEffect(() => {
         setAdvisorsList(advisors.current);
@@ -153,7 +165,7 @@ const FeedbackPage: React.FC = () => {
         return () => {
             subscription.unsubscribe();
         };
-    }, []);
+    }, [updateKey]);
 
     const fetchChatsStatuses = async (config: MetricOptionsState) => {
         setShowSelectAll(false);
@@ -170,6 +182,7 @@ const FeedbackPage: React.FC = () => {
                     end_date: config?.end,
                     events: events.length > 0 ? events : null,
                     csa_events: events.length > 0 ? events : null,
+                    urls: getDomainsArray()
                 },
             });
 
@@ -215,7 +228,7 @@ const FeedbackPage: React.FC = () => {
 
             chartData = {
                 chartData: response,
-                colors: [{id: 'average', color: '#FFB511'}],
+                colors: [{ id: 'average', color: '#FFB511' }],
                 minPointSize: 3,
             };
             setUnit(t('units.minutes') ?? 'chats');
@@ -253,6 +266,7 @@ const FeedbackPage: React.FC = () => {
                 data: {
                     start_date: config?.start,
                     end_date: config?.end,
+                    urls: getDomainsArray()
                 },
             });
 
@@ -291,6 +305,7 @@ const FeedbackPage: React.FC = () => {
                 data: {
                     start_date: config?.start,
                     end_date: config?.end,
+                    urls: getDomainsArray()
                 },
             });
 
@@ -315,6 +330,7 @@ const FeedbackPage: React.FC = () => {
                     start_date: config?.start,
                     end_date: config?.end,
                     excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
+                    urls: getDomainsArray()
                 },
             });
 
@@ -364,6 +380,7 @@ const FeedbackPage: React.FC = () => {
                 metric: config?.groupByPeriod ?? 'day',
                 start_date: config?.start,
                 end_date: config?.end,
+                urls: getDomainsArray()
             },
         });
 
@@ -409,7 +426,8 @@ const FeedbackPage: React.FC = () => {
                         const selectedOption = feedbackMetrics.find((x) => x.id === config.metric);
                         if (!selectedOption) return;
                         setUnit(selectedOption.unit ?? '');
-                }}
+                    }
+                }
             />
             {currentConfigs?.metric != 'negative_feedback' && (
                 <MetricsCharts
@@ -431,6 +449,7 @@ const FeedbackPage: React.FC = () => {
                     delegatedEndDate={currentConfigs?.end}
                     delegatedStartDate={currentConfigs?.start}
                     user={useStore.getState().userInfo}
+                    userDomains={useStore}
                 />
             }
         </>

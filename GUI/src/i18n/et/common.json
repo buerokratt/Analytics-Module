@@ -80,6 +80,7 @@
   },
   "toast": {
     "success": {
+      "updateSuccess": "Värskendamine õnnestus",
       "chatCommentChanged": "Vestluse kommentaar muudetud"
     }
   },

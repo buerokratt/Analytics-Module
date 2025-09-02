@@ -80,6 +80,7 @@
   },
   "toast": {
     "success": {
+      "updateSuccess": "Updated Successfully",
       "chatCommentChanged": "Chat comment changed"
     }
   },

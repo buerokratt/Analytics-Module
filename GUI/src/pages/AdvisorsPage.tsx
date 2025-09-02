@@ -25,6 +25,7 @@ import { ChartData } from 'types/chart';
 import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 import useStore from "../store/user/store";
 import {getDomainsArray} from "../util/multiDomain-utils";
+import {getShowTestData} from "../util/testChat-utils";
 
 const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -139,7 +140,8 @@ const AdvisorsPage: React.FC = () => {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
           end_date: config?.end,
-          urls: getDomainsArray()
+          urls: getDomainsArray(),
+          showTest: getShowTestData()
         },
       });
 
@@ -191,7 +193,8 @@ const AdvisorsPage: React.FC = () => {
           metric: config?.groupByPeriod ?? 'day',
           start_date: config?.start,
           end_date: config?.end,
-          urls: getDomainsArray()
+          urls: getDomainsArray(),
+          showTest: getShowTestData()
         },
       });
 
@@ -256,7 +259,8 @@ const AdvisorsPage: React.FC = () => {
           start_date: config?.start,
           end_date: config?.end,
           excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
-          urls: getDomainsArray()
+          urls: getDomainsArray(),
+          showTest: getShowTestData()
         },
       });
 
@@ -299,7 +303,8 @@ const AdvisorsPage: React.FC = () => {
           start_date: config?.start,
           end_date: config?.end,
           excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
-          urls: getDomainsArray()
+          urls: getDomainsArray(),
+          showTest: getShowTestData()
         },
       });
 

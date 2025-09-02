@@ -32,12 +32,16 @@ declaration:
       - field: urls
         type: array
         description: "Body field 'urls'"
+      - field: showTest
+        type: boolean
+        description: "Body field 'showTest'"
 
 extractRequestData:
   assign:
     startDate: ${incoming.body.startDate}
     endDate: ${incoming.body.endDate}
     urls: ${incoming.body.urls}
+    showTest: ${incoming.body.showTest}
 
 getEndedChats:
   call: http.post
@@ -52,6 +56,7 @@ getEndedChats:
       search: ${incoming.body.search}
       customerSupportIds: ${incoming.body.customerSupportIds?.join(',') ?? ''}
       urls: ${urls}
+      showTest: ${showTest}
   result: res
 
 returnSuccess:

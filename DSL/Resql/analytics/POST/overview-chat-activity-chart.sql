@@ -42,7 +42,10 @@ WITH chat_stats AS (
     array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
     OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
     )
-      AND chat.test = :showTest
+      AND (
+        :showTest = TRUE
+            OR chat.test = FALSE
+        )
       AND ended >= date_trunc('hour', CURRENT_DATE)
 )
 SELECT timescale.ended AS ended,

@@ -7,7 +7,7 @@ WITH chatbot_chats AS (
     array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
        OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
     )
-    AND chat.test = :showTest
+    AND (:showTest = TRUE OR chat.test = FALSE)
     AND ended::date BETWEEN :start::date AND :end::date AND status = 'ENDED'
     AND NOT EXISTS (
         SELECT 1
@@ -31,7 +31,7 @@ csa_chats AS (
     array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
        OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
     )
-    AND chat.test = :showTest
+    AND (:showTest = TRUE OR chat.test = FALSE)
     AND ended::date BETWEEN :start::date AND :end::date AND status = 'ENDED'
     AND EXISTS (
         SELECT 1

@@ -30,6 +30,7 @@ import {usePeriodStatisticsContext} from 'hooks/usePeriodStatisticsContext';
 import {ChatHistory} from "@buerokratt-ria/common-gui-components";
 import {useToast} from "../hooks/useToast";
 import {getDomainsArray} from "../util/multiDomain-utils";
+import {getShowTestData} from "../util/testChat-utils";
 
 const statusOptions = [
     'CLIENT_LEFT_WITH_ACCEPTED',
@@ -182,7 +183,8 @@ const FeedbackPage: React.FC = () => {
                     end_date: config?.end,
                     events: events.length > 0 ? events : null,
                     csa_events: events.length > 0 ? events : null,
-                    urls: getDomainsArray()
+                    urls: getDomainsArray(),
+                    showTest: getShowTestData()
                 },
             });
 
@@ -266,7 +268,8 @@ const FeedbackPage: React.FC = () => {
                 data: {
                     start_date: config?.start,
                     end_date: config?.end,
-                    urls: getDomainsArray()
+                    urls: getDomainsArray(),
+                    showTest: getShowTestData()
                 },
             });
 
@@ -305,7 +308,8 @@ const FeedbackPage: React.FC = () => {
                 data: {
                     start_date: config?.start,
                     end_date: config?.end,
-                    urls: getDomainsArray()
+                    urls: getDomainsArray(),
+                    showTest: getShowTestData()
                 },
             });
 
@@ -330,7 +334,8 @@ const FeedbackPage: React.FC = () => {
                     start_date: config?.start,
                     end_date: config?.end,
                     excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
-                    urls: getDomainsArray()
+                    urls: getDomainsArray(),
+                    showTest: getShowTestData()
                 },
             });
 
@@ -380,7 +385,8 @@ const FeedbackPage: React.FC = () => {
                 metric: config?.groupByPeriod ?? 'day',
                 start_date: config?.start,
                 end_date: config?.end,
-                urls: getDomainsArray()
+                urls: getDomainsArray(),
+                showTest: getShowTestData()
             },
         });
 

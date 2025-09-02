@@ -47,7 +47,8 @@
     "read": "Read",
     "dateTime": "Date",
     "statusClarification": "Status clarification",
-    "selectAll": "Select all"
+    "selectAll": "Select all",
+    "test": "Test"
   },
   "mainMenu": {
     "closeMenu": "Close menu",

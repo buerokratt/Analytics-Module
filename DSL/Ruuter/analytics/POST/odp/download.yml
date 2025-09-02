@@ -26,6 +26,9 @@ declaration:
       - field: urls
         type: array
         description: "Body field 'urls'"
+      - field: showTest
+        type: boolean
+        description: "Body field 'showTest'"
 
 get_metrics:
   call: http.post
@@ -36,6 +39,7 @@ get_metrics:
       start: ${incoming.body.start}
       end: ${incoming.body.end}
       urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
       period: "never"
   result: metrics
 

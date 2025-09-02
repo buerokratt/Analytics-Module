@@ -8,9 +8,11 @@ import {
 import { fetchChartData, fetchChartDataWithSubOptions } from '../../util/api-response-handler';
 import { metricOptions } from './options';
 import {getDomainsArray} from "../../util/multiDomain-utils";
+import {getShowTestData} from "../../util/testChat-utils";
 
 export const fetchData = (config: any) => {
     config.urls = getDomainsArray();
+    config.showTest = getShowTestData();
 
     switch (config.metric) {
         case 'intents':

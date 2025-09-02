@@ -22,6 +22,7 @@ import { formatTimestamp } from '../util/charts-utils';
 import { CgSpinner } from 'react-icons/cg';
 import { saveFile } from 'util/file';
 import {getDomainsArray} from "../util/multiDomain-utils";
+import {getShowTestData} from "../util/testChat-utils";
 
 type ScheduledDataset = {
   datasetId: string;
@@ -81,6 +82,7 @@ const ReportsPage = () => {
           metric_names: string[];
           date_rows: string[][];
           urls: string[];
+          showTest: boolean;
         },
         {
           base64String: string;
@@ -99,7 +101,8 @@ const ReportsPage = () => {
             [t('global.endDate'), options?.end && formatTimestamp(options.end)],
             [],
           ],
-          urls: getDomainsArray()
+          urls: getDomainsArray(),
+          showTest: getShowTestData()
         },
       });
 

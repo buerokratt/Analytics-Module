@@ -151,7 +151,10 @@ WHERE (
     array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
    OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
     )
-    AND c.test = :showTest
+  AND (
+    :showTest = TRUE
+   OR c.test = FALSE
+    )
     AND c.created::date BETWEEN :start::date AND :end::date
   AND (
     m.event = 'contact-information-fulfilled' AND

@@ -1,3 +1,5 @@
+import {getShowTestData} from "../util/testChat-utils";
+
 const baseUrl = import.meta.env.REACT_APP_RUUTER_V2_ANALYTICS_API_URL;
 const ruuterUrl = import.meta.env.REACT_APP_DOCKER_RUUTER;
 
@@ -34,7 +36,7 @@ export const overviewMetricPreferences = (): string => {
 };
 
 export const overviewMetrics = (metrics: string, urls: string[] | null[]): string => {
-  return baseUrl + `/overview/metrics?metrics=${metrics}&urls=${urls}`;
+  return baseUrl + `/overview/metrics?urls=${urls}&showTest=${getShowTestData()}&metrics=${metrics}`;
 };
 
 export const geBykAvgResponseTime = (): string => {

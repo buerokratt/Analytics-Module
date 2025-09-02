@@ -32,7 +32,10 @@ AND 0 < (
     array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
    OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
     )
-    AND c.test = :showTest
+      AND (
+        :showTest = TRUE
+            OR c.test = FALSE
+        )
     AND m.chat_base_id = w.chat_base_id
   AND (
     m.event LIKE '%contact-information-fulfilled'  OR

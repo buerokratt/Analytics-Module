@@ -15,7 +15,10 @@ WITH chat_buerokratt AS (
         array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
             OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
         )
-        AND chat.test = :showTest
+      AND (
+        :showTest = TRUE
+            OR chat.test = FALSE
+        )
         AND EXISTS (
         SELECT 1
         FROM message

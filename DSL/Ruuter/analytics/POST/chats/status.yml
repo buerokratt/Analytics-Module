@@ -23,6 +23,12 @@ declaration:
       - field: start_date
         type: string
         description: "Body field 'start_date'"
+      - field: urls
+        type: array
+        description: "Body field 'urls'"
+      - field: showTest
+        type: boolean
+        description: "Body field 'showTest'"
 
 assign_step:
   assign:
@@ -57,6 +63,7 @@ call_all_chats:
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
       urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: result
   next: check_for_csa_events
 
@@ -70,6 +77,7 @@ call_csa_chats:
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
       urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: csa_result
   next: return_response
 

@@ -2,9 +2,10 @@ WITH filtered_chats AS (
     SELECT DISTINCT ON (c.base_id) c.base_id
 FROM chat c
 WHERE
-    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+    (array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
    OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
-    ),
+    )
+    AND c.test = :showTest ,
     waiting_times AS (
 SELECT
     DATE_TRUNC(:period, m1.created)      AS time,

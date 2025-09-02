@@ -2,6 +2,7 @@ WITH forwarded_chats_by_csa AS (
     SELECT base_id, customer_support_id, customer_support_display_name, ended 
     FROM chat 
     WHERE status = 'REDIRECTED'
+      AND chat.test = :showTest
       AND (
         array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
             OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])

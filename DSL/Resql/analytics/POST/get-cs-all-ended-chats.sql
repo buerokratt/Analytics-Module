@@ -81,6 +81,7 @@ WHERE ended IS NOT NULL
     array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
    OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
     )
+  AND chat.test = :showTest
   AND ended::date BETWEEN :start::date AND :end::date
   AND feedback_rating IS NOT NULL
   AND feedback_rating <= 5

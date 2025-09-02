@@ -150,7 +150,9 @@ FROM chat c
 WHERE (
     array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
    OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
-    ) AND c.created::date BETWEEN :start::date AND :end::date
+    )
+    AND c.test = :showTest
+    AND c.created::date BETWEEN :start::date AND :end::date
   AND (
     m.event = 'contact-information-fulfilled' AND
     (c.end_user_email IS NOT NULL AND c.end_user_email <> '') OR

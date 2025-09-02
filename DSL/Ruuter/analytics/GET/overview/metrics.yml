@@ -33,7 +33,7 @@ extract_request_data:
     res10: null
     res11: null
     urls: ${incoming.params.urls.split(',')}
-    showTest: ${incoming.params.showTest}
+    showTest: ${incoming.params.showTest.toLowerCase() === 'true'}
 
 check1:
   switch:

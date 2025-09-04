@@ -47,7 +47,8 @@
     "read": "Loetud",
     "dateTime": "Kuupäev",
     "statusClarification": "Staatuse täpsustus",
-    "selectAll": "Vali kõik"
+    "selectAll": "Vali kõik",
+    "test": "Test"
   },
   "mainMenu": {
     "closeMenu": "Kitsendan menüü",
@@ -79,6 +80,7 @@
   },
   "toast": {
     "success": {
+      "updateSuccess": "Värskendamine õnnestus",
       "chatCommentChanged": "Vestluse kommentaar muudetud"
     }
   },

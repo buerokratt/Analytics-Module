@@ -20,7 +20,12 @@ WITH botname AS (
     WHERE (
         array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
             OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
-    ) AND chat.created >= date_trunc(
+    )
+      AND (
+    :showTest = TRUE
+       OR chat.test = FALSE
+    )
+    AND chat.created >= date_trunc(
             :group_period,
             current_date - concat('1 ', :group_period)::INTERVAL
         )

@@ -36,6 +36,7 @@ post_step:
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
       urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: result
 
 get_nps_object:

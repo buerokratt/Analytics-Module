@@ -14,6 +14,9 @@ declaration:
       - field: urls
         type: array
         description: "Parameter 'urls'"
+      - field: showTest
+        type: boolean
+        description: "Body field 'showTest'"
 
 extract_request_data:
   assign:
@@ -30,6 +33,7 @@ extract_request_data:
     res10: null
     res11: null
     urls: ${incoming.params.urls.split(',')}
+    showTest: ${incoming.params.showTest.toLowerCase() === 'true'}
 
 check1:
   switch:
@@ -104,6 +108,7 @@ getTotalChatsDayResults:
     body:
       group_period: 'day'
       urls: ${urls}
+      showTest: ${showTest}
   result: res1
   next: check2
 
@@ -114,6 +119,7 @@ getTotalChatsMonthResults:
     body:
       group_period: 'month'
       urls: ${urls}
+      showTest: ${showTest}
   result: res2
   next: check3
 
@@ -124,6 +130,7 @@ getTotalChatsNoCSAResults:
     body:
       group_period: 'day'
       urls: ${urls}
+      showTest: ${showTest}
   result: res3
   next: check4
 
@@ -134,6 +141,7 @@ getAvgChatsMonthResults:
     body:
       group_period: 'month'
       urls: ${urls}
+      showTest: ${showTest}
   result: res4
   next: check5
 
@@ -144,6 +152,7 @@ getAvgChatsWeekResults:
     body:
       group_period: 'week'
       urls: ${urls}
+      showTest: ${showTest}
   result: res5
   next: check6
 
@@ -154,6 +163,7 @@ getAvgChatsNoCSAMonthResult:
     body:
       group_period: 'month'
       urls: ${urls}
+      showTest: ${showTest}
   result: res6
   next: check7
 
@@ -164,6 +174,7 @@ getAvgChatsNoCSAWeekResult:
     body:
       group_period: 'week'
       urls: ${urls}
+      showTest: ${showTest}
   result: res7
   next: check8
 
@@ -174,6 +185,7 @@ getAvgWaitingTimeDayResult:
     body:
       group_period: 'day'
       urls: ${urls}
+      showTest: ${showTest}
   result: res8
   next: check9
 
@@ -184,6 +196,7 @@ getAvgWaitingTimeWeekResult:
     body:
       group_period: 'week'
       urls: ${urls}
+      showTest: ${showTest}
   result: res9
   next: check10
 
@@ -193,6 +206,7 @@ getTotalForwardedChatsResult:
     url: "[#ANALYTICS_RESQL]/overview-total-forwarded-chats"
     body:
       urls: ${urls}
+      showTest: ${showTest}
   result: res10
   next: check11
 
@@ -202,6 +216,7 @@ getChatActivityResult:
     url: "[#ANALYTICS_RESQL]/overview-chat-activity-chart"
     body:
       urls: ${urls}
+      showTest: ${showTest}
   result: res11
   next: assignResponse
 

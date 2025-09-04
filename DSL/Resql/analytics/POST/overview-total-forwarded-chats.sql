@@ -3,6 +3,10 @@ WITH forwarded_chats_by_csa AS (
     FROM chat 
     WHERE status = 'REDIRECTED'
       AND (
+        :showTest = TRUE
+            OR chat.test = FALSE
+        )
+      AND (
         array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
             OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
         )

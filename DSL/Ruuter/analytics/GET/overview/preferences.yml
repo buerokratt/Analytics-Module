@@ -6,6 +6,11 @@ declaration:
   accepts: json
   returns: json
   namespace: analytics
+  allowlist:
+    header:
+      - field: cookie
+        type: string
+        description: "Cookie field"
 
 check_if_authorized:
   template: "[#ANALYTICS_PROJECT_LAYER]/check-user-authority"

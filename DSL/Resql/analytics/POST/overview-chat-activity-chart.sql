@@ -41,7 +41,12 @@ WITH chat_stats AS (
     WHERE (
     array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
     OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
-    ) AND ended >= date_trunc('hour', CURRENT_DATE)
+    )
+      AND (
+        :showTest = TRUE
+            OR chat.test = FALSE
+        )
+      AND ended >= date_trunc('hour', CURRENT_DATE)
 )
 SELECT timescale.ended AS ended,
     COUNT(DISTINCT base_id) AS metric_value,

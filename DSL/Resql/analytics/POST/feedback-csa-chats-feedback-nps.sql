@@ -12,7 +12,12 @@ WITH chat_csas AS (
     WHERE (
         array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
             OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
-        ) AND customer_support_id NOT IN ('', 'chatbot')
+        )
+      AND (
+        :showTest = TRUE
+            OR chat.test = FALSE
+        )
+        AND customer_support_id NOT IN ('', 'chatbot')
         AND EXISTS (
             SELECT 1
             FROM message

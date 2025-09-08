@@ -26,6 +26,7 @@ export interface MetricOptionsState {
   options: string[];
   groupByPeriod: GroupByPeriod;
   urls: string[];
+  showTest: boolean;
   updateKey: number;
 }
 

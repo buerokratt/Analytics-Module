@@ -23,7 +23,12 @@ FROM LastValidMessages lvm
 WHERE (
     array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
    OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
-    ) AND chat.created::date BETWEEN :start::date AND :end::date
+    )
+  AND (
+    :showTest = TRUE
+   OR chat.test = FALSE
+    )
+    AND chat.created::date BETWEEN :start::date AND :end::date
     ),
     FinalData AS (
 SELECT

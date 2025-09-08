@@ -14,7 +14,8 @@ export const fetchChartDataWithSubOptions = async (url: string, config: any, sub
         end_date: config?.end,
         period: config?.groupByPeriod ?? 'day',
         options: config?.options.join(',') ?? '',
-        urls: config?.urls
+        urls: config?.urls,
+        showTest: config?.showTest ?? true
       },
     });
 
@@ -50,7 +51,8 @@ export const fetchChartData = async (url: string, config: any, resultId: string,
         start_date: config?.start,
         end_date: config?.end,
         period: config?.groupByPeriod ?? 'day',
-        urls: config?.urls
+        urls: config?.urls,
+        showTest: config?.showTest ?? true
       },
     });
 

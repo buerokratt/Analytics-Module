@@ -23,6 +23,9 @@ declaration:
       - field: urls
         type: array
         description: "Body field 'urls'"
+      - field: showTest
+        type: boolean
+        description: "Body field 'showTest'"
 
 check_for_body:
   switch:
@@ -36,6 +39,7 @@ extract_request_data:
     end: ${incoming.body.end_date}
     period: ${incoming.body.period}
     urls: ${incoming.body.urls}
+    showTest: ${incoming.body.showTest}
 
 check_for_required_parameters:
   switch:
@@ -67,6 +71,7 @@ outside_working_hours:
       start: ${start}
       end: ${end}
       urls: ${urls}
+      showTest: ${showTest}
   result: results
 
 assign_outside_working_hours:
@@ -92,6 +97,7 @@ long_waiting_time:
       start: ${start}
       end: ${end}
       urls: ${urls}
+      showTest: ${showTest}
       threshold_seconds: ${5 * 60}
   result: results
 
@@ -118,6 +124,7 @@ all_csas_away:
       start: ${start}
       end: ${end}
       urls: ${urls}
+      showTest: ${showTest}
   result: results
 
 assign_all_csas_away:
@@ -143,6 +150,7 @@ outside_working_hours_for_total:
       start: ${start}
       end: ${end}
       urls: ${urls}
+      showTest: ${showTest}
   result: outside_working_hours_for_total_results
 
 long_waiting_time_for_total:
@@ -154,6 +162,7 @@ long_waiting_time_for_total:
       start: ${start}
       end: ${end}
       urls: ${urls}
+      showTest: ${showTest}
       threshold_seconds: ${5 * 60}
   result: long_waiting_time_for_total_results
 
@@ -166,6 +175,7 @@ all_csas_away_for_total:
       start: ${start}
       end: ${end}
       urls: ${urls}
+      showTest: ${showTest}
   result: all_csas_away_for_total_results
 
 get_total:

@@ -23,6 +23,9 @@ declaration:
       - field: urls
         type: array
         description: "Body field 'urls'"
+      - field: showTest
+        type: boolean
+        description: "Body field 'showTest'"
 
 check_for_required_parameters:
   switch:
@@ -40,6 +43,7 @@ post_step:
       end: ${incoming.body.end_date}
       excluded_csas: ${incoming.body.excluded_csas}
       urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: result
 
 return_value:

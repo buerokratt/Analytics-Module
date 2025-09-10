@@ -12,41 +12,40 @@ SELECT u.login,
        csa.created AS status_comment_time_stamp,
        CEIL(COUNT(*) OVER() / :page_size::DECIMAL) AS total_pages
 FROM "user" u
-LEFT JOIN (
-    SELECT authority_name, user_id, ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY id DESC) AS rn
-    FROM user_authority AS ua
-    WHERE authority_name && ARRAY [ :roles ]::character varying array
-      AND ua.id IN (
-          SELECT max(id)
-          FROM user_authority
-          GROUP BY user_id
-      )
+         LEFT JOIN (
+    SELECT authority_name, user_id
+    FROM (
+             SELECT authority_name, user_id,
+                    ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY id DESC) AS rn
+             FROM user_authority
+             WHERE authority_name && ARRAY[:roles]::character varying[]
+         ) sub
+    WHERE rn = 1
 ) ua ON u.id_code = ua.user_id
-JOIN (
-    SELECT id_code, status, status_comment, created, ROW_NUMBER() OVER (PARTITION BY id_code ORDER BY id DESC) AS rn
-    FROM customer_support_agent_activity
-) csa ON u.id_code = csa.id_code AND csa.rn = 1
+         JOIN (
+    SELECT id_code, status, status_comment, created
+    FROM (
+             SELECT id_code, status, status_comment, created,
+                    ROW_NUMBER() OVER (PARTITION BY id_code ORDER BY id DESC) AS rn
+             FROM customer_support_agent_activity
+         ) sub
+    WHERE rn = 1
+) csa ON u.id_code = csa.id_code
 WHERE u.status <> 'deleted'
-  AND array_length(authority_name, 1) > 0
+  AND array_length(ua.authority_name, 1) > 0
   AND u.id IN (
-      SELECT max(id)
-      FROM "user"
-      GROUP BY id_code
-  )
-  AND (
-      :search_display_name_and_csa_title IS NULL 
-      OR LOWER(u.display_name) LIKE LOWER('%' || :search_display_name_and_csa_title || '%')
-      OR LOWER(u.csa_title) LIKE LOWER('%' || :search_display_name_and_csa_title || '%')
-  )
-  AND (
-    :search_full_name_and_csa_title IS NULL
-        OR LOWER(u.first_name || ' ' || u.last_name) LIKE LOWER('%' || :search_full_name_and_csa_title || '%')
-        OR LOWER(u.csa_title) LIKE LOWER('%' || :search_full_name_and_csa_title || '%')
-    )
-  AND (:show_active_only <> true OR csa.status <> 'offline')
-  AND (:search_full_name IS NULL OR (
-      (u.first_name || ' ' || u.last_name) ILIKE '%' || :search_full_name || '%'
-  ))
+    SELECT max(id)
+    FROM "user"
+    GROUP BY id_code
+)
+  AND (:search_display_name_and_csa_title IS NULL
+    OR LOWER(u.display_name) LIKE LOWER('%' || :search_display_name_and_csa_title || '%')
+    OR LOWER(u.csa_title) LIKE LOWER('%' || :search_display_name_and_csa_title || '%'))
+  AND (:search_full_name_and_csa_title IS NULL
+    OR LOWER(u.first_name || ' ' || u.last_name) LIKE LOWER('%' || :search_full_name_and_csa_title || '%')
+    OR LOWER(u.csa_title) LIKE LOWER('%' || :search_full_name_and_csa_title || '%'))
+  AND (:show_active_only <> TRUE OR csa.status <> 'offline')
+  AND (:search_full_name IS NULL OR (u.first_name || ' ' || u.last_name) ILIKE '%' || :search_full_name || '%')
   AND (:search_id_code IS NULL OR u.id_code ILIKE '%' || :search_id_code || '%')
   AND (:search_display_name IS NULL OR u.display_name ILIKE '%' || :search_display_name || '%')
   AND (:search_csa_title IS NULL OR u.csa_title ILIKE '%' || :search_csa_title || '%')
@@ -58,7 +57,7 @@ WHERE u.status <> 'deleted'
   ))
   AND (:search_department IS NULL OR u.department ILIKE '%' || :search_department || '%')
   AND u.id_code NOT IN (:excluded_users)
-ORDER BY 
+ORDER BY
    CASE WHEN :sorting = 'name asc' THEN u.first_name END ASC,
    CASE WHEN :sorting = 'name desc' THEN u.first_name END DESC,
    CASE WHEN :sorting = 'idCode asc' THEN u.id_code END ASC,

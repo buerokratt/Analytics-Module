@@ -1,19 +1,22 @@
-WITH filtered_chats AS (
-    SELECT DISTINCT ON (c.base_id) c.base_id
+WITH latest_per_base AS (
+    SELECT DISTINCT ON (c.base_id) c.*
 FROM chat c
-WHERE
-    (array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+WHERE (
+    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
    OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
     )
-  AND (
-    :showTest = TRUE
-   OR chat.test = FALSE
-    ) ,
+ORDER BY c.base_id, c.updated DESC
+    ),
+    filtered_chats AS (
+SELECT lp.base_id
+FROM latest_per_base lp
+WHERE (:showTest = TRUE OR lp.test = FALSE)
+    ),
     waiting_times AS (
 SELECT
-    DATE_TRUNC(:period, m1.created)      AS time,
+    DATE_TRUNC(:period, m1.created) AS time,
     m1.chat_base_id,
-    (m2.created - m1.created)            AS waiting_time
+    (m2.created - m1.created) AS waiting_time
 FROM message m1
     JOIN filtered_chats fc
 ON m1.chat_base_id = fc.base_id

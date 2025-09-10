@@ -1,16 +1,22 @@
-SELECT
-    DATE_TRUNC(:period, created) AS time,
-    COUNT(DISTINCT base_id)
-FROM chat
+WITH latest_per_base AS (
+    SELECT DISTINCT ON (c.base_id) c.*
+FROM chat c
 WHERE (
     array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
-   OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+   OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
     )
-  AND (
-    :showTest = TRUE
-   OR chat.test = FALSE
+ORDER BY c.base_id, c.updated DESC
+    ),
+    filtered_chats AS (
+SELECT lp.*
+FROM latest_per_base lp
+WHERE lp.status = 'IDLE'
+  AND (:showTest = TRUE OR lp.test = FALSE)
+  AND lp.created::date BETWEEN :start::date AND :end::date
     )
-    AND created::date BETWEEN :start::date AND :end::date
-AND status = 'IDLE'
+SELECT
+    DATE_TRUNC(:period, fc.created) AS time,
+    COUNT(DISTINCT fc.base_id) AS count
+FROM filtered_chats fc
 GROUP BY time
-ORDER BY time
+ORDER BY time;

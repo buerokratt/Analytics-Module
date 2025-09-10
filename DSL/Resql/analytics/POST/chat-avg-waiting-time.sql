@@ -1,15 +1,17 @@
-WITH filtered_chats AS (
-    SELECT DISTINCT ON (c.base_id) c.base_id
+WITH latest_per_base AS (
+    SELECT DISTINCT ON (c.base_id) c.*
 FROM chat c
-WHERE
-    (array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+WHERE (
+    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
    OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
     )
-  AND (
-    :showTest = TRUE
-   OR c.test = FALSE
-    )
-,
+ORDER BY c.base_id, c.updated DESC
+    ),
+    filtered_chats AS (
+SELECT lp.base_id
+FROM latest_per_base lp
+WHERE (:showTest = TRUE OR lp.test = FALSE)
+    ),
     user_messages AS (
 SELECT
     m.chat_base_id,

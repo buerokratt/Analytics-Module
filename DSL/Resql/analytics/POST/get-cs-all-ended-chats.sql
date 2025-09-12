@@ -27,7 +27,8 @@ FROM chat_history_comments
     MessageWithContent AS (
 SELECT
     MAX(id) AS maxId,
-    MIN(id) AS minId
+    MIN(id) AS minId,
+    chat_base_id
 FROM message
 WHERE content <> ''
   AND content <> 'message-read'
@@ -52,7 +53,7 @@ ORDER BY id DESC
     LIMIT 1
     ),
     FulfilledMessages AS (
-SELECT MAX(id) AS maxId
+SELECT MAX(id) AS maxId, chat_base_id
 FROM message
 WHERE event = 'contact-information-fulfilled'
 GROUP BY chat_base_id
@@ -63,17 +64,17 @@ FROM message
     JOIN FulfilledMessages ON id = maxId
     ),
     MaxMessages AS (
-SELECT MAX(id) AS maxId
+SELECT MAX(id) AS maxId, chat_base_id
 FROM message
 GROUP BY chat_base_id
     ),
     Messages AS (
 SELECT event, updated, chat_base_id, author_id
 FROM message
-    JOIN MaxMessages ON id = maxID
+    JOIN MaxMessages ON id = maxId
     ),
     MaxChats AS (
-SELECT MAX(id) AS maxId
+SELECT MAX(id) AS maxId, base_id
 FROM chat
 WHERE ended IS NOT NULL
   AND status = 'ENDED'
@@ -222,24 +223,20 @@ WHERE (
                   FROM unnest(COALESCE(CSAFullNames.all_csa_ids, ARRAY[]::text[])) AS id
                   WHERE id = ANY(string_to_array(:customerSupportIds, ','))
               )
-                  OR (
-                  '-' = ANY(string_to_array(:customerSupportIds, ','))
-                      AND array_length(CSAFullNames.all_csa_ids, 1) = 1
-                      and CSAFullNames.all_csa_ids[1] = ''
-                  )
-              ) AND (
-              :search IS NULL OR
-              :search = '' OR
-              LOWER(c.customer_support_display_name) LIKE LOWER('%' || :search || '%') OR
-              LOWER(c.end_user_first_name) LIKE LOWER('%' || :search || '%') OR
-              LOWER(ContactsMessage.content) LIKE LOWER('%' || :search || '%') OR
-              LOWER(s.comment) LIKE LOWER('%' || :search || '%') OR
-              LOWER(c.status) LIKE LOWER('%' || :search || '%') OR
-              LOWER(m.event) LIKE LOWER('%' || :search || '%') OR
-              LOWER(c.base_id) LIKE LOWER('%' || :search || '%') OR
-              TO_CHAR(FirstContentMessage.created, 'DD.MM.YYYY HH24:MI:SS') LIKE '%' || :search || '%' OR
-              TO_CHAR(c.ended, 'DD.MM.YYYY HH24:MI:SS') LIKE '%' || :search || '%' OR
-              EXISTS (
+              OR ('-' = ANY(string_to_array(:customerSupportIds, ',')) AND array_length(CSAFullNames.all_csa_ids, 1) = 1 AND CSAFullNames.all_csa_ids[1] = '')
+              )
+              AND (
+              :search IS NULL OR :search = ''
+                  OR LOWER(c.customer_support_display_name) LIKE LOWER('%' || :search || '%')
+                  OR LOWER(c.end_user_first_name) LIKE LOWER('%' || :search || '%')
+                  OR LOWER(ContactsMessage.content) LIKE LOWER('%' || :search || '%')
+                  OR LOWER(s.comment) LIKE LOWER('%' || :search || '%')
+                  OR LOWER(c.status) LIKE LOWER('%' || :search || '%')
+                  OR LOWER(m.event) LIKE LOWER('%' || :search || '%')
+                  OR LOWER(c.base_id) LIKE LOWER('%' || :search || '%')
+                  OR TO_CHAR(FirstContentMessage.created, 'DD.MM.YYYY HH24:MI:SS') LIKE '%' || :search || '%'
+                  OR TO_CHAR(c.ended, 'DD.MM.YYYY HH24:MI:SS') LIKE '%' || :search || '%'
+                  OR EXISTS (
                   SELECT 1
                   FROM message AS msg
                   WHERE msg.chat_base_id = c.base_id
@@ -259,46 +256,28 @@ ORDER BY
     CASE WHEN :sorting = 'endUserEmail asc' THEN c.end_user_email END ASC,
     CASE WHEN :sorting = 'endUserEmail desc' THEN c.end_user_email END DESC,
     CASE WHEN :sorting = 'endUserId asc' THEN c.end_user_id END ASC,
-    CASE WHEN :sorting = 'endUserId desc' THEN c.end_user_id END desc,
+    CASE WHEN :sorting = 'endUserId desc' THEN c.end_user_id END DESC,
     CASE WHEN :sorting = 'contactsMessage asc' THEN ContactsMessage.content END ASC,
     CASE WHEN :sorting = 'contactsMessage desc' THEN ContactsMessage.content END DESC,
     CASE WHEN :sorting = 'comment asc' THEN s.comment END ASC,
     CASE WHEN :sorting = 'comment desc' THEN s.comment END DESC,
     CASE WHEN :sorting = 'labels asc' THEN c.labels END ASC,
     CASE WHEN :sorting = 'labels desc' THEN c.labels END DESC,
-    CASE
-        WHEN :sorting = 'status asc' THEN
-            CASE
-                WHEN m.event IS NULL OR m.event = '' THEN NULL
-                ELSE m.event
-                END
+    CASE WHEN :sorting = 'status asc' THEN
+             CASE WHEN m.event IS NULL OR m.event = '' THEN NULL ELSE m.event END
         END ASC NULLS LAST,
-    CASE
-        WHEN :sorting = 'status desc' THEN
-            CASE
-                WHEN m.event IS NULL OR m.event = '' THEN NULL
-                ELSE m.event
-                END
+    CASE WHEN :sorting = 'status desc' THEN
+             CASE WHEN m.event IS NULL OR m.event = '' THEN NULL ELSE m.event END
         END DESC NULLS LAST,
     CASE WHEN :sorting = 'feedbackRating desc' THEN c.feedback_rating END DESC NULLS LAST,
     CASE WHEN :sorting = 'feedbackRating asc' THEN c.feedback_rating END ASC,
     CASE WHEN :sorting = 'customerSupportFullName asc' THEN
-             COALESCE(
-                     NULLIF(array_to_string(CSAFullNames.all_csa_names, ', '), ''),
-                     CASE
-                         WHEN c.customer_support_id = 'chatbot'
-                             THEN 'Bürokratt'
-                         END
-             )
+             COALESCE(NULLIF(array_to_string(CSAFullNames.all_csa_names, ', '), ''),
+                      CASE WHEN c.customer_support_id = 'chatbot' THEN 'Bürokratt' END)
         END ASC NULLS LAST,
     CASE WHEN :sorting = 'customerSupportFullName desc' THEN
-             COALESCE(
-                     NULLIF(array_to_string(CSAFullNames.all_csa_names, ', '), ''),
-                     CASE
-                         WHEN c.customer_support_id = 'chatbot'
-                             THEN 'Bürokratt'
-                         END
-             )
+             COALESCE(NULLIF(array_to_string(CSAFullNames.all_csa_names, ', '), ''),
+                      CASE WHEN c.customer_support_id = 'chatbot' THEN 'Bürokratt' END)
         END DESC NULLS LAST,
     CASE WHEN :sorting = 'id asc' THEN c.base_id END ASC,
     CASE WHEN :sorting = 'id desc' THEN c.base_id END DESC

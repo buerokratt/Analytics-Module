@@ -1,6 +1,6 @@
 WITH chats AS (
-    SELECT base_id,
-        ended
+    SELECT DISTINCT base_id,
+                    ended
     FROM chat
     WHERE (
         array_length(ARRAY[:urls]::TEXT[], 1) IS NULL

@@ -58,8 +58,8 @@ get-chat-count-total:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
-      urls: ${times.response.body[0].urls}
-      showTest: ${times.response.body[0].showTest}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_chat_count_total_result
 
 check-get-chat-count-no-csa:
@@ -79,8 +79,8 @@ get-chat-count-no-csa:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
-      urls: ${times.response.body[0].urls}
-      showTest: ${times.response.body[0].showTest}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_chat_count_no_csa_result
 
 check-get-avg-waiting-time:
@@ -100,8 +100,8 @@ get-avg-waiting-time:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
-      urls: ${times.response.body[0].urls}
-      showTest: ${times.response.body[0].showTest}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_waiting_time_result
 
 check-get-avg-messages:
@@ -121,8 +121,8 @@ get-avg-messages:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
-      urls: ${times.response.body[0].urls}
-      showTest: ${times.response.body[0].showTest}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_messages_result
 
 check-get-avg-time:
@@ -142,8 +142,8 @@ get-avg-time:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
-      urls: ${times.response.body[0].urls}
-      showTest: ${times.response.body[0].showTest}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_time_result
 
 check-get-avg-time-no-csa:
@@ -163,8 +163,8 @@ get-avg-time-no-csa:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
-      urls: ${times.response.body[0].urls}
-      showTest: ${times.response.body[0].showTest}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_time_no_csa_result
 
 check-get-avg-time-csa:
@@ -184,8 +184,8 @@ get-avg-time-csa:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
-      urls: ${times.response.body[0].urls}
-      showTest: ${times.response.body[0].showTest}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_time_csa_result
 
 check-get-avg-session-length-client-left:
@@ -205,8 +205,8 @@ get-avg-session-length-client-left:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
-      urls: ${times.response.body[0].urls}
-      showTest: ${times.response.body[0].showTest}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_session_length_client_left_result
 
 check-get-avg-session-length-csa:
@@ -226,8 +226,8 @@ get-avg-session-length-csa:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
-      urls: ${times.response.body[0].urls}
-      showTest: ${times.response.body[0].showTest}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_session_length_csa_result
 
 check-get-avg-session-length-no-csa:
@@ -247,8 +247,8 @@ get-avg-session-length-no-csa:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
-      urls: ${times.response.body[0].urls}
-      showTest: ${times.response.body[0].showTest}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_session_length_no_csa_result
 
 check-get-avg-response-time:
@@ -268,8 +268,8 @@ get-avg-response-time:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
-      urls: ${times.response.body[0].urls}
-      showTest: ${times.response.body[0].showTest}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_response_time_result
 
 gather_responses:

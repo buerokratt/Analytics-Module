@@ -1,5 +1,29 @@
-WITH workingTimeStart AS (
-    SELECT EXTRACT(HOUR FROM value::timestamp) AS time
+WITH latest_per_base AS (
+    SELECT DISTINCT ON (c.base_id)
+    c.base_id,
+    c.created,
+    c.test,
+    c.end_user_email,
+    c.end_user_phone,
+    c.end_user_url
+FROM chat c
+ORDER BY c.base_id, c.updated DESC
+    ),
+    filtered_chats AS (
+SELECT lp.*
+FROM latest_per_base lp
+WHERE (
+    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+   OR lp.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+    )
+    ),
+    valid_chats AS (
+SELECT fc.*
+FROM filtered_chats fc
+WHERE (:showTest = TRUE OR fc.test = FALSE)
+    ),
+    workingTimeStart AS (
+SELECT EXTRACT(HOUR FROM value::timestamp) AS time
 FROM configuration
 WHERE id = (
     SELECT MAX(id) FROM configuration
@@ -143,32 +167,22 @@ WHERE id = (
     )
     )
 SELECT
-    DATE_TRUNC(:period, c.created) AS time,
-  COUNT(DISTINCT c.base_id) AS chat_count
-FROM chat c
-    JOIN message m ON c.base_id = m.chat_base_id
-WHERE (
-    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
-   OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
-    )
+    DATE_TRUNC(:period, vc.created) AS time,
+    COUNT(DISTINCT vc.base_id) AS chat_count
+FROM valid_chats vc
+    JOIN message m ON vc.base_id = m.chat_base_id
+WHERE vc.created::date BETWEEN :start::date AND :end::date
   AND (
-    :showTest = TRUE
-   OR c.test = FALSE
-    )
-    AND c.created::date BETWEEN :start::date AND :end::date
-  AND (
-    m.event = 'contact-information-fulfilled' AND
-    (c.end_user_email IS NOT NULL AND c.end_user_email <> '') OR
-    (c.end_user_phone IS NOT NULL AND c.end_user_phone <> '')
+        (m.event = 'contact-information-fulfilled' AND (vc.end_user_email IS NOT NULL AND vc.end_user_email <> ''))
+        OR (vc.end_user_phone IS NOT NULL AND vc.end_user_phone <> '')
   )
-  AND (
-    c.base_id IN (
+  AND vc.base_id IN (
       SELECT DISTINCT m.chat_base_id
       FROM message m
-      WHERE m.event = 'unavailable_organization_ask_contacts' AND m.author_id = 'chatbot'
-    )
+      WHERE m.event = 'unavailable_organization_ask_contacts'
+        AND m.author_id = 'chatbot'
   )
-AND (
+  AND (
     EXTRACT(HOUR FROM m.created) < (SELECT time FROM workingTimeStart)
     OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM workingTimeEnd)
     OR (EXTRACT(DOW FROM m.created) = 0 AND (EXTRACT(HOUR FROM m.created) < (SELECT time FROM sundayWorkingTimeStart) OR EXTRACT(HOUR FROM m.created) > (SELECT time FROM sundayWorkingTimeEnd)))

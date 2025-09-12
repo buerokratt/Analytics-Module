@@ -1,30 +1,22 @@
-WITH botname AS (
-    SELECT "value"
-    FROM "configuration"
-    WHERE "key" = 'bot_institution_id'
+WITH botname AS (SELECT value
+                 FROM configuration
+                 WHERE
+    key = 'bot_institution_id'
     LIMIT 1
-), customer_support_changes AS (
-    SELECT base_id,
-        customer_support_id,
-        updated,
-        date_trunc(:metric, created) AS date_time,
-        lag(customer_support_id) over (
-            PARTITION by base_id
-            ORDER BY updated
-        ) AS prev_support_id,
-        lag(updated) over (
-            PARTITION by base_id
-            ORDER BY updated
-        ) AS prev_updated
-    FROM chat
-    WHERE (
-    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
-       OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
     )
-      AND (
-    :showTest = TRUE
-       OR chat.test = FALSE
-    )
+   , customer_support_changes AS (
+SELECT
+    c.base_id, c.customer_support_id, c.updated, date_trunc(:metric, c.created) AS date_time, lag(c.customer_support_id) OVER (
+    PARTITION BY c.base_id
+    ORDER BY c.updated
+    ) AS prev_support_id, lag(c.updated) OVER (
+    PARTITION BY c.base_id
+    ORDER BY c.updated
+    ) AS prev_updated
+FROM chat c
+WHERE (array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+   OR c.end_user_url LIKE ANY (ARRAY[:urls]::TEXT[]))
+  AND (:showTest = TRUE OR c.test = FALSE)
         AND created::date BETWEEN :start::date AND :end::date
 )
 SELECT date_time, ROUND(COALESCE(

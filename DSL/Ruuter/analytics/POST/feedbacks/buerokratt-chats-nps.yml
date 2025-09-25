@@ -17,9 +17,12 @@ declaration:
       - field: start_date
         type: string
         description: "Body field 'start_date'"
-      - field: start_date
+      - field: urls
         type: string
         description: "Body field 'urls'"
+      - field: showTest
+        type: string
+        description: "Body field 'showTest'"
 
 check_for_required_parameters:
   switch:

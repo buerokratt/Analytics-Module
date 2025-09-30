@@ -1,6 +1,7 @@
 WITH latest_per_base AS (
     SELECT DISTINCT ON (c.base_id)
     c.base_id,
+    c.end_user_url,
     date_trunc(:group_period, c.ended) AS ended,
     c.test
 FROM chat c
@@ -22,10 +23,6 @@ WHERE EXISTS (
     WHERE message.chat_base_id = c.base_id
   AND message.author_role = 'buerokratt'
     )
-  AND (
-    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
-   OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
-    )
   AND c.ended >= date_trunc(
     :group_period,
     current_date - concat('1 ', :group_period)::INTERVAL
@@ -33,10 +30,14 @@ WHERE EXISTS (
 ORDER BY c.base_id, c.updated DESC
     ),
     chats AS (
-SELECT lp.base_id, lp.ended
+SELECT lp.base_id, lp.ended, lp.end_user_url
 FROM latest_per_base lp
 WHERE (:showTest = TRUE OR lp.test = FALSE)
-    )
+  AND (
+    array_length(ARRAY[:urls]::text[], 1) IS NULL
+    OR (array_length(ARRAY[:urls]::text[], 1) = 1 AND (ARRAY[:urls]::text[])[1] = 'none')
+    OR lp.end_user_url LIKE ANY(ARRAY[:urls]::text[])
+))
 SELECT timescale.ended AS ended,
        COUNT(DISTINCT base_id) AS metric_value
 FROM (

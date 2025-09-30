@@ -2,6 +2,7 @@ import {getShowTestData} from "../util/testChat-utils";
 
 const baseUrl = import.meta.env.REACT_APP_RUUTER_V2_ANALYTICS_API_URL;
 const ruuterUrl = import.meta.env.REACT_APP_DOCKER_RUUTER;
+const multiDomainsEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN;
 
 export const openSearchDashboard = 'https://opensearch.org/';
 
@@ -36,7 +37,12 @@ export const overviewMetricPreferences = (): string => {
 };
 
 export const overviewMetrics = (metrics: string, urls: string[] | null[]): string => {
-  return baseUrl + `/overview/metrics?urls=${urls}&showTest=${getShowTestData()}&metrics=${metrics}`;
+  let updatedUrls = urls;
+  if(multiDomainsEnabled?.toLowerCase() !== 'true') {
+    updatedUrls = ['none'];
+  }
+
+  return baseUrl + `/overview/metrics?urls=${updatedUrls}&showTest=${getShowTestData()}&metrics=${metrics}`;
 };
 
 export const geBykAvgResponseTime = (): string => {

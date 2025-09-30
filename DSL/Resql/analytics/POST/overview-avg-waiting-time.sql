@@ -18,9 +18,10 @@ SELECT base_id,
     ) AS prev_updated
 FROM chat
 WHERE (
-    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
-   OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
-    )
+    array_length(ARRAY[:urls]::text[], 1) IS NULL
+    OR (array_length(ARRAY[:urls]::text[], 1) = 1 AND (ARRAY[:urls]::text[])[1] = 'none')
+    OR chat.end_user_url LIKE ANY(ARRAY[:urls]::text[])
+  )
   AND (
     :showTest = TRUE
    OR chat.test = FALSE

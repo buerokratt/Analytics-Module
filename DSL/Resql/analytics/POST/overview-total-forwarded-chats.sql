@@ -7,8 +7,9 @@ WITH forwarded_chats_by_csa AS (
             OR chat.test = FALSE
         )
       AND (
-        array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
-            OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+        array_length(ARRAY[:urls]::text[], 1) IS NULL
+            OR (array_length(ARRAY[:urls]::text[], 1) = 1 AND (ARRAY[:urls]::text[])[1] = 'none')
+            OR chat.end_user_url LIKE ANY(ARRAY[:urls]::text[])
         )
       AND customer_support_id <> ''
       AND customer_support_id IS NOT NULL

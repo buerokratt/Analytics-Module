@@ -8,9 +8,10 @@ WITH chats AS (
             WHERE message.chat_base_id = chat.base_id
                 AND message.author_role = 'end-user'
         )
-        AND (
-            array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
-                OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+      AND (
+        array_length(ARRAY[:urls]::text[], 1) IS NULL
+            OR (array_length(ARRAY[:urls]::text[], 1) = 1 AND (ARRAY[:urls]::text[])[1] = 'none')
+            OR chat.end_user_url LIKE ANY(ARRAY[:urls]::text[])
         )
       AND (
         :showTest = TRUE

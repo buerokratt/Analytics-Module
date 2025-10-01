@@ -29,8 +29,8 @@ WHERE pu.created::date NOT BETWEEN :start::date AND :end::date
     )
 SELECT
     DATE_TRUNC(:period, c.created) AS time,
-  COUNT(DISTINCT c.base_id) AS chat_count
-FROM chat c
+    COUNT(DISTINCT c.base_id) AS chat_count
+FROM chats c
     JOIN message m ON c.base_id = m.chat_base_id
 WHERE m.event = 'unavailable-contact-information-fulfilled'
   AND (

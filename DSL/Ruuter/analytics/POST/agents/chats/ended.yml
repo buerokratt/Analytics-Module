@@ -36,12 +36,13 @@ declaration:
         type: boolean
         description: "Body field 'showTest'"
 
+
 extractRequestData:
   assign:
     startDate: ${incoming.body.startDate}
     endDate: ${incoming.body.endDate}
     urls: ${incoming.body.urls}
-    showTest: ${incoming.body.showTest}
+    showTest: ${true}
 
 getEndedChats:
   call: http.post

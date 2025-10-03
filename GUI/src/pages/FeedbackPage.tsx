@@ -156,6 +156,8 @@ const FeedbackPage: React.FC = () => {
                         }
                         case 'selected_advisor_chats':
                             return fetchNpsOnSelectedCSAChatsFeedback(config);
+                        case 'negative_feedback':
+                            return {};
                         default:
                             return fetchChatsStatuses(config);
                     }
@@ -181,8 +183,8 @@ const FeedbackPage: React.FC = () => {
                     metric: config?.groupByPeriod ?? 'day',
                     start_date: config?.start,
                     end_date: config?.end,
-                    events: events.length > 0 ? events : null,
-                    csa_events: events.length > 0 ? events : null,
+                    events: events.length > 0 ? events : [],
+                    csa_events: events.length > 0 ? events : [],
                     urls: getDomainsArray(),
                     showTest: getShowTestData()
                 },

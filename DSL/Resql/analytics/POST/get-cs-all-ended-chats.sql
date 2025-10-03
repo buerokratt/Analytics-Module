@@ -1,7 +1,4 @@
-WITH chatbot_var AS (
-    SELECT 'chatbot'::TEXT AS chatbot_id
-),
- MaxChatHistoryComments AS (
+WITH MaxChatHistoryComments AS (
     SELECT MAX(id) AS maxId
     FROM chat_history_comments
     GROUP BY chat_id
@@ -26,23 +23,23 @@ FROM chat_history_comments
     ),
     MessageWithContent AS (
 SELECT
-    MAX(id) AS maxId,
-    MIN(id) AS minId,
-    chat_base_id
-FROM message
+    MAX(m.id) AS maxId,
+    MIN(m.id) AS minId,
+    m.chat_base_id
+FROM message m
 WHERE content <> ''
   AND content <> 'message-read'
 GROUP BY chat_base_id
     ),
     FirstContentMessage AS (
-SELECT created, chat_base_id
-FROM message
-    JOIN MessageWithContent ON message.id = MessageWithContent.minId
+SELECT m.created, m.chat_base_id
+FROM message m
+    JOIN MessageWithContent ON m.id = MessageWithContent.minId
     ),
     LastContentMessage AS (
-SELECT content, chat_base_id
-FROM message
-    JOIN MessageWithContent ON message.id = MessageWithContent.maxId
+SELECT m.content, m.chat_base_id
+FROM message m
+    JOIN MessageWithContent ON m.id = MessageWithContent.maxId
     ),
     TitleVisibility AS (
 SELECT value
@@ -53,72 +50,72 @@ ORDER BY id DESC
     LIMIT 1
     ),
     FulfilledMessages AS (
-SELECT MAX(id) AS maxId, chat_base_id
-FROM message
+SELECT MAX(m.id) AS maxId, m.chat_base_id
+FROM message m
 WHERE event = 'contact-information-fulfilled'
 GROUP BY chat_base_id
     ),
     ContactsMessage AS (
-SELECT chat_base_id, content
-FROM message
-    JOIN FulfilledMessages ON id = maxId
+SELECT m.chat_base_id, m.content
+FROM message m
+    JOIN FulfilledMessages ON m.id = maxId
     ),
     MaxMessages AS (
-SELECT MAX(id) AS maxId, chat_base_id
-FROM message
+SELECT MAX(m.id) AS maxId, m.chat_base_id
+FROM message m
 GROUP BY chat_base_id
     ),
     Messages AS (
-SELECT event, updated, chat_base_id, author_id
-FROM message
+SELECT m.event, m.updated, m.chat_base_id, m.author_id
+FROM message m
     JOIN MaxMessages ON id = maxId
     ),
     MaxChats AS (
-SELECT MAX(id) AS maxId, base_id
-FROM chat
+SELECT MAX(c.id) AS maxId, c.base_id
+FROM chat c
 WHERE ended IS NOT NULL
   AND status = 'ENDED'
   AND (
     array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
-   OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+   OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
     )
   AND (
     :showTest = TRUE
-   OR chat.test = FALSE
+   OR c.test = FALSE
     )
-  AND ended::date BETWEEN :start::date AND :end::date
-  AND feedback_rating IS NOT NULL
-  AND feedback_rating <= 5
+  AND c.ended::date BETWEEN :start::date AND :end::date
+  AND c.feedback_rating IS NOT NULL
+  AND c.feedback_rating <= 5
 GROUP BY base_id
     ),
     EndedChatMessages AS (
 SELECT
-    base_id,
-    customer_support_id,
-    customer_support_display_name,
-    csa_title,
-    end_user_id,
-    end_user_first_name,
-    end_user_last_name,
-    end_user_email,
-    end_user_phone,
-    end_user_os,
-    end_user_url,
-    status,
-    updated,
-    ended,
-    forwarded_to_name,
-    received_from,
-    labels,
-    created,
-    feedback_text,
-    feedback_rating
-FROM chat
-    RIGHT JOIN MaxChats ON id = maxId
+    c.base_id,
+    c.customer_support_id,
+    c.customer_support_display_name,
+    c.csa_title,
+    c.end_user_id,
+    c.end_user_first_name,
+    c.end_user_last_name,
+    c.end_user_email,
+    c.end_user_phone,
+    c.end_user_os,
+    c.end_user_url,
+    c.status,
+    c.updated,
+    c.ended,
+    c.forwarded_to_name,
+    c.received_from,
+    c.labels,
+    c.created,
+    c.feedback_text,
+    c.feedback_rating
+FROM chat c
+    RIGHT JOIN MaxChats ON c.id = maxId
     ),
     RatedChats AS (
-SELECT MAX(feedback_rating) AS rating
-FROM chat
+SELECT MAX(c.feedback_rating) AS rating
+FROM chat c
 WHERE feedback_rating IS NOT NULL
 GROUP BY base_id
     ),
@@ -150,25 +147,24 @@ SELECT
     c2.base_id,
     ARRAY_AGG(DISTINCT TRIM(
     CASE
-    WHEN c2.customer_support_id = chatbot_var.chatbot_id THEN c2.customer_support_display_name
+    WHEN c2.customer_support_id = :csaId THEN c2.customer_support_display_name
     ELSE COALESCE(NULLIF(TRIM(cu.first_name || ' ' || cu.last_name), ''), cu.display_name)
     END
     )) FILTER (
     WHERE NOT (
-    c2.customer_support_id = chatbot_var.chatbot_id
-    AND (lo.latest_open_csa IS NULL OR lo.latest_open_csa <> chatbot_var.chatbot_id)
+    c2.customer_support_id = :csaId
+    AND (lo.latest_open_csa IS NULL OR lo.latest_open_csa <> :csaId)
     )
     ) AS all_csa_names,
     ARRAY_AGG(DISTINCT c2.customer_support_id) FILTER (
     WHERE NOT (
-    c2.customer_support_id = chatbot_var.chatbot_id
-    AND (lo.latest_open_csa IS NULL OR lo.latest_open_csa <> chatbot_var.chatbot_id)
+    c2.customer_support_id = :csaId
+    AND (lo.latest_open_csa IS NULL OR lo.latest_open_csa <> :csaId)
     )
     ) AS all_csa_ids
 FROM chat c2
     LEFT JOIN ChatUser cu ON cu.id_code = c2.customer_support_id
     LEFT JOIN LatestOpenChat lo ON lo.base_id = c2.base_id
-    CROSS JOIN chatbot_var
 GROUP BY c2.base_id
     )
 SELECT c.base_id AS id,

@@ -1,10 +1,6 @@
 WITH latest_per_base AS (
     SELECT DISTINCT ON (c.base_id) c.*
 FROM chat c
-WHERE (
-    array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
-   OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
-    )
 ORDER BY c.base_id, c.updated DESC
     ),
     chats AS (
@@ -18,6 +14,11 @@ WHERE EXISTS (
   AND m.author_role = 'end-user'
     )
   AND (:showTest = TRUE OR lp.test = FALSE)
+  AND (
+    array_length(ARRAY[:urls]::text[], 1) IS NULL
+    OR (array_length(ARRAY[:urls]::text[], 1) = 1 AND (ARRAY[:urls]::text[])[1] = 'none')
+    OR lp.end_user_url LIKE ANY(ARRAY[:urls]::text[])
+  )
   AND lp.ended >= date_trunc(
     :group_period,
     current_date - concat('1 ', :group_period)::INTERVAL

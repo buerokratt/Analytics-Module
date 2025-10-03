@@ -19,8 +19,8 @@ WHERE csa.id = (
     FROM customer_support_agent_activity
     WHERE id_code = csa.id_code
     )
-      AND csa.status = 'offline'
-      AND csa.created::date BETWEEN :start::date AND :end::date
+  AND csa.status = 'offline'
+  AND csa.created::date BETWEEN :start::date AND :end::date
     ),
     AllCSAs AS (
 SELECT COUNT(*) AS userCount
@@ -29,8 +29,8 @@ WHERE pu.created::date NOT BETWEEN :start::date AND :end::date
     )
 SELECT
     DATE_TRUNC(:period, c.created) AS time,
-  COUNT(DISTINCT c.base_id) AS chat_count
-FROM chat c
+    COUNT(DISTINCT c.base_id) AS chat_count
+FROM chats c
     JOIN message m ON c.base_id = m.chat_base_id
 WHERE m.event = 'unavailable-contact-information-fulfilled'
   AND (
@@ -38,14 +38,13 @@ WHERE m.event = 'unavailable-contact-information-fulfilled'
    OR
     (c.end_user_phone IS NOT NULL AND c.end_user_phone <> '')
     )
-)
-AND (
-  c.base_id IN (
+  AND (
+    c.base_id IN (
     SELECT DISTINCT m.chat_base_id
     FROM message m
     WHERE m.event = 'unavailable_csas_ask_contacts'
-    AND m.author_role = 'buerokratt'
-  )
-)
+  AND m.author_role = 'buerokratt'
+    )
+    )
 GROUP BY time
 ORDER BY time;

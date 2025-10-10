@@ -1,19 +1,23 @@
-WITH forwarded_chats_by_csa AS (
-    SELECT base_id, customer_support_id, customer_support_display_name, ended
-    FROM chat
-    WHERE status = 'REDIRECTED'
-      AND (
-        :showTest = TRUE
-            OR chat.test = FALSE
-        )
-      AND (
-        array_length(ARRAY[:urls]::text[], 1) IS NULL
-            OR (array_length(ARRAY[:urls]::text[], 1) = 1 AND (ARRAY[:urls]::text[])[1] = 'none')
-            OR chat.end_user_url LIKE ANY(ARRAY[:urls]::text[])
-        )
-      AND customer_support_id <> ''
-      AND customer_support_id IS NOT NULL
-    GROUP BY base_id, customer_support_id, customer_support_display_name, ended
+WITH latest_chat AS (
+    SELECT DISTINCT ON (base_id)
+    base_id,
+    status,
+    external_id,
+    ended,
+    end_user_url,
+    test
+FROM chat
+WHERE (:showTest = TRUE OR chat.test = FALSE)
+  AND (
+    array_length(ARRAY[:urls]::text[], 1) IS NULL
+    OR (array_length(ARRAY[:urls]::text[], 1) = 1 AND (ARRAY[:urls]::text[])[1] = 'none')
+    OR chat.end_user_url LIKE ANY(ARRAY[:urls]::text[]))
+ORDER BY base_id, ended DESC
+    ),
+    redirected_chats AS (
+SELECT DISTINCT base_id
+FROM chat
+WHERE status = 'REDIRECTED'
 )
 SELECT COUNT(DISTINCT base_id) AS metric_value
 FROM forwarded_chats_by_csa

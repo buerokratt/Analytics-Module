@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Provider} from 'react-redux';
 import {BrowserRouter} from 'react-router-dom';
 import {PersistGate} from 'redux-persist/integration/react';
@@ -10,6 +10,8 @@ import useStore from './store/user/store';
 import {useQuery} from '@tanstack/react-query';
 import {PeriodStatisticsProvider} from 'components/context/PeriodStatisticsContext';
 import {getWidgetData} from "./components/services/user";
+import {CHAT_SESSIONS} from "./util/constants";
+import {generateUEID} from "./util/generateUEID";
 
 const App: React.FC = () => {
     const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
@@ -42,6 +44,69 @@ const App: React.FC = () => {
             return useStore.getState().setUserInfo(res.response);
         },
     });
+
+    useEffect(() => {
+        const delay = 1000;
+
+        const timeOutId = setTimeout(() => {
+            initializeSession();
+        }, delay);
+
+        return () => clearTimeout(timeOutId);
+    }, []);
+
+
+    const initializeSession = () => {
+        let tabId = sessionStorage.getItem(CHAT_SESSIONS.SESSION_ID_KEY);
+        if (!tabId) {
+            tabId = generateUEID();
+            sessionStorage.setItem(CHAT_SESSIONS.SESSION_ID_KEY, tabId);
+        }
+
+        let currentState = getCurrentSessionState();
+
+        if (!currentState.ids.includes(tabId)) {
+            currentState.ids.push(tabId);
+            currentState.count = currentState.ids.length;
+            localStorage.setItem(
+                CHAT_SESSIONS.SESSION_STATE_KEY,
+                JSON.stringify(currentState)
+            );
+        }
+
+        const handleTabClose = () => {
+            const currentAppState = JSON.parse(
+                localStorage.getItem(CHAT_SESSIONS.SESSION_STATE_KEY) as string
+            ) || { ids: [], count: 0 };
+
+            const updatedIds = currentAppState.ids.filter(
+                (id: string) => id !== tabId
+            );
+            const updatedState = {
+                ids: updatedIds,
+                count: updatedIds.length,
+            };
+
+            localStorage.setItem(
+                CHAT_SESSIONS.SESSION_STATE_KEY,
+                JSON.stringify(updatedState)
+            );
+        };
+
+        window.addEventListener("beforeunload", handleTabClose);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleTabClose);
+        };
+    };
+
+    const getCurrentSessionState = () => {
+        return (
+            JSON.parse(
+                localStorage.getItem(CHAT_SESSIONS.SESSION_STATE_KEY) as string
+            ) || { ids: [], count: 0 }
+        );
+    };
 
     return (
         <Provider store={reducerStore}>

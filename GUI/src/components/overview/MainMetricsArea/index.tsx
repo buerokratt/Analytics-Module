@@ -16,16 +16,15 @@ type Props = {
 const MainMetricsArea = ({ metricPreferences, updateKey,saveReorderedMetric }: Props) => {
   const [metrics, setMetrics] = useState<OverviewMetricData[]>([]);
   const [currentKey, setCurrentKey] = useState<number>(0);
-  const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
   useEffect(() => {
-    const shouldFetch = !multiDomainEnabled
-        ? metricPreferences.length > 0
-        : metricPreferences.length > 0 && updateKey > currentKey;
+    const mandatoryCondition = metricPreferences.length > 0;
+    const optionalCondition = updateKey > currentKey;
+    const shouldFetch = mandatoryCondition || (mandatoryCondition && optionalCondition);
     if (shouldFetch) fetchMetrics(metricPreferences);
     const interval = setInterval(() => fetchMetrics(metricPreferences), 30000);
     return () => clearInterval(interval);
-  }, [metricPreferences,updateKey,multiDomainEnabled]);
+  }, [metricPreferences,updateKey]);
 
   const fetchMetrics = async (metricPreferences: OverviewMetricPreference[]) => {
     const metricsToFetch = metricPreferences.filter((m) => m.active);

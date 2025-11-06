@@ -75,27 +75,24 @@ const OverviewPage: React.FC = () => {
     setChartData(chartData);
   };
 
-  const updateMetricPreference = async (metric: OverviewMetricPreference) => {
-    const result: any = await request({
+  const updateMetricPreference = async (metrics: OverviewMetricPreference[]) => {
+    await request({
       url: overviewMetricPreferences(),
       method: Methods.post,
       withCredentials: true,
-      data: {
-        metric: metric.metric,
-        ordinality: metric.ordinality,
-        active: metric.active,
-      },
+      data: { preferences: JSON.stringify(metrics) },
     });
-    setMetricPreferences(result.response);
   };
 
   const toggleMetricActive = (metric: OverviewMetricPreference) => {
-    setMetricPreferences((metrics) => metrics.map((m) => (m === metric ? { ...metric, active: !metric.active } : m)));
-    updateMetricPreference({ ...metric, active: !metric.active });
+    const updatedMetrics = metricPreferences.map((m) => (m === metric ? { ...metric, active: !metric.active } : m));
+    setMetricPreferences(updatedMetrics);
+    updateMetricPreference(updatedMetrics);
   };
 
   const saveReorderedMetric = useCallback((metric: OverviewMetricPreference, newIndex: number) => {
-    updateMetricPreference({ ...metric, ordinality: newIndex });
+    const updatedMetrics = reorderItem<OverviewMetricPreference>(metricPreferences, (m) => m.metric === metric.metric, newIndex)
+    updateMetricPreference(updatedMetrics);
   }, []);
 
   const moveMetric = (metric: string, target: number) => {
@@ -153,6 +150,7 @@ const OverviewPage: React.FC = () => {
 
       <MainMetricsArea
         updateKey={updateKey}
+        moveMetric={moveMetric}
         metricPreferences={metricPreferences}
         saveReorderedMetric={saveReorderedMetric}
       />

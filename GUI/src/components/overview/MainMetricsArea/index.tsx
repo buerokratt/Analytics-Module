@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { overviewMetrics } from '../../../resources/api-constants';
 import { OverviewMetricData, OverviewMetricPreference } from '../../../types/overview-metrics';
-import { reorderItem } from '../../../util/reorder-array';
 import DraggableCard from '../DraggableCard';
 import './styles.scss';
 import { request } from '../../../util/axios-client';
@@ -11,9 +10,10 @@ type Props = {
   metricPreferences: OverviewMetricPreference[];
   updateKey: number;
   saveReorderedMetric: (metric: OverviewMetricPreference, newIndex: number) => void;
+  moveMetric: (metric: string, newIndex: number) => void;
 };
 
-const MainMetricsArea = ({ metricPreferences, updateKey,saveReorderedMetric }: Props) => {
+const MainMetricsArea = ({ metricPreferences, updateKey,saveReorderedMetric, moveMetric }: Props) => {
   const [metrics, setMetrics] = useState<OverviewMetricData[]>([]);
   const [currentKey, setCurrentKey] = useState<number>(0);
 
@@ -62,12 +62,6 @@ const MainMetricsArea = ({ metricPreferences, updateKey,saveReorderedMetric }: P
         };
       })
     );
-  };
-
-  const moveMetric = (metric: string, target: number) => {
-    setMetrics((metrics) => {
-      return reorderItem<OverviewMetricData>(metrics, (m) => m.metric === metric, target);
-    });
   };
 
   const renderCards = useCallback(

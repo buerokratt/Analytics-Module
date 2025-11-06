@@ -2,7 +2,7 @@ WITH
     preference_list AS (
         SELECT
             (:user_id_code)::text AS user_id_code,
-            (pref->>'metric') AS metric,
+            (pref->>'metric')::overview_metric AS metric,
             (pref->>'ordinality')::int AS ordinality,
             (pref->>'active')::boolean AS active
         FROM jsonb_array_elements(:preferences::jsonb) AS pref

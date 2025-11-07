@@ -20,7 +20,7 @@ WITH chats_filtered AS (
         )
         AND STATUS = 'ENDED'
         AND feedback_rating IS NOT NULL
-        AND created::date BETWEEN :start::date AND :end::date
+        AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
         AND (
             (:chat_type = 'buerokratt' AND EXISTS (
                 SELECT 1 

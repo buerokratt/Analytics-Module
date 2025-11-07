@@ -83,7 +83,7 @@ WHERE ended IS NOT NULL
     :showTest = TRUE
    OR c.test = FALSE
     )
-  AND c.ended::date BETWEEN :start::date AND :end::date
+  AND c.ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
   AND c.feedback_rating IS NOT NULL
   AND c.feedback_rating <= 5
 GROUP BY base_id

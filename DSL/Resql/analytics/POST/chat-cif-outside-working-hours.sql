@@ -171,7 +171,7 @@ SELECT
     COUNT(DISTINCT vc.base_id) AS chat_count
 FROM valid_chats vc
     JOIN message m ON vc.base_id = m.chat_base_id
-WHERE vc.created::date BETWEEN :start::date AND :end::date
+WHERE vc.created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
   AND (
         (m.event = 'contact-information-fulfilled' AND (vc.end_user_email IS NOT NULL AND vc.end_user_email <> ''))
         OR (vc.end_user_phone IS NOT NULL AND vc.end_user_phone <> '')

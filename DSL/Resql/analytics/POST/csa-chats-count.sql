@@ -28,7 +28,7 @@ WHERE (
     :showTest = TRUE
    OR chat.test = FALSE
     )
-    AND chat.created::date BETWEEN :start::date AND :end::date
+    AND chat.created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
     ),
     FinalData AS (
 SELECT

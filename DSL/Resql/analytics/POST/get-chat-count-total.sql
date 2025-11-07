@@ -8,7 +8,7 @@ WHERE (
     :showTest = TRUE
         OR chat.test = FALSE
     )
-    AND created::date BETWEEN :start::date AND :end::date
+    AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
     AND exists (
         SELECT 1
         FROM message

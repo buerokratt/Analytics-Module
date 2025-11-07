@@ -27,7 +27,7 @@ WITH chat_buerokratt AS (
     )
     AND status = 'ENDED'
     AND feedback_rating IS NOT NULL
-    AND ended::date BETWEEN :start::date AND :end::date
+    AND ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
 ),
 point_nps AS (
     SELECT date_trunc(:metric, ended)::text AS date_time,

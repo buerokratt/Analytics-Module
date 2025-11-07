@@ -25,7 +25,7 @@ ON m1.chat_base_id = fc.base_id
     AND m2.author_role = 'backoffice-user'
     AND m2.created > m1.created
 WHERE m1.author_role = 'end-user'
-  AND m1.created::date BETWEEN :start::date AND :end::date
+  AND m1.created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
     )
 SELECT
     time,

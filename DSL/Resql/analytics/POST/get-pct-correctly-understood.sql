@@ -1,7 +1,7 @@
 WITH chats AS (
     SELECT DISTINCT base_id
     FROM chat
-    WHERE created::date BETWEEN :start::date AND :end::date
+    WHERE created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
 )
 SELECT CASE
         WHEN COUNT(*) = 0 THEN 0

@@ -9,7 +9,7 @@ WITH chat_durations AS (
       AND (array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
         OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[]))
       AND (:showTest = TRUE OR chat.test = FALSE)
-      AND chat.created::date BETWEEN :start::date AND :end::date
+      AND chat.created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
 GROUP BY chat.base_id
     )
 SELECT

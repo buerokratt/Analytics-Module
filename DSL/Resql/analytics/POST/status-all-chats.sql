@@ -15,6 +15,6 @@ WHERE chat.status = 'ENDED'
     :showTest = TRUE
         OR chat.test = FALSE
     )
-  AND chat.ended::date BETWEEN :start::date AND :end::date
+  AND chat.ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
 GROUP BY date_time, event
 ORDER BY event;

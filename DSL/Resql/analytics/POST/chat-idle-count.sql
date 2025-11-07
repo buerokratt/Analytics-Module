@@ -12,7 +12,7 @@ SELECT lp.*
 FROM latest_per_base lp
 WHERE lp.status = 'IDLE'
   AND (:showTest = TRUE OR lp.test = FALSE)
-  AND lp.created::date BETWEEN :start::date AND :end::date
+  AND lp.created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
     )
 SELECT
     DATE_TRUNC(:period, fc.created) AS time,

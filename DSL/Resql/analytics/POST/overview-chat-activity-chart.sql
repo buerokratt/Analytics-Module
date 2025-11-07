@@ -1,5 +1,5 @@
 WITH chat_stats AS (
-    SELECT date_trunc('hour', ended) AS ended,
+    SELECT date_trunc('hour', ended AT TIME ZONE :timezone) AS ended,
            base_id,
            (
                SELECT 1
@@ -47,7 +47,7 @@ WITH chat_stats AS (
         :showTest = TRUE
             OR chat.test = FALSE
         )
-      AND ended >= date_trunc('hour', CURRENT_DATE)
+      AND (ended AT TIME ZONE :timezone) >= date_trunc('hour', (CURRENT_DATE AT TIME ZONE :timezone))
 )
 SELECT timescale.ended AS ended,
        COUNT(DISTINCT base_id) AS metric_value,
@@ -73,8 +73,8 @@ FROM (
          SELECT date_trunc(
                         'hour',
                         generate_series(
-                                        current_date,
-                                        NOW(),
+                                        (current_date AT TIME ZONE :timezone),
+                                        (NOW() AT TIME ZONE :timezone),
                                         '1 hour'::INTERVAL
                         )
                 ) AS ended
@@ -82,4 +82,3 @@ FROM (
          LEFT JOIN chat_stats ON chat_stats.ended = timescale.ended
 GROUP BY 1
 ORDER BY 1 DESC;
-

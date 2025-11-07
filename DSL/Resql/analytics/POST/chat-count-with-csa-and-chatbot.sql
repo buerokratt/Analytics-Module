@@ -8,7 +8,7 @@ WITH latest_per_base AS (
     c.updated
 FROM chat c
 WHERE c.status = 'ENDED'
-  AND c.ended::date BETWEEN :start::date AND :end::date
+  AND c.ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
   ORDER BY c.base_id, c.updated DESC
 ),
 
@@ -46,7 +46,7 @@ csa_ids AS (
   AND EXISTS (
     SELECT 1 FROM message m
     WHERE m.chat_base_id = b.base_id
-      AND m.event = 'taken-over'
+      AND m.event = 'taken-over' or m.event = 'pending-assigned'
   )
   AND (
     :showTest = TRUE

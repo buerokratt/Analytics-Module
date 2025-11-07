@@ -5,11 +5,12 @@ import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators'
 import OptionsPanel from '../../components/MetricAndPeriodOptions'
 import {MetricOptionsState} from '../../components/MetricAndPeriodOptions/types'
 import MetricsCharts from '../../components/MetricsCharts'
-import {chartDateFormat, formatDate} from '../../util/charts-utils'
+import {chartDateFormat} from '../../util/charts-utils'
 import {fetchData} from './data'
 import {metricOptions} from './options'
 import withAuthorization, {ROLES} from '../../hoc/with-authorization'
 import useStore from "../../store/user/store";
+import { endOfDay, formatISO, startOfDay } from 'date-fns'
 
 const BurokrattPage: React.FC = () => {
     const {t} = useTranslation()
@@ -61,8 +62,8 @@ const BurokrattPage: React.FC = () => {
             <MetricsCharts
                 title={tableTitleKey}
                 data={chartData}
-                startDate={configs?.start ?? formatDate(new Date(), chartDateFormat)}
-                endDate={configs?.end ?? formatDate(new Date(), chartDateFormat)}
+                startDate={configs?.start ?? formatISO(startOfDay(new Date()))}
+                endDate={configs?.end ?? formatISO(endOfDay(new Date()))}
                 groupByPeriod={configs?.groupByPeriod ?? 'day'}
                 unit={unit}
             />

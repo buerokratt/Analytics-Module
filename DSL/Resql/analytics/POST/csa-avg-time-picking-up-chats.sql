@@ -17,7 +17,7 @@ FROM chat c
 WHERE (array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
    OR c.end_user_url LIKE ANY (ARRAY[:urls]::TEXT[]))
   AND (:showTest = TRUE OR c.test = FALSE)
-        AND created::date BETWEEN :start::date AND :end::date
+        AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
 )
 SELECT date_time, ROUND(COALESCE(
         AVG(

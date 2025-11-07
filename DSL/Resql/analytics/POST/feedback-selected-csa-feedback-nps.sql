@@ -8,7 +8,7 @@ WITH ranked_chats AS (
         ) AND customer_support_id NOT IN ('', 'chatbot')
       AND STATUS = 'ENDED'
       AND feedback_rating IS NOT NULL
-      AND created::date BETWEEN :start::date AND :end::date
+      AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
                                    AND customer_support_id NOT IN (:excluded_csas)
                                    AND EXISTS (
     SELECT 1

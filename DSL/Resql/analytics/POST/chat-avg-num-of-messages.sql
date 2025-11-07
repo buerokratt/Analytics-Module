@@ -20,7 +20,7 @@ SELECT
 FROM message m
     JOIN filtered_chats fc
 ON m.chat_base_id = fc.base_id
-WHERE m.created::date BETWEEN :start::date AND :end::date
+WHERE m.created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
 GROUP BY m.chat_base_id
     )
 SELECT

@@ -17,6 +17,9 @@ declaration:
       - field: showTest
         type: boolean
         description: "Body field 'showTest'"
+      - field: timezone
+        type: string
+        description: "Body field 'timezone'"  
 
 extract_request_data:
   assign:
@@ -34,6 +37,7 @@ extract_request_data:
     res11: null
     urls: ${incoming.params.urls.split(',')}
     showTest: ${incoming.params.showTest.toLowerCase() === 'true'}
+    timezone: ${incoming.params.timezone}
 
 check1:
   switch:
@@ -109,6 +113,7 @@ getTotalChatsDayResults:
       group_period: 'day'
       urls: ${urls}
       showTest: ${showTest}
+      timezone: ${timezone}
   result: res1
   next: check2
 
@@ -120,6 +125,7 @@ getTotalChatsMonthResults:
       group_period: 'month'
       urls: ${urls}
       showTest: ${showTest}
+      timezone: ${timezone}
   result: res2
   next: check3
 
@@ -131,6 +137,7 @@ getTotalChatsNoCSAResults:
       group_period: 'day'
       urls: ${urls}
       showTest: ${showTest}
+      timezone: ${timezone}
   result: res3
   next: check4
 
@@ -142,6 +149,7 @@ getAvgChatsMonthResults:
       group_period: 'month'
       urls: ${urls}
       showTest: ${showTest}
+      timezone: ${timezone}
   result: res4
   next: check5
 
@@ -153,6 +161,7 @@ getAvgChatsWeekResults:
       group_period: 'week'
       urls: ${urls}
       showTest: ${showTest}
+      timezone: ${timezone}
   result: res5
   next: check6
 
@@ -164,6 +173,7 @@ getAvgChatsNoCSAMonthResult:
       group_period: 'month'
       urls: ${urls}
       showTest: ${showTest}
+      timezone: ${timezone}
   result: res6
   next: check7
 
@@ -175,6 +185,7 @@ getAvgChatsNoCSAWeekResult:
       group_period: 'week'
       urls: ${urls}
       showTest: ${showTest}
+      timezone: ${timezone}
   result: res7
   next: check8
 
@@ -186,6 +197,7 @@ getAvgWaitingTimeDayResult:
       group_period: 'day'
       urls: ${urls}
       showTest: ${showTest}
+      timezone: ${timezone}
   result: res8
   next: check9
 
@@ -197,6 +209,7 @@ getAvgWaitingTimeWeekResult:
       group_period: 'week'
       urls: ${urls}
       showTest: ${showTest}
+      timezone: ${timezone}
   result: res9
   next: check10
 
@@ -207,6 +220,7 @@ getTotalForwardedChatsResult:
     body:
       urls: ${urls}
       showTest: ${showTest}
+      timezone: ${timezone}
   result: res10
   next: check11
 
@@ -217,6 +231,7 @@ getChatActivityResult:
     body:
       urls: ${urls}
       showTest: ${showTest}
+      timezone: ${timezone}
   result: res11
   next: assignResponse
 

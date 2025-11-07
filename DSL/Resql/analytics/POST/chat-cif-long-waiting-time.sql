@@ -33,7 +33,7 @@ SELECT
 FROM waiting_times w
     JOIN latest_per_base lp
 ON lp.base_id = w.chat_base_id
-WHERE w.created::date BETWEEN :start::date AND :end::date
+WHERE w.created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
   AND w.waiting_time_seconds > :threshold_seconds
   AND (:showTest = TRUE OR lp.test = FALSE)
   AND (

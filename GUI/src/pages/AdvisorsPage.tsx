@@ -5,7 +5,6 @@ import MetricsCharts from '../components/MetricsCharts';
 import { MetricOptionsState } from '../components/MetricAndPeriodOptions/types';
 import {
   chartDataKey,
-  formatDate,
   getAdvisorChartData,
   getAdvisorsList,
   translateChartKeys,
@@ -26,6 +25,7 @@ import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 import useStore from "../store/user/store";
 import {getDomainsArray} from "../util/multiDomain-utils";
 import {getShowTestData} from "../util/testChat-utils";
+import { endOfDay, formatISO, startOfDay } from 'date-fns';
 
 const AdvisorsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -366,8 +366,8 @@ const AdvisorsPage: React.FC = () => {
       <MetricsCharts
         title={currentMetric}
         data={chartData}
-        startDate={currentConfigs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
-        endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
+        startDate={currentConfigs?.start ?? formatISO(startOfDay(new Date()))}
+        endDate={currentConfigs?.end ?? formatISO(endOfDay(new Date()))}
         groupByPeriod={currentConfigs?.groupByPeriod ?? 'day'}
         unit={unit}
       />

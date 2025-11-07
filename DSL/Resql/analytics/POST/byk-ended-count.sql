@@ -2,7 +2,7 @@ WITH latest_per_base AS (
     SELECT DISTINCT ON (c.base_id) c.*
 FROM chat c
 WHERE c.status = 'ENDED'
-  AND c.created::date BETWEEN :start::date AND :end::date
+  AND c.created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
     ORDER BY c.base_id, c.updated DESC
 )
 SELECT

@@ -1,6 +1,6 @@
 WITH chats AS (
     SELECT COUNT(DISTINCT base_id) AS num_chats,
-        date_trunc('day', ended) AS ended
+        date_trunc('day', ended AT TIME ZONE :timezone) AS ended
     FROM chat
     WHERE EXISTS (
             SELECT 1
@@ -17,26 +17,27 @@ WITH chats AS (
         :showTest = TRUE
             OR chat.test = FALSE
         )
-      AND chat.ended >= date_trunc(
+      AND (chat.ended AT TIME ZONE :timezone) >= date_trunc(
             :group_period,
-            current_date - concat('1 ', :group_period)::INTERVAL
-                        )
+            (current_date AT TIME ZONE :timezone - concat('1 ', :group_period)::INTERVAL)
+        )
     GROUP BY 2
 )
 SELECT date_trunc(:group_period, timescale.ended) AS ended,
        ROUND(AVG(COALESCE(num_chats, 0))) AS metric_value
 FROM (
-         SELECT date_trunc(
-                        'day',
-                        generate_series(
-                                date_trunc(
-                                        :group_period,
-                                        current_date - concat('1 ', :group_period)::INTERVAL
-                                ),
-                                NOW(),
-                                '1 day'::INTERVAL
-                        )
-                ) AS ended
+         SELECT date_trunc('day', period) AS ended
+         FROM generate_series(
+             date_trunc(
+                 :group_period,
+                 (current_date AT TIME ZONE :timezone - concat('1 ', :group_period)::INTERVAL)
+             ),
+             date_trunc(
+                 :group_period,
+                 (current_date AT TIME ZONE :timezone)
+             ),
+             '1 day'::INTERVAL
+         ) AS period
      ) AS timescale
          LEFT JOIN chats c ON c.ended = timescale.ended
 GROUP BY 1

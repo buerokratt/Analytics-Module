@@ -14,7 +14,6 @@ import {
 import {MetricOptionsState} from '../components/MetricAndPeriodOptions/types';
 import {
     chartDataKey,
-    formatDate,
     getAdvisorChartData,
     getAdvisorsList,
     translateChartKeys,
@@ -31,6 +30,7 @@ import {ChatHistory} from "@buerokratt-ria/common-gui-components";
 import {useToast} from "../hooks/useToast";
 import {getDomainsArray} from "../util/multiDomain-utils";
 import {getShowTestData} from "../util/testChat-utils";
+import { endOfDay, formatISO, startOfDay } from 'date-fns';
 
 const statusOptions = [
     'CLIENT_LEFT_WITH_ACCEPTED',
@@ -441,8 +441,8 @@ const FeedbackPage: React.FC = () => {
                 <MetricsCharts
                     title={currentMetric}
                     data={chartData}
-                    startDate={currentConfigs?.start ?? formatDate(new Date(), 'yyyy-MM-dd')}
-                    endDate={currentConfigs?.end ?? formatDate(new Date(), 'yyyy-MM-dd')}
+                    startDate={currentConfigs?.start ?? formatISO(startOfDay(new Date()))}
+                    endDate={currentConfigs?.end ?? formatISO(endOfDay(new Date()))}
                     groupByPeriod={currentConfigs?.groupByPeriod ?? 'day'}
                     unit={unit}
                 />
@@ -454,8 +454,8 @@ const FeedbackPage: React.FC = () => {
                     displaySearchBar={false}
                     displayTitle={false}
                     showStatus={false}
-                    delegatedEndDate={currentConfigs?.end}
-                    delegatedStartDate={currentConfigs?.start}
+                    delegatedEndDate={currentConfigs?.end ?? formatISO(endOfDay(new Date()))}
+                    delegatedStartDate={currentConfigs?.start ?? formatISO(startOfDay(new Date()))}
                     user={useStore.getState().userInfo}
                     userDomains={useStore}
                 />

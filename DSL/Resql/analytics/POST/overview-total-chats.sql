@@ -1,6 +1,13 @@
 WITH latest_per_base AS (
-    SELECT DISTINCT ON (c.base_id) c.*
+    SELECT DISTINCT ON (c.base_id)
+    DATE_TRUNC('day', c.ended) AS time,
+    c.base_id,
+    c.test,
+    c.end_user_url,
+    c.ended,
+    c.updated
     FROM chat c
+    WHERE c.status = 'ENDED'
     ORDER BY c.base_id, c.updated DESC
 ),
 chats AS (

@@ -2,7 +2,7 @@ WITH latest_per_base AS (
     SELECT DISTINCT ON (c.base_id)
     c.base_id,
     c.end_user_url,
-    date_trunc(:group_period, c.ended) AS ended,
+    date_trunc(:group_period, c.ended AT TIME ZONE :timezone) AS ended,
     c.test
 FROM chat c
 WHERE EXISTS (
@@ -23,9 +23,9 @@ WHERE EXISTS (
     WHERE message.chat_base_id = c.base_id
   AND message.author_role = 'buerokratt'
     )
-  AND c.ended >= date_trunc(
+  AND (c.ended AT TIME ZONE :timezone) >= date_trunc(
     :group_period,
-    current_date - concat('1 ', :group_period)::INTERVAL
+    (current_date AT TIME ZONE :timezone - concat('1 ', :group_period)::INTERVAL)
     )
 ORDER BY c.base_id, c.updated DESC
     ),
@@ -41,14 +41,12 @@ WHERE (:showTest = TRUE OR lp.test = FALSE)
 SELECT timescale.ended AS ended,
        COUNT(DISTINCT base_id) AS metric_value
 FROM (
-         SELECT date_trunc(
-                        :group_period,
-                        generate_series(
-                                        current_date - concat('1 ', :group_period)::INTERVAL,
-                                        NOW(),
-                                        concat('1 ', :group_period)::INTERVAL
-                        )
-                ) AS ended
+         SELECT date_trunc(:group_period, period) AS ended
+         FROM generate_series(
+             (current_date AT TIME ZONE :timezone - concat('1 ', :group_period)::INTERVAL),
+             (current_date AT TIME ZONE :timezone),
+             concat('1 ', :group_period)::INTERVAL
+         ) AS period
      ) AS timescale
          LEFT JOIN chats ON chats.ended = timescale.ended
 GROUP BY 1

@@ -42,7 +42,7 @@ export const overviewMetrics = (metrics: string, urls: string[] | null[]): strin
     updatedUrls = ['none'];
   }
 
-  return baseUrl + `/overview/metrics?urls=${updatedUrls}&showTest=${getShowTestData()}&metrics=${metrics}`;
+  return baseUrl + `/overview/metrics?urls=${updatedUrls}&showTest=${getShowTestData()}&metrics=${metrics}&timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
 };
 
 export const geBykAvgResponseTime = (): string => {

@@ -5,7 +5,7 @@ import { FormDatepicker } from '../../FormElements'
 import Track from '../../Track'
 import { Option } from '../types'
 import './styles.scss'
-import { formatDate } from '../../../util/charts-utils'
+import { endOfDay, formatISO, startOfDay } from 'date-fns'
 
 type DatePickHandler = ((startDate: string, endDate: string) => void) | undefined
 type StartEndTimes = { start: Date; end: Date }
@@ -65,14 +65,12 @@ const MetricOptionsGroup: React.FC<MetricOptionsGroupProps> = ({
   }, [selectedValue])
 
   useEffect(() => {
-    onDatePicked?.(dateToStr(startEndTimes.start), dateToStr(startEndTimes.end))
+    const startDate = formatISO(startOfDay(startEndTimes.start));
+    const endDate = formatISO(endOfDay(startEndTimes.end));
+    onDatePicked?.(startDate, endDate)
   }, [startEndTimes])
 
   const additionalKey = useMemo(() => options.find((x) => x.id === selectedValue)?.additionalKey, [selectedValue])
-
-  const dateToStr = (date: Date) => {
-    return formatDate(date, dateFormat ?? 'EEE MMM dd yyyy')
-  }
 
   const changeMonthDate = (date: Date) => {
     const sd = new Date(date)

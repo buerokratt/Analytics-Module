@@ -9,7 +9,7 @@ WITH chats AS (
         :showTest = TRUE
             OR chat.test = FALSE
         )
-      AND created::date BETWEEN :start::date AND :end::date
+      AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
     ),
     offlineCSAs AS (
 SELECT COUNT(csa.id_code) AS csaCount
@@ -20,12 +20,12 @@ WHERE csa.id = (
     WHERE id_code = csa.id_code
     )
   AND csa.status = 'offline'
-  AND csa.created::date BETWEEN :start::date AND :end::date
+  AND csa.created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
     ),
     AllCSAs AS (
 SELECT COUNT(*) AS userCount
 FROM public.user pu
-WHERE pu.created::date NOT BETWEEN :start::date AND :end::date
+WHERE pu.created::timestamptz NOT BETWEEN :start::timestamptz AND :end::timestamptz
     )
 SELECT
     DATE_TRUNC(:period, c.created) AS time,

@@ -6,8 +6,9 @@ import MetricOptionsGroup from '../MetricOptionsGroup'
 import SubOptionsGroup from '../SubOptionsGroup'
 import { MetricOptionsState, Option, OnChangeCallback } from '../types'
 import Section from '../../Section'
-import { formatDate } from '../../../util/charts-utils'
 import { FormRadios } from 'components/FormElements'
+import { endOfDay, formatISO, startOfDay } from 'date-fns'
+import { formatDate } from 'util/charts-utils'
 
 interface MetricOptionsProps {
   metricOptions: Option[];
@@ -28,8 +29,8 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({
   const [selection, setSelection] = useState<MetricOptionsState>({
     period: '',
     metric: '',
-    start: formatDate(new Date(), dateFormat ?? 'EEE MMM dd yyyy'),
-    end: formatDate(new Date(), dateFormat ?? 'EEE MMM dd yyyy'),
+    start: formatISO(startOfDay(new Date())),
+    end: formatISO(endOfDay(new Date())),
     options: [],
     groupByPeriod: '',
   })
@@ -46,7 +47,9 @@ const MetricOptions: React.FC<MetricOptionsProps> = ({
   }, [])
 
   useEffect(() => {
-    const groupByPeriod = selection.start === selection.end ? 'hour' : 'day'
+    const startDate = formatDate(new Date(selection.start), dateFormat ?? 'EEE MMM dd yyyy');
+    const endDate = formatDate(new Date(selection.end), dateFormat ?? 'EEE MMM dd yyyy');
+    const groupByPeriod = startDate === endDate ? 'hour' : 'day';
     onChange({ ...selection, groupByPeriod })
   }, [selection])
 

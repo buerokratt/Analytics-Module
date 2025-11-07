@@ -18,7 +18,7 @@ WITH MaxChatHistoryComments AS (
              MAX(created) AS created
          FROM chat
          WHERE STATUS = 'ENDED'
-           AND created::date BETWEEN :start::date AND :end::date
+           AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
                                         AND feedback_rating IS NOT NULL
                                         AND feedback_rating <= 5
 GROUP BY base_id

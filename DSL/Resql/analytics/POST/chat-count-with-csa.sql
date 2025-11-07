@@ -2,7 +2,7 @@ WITH latest_per_base AS (
     SELECT DISTINCT ON (c.base_id) c.*
 FROM chat c
 WHERE c.status = 'ENDED'
-  AND c.ended::date BETWEEN :start::date AND :end::date
+  AND c.ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
     ORDER BY c.base_id, c.updated DESC
 )
 SELECT
@@ -24,7 +24,7 @@ WHERE (:showTest = TRUE OR lp.test = FALSE)
     SELECT 1
     FROM message m
     WHERE m.chat_base_id = lp.base_id
-  AND m.event = 'taken-over'
+  AND m.event = 'taken-over' or m.event = 'pending-assigned'
     )
 GROUP BY time
 ORDER BY time ASC;

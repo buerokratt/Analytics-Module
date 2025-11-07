@@ -13,7 +13,7 @@ WITH chats AS (
         :showTest = TRUE
             OR c.test = FALSE
         )
-      AND c.created::date BETWEEN :start::date AND :end::date
+      AND c.created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
                                      AND m.author_role IN ('backoffice-user', 'end-user')
                                      AND m.author_id IS NOT NULL
                                      AND m.author_id <> ''

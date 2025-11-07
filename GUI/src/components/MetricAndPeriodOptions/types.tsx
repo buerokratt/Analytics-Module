@@ -25,9 +25,9 @@ export interface MetricOptionsState {
   end: string;
   options: string[];
   groupByPeriod: GroupByPeriod;
-  urls: string[];
-  showTest: boolean;
-  updateKey: number;
+  urls?: string[];
+  showTest?: boolean;
+  updateKey?: number;
 }
 
 export type OnChangeCallback = MetricOptionsState;

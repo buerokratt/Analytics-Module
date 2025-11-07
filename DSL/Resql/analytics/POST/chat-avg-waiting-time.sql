@@ -24,7 +24,7 @@ FROM message m
     JOIN filtered_chats fc
 ON m.chat_base_id = fc.base_id
 WHERE m.author_role = 'end-user'
-  AND m.created::date BETWEEN :start::date AND :end::date
+  AND m.created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
     ),
     average_waiting_time AS (
 SELECT

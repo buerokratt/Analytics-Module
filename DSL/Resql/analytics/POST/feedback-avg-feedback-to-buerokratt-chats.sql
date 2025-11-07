@@ -15,5 +15,5 @@ WHERE (
      WHERE message.chat_base_id = chat.base_id
        AND (message.author_role = 'buerokratt' OR message.author_role = 'Bürokratt'))
 AND status = 'ENDED'
-AND ended::date BETWEEN :start::date AND :end::date
+AND ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
 GROUP BY date_time

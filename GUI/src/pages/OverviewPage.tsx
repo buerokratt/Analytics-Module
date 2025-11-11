@@ -16,6 +16,9 @@ import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { ChartData } from 'types/chart';
 import useStore from "../store/user/store";
 import {getDomainsArray} from "../util/multiDomain-utils";
+import { getShowTestData } from 'util/testChat-utils';
+import { endOfDay, formatISO, startOfDay } from 'date-fns';
+const multiDomainsEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN;
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([]);
@@ -36,7 +39,6 @@ const OverviewPage: React.FC = () => {
     });
   }
 
-
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -53,11 +55,23 @@ const OverviewPage: React.FC = () => {
   };
 
   const fetchChartData = async () => {
-    const result: any = await request({ url: overviewMetrics('chat-activity', getDomainsArray()), withCredentials: true });
+    const result: any = await request({
+      url: overviewMetrics(),
+      withCredentials: true,
+      method: Methods.post,
+      data: {
+        urls: multiDomainsEnabled?.toLowerCase() === 'true' ? getDomainsArray() : ['none'],
+        showTest: getShowTestData(),
+        metrics: 'chat-activity',
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        startDate: formatISO(startOfDay(new Date())),
+        endDate: formatISO(endOfDay(new Date())),
+      },
+    });
 
     const response = result.response['chat-activity'].map((entry: any) => ({
       ...translateChartKeys(entry),
-      dateTime: new Date(entry.ended).getTime(),
+      dateTime: new Date(entry.ended).getTime() + new Date(entry.ended).getTimezoneOffset() * 60 * 1000,
     }));
 
     const chartData = {

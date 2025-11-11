@@ -2,7 +2,7 @@ declaration:
   call: declare
   version: 0.1
   description: "Decription placeholder for 'METRICS'"
-  method: get
+  method: post
   accepts: json
   returns: json
   namespace: analytics
@@ -10,20 +10,26 @@ declaration:
     params:
       - field: metrics
         type: string
-        description: "Parameter 'metrics'"
+        description: "Body field 'metrics'"
       - field: urls
-        type: array
-        description: "Parameter 'urls'"
+        type: object
+        description: "Body field 'urls'"
       - field: showTest
         type: boolean
         description: "Body field 'showTest'"
       - field: timezone
         type: string
         description: "Body field 'timezone'"  
+      - field: startDate
+        type: string
+        description: "Body field 'startDate'"  
+      - field: endDate
+        type: string
+        description: "Body field 'endDate'"
 
 extract_request_data:
   assign:
-    requestedMetric: ${incoming.params.metrics}
+    requestedMetric: ${incoming.body.metrics}
     res1: null
     res2: null
     res3: null
@@ -35,9 +41,14 @@ extract_request_data:
     res9: null
     res10: null
     res11: null
-    urls: ${incoming.params.urls.split(',')}
-    showTest: ${incoming.params.showTest.toLowerCase() === 'true'}
-    timezone: ${incoming.params.timezone}
+    urls: ${incoming.body.urls}
+    showTest: ${incoming.body.showTest}
+    timezone: ${incoming.body.timezone}
+    start: ${incoming.body.startDate}
+    end: ${incoming.body.endDate}
+
+log_step:
+  log: "start date is ${start}, end date is ${end}"
 
 check1:
   switch:
@@ -232,6 +243,8 @@ getChatActivityResult:
       urls: ${urls}
       showTest: ${showTest}
       timezone: ${timezone}
+      start: ${start}
+      end: ${end}
   result: res11
   next: assignResponse
 

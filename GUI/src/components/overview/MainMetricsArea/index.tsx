@@ -3,8 +3,11 @@ import { overviewMetrics } from '../../../resources/api-constants';
 import { OverviewMetricData, OverviewMetricPreference } from '../../../types/overview-metrics';
 import DraggableCard from '../DraggableCard';
 import './styles.scss';
-import { request } from '../../../util/axios-client';
+import { Methods, request } from '../../../util/axios-client';
 import {getDomainsArray} from "../../../util/multiDomain-utils";
+import { endOfDay, formatISO, startOfDay } from 'date-fns';
+import { getShowTestData } from 'util/testChat-utils';
+const multiDomainsEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN;
 
 type Props = {
   metricPreferences: OverviewMetricPreference[];
@@ -45,8 +48,17 @@ const MainMetricsArea = ({ metricPreferences, updateKey,saveReorderedMetric, mov
     }
 
     const metricsResponse: any = await request({
-      url: overviewMetrics(metricsToFetch.map((e) => e.metric).join(','), getDomainsArray()),
+      url: overviewMetrics(),
       withCredentials: true,
+      method: Methods.post,
+      data: {
+        urls: multiDomainsEnabled?.toLowerCase() === 'true' ? getDomainsArray() : ['none'],
+        showTest: getShowTestData(),
+        metrics: metricsToFetch.map((e) => e.metric).join(','),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        startDate: formatISO(startOfDay(new Date())),
+        endDate: formatISO(endOfDay(new Date())),
+      },
     });
     const results = metricsResponse.response;
     setCurrentKey(updateKey);

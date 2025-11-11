@@ -20,7 +20,6 @@ import { getShowTestData } from 'util/testChat-utils';
 import { endOfDay, formatISO, startOfDay } from 'date-fns';
 const multiDomainsEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN;
 
-
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([]);
   const [chartData, setChartData] = useState<ChartData>({
@@ -39,7 +38,6 @@ const OverviewPage: React.FC = () => {
       }
     });
   }
-
 
   const { t } = useTranslation();
 
@@ -73,7 +71,7 @@ const OverviewPage: React.FC = () => {
 
     const response = result.response['chat-activity'].map((entry: any) => ({
       ...translateChartKeys(entry),
-      dateTime: new Date(entry.ended).getTime(),
+      dateTime: new Date(entry.ended).getTime() + new Date(entry.ended).getTimezoneOffset() * 60 * 1000,
     }));
 
     const chartData = {

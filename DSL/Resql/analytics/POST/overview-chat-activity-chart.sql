@@ -70,7 +70,7 @@ FROM (
         'hour',
         generate_series(
             (current_date),
-            (NOW()),
+            (NOW() AT TIME ZONE :timezone),
             '1 hour'::INTERVAL
         )
     ) AS ended

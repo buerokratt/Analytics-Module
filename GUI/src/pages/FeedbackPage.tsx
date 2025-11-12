@@ -14,6 +14,7 @@ import {
 import {MetricOptionsState} from '../components/MetricAndPeriodOptions/types';
 import {
     chartDataKey,
+    formatDate,
     getAdvisorChartData,
     getAdvisorsList,
     translateChartKeys,
@@ -454,8 +455,8 @@ const FeedbackPage: React.FC = () => {
                     displaySearchBar={false}
                     displayTitle={false}
                     showStatus={false}
-                    delegatedEndDate={currentConfigs?.end ?? formatISO(endOfDay(new Date()))}
-                    delegatedStartDate={currentConfigs?.start ?? formatISO(startOfDay(new Date()))}
+                    delegatedEndDate={formatDate(new Date(currentConfigs?.end ?? Date.now()), 'yyyy-MM-dd')}
+                    delegatedStartDate={formatDate(new Date(currentConfigs?.start ?? Date.now()), 'yyyy-MM-dd')}
                     user={useStore.getState().userInfo}
                     userDomains={useStore}
                 />

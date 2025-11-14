@@ -106,11 +106,18 @@ const OverviewPage: React.FC = () => {
     updateMetricPreference(updatedMetrics);
   };
 
-  const saveReorderedMetric = useCallback((metric: OverviewMetricPreference, newIndex: number) => {
-    const updatedMetrics = reorderItem<OverviewMetricPreference>(metricPreferences, (m) => m.metric === metric.metric, newIndex)
-    console.log('save reorder', metric, metricPreferences, updatedMetrics)
-    updateMetricPreference(updatedMetrics);
-  }, []);
+const saveReorderedMetric = useCallback(
+        (metric: OverviewMetricPreference, newIndex: number) => {
+            const updatedMetrics = reorderItem<OverviewMetricPreference>(
+                metricPreferences,
+                (m) => m.metric === metric.metric,
+                newIndex
+            );
+
+            updateMetricPreference(updatedMetrics);
+        },
+        [metricPreferences]
+    );
 
   const moveMetric = (metric: string, target: number) => {
     setMetricPreferences((metrics) =>
@@ -194,6 +201,7 @@ const OverviewPage: React.FC = () => {
 };
 
 export default withAuthorization(OverviewPage, [ROLES.ROLE_ADMINISTRATOR, ROLES.ROLE_ANALYST]);
+
 
 
 

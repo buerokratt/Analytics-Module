@@ -90,6 +90,7 @@ const OverviewPage: React.FC = () => {
   };
 
   const updateMetricPreference = async (metrics: OverviewMetricPreference[]) => {
+    console.log('seding request with :', metrics);
     await request({
       url: overviewMetricPreferences(),
       method: Methods.post,
@@ -191,3 +192,4 @@ const OverviewPage: React.FC = () => {
 };
 
 export default withAuthorization(OverviewPage, [ROLES.ROLE_ADMINISTRATOR, ROLES.ROLE_ANALYST]);
+

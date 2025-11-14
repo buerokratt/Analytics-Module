@@ -52,6 +52,7 @@ const OverviewPage: React.FC = () => {
   const fetchMetricPreferences = async () => {
     const result: any = await request({ url: overviewMetricPreferences(), withCredentials: true });
     setMetricPreferences(result.response);
+    console.log('fetching prefs', result, metricPreferences)
   };
 
   const fetchChartData = async () => {
@@ -193,5 +194,6 @@ const OverviewPage: React.FC = () => {
 };
 
 export default withAuthorization(OverviewPage, [ROLES.ROLE_ADMINISTRATOR, ROLES.ROLE_ANALYST]);
+
 
 

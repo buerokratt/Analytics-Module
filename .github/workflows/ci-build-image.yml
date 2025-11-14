@@ -3,7 +3,7 @@ name: Build and publish GUI
 on:
   push:
     branches:
-      - v2.0.2
+      - fredy-temp
     paths:
       - '.env.gui'
 

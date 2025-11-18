@@ -1,54 +1,60 @@
-WITH chat_stats AS (
-    SELECT 
+WITH latest_per_base AS (
+    SELECT DISTINCT ON (c.base_id)
+    c.*
+FROM chat c
+WHERE c.created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
+    ORDER BY c.base_id, c.created DESC
+),
+chat_stats AS (
+    SELECT
         date_trunc('hour', ended AT TIME ZONE :timezone) AS ended,
         base_id,
         EXISTS (
             SELECT 1
             FROM message
-            WHERE message.chat_base_id = chat.base_id
+            WHERE message.chat_base_id = lp.base_id
             AND "event" = 'CLIENT_LEFT_WITH_ACCEPTED'
         ) AS client_left_with_accepted,
         EXISTS (
             SELECT 1
             FROM message
-            WHERE message.chat_base_id = chat.base_id
+            WHERE message.chat_base_id = lp.base_id
             AND "event" = 'CLIENT_LEFT_WITH_NO_RESOLUTION'
         ) AS client_left_with_no_resolution,
         EXISTS (
             SELECT 1
             FROM message
-            WHERE message.chat_base_id = chat.base_id
+            WHERE message.chat_base_id = lp.base_id
             AND "event" = 'HATE_SPEECH'
         ) AS hate_speech,
         EXISTS (
             SELECT 1
             FROM message
-            WHERE message.chat_base_id = chat.base_id
+            WHERE message.chat_base_id = lp.base_id
             AND "event" = 'ACCEPTED'
         ) AS accepted,
         EXISTS (
             SELECT 1
             FROM message
-            WHERE message.chat_base_id = chat.base_id
+            WHERE message.chat_base_id = lp.base_id
             AND "event" = 'OTHER'
         ) AS other_event,
         EXISTS (
             SELECT 1
             FROM message
-            WHERE message.chat_base_id = chat.base_id
+            WHERE message.chat_base_id = lp.base_id
             AND "event" = 'RESPONSE_SENT_TO_CLIENT_EMAIL'
         ) AS response_sent_to_client_email
-    FROM chat
+    FROM latest_per_base lp
     WHERE (
         array_length(ARRAY[:urls]::text[], 1) IS NULL
         OR (array_length(ARRAY[:urls]::text[], 1) = 1 AND (ARRAY[:urls]::text[])[1] = 'none')
-        OR chat.end_user_url LIKE ANY(ARRAY[:urls]::text[])
+        OR lp.end_user_url LIKE ANY(ARRAY[:urls]::text[])
     )
     AND (
         :showTest = TRUE
-        OR chat.test = FALSE
+        OR lp.test = FALSE
     )
-    AND ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
 )
 SELECT 
     timescale.ended AS ended,

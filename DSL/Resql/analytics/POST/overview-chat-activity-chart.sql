@@ -3,11 +3,11 @@ WITH latest_per_base AS (
     c.*
 FROM chat c
 WHERE c.created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
-    ORDER BY c.base_id, c.created DESC
+    ORDER BY c.base_id, c.updated DESC
 ),
 chat_stats AS (
     SELECT
-        date_trunc('hour', ended AT TIME ZONE :timezone) AS ended,
+        date_trunc('hour', created AT TIME ZONE :timezone) AS ended,
         base_id,
         EXISTS (
             SELECT 1

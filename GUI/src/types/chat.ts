@@ -58,6 +58,7 @@ export interface Chat {
   id: string;
   baseId?: string;
   feedback?: string;
+  feedbackText?: string;
   rating?: string;
   csaTitle?: string | null;
   customerSupportId?: string;
@@ -84,6 +85,7 @@ export interface Chat {
   receivedFrom?: string;
   comment?: string;
   labels: string;
+  allCsaNames: string[];
 }
 export interface GroupedChat {
   myChats: Chat[];

@@ -8,7 +8,7 @@ import LineGraph from '../LineGraph';
 import PieGraph from '../PieGraph';
 import { getXlsx } from '../../resources/api-constants';
 import { ChartData, ChartType } from '../../types/chart';
-import { chartDataKey, formatTimestamp, getKeys } from '../../util/charts-utils';
+import { chartDataKey, formatDate, formatTimestamp, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { request, Methods } from '../../util/axios-client';
 import { saveFile } from 'util/file';
@@ -24,6 +24,8 @@ type Props = {
 
 const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }: Props) => {
   const { t } = useTranslation();
+  const formattedStartDate = formatDate(new Date(startDate), 'yyyy-MM-dd');
+  const formattedEndDate = formatDate(new Date(endDate), 'yyyy-MM-dd');
 
   const charts: ChartType[] = [
     {
@@ -49,8 +51,8 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       return (
         <LineGraph
           data={selectedData}
-          startDate={startDate}
-          endDate={endDate}
+          startDate={formattedStartDate}
+          endDate={formattedEndDate}
           unit={unit}
         />
       );
@@ -58,8 +60,8 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       return (
         <BarGraph
           data={selectedData}
-          startDate={startDate}
-          endDate={endDate}
+          startDate={formattedStartDate}
+          endDate={formattedEndDate}
           unit={unit}
           groupByPeriod={groupByPeriod}
         />
@@ -67,8 +69,8 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
     }
   };
 
-  const downloadXlsx = async (data: any[]) => {
-    const modifiedData: any[] = data.map((item) => {
+  const downloadXlsx = async (data: any[] = []) => {
+    const modifiedData: any[] = data?.map((item) => {
       const modifiedItem: any = { ...item };
       getKeys(data).forEach((propertyName: any) => {
         if (!(propertyName in modifiedItem)) {
@@ -90,7 +92,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       method: Methods.post,
       withCredentials: true,
       data: {
-        data: modifiedData.map((p) => {
+        data: modifiedData?.map((p) => {
           const { [chartDataKey]: originalKey, ...rest } = p;
           return {
             [t(`global.${chartDataKey}`)]: formatTimestamp(originalKey),
@@ -114,9 +116,9 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
           <div className="title">
             <h3>
               {t(title)}{' '}
-              {startDate !== endDate
-                ? `${formatTimestamp(startDate)} - ${formatTimestamp(endDate)}`
-                : formatTimestamp(startDate)}
+              {formattedStartDate === formattedEndDate
+                ? formatTimestamp(formattedStartDate)
+                : `${formatTimestamp(formattedStartDate)} - ${formatTimestamp(formattedEndDate)}`}
             </h3>
           </div>
           <div className="other_content">
@@ -124,7 +126,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
               appearance="text"
               style={{ marginRight: 15 }}
               onClick={() => {
-                downloadXlsx(data.chartData);
+                downloadXlsx(data.feedBackData ? data.feedBackData?.chartData : data.chartData);
               }}
             >
               <Icon
@@ -144,7 +146,9 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
         </div>
       }
     >
-      {buildChart()}
+      <div className="charts_wrapper">
+        {buildChart()}
+      </div>
     </Card>
   );
 };

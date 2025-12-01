@@ -1,45 +1,67 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-import { PersistGate } from 'redux-persist/integration/react';
-import { ToastProvider } from './components/context/ToastContext';
+import React, {useEffect} from 'react';
+import {Provider} from 'react-redux';
+import {BrowserRouter} from 'react-router-dom';
+import {PersistGate} from 'redux-persist/integration/react';
+import {ToastProvider} from './components/context/ToastContext';
 import RootComponent from './RootComponent';
-import { persistor, store as reducerStore } from './store/reducers/store';
-import { UserInfo } from './types/userInfo';
+import {persistor, store as reducerStore} from './store/reducers/store';
+import {UserInfo} from './types/userInfo';
 import useStore from './store/user/store';
-import { useQuery } from '@tanstack/react-query';
-import { PeriodStatisticsProvider } from 'components/context/PeriodStatisticsContext';
+import {useQuery} from '@tanstack/react-query';
+import {PeriodStatisticsProvider} from 'components/context/PeriodStatisticsContext';
+import {getWidgetData} from "./components/services/user";
+import useTabCloseEffect from "./hooks/useTabCloseEffects";
 
 const App: React.FC = () => {
-  useQuery<UserInfo>({
-    queryKey:
-      import.meta.env.REACT_APP_LOCAL === 'true'
-        ? ['userinfo', 'prod']
-        : [(import.meta.env.REACT_APP_AUTH_BASE_URL, 'auth/jwt/userinfo')],
-    onSuccess: (res: { response: UserInfo }) => {
-      if (import.meta.env.REACT_APP_LOCAL != 'true') {
-        localStorage.setItem('exp', res.response.JWTExpirationTimestamp);
-      }
-      return useStore.getState().setUserInfo(res.response);
-    },
-  });
+    const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
-  return (
-    <Provider store={reducerStore}>
-      <PersistGate
-        loading={null}
-        persistor={persistor}
-      >
-        <BrowserRouter basename={import.meta.env.BASE_URL}>
-          <ToastProvider>
-            <PeriodStatisticsProvider>
-              <RootComponent />
-            </PeriodStatisticsProvider>
-          </ToastProvider>
-        </BrowserRouter>
-      </PersistGate>
-    </Provider>
-  );
+    useQuery<UserInfo>({
+        queryKey:
+            import.meta.env.REACT_APP_LOCAL === 'true'
+                ? ['userinfo', 'prod']
+                : [(import.meta.env.REACT_APP_AUTH_BASE_URL, 'auth/jwt/userinfo')],
+        onSuccess: (res: { response: UserInfo }) => {
+            if (import.meta.env.REACT_APP_LOCAL != 'true') {
+                localStorage.setItem('exp', res.response.JWTExpirationTimestamp);
+            }
+
+            if (multiDomainEnabled) {
+                getWidgetData(res.response.idCode)
+                    .then((domains) => {
+                        const selectedDomains = domains
+                            .filter(d => d.selected)
+                            .map(d => d.url)
+                            .filter(Boolean);
+
+                        useStore.getState().setUserDomains(selectedDomains);
+                    })
+                    .catch((e) => {
+                        console.error('Failed to fetch widget data:', e);
+                    });
+            }
+
+            return useStore.getState().setUserInfo(res.response);
+        },
+    });
+
+    useTabCloseEffect();
+
+    return (
+        <Provider store={reducerStore}>
+            <PersistGate
+                loading={null}
+                persistor={persistor}
+            >
+                <BrowserRouter basename={import.meta.env.BASE_URL}>
+                    <ToastProvider>
+                        <PeriodStatisticsProvider>
+                            <RootComponent/>
+                        </PeriodStatisticsProvider>
+                    </ToastProvider>
+                </BrowserRouter>
+            </PersistGate>
+        </Provider>
+    );
 };
 
 export default App;

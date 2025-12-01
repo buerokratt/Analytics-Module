@@ -3,13 +3,18 @@ import {
   getAvgMessagesInChats,
   getCipChats,
   getDurationChats,
-  getIdleChats,
+  getBykEndedChats,
   getTotalChats,
 } from '../../resources/api-constants';
 import { fetchChartData, fetchChartDataWithSubOptions } from '../../util/api-response-handler';
 import { chatOptions } from './options';
+import {getDomainsArray} from "../../util/multiDomain-utils";
+import {getShowTestData} from "../../util/testChat-utils";
 
 export const fetchData = (config: any) => {
+  config.urls = getDomainsArray();
+  config.showTest = getShowTestData();
+
   switch (config.metric) {
     case 'total':
       return fetchChartDataWithSubOptions(getTotalChats(), config, chatOptions[0].subOptions!);
@@ -22,7 +27,7 @@ export const fetchData = (config: any) => {
     case 'avgNumOfMessages':
       return fetchChartData(getAvgMessagesInChats(), config, chatOptions[4].labelKey);
     case 'idle':
-      return fetchChartData(getIdleChats(), config, chatOptions[5].labelKey);
+      return fetchChartData(getBykEndedChats(), config, chatOptions[5].labelKey);
     default:
       return [];
   }

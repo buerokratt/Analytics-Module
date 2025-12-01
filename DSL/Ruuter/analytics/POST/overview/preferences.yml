@@ -8,32 +8,24 @@ declaration:
   namespace: analytics
   allowlist:
     body:
-      - field: active
-        type: boolean
-        description: "Body field 'active'"
-      - field: metric
-        type: string
-        description: "Body field 'metric'"
-      - field: ordinality
-        type: number
-        description: "Body field 'ordinality'"
-    headers:
+      - field: preferences
+        type: object
+        description: "Body field 'preferences'"
+    header:
       - field: cookie
         type: string
         description: "Cookie field"
 
 check_for_required_parameters:
   switch:
-    - condition: ${incoming.body == null || incoming.body.active == null || incoming.body.metric == null || incoming.body.ordinality == null}
+    - condition: ${incoming.body == null || incoming.body.preferences == null}
       next: return_incorrect_request
   next: extract_request_data
 
 extract_request_data:
   assign:
     cookie: ${incoming.headers.cookie}
-    active: ${incoming.body.active}
-    metric: ${incoming.body.metric}
-    ordinality: ${incoming.body.ordinality}
+    preferences: ${incoming.body.preferences}
   next: check_if_authorized
 
 check_if_authorized:
@@ -46,12 +38,10 @@ check_if_authorized:
 update_metrics_preferences:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/update-overview-metric-preferences"
+    url: "[#ANALYTICS_RESQL]/update-metric-preferences"
     body:
       user_id_code: ${authority_result.idCode}
-      active: ${active}
-      metric: ${metric}
-      ordinality: ${ordinality}
+      preferences: ${preferences}
   result: result
   next: get_metrics_preferences
 

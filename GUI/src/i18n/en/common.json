@@ -45,11 +45,18 @@
     "forward": "Forward",
     "chosen": "Chosen",
     "read": "Read",
-    "dateTime": "Date"
+    "dateTime": "Date",
+    "statusClarification": "Status clarification",
+    "selectAll": "Select all",
+    "test": "Test"
   },
   "mainMenu": {
     "closeMenu": "Close menu",
     "openMenu": "Open menu"
+  },
+  "multiDomains": {
+    "selectDomains": "Select Domains",
+    "noDomains": "No domains available. Please contact your system administrator."
   },
   "general": {
     "selectAll": "Select All",
@@ -70,6 +77,12 @@
     "feedback": "Feedback",
     "advisors": "Advisors",
     "reports": "Open Data"
+  },
+  "toast": {
+    "success": {
+      "updateSuccess": "Updated Successfully",
+      "chatCommentChanged": "Chat comment changed"
+    }
   },
   "burokratt": {
     "intents": "Intents",
@@ -105,10 +118,12 @@
   },
   "feedback": {
     "statuses": "Completed statuses / number of conversations",
+    "feedback": "Feedback",
     "burokratt_chats": "Feedback on bureaucrat conversations",
     "advisor_chats": "Feedback on advisor conversations",
     "selected_advisor_chats": "Feedback to selected advisor",
     "negative_feedback": "Conversations with negative feedback",
+    "chosen_csas": "Chosen csa(s)",
     "no_negative_feedback_chats": "There are no conversations",
     "status_options": {
       "client_left_with_accepted": "Bureaucrat - the client left with an answer",
@@ -118,6 +133,8 @@
       "accepted": "Advisor - accepted answer",
       "hate_speech": "Advisor - signs of hate speech",
       "response_sent_to_client_email": "Advisor - answered in another channel",
+      "user-reached": "Advisor - user contacted",
+      "user-not-reached": "Advisor - user could not be reached",
       "other": "Advisor - other reasons",
       "average": "Average",
       "nps": "NPS"
@@ -130,6 +147,8 @@
       "accepted": "accepted answer",
       "hate_speech": "signs of hate speech",
       "response_sent_to_client_email": "answered in another channel",
+      "user-reached": "user contacted",
+      "user-not-reached": "user could not be reached",
       "other": "other reasons"
     },
     "xlsx": "XLSX",
@@ -138,7 +157,8 @@
     "status": "Status",
     "ended": "Ended",
     "view": "View",
-    "comment": "Comment"
+    "comment": "Comment",
+    "feedback": "Feedback"
   },
   "chats": {
     "total": "Total number of chats",
@@ -174,6 +194,7 @@
     "event": "Event",
     "avg": "Average",
     "nps": "NPS",
+    "customerSupportFullName": "CSA Nimi",
     "id": "Id",
     "baseId": "Id",
     "rating": "Rating",
@@ -181,6 +202,7 @@
     "ended": "Ended",
     "customerSupportId": "Customer Support Id",
     "customerSupportDisplayName": "Customer Support Display Name",
+    "customerSupportFullName": "Customer Support Full Name",
     "barChart": "Bar Chart",
     "pieChart": "Pie Chart",
     "lineChart": "Line Chart",
@@ -196,7 +218,12 @@
     "value": "Value",
     "promoters": "Promoters",
     "passives": "Passives",
-    "detractors": "Detractors"
+    "detractors": "Detractors",
+    "totalPages": "Total Pages",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "comment": "Comment",
+    "feebackText": "Feedback"
   },
   "reports": {
     "get-chat-count-total": "Total chat count",
@@ -260,7 +287,13 @@
     "correct_apikey_message": "API Key and API Key ID validated",
     "disabled_create_dataset_tooltip": "In order to enable, please configure Open Data Access first",
     "save_configuration_failed": "Error saving configuration",
-    "no_datasets_description": "No Datasets found"
+    "no_datasets_description": "No Datasets found",
+    "save": "Save",
+    "timeInterval": "Time Interval",
+    "receivedChats": "Received Chats",
+    "avgWaitingTimeSeconds": "Average (Sec)",
+    "forwardedChats": "Forwarded Chats",
+    "forwardedExternally": "Forwarded Externally"
   },
   "advisors": {
     "chat_forwards": "Forwarding",
@@ -345,7 +378,9 @@
       "forwarded": "Forwarded",
       "addACommentToTheConversation": "Add a comment to the conversation",
       "rating": "Rating",
-      "feedback": "Feedback"
+      "feedback": "Feedback",
+      "chosenCsa": "Chosen csa(s)",
+      "chosenColumn": "Chosen column(s)"
     },
     "plainEvents": {
       "answered": "Answered",
@@ -471,10 +506,13 @@
       "popupNotifications": "Popup notifications",
       "newUnansweredChat": "New unanswered chat",
       "newForwardedChat": "New forwarded chat",
+      "newForwardedChatTitle": "Forwarded chat",
+      "newForwardedChatMessage": "You have new forwarded chat!",
       "newValidationMessage": "New message to validate",
       "useAutocorrect": "Text auto corrector",
       "required": "Required",
-      "invalidemail": "Invalid email"
+      "invalidemail": "Invalid email",
+      "statusCommentUpdated": "Status clarification updated"
     }
   },
   "roles": {

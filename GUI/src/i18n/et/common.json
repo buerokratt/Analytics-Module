@@ -45,11 +45,18 @@
     "forward": "Suuna",
     "chosen": "Valitud",
     "read": "Loetud",
-    "dateTime": "Kuupäev"
+    "dateTime": "Kuupäev",
+    "statusClarification": "Staatuse täpsustus",
+    "selectAll": "Vali kõik",
+    "test": "Test"
   },
   "mainMenu": {
     "closeMenu": "Kitsendan menüü",
     "openMenu": "Ava menüü"
+  },
+  "multiDomains": {
+    "selectDomains": "Vali Domeenid",
+    "noDomains": "Domeene ei ole saadaval. Palun võtke ühendust süsteemiadministraatoriga."
   },
   "general": {
     "selectAll": "Vali kõik",
@@ -70,6 +77,12 @@
     "feedback": "Tagasiside",
     "advisors": "Nõustajad",
     "reports": "Avaandmed"
+  },
+  "toast": {
+    "success": {
+      "updateSuccess": "Värskendamine õnnestus",
+      "chatCommentChanged": "Vestluse kommentaar muudetud"
+    }
   },
   "burokratt": {
     "intents": "Teemad",
@@ -106,9 +119,11 @@
   "feedback": {
     "statuses": "Lõpetatud staatused / vestluste arv",
     "burokratt_chats": "Tagasiside bürokrati vestlustele",
+    "feedback": "Tagasiside",
     "advisor_chats": "Tagasiside nõustajate vestlustele",
     "selected_advisor_chats": "Tagasiside valitud nõustajale",
     "negative_feedback": "Negatiivse tagasisidega vestlused",
+    "chosen_csas": "Valitud nõustaja(d)",
     "no_negative_feedback_chats": "Vestlused puuduvad",
     "status_options": {
       "client_left_with_accepted": "Bürokratt - klient lahkus vastusega",
@@ -118,6 +133,8 @@
       "accepted": "Nõustaja - aksepteeritud vastus",
       "hate_speech": "Nõustaja - vihakõne tunnused",
       "response_sent_to_client_email": "Nõustaja - vastatud teises kanalis",
+      "user-reached": "Nõustaja - kasutajaga võeti ühendust",
+      "user-not-reached": "Nõustaja - kasutajaga ei õnnestunud ühendust saada",
       "other": "Nõustaja - muud põhjused",
       "average": "Keskmine",
       "nps": "NPS"
@@ -130,6 +147,8 @@
       "accepted": "aksepteeritud vastus",
       "hate_speech": "vihakõne tunnused",
       "response_sent_to_client_email": "vastatud teises kanalis",
+      "user-reached": "kasutajaga võeti ühendust",
+      "user-not-reached": "kasutajaga ei õnnestunud ühendust saada",
       "other": "muud põhjused"
     },
     "xlsx": "XLSX",
@@ -138,7 +157,8 @@
     "status": "Staatus",
     "ended": "Lõppenud",
     "view": "Vaata",
-    "comment": "Kommentaar"
+    "comment": "Kommentaar",
+    "feedback": "Tagasiside"
   },
   "chats": {
     "total": "Vestluste koguarv",
@@ -174,6 +194,8 @@
     "event": "Sündmus",
     "avg": "Keskmine",
     "nps": "NPS",
+    "avgWaitingTimeSeconds": "Keskmine (Sec)",
+    "customerSupportFullName": "CSA Full Name",
     "id": "Id",
     "baseId": "Id",
     "rating": "Hinnang",
@@ -183,6 +205,7 @@
     "avgMin": "Keskmine (min)",
     "customerSupportId": "Nõustaja Id",
     "customerSupportDisplayName": "Nõustaja nimi",
+    "customerSupportFullName": "Nõustaja nimi",
     "barChart": "Tulpdiagramm",
     "pieChart": "Sektordiagramm",
     "lineChart": "Joondiagramm",
@@ -195,7 +218,12 @@
     "value": "Väärtus",
     "promoters": "Soovitajad",
     "passives": "Neutraalsed",
-    "detractors": "Kriitikud"
+    "detractors": "Kriitikud",
+    "totalPages": "Total Pages",
+    "firstName": "Ees nimi",
+    "lastName": "Perekonnanimi",
+    "comment": "Kommentaar",
+    "feebackText": "Tagasiside"
   },
   "reports": {
     "get-chat-count-total": "Vestluste koguarv",
@@ -258,7 +286,7 @@
     "incorrect_apikey_message": "API võti või API võtme ID ei olnud õiged",
     "correct_apikey_title": "API seaded salvestatud",
     "correct_apikey_message": "API võti ja API võtme ID kinnitatud",
-    "avgWaitingTimeSeconds": "Average (Sec)",
+    "avgWaitingTimeSeconds": "Keskmine (Sec)",
     "receivedChats": "receivedChats",
     "forwardedChats": "forwardedChats",
     "forwardedExternally": "forwardedExternally",
@@ -300,10 +328,13 @@
       "popupNotifications": "Pop-up märguanded",
       "newUnansweredChat": "Uus vastamata vestlus",
       "newForwardedChat": "Uus suunatud vestlus",
+      "newForwardedChatTitle": "Suunatud vestlus",
+      "newForwardedChatMessage": "Sulle suunati uus vestlus!",
       "newValidationMessage": "Uus teade kinnitamiseks",
       "useAutocorrect": "Teksti autokorrektor",
       "required": "Nõutud",
-      "invalidemail": "Kehtetu e-posti"
+      "invalidemail": "Kehtetu e-posti",
+      "statusCommentUpdated": "Staatuse täpsustus uuendatud"
     }
   },
   "roles": {
@@ -385,6 +416,8 @@
       "forwarded": "Suunatud",
       "addACommentToTheConversation": "Lisa vestlusele kommentaar",
       "rating": "Hinnang",
+      "chosenCsa": "Valitud nõustaja(d)",
+      "chosenColumn": "Valitud tulba(d)",
       "feedback": "Tagasiside"
     },
     "plainEvents": {

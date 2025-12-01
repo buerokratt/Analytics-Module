@@ -12,7 +12,7 @@ declaration:
         type: string
         description: "Body field 'end_date'"
       - field: excluded_csas
-        type: array
+        type: object
         description: "Body field 'excluded_csas'"
       - field: metric
         type: string
@@ -20,6 +20,12 @@ declaration:
       - field: start_date
         type: string
         description: "Body field 'start_date'"
+      - field: urls
+        type: array
+        description: "Body field 'urls'"
+      - field: showTest
+        type: boolean
+        description: "Body field 'showTest'"
 
 check_for_required_parameters:
   switch:
@@ -36,6 +42,8 @@ post_step:
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
       excluded_csas: ${incoming.body.excluded_csas}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: result
 
 return_value:

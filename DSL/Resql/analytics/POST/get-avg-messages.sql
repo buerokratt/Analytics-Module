@@ -1,7 +1,15 @@
 WITH chats AS (
     SELECT DISTINCT base_id
     FROM chat
-    WHERE created::date BETWEEN :start::date AND :end::date
+    WHERE (
+        array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+            OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+        )
+      AND (
+        :showTest = TRUE
+            OR chat.test = FALSE
+        )
+        AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
         AND EXISTS (
             SELECT 1
             FROM message
@@ -11,11 +19,11 @@ WITH chats AS (
 )
 SELECT COALESCE(AVG(num_messages),0)
 FROM (
-        SELECT COUNT(DISTINCT base_id) AS num_messages
-        FROM "message"
-        WHERE chat_base_id IN (
-                SELECT base_id
-                FROM chats
-            )
-        GROUP BY chat_base_id
-    ) AS msg_counts;
+         SELECT COUNT(*) AS num_messages
+         FROM message
+         WHERE chat_base_id IN (
+             SELECT base_id
+             FROM chats
+         )
+         GROUP BY chat_base_id
+     ) AS msg_counts;

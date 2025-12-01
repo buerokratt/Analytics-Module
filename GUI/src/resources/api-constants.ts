@@ -33,8 +33,8 @@ export const overviewMetricPreferences = (): string => {
   return baseUrl + '/overview/preferences';
 };
 
-export const overviewMetrics = (metrics: string): string => {
-  return baseUrl + `/overview/metrics?metrics=${metrics}`;
+export const overviewMetrics = (): string => {
+  return baseUrl + `/overview/metrics`;
 };
 
 export const geBykAvgResponseTime = (): string => {
@@ -137,4 +137,8 @@ export const getDurationChats = (): string => {
 
 export const getIdleChats = (): string => {
   return baseUrl + '/chats/idle-count';
+};
+
+export const getBykEndedChats = (): string => {
+  return baseUrl + '/chats/byk-ended-count';
 };

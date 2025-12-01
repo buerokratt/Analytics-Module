@@ -1,31 +1,40 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { overviewMetrics } from '../../../resources/api-constants';
 import { OverviewMetricData, OverviewMetricPreference } from '../../../types/overview-metrics';
-import { reorderItem } from '../../../util/reorder-array';
 import DraggableCard from '../DraggableCard';
 import './styles.scss';
-import { request } from '../../../util/axios-client';
+import { Methods, request } from '../../../util/axios-client';
+import {getDomainsArray} from "../../../util/multiDomain-utils";
+import { endOfDay, formatISO, startOfDay } from 'date-fns';
+import { getShowTestData } from 'util/testChat-utils';
+const multiDomainsEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN;
 
 type Props = {
   metricPreferences: OverviewMetricPreference[];
+  updateKey: number;
   saveReorderedMetric: (metric: OverviewMetricPreference, newIndex: number) => void;
+  moveMetric: (metric: string, newIndex: number) => void;
 };
 
-const MainMetricsArea = ({ metricPreferences, saveReorderedMetric }: Props) => {
+const MainMetricsArea = ({ metricPreferences, updateKey,saveReorderedMetric, moveMetric }: Props) => {
   const [metrics, setMetrics] = useState<OverviewMetricData[]>([]);
+  const [currentKey, setCurrentKey] = useState<number>(0);
 
   useEffect(() => {
-    if (metricPreferences.length > 0) fetchMetrics(metricPreferences);
+    const mandatoryCondition = metricPreferences.length > 0;
+    const optionalCondition = updateKey > currentKey;
+    const shouldFetch = mandatoryCondition || (mandatoryCondition && optionalCondition);
+    if (shouldFetch) fetchMetrics(metricPreferences);
     const interval = setInterval(() => fetchMetrics(metricPreferences), 30000);
     return () => clearInterval(interval);
-  }, [metricPreferences]);
+  }, [metricPreferences,updateKey]);
 
   const fetchMetrics = async (metricPreferences: OverviewMetricPreference[]) => {
     const metricsToFetch = metricPreferences.filter((m) => m.active);
 
     const noRemovedMetrics = metrics.every((m) => metricsToFetch.find((mf) => mf.metric === m.metric));
     const noNewMetrics = metricsToFetch.every((mf) => metrics.find((m) => mf.metric === m.metric));
-    if (noRemovedMetrics && noNewMetrics) {
+    if (noRemovedMetrics && noNewMetrics && updateKey < currentKey) {
       setMetrics(
         metricsToFetch.map((r) => ({
           metric: r.metric,
@@ -39,10 +48,20 @@ const MainMetricsArea = ({ metricPreferences, saveReorderedMetric }: Props) => {
     }
 
     const metricsResponse: any = await request({
-      url: overviewMetrics(metricsToFetch.map((e) => e.metric).join(',')),
+      url: overviewMetrics(),
       withCredentials: true,
+      method: Methods.post,
+      data: {
+        urls: multiDomainsEnabled?.toLowerCase() === 'true' ? getDomainsArray() : ['none'],
+        showTest: getShowTestData(),
+        metrics: metricsToFetch.map((e) => e.metric).join(','),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        startDate: formatISO(startOfDay(new Date())),
+        endDate: formatISO(endOfDay(new Date())),
+      },
     });
     const results = metricsResponse.response;
+    setCurrentKey(updateKey);
 
     setMetrics(
       metricsToFetch.map((e) => {
@@ -55,12 +74,6 @@ const MainMetricsArea = ({ metricPreferences, saveReorderedMetric }: Props) => {
         };
       })
     );
-  };
-
-  const moveMetric = (metric: string, target: number) => {
-    setMetrics((metrics) => {
-      return reorderItem<OverviewMetricData>(metrics, (m) => m.metric === metric, target);
-    });
   };
 
   const renderCards = useCallback(

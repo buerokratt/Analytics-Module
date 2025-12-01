@@ -20,6 +20,12 @@ declaration:
       - field: start
         type: string
         description: "Body field 'start'"
+      - field: urls
+        type: array
+        description: "Body field 'urls'"
+      - field: showTest
+        type: boolean
+        description: "Body field 'showTest'"
 
 set_variables:
   assign:
@@ -34,9 +40,6 @@ get-timescale:
       end: ${incoming.body.end}
       period: ${incoming.body.period}
   result: times
-
-metrics_debug_log_times:
-  log: ${times.response.body}
 
 check-get-chat-count-total:
   switch:
@@ -55,10 +58,9 @@ get-chat-count-total:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_chat_count_total_result
-
-metrics_debug_log_get_chat_count_total:
-  log: ${get_chat_count_total_result.response.body}
 
 check-get-chat-count-no-csa:
   switch:
@@ -77,10 +79,9 @@ get-chat-count-no-csa:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_chat_count_no_csa_result
-
-metrics_debug_log_get_chat_count_no_csa:
-  log: ${get_chat_count_no_csa_result.response.body}
 
 check-get-avg-waiting-time:
   switch:
@@ -99,10 +100,9 @@ get-avg-waiting-time:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_waiting_time_result
-
-metrics_debug_log_get_avg_waiting_time:
-  log: ${get_avg_waiting_time_result.response.body}
 
 check-get-avg-messages:
   switch:
@@ -121,10 +121,9 @@ get-avg-messages:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_messages_result
-
-metrics_debug_log_get_avg_messages:
-  log: ${get_avg_messages_result.response.body}
 
 check-get-avg-time:
   switch:
@@ -143,10 +142,9 @@ get-avg-time:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_time_result
-
-metrics_debug_log_get_avg_time:
-  log: ${get_avg_time_result.response.body}
 
 check-get-avg-time-no-csa:
   switch:
@@ -165,10 +163,9 @@ get-avg-time-no-csa:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_time_no_csa_result
-
-metrics_debug_log_get_avg_time_no_csa:
-  log: ${get_avg_time_no_csa_result.response.body}
 
 check-get-avg-time-csa:
   switch:
@@ -187,10 +184,9 @@ get-avg-time-csa:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_time_csa_result
-
-metrics_debug_log_get_avg_time_csa:
-  log: ${get_avg_time_csa_result.response.body}
 
 check-get-avg-session-length-client-left:
   switch:
@@ -209,10 +205,9 @@ get-avg-session-length-client-left:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_session_length_client_left_result
-
-metrics_debug_log_get_avg_session_length_client_left:
-  log: ${get_avg_session_length_client_left_result.response.body}
 
 check-get-avg-session-length-csa:
   switch:
@@ -231,10 +226,9 @@ get-avg-session-length-csa:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_session_length_csa_result
-
-metrics_debug_log_get_avg_session_length_csa:
-  log: ${get_avg_session_length_csa_result.response.body}
 
 check-get-avg-session-length-no-csa:
   switch:
@@ -253,10 +247,9 @@ get-avg-session-length-no-csa:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_session_length_no_csa_result
-
-metrics_debug_log_get_avg_session_length_no_csa:
-  log: ${get_avg_session_length_no_csa_result.response.body}
 
 check-get-avg-response-time:
   switch:
@@ -275,17 +268,13 @@ get-avg-response-time:
     body:
       start: ${times.response.body[0].start}
       end: ${times.response.body[0].end}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
   result: get_avg_response_time_result
-
-metrics_debug_log_get_avg_response_time:
-  log: ${get_avg_response_time_result.response.body}
 
 gather_responses:
   assign:
     results: ${[ get_chat_count_total_result.response.body, get_chat_count_no_csa_result.response.body, get_avg_waiting_time_result.response.body, get_avg_messages_result.response.body, get_avg_time_result.response.body, get_avg_time_no_csa_result.response.body, get_avg_time_csa_result.response.body, get_avg_session_length_client_left_result.response.body, get_avg_session_length_csa_result.response.body, get_avg_session_length_no_csa_result.response.body, get_avg_response_time_result.response.body ]}
-
-metrics_debug_log_gather_responses:
-  log: ${results}
 
 return:
   return: ${results}

@@ -2,7 +2,7 @@ declaration:
   call: declare
   version: 0.1
   description: "Decription placeholder for 'METRICS'"
-  method: get
+  method: post
   accepts: json
   returns: json
   namespace: analytics
@@ -10,11 +10,26 @@ declaration:
     params:
       - field: metrics
         type: string
-        description: "Parameter 'metrics'"
+        description: "Body field 'metrics'"
+      - field: urls
+        type: object
+        description: "Body field 'urls'"
+      - field: showTest
+        type: boolean
+        description: "Body field 'showTest'"
+      - field: timezone
+        type: string
+        description: "Body field 'timezone'"  
+      - field: startDate
+        type: string
+        description: "Body field 'startDate'"  
+      - field: endDate
+        type: string
+        description: "Body field 'endDate'"
 
 extract_request_data:
   assign:
-    requestedMetric: ${incoming.params.metrics}
+    requestedMetric: ${incoming.body.metrics}
     res1: null
     res2: null
     res3: null
@@ -26,6 +41,14 @@ extract_request_data:
     res9: null
     res10: null
     res11: null
+    urls: ${incoming.body.urls}
+    showTest: ${incoming.body.showTest}
+    timezone: ${incoming.body.timezone}
+    start: ${incoming.body.startDate}
+    end: ${incoming.body.endDate}
+
+log_step:
+  log: "start date is ${start}, end date is ${end}"
 
 check1:
   switch:
@@ -99,6 +122,9 @@ getTotalChatsDayResults:
     url: "[#ANALYTICS_RESQL]/overview-total-chats"
     body:
       group_period: 'day'
+      urls: ${urls}
+      showTest: ${showTest}
+      timezone: ${timezone}
   result: res1
   next: check2
 
@@ -108,6 +134,9 @@ getTotalChatsMonthResults:
     url: "[#ANALYTICS_RESQL]/overview-total-chats"
     body:
       group_period: 'month'
+      urls: ${urls}
+      showTest: ${showTest}
+      timezone: ${timezone}
   result: res2
   next: check3
 
@@ -117,6 +146,9 @@ getTotalChatsNoCSAResults:
     url: "[#ANALYTICS_RESQL]/overview-total-chats-no-csa"
     body:
       group_period: 'day'
+      urls: ${urls}
+      showTest: ${showTest}
+      timezone: ${timezone}
   result: res3
   next: check4
 
@@ -126,6 +158,9 @@ getAvgChatsMonthResults:
     url: "[#ANALYTICS_RESQL]/overview-avg-chats"
     body:
       group_period: 'month'
+      urls: ${urls}
+      showTest: ${showTest}
+      timezone: ${timezone}
   result: res4
   next: check5
 
@@ -135,6 +170,9 @@ getAvgChatsWeekResults:
     url: "[#ANALYTICS_RESQL]/overview-avg-chats"
     body:
       group_period: 'week'
+      urls: ${urls}
+      showTest: ${showTest}
+      timezone: ${timezone}
   result: res5
   next: check6
 
@@ -144,6 +182,9 @@ getAvgChatsNoCSAMonthResult:
     url: "[#ANALYTICS_RESQL]/overview-avg-chats-no-csa"
     body:
       group_period: 'month'
+      urls: ${urls}
+      showTest: ${showTest}
+      timezone: ${timezone}
   result: res6
   next: check7
 
@@ -153,6 +194,9 @@ getAvgChatsNoCSAWeekResult:
     url: "[#ANALYTICS_RESQL]/overview-avg-chats-no-csa"
     body:
       group_period: 'week'
+      urls: ${urls}
+      showTest: ${showTest}
+      timezone: ${timezone}
   result: res7
   next: check8
 
@@ -162,6 +206,9 @@ getAvgWaitingTimeDayResult:
     url: "[#ANALYTICS_RESQL]/overview-avg-waiting-time"
     body:
       group_period: 'day'
+      urls: ${urls}
+      showTest: ${showTest}
+      timezone: ${timezone}
   result: res8
   next: check9
 
@@ -171,6 +218,9 @@ getAvgWaitingTimeWeekResult:
     url: "[#ANALYTICS_RESQL]/overview-avg-waiting-time"
     body:
       group_period: 'week'
+      urls: ${urls}
+      showTest: ${showTest}
+      timezone: ${timezone}
   result: res9
   next: check10
 
@@ -178,6 +228,10 @@ getTotalForwardedChatsResult:
   call: http.post
   args:
     url: "[#ANALYTICS_RESQL]/overview-total-forwarded-chats"
+    body:
+      urls: ${urls}
+      showTest: ${showTest}
+      timezone: ${timezone}
   result: res10
   next: check11
 
@@ -185,6 +239,12 @@ getChatActivityResult:
   call: http.post
   args:
     url: "[#ANALYTICS_RESQL]/overview-chat-activity-chart"
+    body:
+      urls: ${urls}
+      showTest: ${showTest}
+      timezone: ${timezone}
+      start: ${start}
+      end: ${end}
   result: res11
   next: assignResponse
 

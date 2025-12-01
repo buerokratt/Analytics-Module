@@ -9,7 +9,7 @@ declaration:
   allowlist:
     body:
       - date_rows:
-        type: array
+        type: object
         description: "Array of string arrays for the date rows at the top of the XSLX file"
       - field: end
         type: string
@@ -18,11 +18,17 @@ declaration:
         type: string
         description: "Body field 'metrics'"
       - field: metric_names
-        type: array
+        type: object
         description: "Localized metric names"
       - field: start
         type: string
         description: "Body field 'start'"
+      - field: urls
+        type: array
+        description: "Body field 'urls'"
+      - field: showTest
+        type: boolean
+        description: "Body field 'showTest'"
 
 get_metrics:
   call: http.post
@@ -32,6 +38,8 @@ get_metrics:
       metrics: ${incoming.body.metrics}
       start: ${incoming.body.start}
       end: ${incoming.body.end}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
       period: "never"
   result: metrics
 

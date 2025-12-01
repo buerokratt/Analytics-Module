@@ -1,0 +1,12 @@
+.chart-tooltip {
+  background: white;
+  border: 1px solid #ccc;
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+
+  &__header {
+    grid-column: span var(--columns);
+    text-align: center;
+  }
+}

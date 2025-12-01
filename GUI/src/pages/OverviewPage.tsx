@@ -14,6 +14,11 @@ import { formatDate } from '../util/charts-utils';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { ChartData } from 'types/chart';
+import useStore from "../store/user/store";
+import {getDomainsArray} from "../util/multiDomain-utils";
+import { getShowTestData } from 'util/testChat-utils';
+import { endOfDay, formatISO, startOfDay } from 'date-fns';
+const multiDomainsEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN;
 
 const OverviewPage: React.FC = () => {
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([]);
@@ -22,6 +27,17 @@ const OverviewPage: React.FC = () => {
     colors: [],
   });
   const [drawerIsHidden, setDrawerIsHidden] = useState(true);
+  const [updateKey, setUpdateKey] = useState<number>(0)
+  const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
+
+
+  if(multiDomainEnabled) {
+    useStore.subscribe((state, prevState) => {
+      if(JSON.stringify(state.userDomains) !== JSON.stringify(prevState.userDomains)) {
+        setUpdateKey(prevState => prevState + 1);
+      }
+    });
+  }
 
   const { t } = useTranslation();
 
@@ -31,20 +47,31 @@ const OverviewPage: React.FC = () => {
 
     const interval = setInterval(() => fetchChartData(), 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [updateKey]);
 
   const fetchMetricPreferences = async () => {
     const result: any = await request({ url: overviewMetricPreferences(), withCredentials: true });
-
     setMetricPreferences(result.response);
   };
 
   const fetchChartData = async () => {
-    const result: any = await request({ url: overviewMetrics('chat-activity'), withCredentials: true });
+    const result: any = await request({
+      url: overviewMetrics(),
+      withCredentials: true,
+      method: Methods.post,
+      data: {
+        urls: multiDomainsEnabled?.toLowerCase() === 'true' ? getDomainsArray() : ['none'],
+        showTest: getShowTestData(),
+        metrics: 'chat-activity',
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        startDate: formatISO(startOfDay(new Date())),
+        endDate: formatISO(endOfDay(new Date())),
+      },
+    });
 
     const response = result.response['chat-activity'].map((entry: any) => ({
       ...translateChartKeys(entry),
-      dateTime: new Date(entry.created).getTime(),
+      dateTime: new Date(entry.ended).getTime() + new Date(entry.ended).getTimezoneOffset() * 60 * 1000,
     }));
 
     const chartData = {
@@ -62,28 +89,33 @@ const OverviewPage: React.FC = () => {
     setChartData(chartData);
   };
 
-  const updateMetricPreference = async (metric: OverviewMetricPreference) => {
-    const result: any = await request({
+  const updateMetricPreference = async (metrics: OverviewMetricPreference[]) => {
+    await request({
       url: overviewMetricPreferences(),
       method: Methods.post,
       withCredentials: true,
-      data: {
-        metric: metric.metric,
-        ordinality: metric.ordinality,
-        active: metric.active,
-      },
+      data: { preferences: JSON.stringify(metrics) },
     });
-    setMetricPreferences(result.response);
   };
 
   const toggleMetricActive = (metric: OverviewMetricPreference) => {
-    setMetricPreferences((metrics) => metrics.map((m) => (m === metric ? { ...metric, active: !metric.active } : m)));
-    updateMetricPreference({ ...metric, active: !metric.active });
+    const updatedMetrics = metricPreferences.map((m) => (m === metric ? { ...metric, active: !metric.active } : m));
+    setMetricPreferences(updatedMetrics);
+    updateMetricPreference(updatedMetrics);
   };
 
-  const saveReorderedMetric = useCallback((metric: OverviewMetricPreference, newIndex: number) => {
-    updateMetricPreference({ ...metric, ordinality: newIndex });
-  }, []);
+  const saveReorderedMetric = useCallback(
+    (metric: OverviewMetricPreference, newIndex: number) => {
+        const updatedMetrics = reorderItem<OverviewMetricPreference>(
+            metricPreferences,
+            (m) => m.metric === metric.metric,
+            newIndex
+        );
+
+        updateMetricPreference(updatedMetrics);
+    },
+    [metricPreferences]
+  );
 
   const moveMetric = (metric: string, target: number) => {
     setMetricPreferences((metrics) =>
@@ -94,7 +126,7 @@ const OverviewPage: React.FC = () => {
   const translateChartKeys = (obj: any) =>
     Object.keys(obj).reduce(
       (acc, key) =>
-        key === 'created'
+        key === 'created' || key === 'ended'
           ? acc
           : {
               ...acc,
@@ -139,6 +171,8 @@ const OverviewPage: React.FC = () => {
       </Drawer>
 
       <MainMetricsArea
+        updateKey={updateKey}
+        moveMetric={moveMetric}
         metricPreferences={metricPreferences}
         saveReorderedMetric={saveReorderedMetric}
       />

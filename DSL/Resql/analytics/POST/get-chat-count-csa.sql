@@ -1,6 +1,6 @@
 SELECT COUNT(DISTINCT base_id)
 FROM chat
-WHERE created::date BETWEEN :start::date AND :end::date
+WHERE created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
   AND EXISTS
     (SELECT 1
      FROM message

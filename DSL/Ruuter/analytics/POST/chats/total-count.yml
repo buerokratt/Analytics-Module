@@ -20,6 +20,12 @@ declaration:
       - field: start_date
         type: string
         description: "Body field 'start_date'"
+      - field: urls
+        type: array
+        description: "Body field 'urls'"
+      - field: showTest
+        type: boolean
+        description: "Body field 'showTest'"
 
 check_for_body:
   switch:
@@ -32,6 +38,8 @@ extract_request_data:
     start: ${incoming.body.start_date}
     end: ${incoming.body.end_date}
     period: ${incoming.body.period}
+    urls: ${incoming.body.urls}
+    showTest: ${incoming.body.showTest}
 
 check_for_required_parameters:
   switch:
@@ -62,6 +70,8 @@ byk:
       period: ${period}
       start: ${start}
       end: ${end}
+      urls: ${urls}
+      showTest: ${showTest}
   result: results
 
 assign_byk:
@@ -86,6 +96,8 @@ csa:
       period: ${period}
       start: ${start}
       end: ${end}
+      urls: ${urls}
+      showTest: ${showTest}
   result: results
 
 assign_csa:
@@ -110,6 +122,8 @@ total:
       period: ${period}
       start: ${start}
       end: ${end}
+      urls: ${urls}
+      showTest: ${showTest}
   result: results
 
 assign_total:

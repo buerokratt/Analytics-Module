@@ -20,7 +20,7 @@ import {
     translateChartKeys,
 } from '../util/charts-utils';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {Methods, request} from '../util/axios-client';
 import withAuthorization, {ROLES} from '../hoc/with-authorization';
 import useStore from '../store/user/store';
@@ -64,13 +64,20 @@ const FeedbackPage: React.FC = () => {
     const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
 
-    if(multiDomainEnabled) {
-        useStore.subscribe((state, prevState) => {
-            if(JSON.stringify(state.userDomains) !== JSON.stringify(prevState.userDomains)) {
-                setUpdateKey(prevState => prevState + 1);
+    useEffect(() => {
+        if (!multiDomainEnabled) return;
+
+        const unsubscribe = useStore.subscribe((state, prevState) => {
+            if (
+                JSON.stringify(state.userDomains) !==
+                JSON.stringify(prevState.userDomains)
+            ) {
+                setUpdateKey((v) => v + 1);
             }
         });
-    }
+
+        return () => unsubscribe();
+    }, [multiDomainEnabled, useStore]);
 
     useEffect(() => {
         setAdvisorsList(advisors.current);
@@ -128,7 +135,10 @@ const FeedbackPage: React.FC = () => {
 
     const showNegativeChart = currentConfigs?.metric === 'negative_feedback';
 
-    const [configsSubject] = useState(() => new Subject());
+    const [configsSubject] = useState(
+        () => new BehaviorSubject<any>(null)
+    );
+
     useEffect(() => {
         const subscription = configsSubject
             .pipe(

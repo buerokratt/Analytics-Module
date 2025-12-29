@@ -229,8 +229,6 @@ const FeedbackPage: React.FC = () => {
                     };
                 }),
             };
-
-            console.log('chartData', chartData)
         } catch (err) {
             console.error("Failed: ", err)
         }

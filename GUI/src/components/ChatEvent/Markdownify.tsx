@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Markdown from 'markdown-to-jsx';
+import sanitizeHtml from 'sanitize-html';
 
 interface MarkdownifyProps {
   message: string | undefined;
@@ -51,9 +52,11 @@ const LinkPreview: React.FC<{
 const hasSpecialFormat = (m: string) => m.includes('\n\n') && m.indexOf('.') > 0 && m.indexOf(':') > m.indexOf('.');
 
 function formatMessage(message?: string): string {
-  if (!message) return '';
+  const sanitizedMessage = sanitizeHtml(message ?? '');
 
-  const filteredMessage = message
+  if (!sanitizedMessage) return '';
+
+  const filteredMessage = sanitizedMessage
     .replaceAll(/\\?\$b\w*/g, '')
     .replaceAll(/\\?\$v\w*/g, '')
     .replaceAll(/\\?\$g\w*/g, '');

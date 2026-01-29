@@ -1,13 +1,27 @@
-WITH chat_csas AS (
+WITH rating_config AS (
+    SELECT value AS is_five_rating_scale
+    FROM configuration
+    WHERE key = 'isFiveRatingScale'
+      AND id IN (SELECT max(id) FROM configuration WHERE key = 'isFiveRatingScale' GROUP BY key)
+      AND NOT deleted
+),
+chat_csas AS (
     SELECT DISTINCT base_id,
     first_value(created) over (
             PARTITION by base_id
             ORDER BY updated
             ) AS created,
-    last_value(feedback_rating) over (
-            PARTITION by base_id
-            ORDER BY updated
-            ) AS feedback_rating
+    CASE 
+        WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) 
+        THEN last_value(feedback_rating_five) over (
+                PARTITION by base_id
+                ORDER BY updated
+                )
+        ELSE last_value(feedback_rating) over (
+                PARTITION by base_id
+                ORDER BY updated
+                )
+    END AS feedback_rating_dynamic
     FROM chat
     WHERE (
         array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
@@ -25,14 +39,18 @@ WITH chat_csas AS (
                 AND message.author_role = 'end-user'
         )
         AND STATUS = 'ENDED'
-        AND feedback_rating IS NOT NULL
+        AND CASE 
+            WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) 
+            THEN feedback_rating_five IS NOT NULL
+            ELSE feedback_rating IS NOT NULL
+        END
         AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
 ),
 point_nps AS (
     SELECT date_trunc(:metric, created)::text AS date_time,
         coalesce(CAST(((
-           SUM(CASE WHEN feedback_rating BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 -
-           SUM(CASE WHEN feedback_rating BETWEEN 0 AND 6 THEN 1 ELSE 0 END)
+           SUM(CASE WHEN feedback_rating_dynamic BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 -
+           SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 6 THEN 1 ELSE 0 END)
            ) / COUNT(base_id) * 100) AS int), 0) AS nps
     FROM chat_csas
     GROUP BY date_time
@@ -40,8 +58,8 @@ point_nps AS (
 ),
 period_nps AS (
     SELECT coalesce(CAST(((
-           SUM(CASE WHEN feedback_rating BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 -
-           SUM(CASE WHEN feedback_rating BETWEEN 0 AND 6 THEN 1 ELSE 0 END)
+           SUM(CASE WHEN feedback_rating_dynamic BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 -
+           SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 6 THEN 1 ELSE 0 END)
            ) / COUNT(base_id) * 100) AS int), 0) AS nps
     FROM chat_csas
 )

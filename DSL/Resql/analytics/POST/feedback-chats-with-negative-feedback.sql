@@ -154,6 +154,7 @@ ORDER BY
             THEN chat.feedback_rating_five 
             ELSE chat.feedback_rating 
         END 
-    END ASC
+    END ASC,
+    chat.base_id ASC
 OFFSET ((GREATEST(:page, 1) - 1) * :page_size)
 LIMIT :page_size;

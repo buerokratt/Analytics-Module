@@ -1,8 +1,8 @@
 import {DomainSelection} from "../../types/widgetModels";
-import {api} from "./api";
+import { analyticsApi } from "./api";
 
 export async function getWidgetData(userId: string) {
-    const { data } = await api.get<DomainSelection[]>('accounts/widget-data', {
+    const { data } = await analyticsApi.get<DomainSelection[]>('accounts/widget-data', {
         params: {
             user_id: userId,
         },

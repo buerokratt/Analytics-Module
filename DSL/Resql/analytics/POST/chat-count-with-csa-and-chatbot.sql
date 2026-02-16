@@ -46,7 +46,7 @@ csa_ids AS (
   AND EXISTS (
     SELECT 1 FROM message m
     WHERE m.chat_base_id = b.base_id
-      AND m.event = 'taken-over' or m.event = 'pending-assigned'
+      AND (m.event = 'taken-over' or m.event = 'pending-assigned' or m.event = 'forwarded_to_backoffice')
   )
   AND (
     :showTest = TRUE

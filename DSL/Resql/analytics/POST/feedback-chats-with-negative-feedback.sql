@@ -28,7 +28,7 @@ n_chats AS (
       AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
       AND CASE 
           WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) 
-          THEN feedback_rating_five IS NOT NULL AND feedback_rating_five <= 5
+          THEN feedback_rating_five IS NOT NULL AND feedback_rating_five <= 3
           ELSE feedback_rating IS NOT NULL AND feedback_rating <= 5
       END
     GROUP BY base_id
@@ -154,6 +154,7 @@ ORDER BY
             THEN chat.feedback_rating_five 
             ELSE chat.feedback_rating 
         END 
-    END ASC
+    END ASC,
+    chat.base_id ASC
 OFFSET ((GREATEST(:page, 1) - 1) * :page_size)
 LIMIT :page_size;

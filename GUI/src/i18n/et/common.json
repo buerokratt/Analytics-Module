@@ -418,7 +418,8 @@
       "rating": "Hinnang",
       "chosenCsa": "Valitud nõustaja(d)",
       "chosenColumn": "Valitud tulba(d)",
-      "feedback": "Tagasiside"
+      "feedback": "Tagasiside",
+      "statusAddedDate": "Staatuse lisamise kuupäev"
     },
     "plainEvents": {
       "answered": "Vastatud",

@@ -380,7 +380,8 @@
       "rating": "Rating",
       "feedback": "Feedback",
       "chosenCsa": "Chosen csa(s)",
-      "chosenColumn": "Chosen column(s)"
+      "chosenColumn": "Chosen column(s)",
+      "statusAddedDate": "Status added date"
     },
     "plainEvents": {
       "answered": "Answered",

@@ -2,7 +2,8 @@ WITH rating_config AS (
     SELECT value AS is_five_rating_scale
     FROM configuration
     WHERE key = 'isFiveRatingScale'
-      AND id IN (SELECT max(id) FROM configuration WHERE key = 'isFiveRatingScale' GROUP BY key)
+      AND "domain" IS NULL
+      AND id IN (SELECT max(id) FROM configuration WHERE key = 'isFiveRatingScale' AND "domain" IS NULL)
       AND NOT deleted
 ),
 MaxChatHistoryComments AS (
@@ -93,7 +94,7 @@ MaxChats AS (
       AND c.ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
       AND CASE 
           WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) 
-          THEN c.feedback_rating_five IS NOT NULL AND c.feedback_rating_five <= 5
+          THEN c.feedback_rating_five IS NOT NULL AND c.feedback_rating_five <= 3
           ELSE c.feedback_rating IS NOT NULL AND c.feedback_rating <= 5
       END
     GROUP BY base_id

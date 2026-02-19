@@ -84,8 +84,8 @@ MaxChats AS (
     WHERE ended IS NOT NULL
       AND status = 'ENDED'
       AND (
-        array_length(ARRAY[[]]::TEXT[], 1) IS NULL
-        OR c.end_user_url LIKE ANY(ARRAY[[]]::TEXT[])
+        array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+        OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
       )
       AND (
         :showTest = TRUE

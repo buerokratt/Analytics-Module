@@ -84,19 +84,19 @@ MaxChats AS (
     WHERE ended IS NOT NULL
       AND status = 'ENDED'
       AND (
-        array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
-        OR c.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+        array_length(ARRAY[[]]::TEXT[], 1) IS NULL
+        OR c.end_user_url LIKE ANY(ARRAY[[]]::TEXT[])
       )
       AND (
         :showTest = TRUE
         OR c.test = FALSE
       )
       AND c.ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
-      AND CASE 
-          WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) 
-          THEN c.feedback_rating_five IS NOT NULL AND c.feedback_rating_five <= 3
-          ELSE c.feedback_rating IS NOT NULL AND c.feedback_rating <= 5
-      END
+      AND (
+        (c.feedback_rating_five IS NOT NULL AND c.feedback_rating_five <= 3)
+        OR 
+        (c.feedback_rating IS NOT NULL AND c.feedback_rating <= 5)
+      )
     GROUP BY base_id
 ),
 EndedChatMessages AS (
@@ -218,12 +218,12 @@ SELECT
     ContactsMessage.content AS contacts_message,
     m.updated AS last_message_timestamp,
     c.feedback_text,
+    COALESCE(c.feedback_rating_five, c.feedback_rating) AS feedback_rating,
     CASE 
-        WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) 
-        THEN c.feedback_rating_five
-        ELSE c.feedback_rating
-    END AS feedback_rating,
-    is_five_rating_scale,
+        WHEN c.feedback_rating_five IS NOT NULL THEN 'true'
+        WHEN c.feedback_rating IS NOT NULL THEN 'false'
+        ELSE NULL
+    END AS is_five_rating_scale,
     nps,
     CSAFullNames.all_csa_names AS all_csa,
     CEIL(COUNT(*) OVER() / :page_size::DECIMAL) AS total_pages
@@ -238,7 +238,6 @@ LEFT JOIN ContactsMessage ON ContactsMessage.chat_base_id = c.base_id
 LEFT JOIN CSAFullNames ON CSAFullNames.base_id = c.base_id
 CROSS JOIN TitleVisibility
 CROSS JOIN NPS
-CROSS JOIN rating_config rc
 WHERE (
     (
         COALESCE(:customerSupportIds, '') = ''
@@ -293,20 +292,8 @@ ORDER BY
     CASE WHEN :sorting = 'status desc' THEN
         CASE WHEN m.event IS NULL OR m.event = '' THEN NULL ELSE m.event END
     END DESC NULLS LAST,
-    CASE WHEN :sorting = 'feedbackRating desc' THEN 
-        CASE 
-            WHEN rc.is_five_rating_scale = 'true' 
-            THEN c.feedback_rating_five 
-            ELSE c.feedback_rating 
-        END 
-    END DESC NULLS LAST,
-    CASE WHEN :sorting = 'feedbackRating asc' THEN 
-        CASE 
-            WHEN rc.is_five_rating_scale = 'true' 
-            THEN c.feedback_rating_five 
-            ELSE c.feedback_rating 
-        END 
-    END ASC NULLS LAST,
+    CASE WHEN :sorting = 'feedbackRating desc' THEN COALESCE(c.feedback_rating_five, c.feedback_rating) END DESC NULLS LAST,
+    CASE WHEN :sorting = 'feedbackRating asc' THEN COALESCE(c.feedback_rating_five, c.feedback_rating) END ASC NULLS LAST,
     CASE WHEN :sorting = 'customerSupportFullName asc' THEN
         COALESCE(NULLIF(array_to_string(CSAFullNames.all_csa_names, ', '), ''),
                 CASE WHEN c.customer_support_id = 'chatbot' THEN 'Bürokratt' END)
@@ -318,4 +305,3 @@ ORDER BY
     CASE WHEN :sorting = 'id asc' THEN c.base_id END ASC,
     CASE WHEN :sorting = 'id desc' THEN c.base_id END DESC
 OFFSET ((GREATEST(:page, 1) - 1) * :page_size) LIMIT :page_size;
-

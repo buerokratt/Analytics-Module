@@ -4,7 +4,7 @@ WITH latest_messages AS (
         message.event
     FROM message
     WHERE message.event IN (:events)
-    ORDER BY message.chat_base_id, message.updated DESC
+    ORDER BY message.chat_base_id, message.created DESC
 )
 SELECT
     date_trunc(:metric, chat.ended) AS date_time,

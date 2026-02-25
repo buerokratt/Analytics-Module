@@ -88,49 +88,52 @@ const FeedbackPage: React.FC = () => {
     }, [chartData, unit]);
 
     const [feedbackMetrics, setFeedbackMetrics] = useState<Option[]>([
-        {
-            id: 'statuses',
-            labelKey: 'feedback.statuses',
-            subOptions: statusOptions.map((id) => ({
-                id,
-                labelKey: `feedback.status_options.${id.toLowerCase()}`,
-                color: randomColor(),
-                isSelected: true,
-            })),
-            unit: t('units.chats') ?? 'chats',
-        },
-        {
-            id: 'burokratt_chats',
-            labelKey: 'feedback.burokratt_chats',
-            unit: t('units.nps') ?? 'nps',
-            subRadioOptions: [
-                {
-                    id: 'NPS',
-                    labelKey: 'feedback.status_options.nps',
-                    color: randomColor(),
-                },
-                {
-                    id: 'AVG',
-                    labelKey: 'feedback.status_options.average',
-                    color: randomColor(),
-                },
-            ],
-        },
-        {
-            id: 'advisor_chats',
-            labelKey: 'feedback.advisor_chats',
-            unit: t('units.nps') ?? 'nps',
-        },
-        {
-            id: 'selected_advisor_chats',
-            labelKey: 'feedback.selected_advisor_chats',
-            unit: t('units.nps') ?? 'nps',
-        },
-        {
-            id: 'negative_feedback',
-            labelKey: 'feedback.negative_feedback',
-            unit: t('units.feedback') ?? 'feedback',
-        },
+      {
+        id: 'statuses',
+        labelKey: 'feedback.statuses',
+        subOptions: [
+          ...statusOptions.map((id) => ({
+            id,
+            labelKey: `feedback.status_options.${id.toLowerCase()}`,
+            color: randomColor(),
+            isSelected: true,
+          })),
+          { id: 'total', labelKey: 'chats.totalCount', color: '#008000', isSelected: true },
+        ],
+        unit: t('units.chats') ?? 'chats',
+      },
+      {
+        id: 'burokratt_chats',
+        labelKey: 'feedback.burokratt_chats',
+        unit: t('units.nps') ?? 'nps',
+        subRadioOptions: [
+          {
+            id: 'NPS',
+            labelKey: 'feedback.status_options.nps',
+            color: randomColor(),
+          },
+          {
+            id: 'AVG',
+            labelKey: 'feedback.status_options.average',
+            color: randomColor(),
+          },
+        ],
+      },
+      {
+        id: 'advisor_chats',
+        labelKey: 'feedback.advisor_chats',
+        unit: t('units.nps') ?? 'nps',
+      },
+      {
+        id: 'selected_advisor_chats',
+        labelKey: 'feedback.selected_advisor_chats',
+        unit: t('units.nps') ?? 'nps',
+      },
+      {
+        id: 'negative_feedback',
+        labelKey: 'feedback.negative_feedback',
+        unit: t('units.feedback') ?? 'feedback',
+      },
     ]);
 
     const showNegativeChart = currentConfigs?.metric === 'negative_feedback';
@@ -184,7 +187,8 @@ const FeedbackPage: React.FC = () => {
     const fetchChatsStatuses = async (config: MetricOptionsState) => {
         setShowSelectAll(false);
         let chartData = {};
-        const events = config.options;
+        const events = (config.options || []).filter((e: string) => e !== 'total');
+        const eventsForApi = events.length > 0 ? events : statusOptions;
         try {
             const result: any = await request({
                 url: getChatsStatuses(),
@@ -194,8 +198,8 @@ const FeedbackPage: React.FC = () => {
                     metric: config?.groupByPeriod ?? 'day',
                     start_date: config?.start,
                     end_date: config?.end,
-                    events: events.length > 0 ? events : [],
-                    csa_events: events.length > 0 ? events : [],
+                    events: eventsForApi,
+                    csa_events: eventsForApi,
                     urls: getDomainsArray(),
                     showTest: getShowTestData()
                 },
@@ -209,25 +213,32 @@ const FeedbackPage: React.FC = () => {
                 }))
                 .reduce((a: any, b: any) => {
                     const dateRow = a.find((i: any) => i[chartDataKey] === b[chartDataKey]);
+                    const key = t(`feedback.plain_status_options.${b[t('chart.event')].toLowerCase()}`);
                     if (dateRow) {
-                        dateRow[t(`feedback.plain_status_options.${b[t('chart.event')].toLowerCase()}`)] = b[t('chart.count')];
+                        dateRow[key] = b[t('chart.count')];
                     } else {
-                        a.push({
-                            [chartDataKey]: b[chartDataKey],
-                            [t(`feedback.plain_status_options.${b[t('chart.event')].toLowerCase()}`)]: b[t('chart.count')],
-                        });
+                        a.push({ [chartDataKey]: b[chartDataKey], [key]: b[t('chart.count')] });
                     }
                     return a;
                 }, []);
 
+            const totalLabel = t('chats.totalCount');
+            if ((config.options || []).includes('total')) {
+                response.forEach((row: any) => {
+                    row[totalLabel] = Object.keys(row).reduce(
+                        (sum, k) => sum + (k === chartDataKey ? 0 : (row[k] || 0)),
+                        0
+                    );
+                });
+            }
+
+            const subOpts = feedbackMetrics[0].subOptions!;
             chartData = {
                 chartData: response,
-                colors: feedbackMetrics[0].subOptions!.map(({id, color}) => {
-                    return {
-                        id: t(`feedback.plain_status_options.${id.toLowerCase()}`),
-                        color,
-                    };
-                }),
+                colors: subOpts.map(({ id, color }) => ({
+                    id: id === 'total' ? totalLabel : t(`feedback.plain_status_options.${id.toLowerCase()}`),
+                    color,
+                })),
             };
         } catch (err) {
             console.error("Failed: ", err)

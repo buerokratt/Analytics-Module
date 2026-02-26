@@ -381,6 +381,7 @@
       "feedback": "Feedback",
       "chosenCsa": "Chosen csa(s)",
       "chosenColumn": "Chosen column(s)",
+      "statusAdder": "Status adder",
       "statusAddedDate": "Status added date"
     },
     "plainEvents": {

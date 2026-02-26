@@ -419,6 +419,7 @@
       "chosenCsa": "Valitud nõustaja(d)",
       "chosenColumn": "Valitud tulba(d)",
       "feedback": "Tagasiside",
+      "statusAdder": "Staatuse lisaja",
       "statusAddedDate": "Staatuse lisamise kuupäev"
     },
     "plainEvents": {

@@ -419,6 +419,8 @@
       "chosenCsa": "Valitud nõustaja(d)",
       "chosenColumn": "Valitud tulba(d)",
       "feedback": "Tagasiside",
+      "commentAuthor": "Kommentaari lisaja",
+      "commentAddedDate": "Kommentaari lisamise kuupäev",
       "statusAdder": "Staatuse lisaja",
       "statusAddedDate": "Staatuse lisamise kuupäev"
     },
@@ -493,6 +495,7 @@
       "requested-chat-forward-accepted": "Vestluse suunamine aktsepteeritud {{date}}",
       "requested-chat-forward-rejected": "Vestluse suunamine tagasi lükatud {{date}}",
       "message-read": "Loetud",
+      "read": "Loetud {{ date }}",
       "contact-information-skipped": "Kontaktandmeid ei saadetud",
       "unavailable-contact-information-fulfilled": "Kontaktandmed on antud",
       "unavailable_organization": "Asutus ei ole kättesaadav",

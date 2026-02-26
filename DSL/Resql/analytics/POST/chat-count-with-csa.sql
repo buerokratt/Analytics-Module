@@ -18,13 +18,13 @@ WHERE (:showTest = TRUE OR lp.test = FALSE)
     SELECT 1
     FROM message m
     WHERE m.chat_base_id = lp.base_id
-  AND m.author_role = 'backoffice-user'
-    )
+      AND m.author_role = 'backoffice-user'
+  )
   AND EXISTS (
     SELECT 1
     FROM message m
     WHERE m.chat_base_id = lp.base_id
-  AND m.event = 'taken-over' or m.event = 'pending-assigned'
-    )
+      AND (m.event = 'taken-over' OR m.event = 'pending-assigned')
+  )
 GROUP BY time
 ORDER BY time ASC;

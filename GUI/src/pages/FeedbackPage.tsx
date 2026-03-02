@@ -33,6 +33,8 @@ import {getDomainsArray} from "../util/multiDomain-utils";
 import {getShowTestData} from "../util/testChat-utils";
 import { endOfDay, formatISO, startOfDay } from 'date-fns';
 
+const FEEDBACK_Y_AXIS_MAX = 20;
+
 const statusOptions = [
     'CLIENT_LEFT_WITH_ACCEPTED',
     'CLIENT_LEFT_WITH_NO_RESOLUTION',
@@ -297,7 +299,8 @@ const FeedbackPage: React.FC = () => {
                 },
             });
 
-            chartData = mapDistributionChartData(result);
+            const body = result.response ?? result;
+            chartData = mapDistributionChartData(body);
         } catch (e) {
             console.error(e);
         }
@@ -336,8 +339,8 @@ const FeedbackPage: React.FC = () => {
                     showTest: getShowTestData()
                 },
             });
-
-            chartData = mapDistributionChartData(result);
+            const body = result.response ?? result;
+            chartData = mapDistributionChartData(body);
         } catch (e) {
             console.error(e);
         }
@@ -422,22 +425,33 @@ const FeedbackPage: React.FC = () => {
         return {result, response};
     };
 
-    const mapDistributionChartData = (result: any) => {
-        const {promoters, passives, detractors} = result.response[0];
+    const mapDistributionChartData = (result: any, isFiveScale?: boolean) => {
+        const response = result.response ?? result;
+        const raw = Array.isArray(response) ? response[0] : response;
+        const data = raw?.result?.value ? JSON.parse(raw.result.value) : (raw?.result ?? raw);
+        const distribution: { rating: number; count: number }[] = data?.distribution ?? [];
+        const totalFeedback = data?.total_feedback ?? 0;
+        const totalChats = data?.total_chats ?? 0;
+        const scaleIsFive = data?.is_five_scale ?? isFiveScale ?? false;
+
+        const chartData = distribution.map((r: { rating: number; count: number }) => ({
+            rating: r.rating,
+            count: r.count,
+            displayCount: Math.min(r.count, FEEDBACK_Y_AXIS_MAX),
+        }));
+
+        const colors = chartData.map((d: { rating: number }) => ({
+            id: String(d.rating),
+            color: randomColor(),
+        }));
+
         return {
-            chartData:
-                promoters === 0 && passives === 0 && detractors === 0
-                    ? []
-                    : [
-                        {[t('chart.promoters')]: promoters},
-                        {[t('chart.passives')]: passives},
-                        {[t('chart.detractors')]: detractors},
-                    ],
-            colors: [
-                {id: t('chart.promoters'), color: '#FF0000'},
-                {id: t('chart.passives'), color: '#0000FF'},
-                {id: t('chart.detractors'), color: '#00FF00'},
-            ],
+            chartData,
+            colors,
+            isRatingDistribution: true,
+            totalFeedback,
+            totalChats,
+            isFiveScale: scaleIsFive,
         };
     };
 
@@ -459,7 +473,7 @@ const FeedbackPage: React.FC = () => {
                     }
                 }
             />
-            {currentConfigs?.metric != 'negative_feedback' && (
+            {currentConfigs?.metric !== 'negative_feedback' && (
                 <MetricsCharts
                     title={currentMetric}
                     data={chartData}
@@ -469,7 +483,7 @@ const FeedbackPage: React.FC = () => {
                     unit={unit}
                 />
             )}
-            {showNegativeChart &&
+            {showNegativeChart && (
                 <ChatHistory
                     toastContext={toastContext}
                     displayDateFilter={false}
@@ -481,7 +495,7 @@ const FeedbackPage: React.FC = () => {
                     user={useStore.getState().userInfo}
                     userDomains={useStore}
                 />
-            }
+            )}
         </>
     );
 };

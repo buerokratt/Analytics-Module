@@ -13,8 +13,8 @@ chat_buerokratt AS (
             ORDER BY updated
             ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
         ) AS ended,
-        CASE 
-            WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) 
+        CASE
+            WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config)
             THEN last_value(feedback_rating_five) OVER (
                 PARTITION BY base_id
                 ORDER BY updated
@@ -30,7 +30,7 @@ chat_buerokratt AS (
     WHERE (
         array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
             OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
-        )
+    )
       AND (
         :showTest = TRUE
             OR chat.test = FALSE
@@ -42,8 +42,8 @@ chat_buerokratt AS (
           AND message.author_role = 'buerokratt'
     )
     AND status = 'ENDED'
-    AND CASE 
-        WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) 
+    AND CASE
+        WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config)
         THEN feedback_rating_five IS NOT NULL
         ELSE feedback_rating IS NOT NULL
     END
@@ -51,28 +51,50 @@ chat_buerokratt AS (
 ),
 point_nps AS (
     SELECT date_trunc(:metric, ended)::text AS date_time,
-           COALESCE(
-             CAST((
-               (
-                 SUM(CASE WHEN feedback_rating_dynamic BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 -
-                 SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 6 THEN 1 ELSE 0 END)
-               ) / NULLIF(COUNT(feedback_rating_dynamic), 0) * 100
-             ) AS int), 0) AS nps
+           CASE
+               WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) THEN
+                   ROUND(
+                       100.0 * SUM(CASE WHEN feedback_rating_dynamic IN (4, 5) THEN 1 ELSE 0 END)
+                           / NULLIF(COUNT(feedback_rating_dynamic), 0),
+                       2
+                   )
+               ELSE
+                   COALESCE(ROUND(
+                       (
+                           (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(feedback_rating_dynamic), 0))
+                           - (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 6 THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(feedback_rating_dynamic), 0))
+                       ) * 100,
+                       2
+                   ), 0)
+           END AS nps
     FROM chat_buerokratt
     GROUP BY date_time
     ORDER BY date_time
 ),
 period_nps AS (
-    SELECT COALESCE(
-             CAST((
-               (
-                 SUM(CASE WHEN feedback_rating_dynamic BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 -
-                 SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 6 THEN 1 ELSE 0 END)
-               ) / NULLIF(COUNT(feedback_rating_dynamic), 0) * 100
-             ) AS int), 0) AS nps
+    SELECT CASE
+               WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) THEN
+                   ROUND(
+                       100.0 * SUM(CASE WHEN feedback_rating_dynamic IN (4, 5) THEN 1 ELSE 0 END)
+                           / NULLIF(COUNT(feedback_rating_dynamic), 0),
+                       2
+                   )
+               ELSE
+                   COALESCE(ROUND(
+                       (
+                           (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(feedback_rating_dynamic), 0))
+                           - (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 6 THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(feedback_rating_dynamic), 0))
+                       ) * 100,
+                       2
+                   ), 0)
+           END AS nps
     FROM chat_buerokratt
+),
+is_five AS (
+    SELECT COALESCE(is_five_rating_scale, 'false') = 'true' AS is_five_scale FROM rating_config
 )
 SELECT json_build_object(
     'pointNps', (SELECT json_agg(json_build_object('dateTime', date_time, 'nps', nps)) FROM point_nps),
-    'periodNps', (SELECT nps FROM period_nps)
+    'periodNps', (SELECT nps FROM period_nps),
+    'isFiveScale', (SELECT is_five_scale FROM is_five)
 ) AS result

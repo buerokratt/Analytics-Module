@@ -15,15 +15,18 @@ import { ChartData } from 'types/chart';
 import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 import { CustomChartTooltip } from 'components';
 
+const FEEDBACK_Y_AXIS_MAX = 20;
+
 type Props = {
   data: ChartData;
   startDate: string;
   endDate: string;
   unit?: string;
   groupByPeriod: GroupByPeriod;
+  isRatingDistribution?: boolean;
 };
 
-const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod }) => {
+const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod, isRatingDistribution }) => {
   const [width, setWidth] = useState<number | null>(null);
   const { periodStatistics } = usePeriodStatisticsContext();
 
@@ -47,6 +50,46 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
 
   const domain = [minDate, new Date(endDate).getTime()];
   const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5);
+
+  const ratingTooltip = (props: { payload?: Array<{ payload?: { rating: number; count: number } }> }) => {
+    const payload = props?.payload ?? [];
+    if (!payload.length) return null;
+    const p = payload[0]?.payload;
+    if (!p || p.count == null) return null;
+    const display = p.count > FEEDBACK_Y_AXIS_MAX ? `${FEEDBACK_Y_AXIS_MAX}+` : String(p.count);
+    return (
+      <div style={{ padding: 8, background: '#fff', border: '1px solid #ccc' }}>
+        {String(t('chart.rating'))}: {p.rating} — {String(t('chart.count'))}: {display}
+      </div>
+    );
+  };
+
+  if (isRatingDistribution && (data?.chartData?.length ?? 0) > 0 && data.chartData?.[0] && 'rating' in data.chartData[0]) {
+    return (
+      <div ref={ref}>
+        <BarChart
+          width={width ?? 0}
+          height={(width ?? 0) / 3.76}
+          data={data.chartData}
+          barSize={20}
+          margin={{ top: 20, right: 65, bottom: 50 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="rating" type="category" />
+          <YAxis domain={[0, FEEDBACK_Y_AXIS_MAX]} allowDataOverflow>
+            <Label dx={-25} angle={270} value={unit ?? String(t('chart.count'))} />
+          </YAxis>
+          <Tooltip content={ratingTooltip} />
+          <Bar
+            dataKey="displayCount"
+            type="monotone"
+            fill={getColor(data, 'displayCount') || '#8884d8'}
+            stroke={getColor(data, 'displayCount') || '#8884d8'}
+          />
+        </BarChart>
+      </div>
+    );
+  }
 
   return (
     <div ref={ref}>

@@ -6,11 +6,15 @@ export type ChartType = {
 };
 
 export type ChartData = {
-  chartData: Record<string, number>[];
+  chartData: Record<string, number | string>[];
   colors: { id: string; color: string }[];
   minPointSize?: MinPointSize;
   periodNps?: number;
   periodNpsByCsa?: Record<string, number>;
   distributionData?: ChartData;
   feedBackData?: ChartData;
+  isRatingDistribution?: boolean;
+  totalChats?: number;
+  totalFeedback?: number;
+  isFiveScale?: boolean;
 };

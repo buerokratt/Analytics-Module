@@ -22,10 +22,17 @@ type Props = {
   groupByPeriod: GroupByPeriod;
 };
 
+const formatPeriodScore = (value: number | undefined | null): string => {
+  if (value == null || Number.isNaN(value)) return '—';
+  const n = Number(value);
+  return Number.isFinite(n) ? n.toFixed(2) : '—';
+};
+
 const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }: Props) => {
   const { t } = useTranslation();
   const formattedStartDate = formatDate(new Date(startDate), 'yyyy-MM-dd');
   const formattedEndDate = formatDate(new Date(endDate), 'yyyy-MM-dd');
+  const feedbackScoreLabel = data.distributionData?.isFiveScale ? t('feedback.positiveFeedbackScore') : t('feedback.averageNps');
 
   const charts: ChartType[] = [
     {
@@ -42,11 +49,13 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
     },
   ];
   const [selectedChart, setSelectedChart] = useState<string>('barChart');
-  const selectedData = selectedChart === 'pieChart' ? (data.distributionData ?? data) : (data.feedBackData ?? data);
+  const isRatingDistribution = data.distributionData?.isRatingDistribution === true;
+  const distributionOrFeedBack = selectedChart === 'pieChart' ? (data.distributionData ?? data) : (data.feedBackData ?? data);
+  const selectedData = isRatingDistribution ? (data.distributionData ?? data) : distributionOrFeedBack;
 
   const buildChart = () => {
     if (selectedChart === 'pieChart') {
-      return <PieGraph data={selectedData} />;
+      return <PieGraph data={selectedData} isRatingDistribution={isRatingDistribution} />;
     } else if (selectedChart === 'lineChart') {
       return (
         <LineGraph
@@ -54,6 +63,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
           startDate={formattedStartDate}
           endDate={formattedEndDate}
           unit={unit}
+          isRatingDistribution={isRatingDistribution}
         />
       );
     } else {
@@ -64,6 +74,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
           endDate={formattedEndDate}
           unit={unit}
           groupByPeriod={groupByPeriod}
+          isRatingDistribution={isRatingDistribution}
         />
       );
     }
@@ -126,7 +137,13 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
               appearance="text"
               style={{ marginRight: 15 }}
               onClick={() => {
-                downloadXlsx(data.feedBackData ? data.feedBackData?.chartData : data.chartData);
+                let sourceData = data.chartData;
+                if (data.distributionData?.isRatingDistribution) {
+                  sourceData = data.distributionData?.chartData ?? data.chartData;
+                } else if (data.feedBackData?.chartData) {
+                  sourceData = data.feedBackData.chartData;
+                }
+                downloadXlsx(sourceData);
               }}
             >
               <Icon
@@ -149,6 +166,24 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       <div className="charts_wrapper">
         {buildChart()}
       </div>
+      {isRatingDistribution && (data.distributionData?.totalChats != null || data.distributionData?.totalFeedback != null) && (
+        <div className="feedback_summary" style={{ marginTop: 16, padding: '12px 0', borderTop: '1px solid #eee' }}>
+          <div style={{ marginBottom: 4 }}>
+            <span>
+              {feedbackScoreLabel}: {formatPeriodScore(data.feedBackData?.periodNps ?? data.periodNps)}
+            </span>
+          </div>
+          <div style={{ marginBottom: 4 }}>
+            {t('feedback.percentOfChatsWithFeedback')}:{' '}
+            {data.distributionData?.totalChats != null && data.distributionData.totalChats > 0
+              ? `${((data.distributionData.totalFeedback ?? 0) / data.distributionData.totalChats * 100).toFixed(1)}%`
+              : '0%'}
+          </div>
+          <div>
+            {t('feedback.chatsWithNoFeedback')}: -
+          </div>
+        </div>
+      )}
     </Card>
   );
 };

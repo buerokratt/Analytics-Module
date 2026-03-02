@@ -3,7 +3,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import OptionsPanel, {Option} from '../components/MetricAndPeriodOptions';
 import MetricsCharts from '../components/MetricsCharts';
 import {
-    getAverageFeedbackOnBuerokrattChats,
     getChatsStatuses,
     getDistributionOnBuerokrattChatsFeedback,
     getDistributionOnCSAChatsFeedback,
@@ -108,18 +107,6 @@ const FeedbackPage: React.FC = () => {
         id: 'burokratt_chats',
         labelKey: 'feedback.burokratt_chats',
         unit: t('units.nps') ?? 'nps',
-        subRadioOptions: [
-          {
-            id: 'NPS',
-            labelKey: 'feedback.status_options.nps',
-            color: randomColor(),
-          },
-          {
-            id: 'AVG',
-            labelKey: 'feedback.status_options.average',
-            color: randomColor(),
-          },
-        ],
       },
       {
         id: 'advisor_chats',
@@ -154,13 +141,10 @@ const FeedbackPage: React.FC = () => {
                         case 'statuses':
                             return fetchChatsStatuses(config);
                         case 'burokratt_chats': {
-                            const promises = [
+                            const [distributionData, feedBackData] = await Promise.all([
                                 fetchDistributionOnBuerokrattChatsFeedback(config),
-                                config.options === 'AVG'
-                                    ? fetchAverageFeedbackOnBuerokrattChats(config)
-                                    : fetchNpsFeedbackOnBuerokrattChats(config),
-                            ];
-                            const [distributionData, feedBackData] = await Promise.all(promises);
+                                fetchNpsFeedbackOnBuerokrattChats(config),
+                            ]);
                             return {distributionData, feedBackData};
                         }
                         case 'advisor_chats': {
@@ -242,24 +226,6 @@ const FeedbackPage: React.FC = () => {
                     color,
                 })),
             };
-        } catch (err) {
-            console.error("Failed: ", err)
-        }
-        return chartData;
-    };
-
-    const fetchAverageFeedbackOnBuerokrattChats = async (config: any) => {
-        setShowSelectAll(false);
-        let chartData = {};
-        try {
-            const {response} = await fetchAndMapFeedbackData(getAverageFeedbackOnBuerokrattChats, config);
-
-            chartData = {
-                chartData: response,
-                colors: [{ id: 'average', color: '#FFB511' }],
-                minPointSize: 3,
-            };
-            setUnit(t('units.minutes') ?? 'chats');
         } catch (err) {
             console.error("Failed: ", err)
         }

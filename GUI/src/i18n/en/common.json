@@ -161,7 +161,7 @@
     "positiveFeedbackScore": "Positive feedback (%)",
     "averageNps": "Average (NPS)",
     "percentOfChatsWithFeedback": "% of chats that received feedback",
-    "chatsWithNoFeedback": "Chats with no feedback"
+    "chatsWithNoFeedback": "No Feedback"
   },
   "chats": {
     "total": "Total number of chats",

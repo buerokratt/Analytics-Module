@@ -180,7 +180,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
               : '0%'}
           </div>
           <div>
-            {t('feedback.chatsWithNoFeedback')}: -
+            {t('feedback.chatsWithNoFeedback')}: {data.distributionData?.noFeedbackCount ?? (data.distributionData?.totalChats != null && data.distributionData?.totalFeedback != null ? data.distributionData.totalChats - data.distributionData.totalFeedback : '—')}
           </div>
         </div>
       )}

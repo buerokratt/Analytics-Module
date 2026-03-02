@@ -429,18 +429,19 @@ const FeedbackPage: React.FC = () => {
         const response = result.response ?? result;
         const raw = Array.isArray(response) ? response[0] : response;
         const data = raw?.result?.value ? JSON.parse(raw.result.value) : (raw?.result ?? raw);
-        const distribution: { rating: number; count: number }[] = data?.distribution ?? [];
+        const distribution: { rating: number | string; count: number }[] = data?.distribution ?? [];
         const totalFeedback = data?.total_feedback ?? 0;
         const totalChats = data?.total_chats ?? 0;
         const scaleIsFive = data?.is_five_scale ?? isFiveScale ?? false;
+        const noFeedbackCount = totalChats - totalFeedback;
 
-        const chartData = distribution.map((r: { rating: number; count: number }) => ({
+        const chartData = distribution.map((r: { rating: number | string; count: number }) => ({
             rating: r.rating,
             count: r.count,
             displayCount: Math.min(r.count, FEEDBACK_Y_AXIS_MAX),
         }));
 
-        const colors = chartData.map((d: { rating: number }) => ({
+        const colors = chartData.map((d: { rating: number | string }) => ({
             id: String(d.rating),
             color: randomColor(),
         }));
@@ -451,6 +452,7 @@ const FeedbackPage: React.FC = () => {
             isRatingDistribution: true,
             totalFeedback,
             totalChats,
+            noFeedbackCount,
             isFiveScale: scaleIsFive,
         };
     };

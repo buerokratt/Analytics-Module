@@ -103,13 +103,21 @@ scale_ratings AS (
         )
     ) s
 ),
-distribution_rows AS (
-    SELECT json_agg(json_build_object('rating', sr.rating, 'count', COALESCE(rc.cnt, 0)) ORDER BY sr.rating) AS distribution
-    FROM scale_ratings sr
-    LEFT JOIN rating_counts rc ON sr.rating = rc.rating
+no_feedback_count AS (
+    SELECT (SELECT total_chats FROM all_ended_chats) - (SELECT COUNT(*) FROM chats_filtered) AS cnt
+),
+distribution_with_no_feedback AS (
+    SELECT json_agg(elem ORDER BY ord, rating_nullable NULLS LAST) AS distribution
+    FROM (
+        SELECT 0 AS ord, sr.rating AS rating_nullable, json_build_object('rating', sr.rating, 'count', COALESCE(rc.cnt, 0)) AS elem
+        FROM scale_ratings sr
+        LEFT JOIN rating_counts rc ON sr.rating = rc.rating
+        UNION ALL
+        SELECT 1 AS ord, NULL::int AS rating_nullable, json_build_object('rating', '-', 'count', (SELECT cnt FROM no_feedback_count)) AS elem
+    ) parts
 )
 SELECT json_build_object(
-    'distribution', (SELECT distribution FROM distribution_rows),
+    'distribution', (SELECT distribution FROM distribution_with_no_feedback),
     'total_feedback', (SELECT COUNT(*) FROM chats_filtered),
     'total_chats', (SELECT total_chats FROM all_ended_chats),
     'is_five_scale', (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config)

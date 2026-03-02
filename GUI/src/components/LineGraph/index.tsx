@@ -42,20 +42,20 @@ const LineGraph = ({ data, startDate, endDate, unit, isRatingDistribution }: Pro
   const domain = [new Date(startDate).getTime(), new Date(endDate).getTime()];
   const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5);
 
-  const ratingTooltip = (props: { payload?: Array<{ payload?: { rating: number; count: number } }> }) => {
+  const ratingTooltip = (props: { payload?: Array<{ payload?: { rating: number | string; count: number } }> }) => {
     const payload = props?.payload ?? [];
     if (!payload.length) return null;
     const p = payload[0]?.payload;
-    if (!p || p.count == null) return null;
-    const display = p.count > FEEDBACK_Y_AXIS_MAX ? `${FEEDBACK_Y_AXIS_MAX}+` : String(p.count);
+    if (p?.count == null) return null;
+    const ratingLabel = p.rating === '-' ? t('feedback.chatsWithNoFeedback') : String(p.rating);
     return (
       <div style={{ padding: 8, background: '#fff', border: '1px solid #ccc' }}>
-        {String(t('chart.rating'))}: {p.rating} — {String(t('chart.count'))}: {display}
+        {String(t('chart.rating'))}: {ratingLabel} — {String(t('chart.count'))}: {p.count}
       </div>
     );
   };
 
-  if (isRatingDistribution && (data?.chartData?.length ?? 0) > 0 && data.chartData?.[0] && 'rating' in data.chartData[0]) {
+  if (isRatingDistribution && (data?.chartData?.length ?? 0) > 0 && data.chartData?.[0] && ('rating' in data.chartData[0] || 'displayCount' in data.chartData[0])) {
     return (
       <div ref={ref}>
         <LineChart

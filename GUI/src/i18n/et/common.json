@@ -161,7 +161,7 @@
     "positiveFeedbackScore": "Positiivne tagasiside (%)",
     "averageNps": "Keskmine (NPS)",
     "percentOfChatsWithFeedback": "% vestlustest, millele anti tagasiside",
-    "chatsWithNoFeedback": "Vestlused ilma tagasisideta"
+    "chatsWithNoFeedback": "Tagasisidet pole"
   },
   "chats": {
     "total": "Vestluste koguarv",

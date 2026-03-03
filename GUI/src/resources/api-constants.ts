@@ -87,6 +87,14 @@ export const getNpsOnSelectedCSAChatsFeedback = (): string => {
   return baseUrl + '/feedbacks/agents/nps';
 };
 
+export const getDistributionOnSelectedCSAChatsFeedback = (): string => {
+  return baseUrl + '/feedbacks/agents/distribution';
+};
+
+export const getNpsAggregateOnSelectedCSAChatsFeedback = (): string => {
+  return baseUrl + '/feedbacks/agents/nps-aggregate';
+};
+
 export const getNegativeFeedbackChats = (): string => {
   return baseUrl + '/feedbacks/negative';
 };

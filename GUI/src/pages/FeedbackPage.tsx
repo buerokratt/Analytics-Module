@@ -6,6 +6,8 @@ import {
     getChatsStatuses,
     getDistributionOnBuerokrattChatsFeedback,
     getDistributionOnCSAChatsFeedback,
+    getDistributionOnSelectedCSAChatsFeedback,
+    getNpsAggregateOnSelectedCSAChatsFeedback,
     getNpsFeedbackOnBuerokrattChats,
     getNpsOnCSAChatsFeedback,
     getNpsOnSelectedCSAChatsFeedback,
@@ -154,8 +156,14 @@ const FeedbackPage: React.FC = () => {
                             ]);
                             return {distributionData, feedBackData};
                         }
-                        case 'selected_advisor_chats':
-                            return fetchNpsOnSelectedCSAChatsFeedback(config);
+                        case 'selected_advisor_chats': {
+                            const [distributionData, feedBackData] = await Promise.all([
+                                fetchDistributionOnSelectedCSAChatsFeedback(config),
+                                fetchNpsAggregateOnSelectedCSAChatsFeedback(config),
+                            ]);
+                            await fetchNpsOnSelectedCSAChatsFeedback(config);
+                            return {distributionData, feedBackData};
+                        }
                         case 'negative_feedback':
                             return {};
                         default:
@@ -313,11 +321,71 @@ const FeedbackPage: React.FC = () => {
         return chartData;
     };
 
+    const getExcludedCsas = (config: any) => {
+        const excluded_csas = advisors.current.map((e: any) => e.id).filter((e: string) => !config?.options?.includes(e));
+        return (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''];
+    };
+
+    const fetchDistributionOnSelectedCSAChatsFeedback = async (config: any) => {
+        setShowSelectAll(true);
+        let chartData = {};
+        try {
+            const result: any = await request({
+                url: getDistributionOnSelectedCSAChatsFeedback(),
+                method: Methods.post,
+                withCredentials: true,
+                data: {
+                    start_date: config?.start,
+                    end_date: config?.end,
+                    urls: getDomainsArray(),
+                    showTest: getShowTestData(),
+                    excluded_csas: getExcludedCsas(config),
+                },
+            });
+            const body = result.response ?? result;
+            chartData = mapDistributionChartData(body);
+        } catch (e) {
+            console.error(e);
+        }
+        return chartData;
+    };
+
+    const fetchNpsAggregateOnSelectedCSAChatsFeedback = async (config: any) => {
+        setShowSelectAll(true);
+        let chartData = {};
+        try {
+            const result: any = await request({
+                url: getNpsAggregateOnSelectedCSAChatsFeedback(),
+                method: Methods.post,
+                withCredentials: true,
+                data: {
+                    metric: config?.groupByPeriod ?? 'day',
+                    start_date: config?.start,
+                    end_date: config?.end,
+                    urls: getDomainsArray(),
+                    showTest: getShowTestData(),
+                    excluded_csas: getExcludedCsas(config),
+                },
+            });
+            const response = result.response.map((entry: any) => ({
+                ...translateChartKeys(entry, chartDataKey),
+                [chartDataKey]: new Date(entry[chartDataKey]).getTime(),
+            }));
+            chartData = {
+                chartData: response,
+                colors: [{ id: 'NPS', color: '#FFB511' }],
+                periodNps: result.periodNps,
+            };
+        } catch (err) {
+            console.error('Failed: ', err);
+        }
+        return chartData;
+    };
+
     const fetchNpsOnSelectedCSAChatsFeedback = async (config: any) => {
         setShowSelectAll(true);
         let chartData = {};
         try {
-            const excluded_csas = advisors.current.map((e) => e.id).filter((e) => !config?.options.includes(e));
             const result: any = await request({
                 url: getNpsOnSelectedCSAChatsFeedback(),
                 method: Methods.post,
@@ -326,7 +394,7 @@ const FeedbackPage: React.FC = () => {
                     metric: config?.groupByPeriod ?? 'day',
                     start_date: config?.start,
                     end_date: config?.end,
-                    excluded_csas: (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''],
+                    excluded_csas: getExcludedCsas(config),
                     urls: getDomainsArray(),
                     showTest: getShowTestData()
                 },

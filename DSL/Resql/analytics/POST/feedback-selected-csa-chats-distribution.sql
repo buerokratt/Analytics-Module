@@ -33,35 +33,27 @@ chats_filtered AS (
         :showTest = TRUE
             OR chat.test = FALSE
     )
-        AND STATUS = 'ENDED'
-        AND CASE
+      AND STATUS = 'ENDED'
+      AND customer_support_id NOT IN (:excluded_csas)
+      AND customer_support_id <> ''
+      AND customer_support_id <> 'chatbot'
+      AND CASE
             WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config)
             THEN feedback_rating_five IS NOT NULL
             ELSE feedback_rating IS NOT NULL
         END
         AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
-        AND (
-            (:chat_type = 'buerokratt' AND EXISTS (
-                SELECT 1
-                FROM message
-                WHERE message.chat_base_id = chat.base_id
-                AND message.author_role = 'buerokratt'
-            ))
-            OR
-            (:chat_type = 'csa' AND customer_support_id <> ''
-                AND EXISTS (
-                    SELECT 1
-                    FROM message
-                    WHERE message.chat_base_id = chat.base_id
-                    AND message.author_role = 'backoffice-user'
-                )
-                AND EXISTS (
-                    SELECT 1
-                    FROM message
-                    WHERE message.chat_base_id = chat.base_id
-                    AND message.author_role = 'end-user'
-                )
-            )
+        AND EXISTS (
+            SELECT 1
+            FROM message
+            WHERE message.chat_base_id = chat.base_id
+            AND message.author_role = 'backoffice-user'
+        )
+        AND EXISTS (
+            SELECT 1
+            FROM message
+            WHERE message.chat_base_id = chat.base_id
+            AND message.author_role = 'end-user'
         )
 ),
 all_ended_chats AS (
@@ -74,20 +66,15 @@ all_ended_chats AS (
       AND (:showTest = TRUE OR chat.test = FALSE)
       AND STATUS = 'ENDED'
       AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
-      AND (
-            (:chat_type = 'buerokratt' AND EXISTS (
-                SELECT 1 FROM message WHERE message.chat_base_id = chat.base_id AND message.author_role = 'buerokratt'
-            ))
-            OR
-            (:chat_type = 'csa' AND customer_support_id <> ''
-                AND EXISTS (
-                    SELECT 1 FROM message WHERE message.chat_base_id = chat.base_id AND message.author_role = 'backoffice-user'
-                )
-                AND EXISTS (
-                    SELECT 1 FROM message WHERE message.chat_base_id = chat.base_id AND message.author_role = 'end-user'
-                )
-            )
-      )
+      AND customer_support_id NOT IN (:excluded_csas)
+      AND customer_support_id <> ''
+      AND customer_support_id <> 'chatbot'
+      AND EXISTS (
+            SELECT 1 FROM message WHERE message.chat_base_id = chat.base_id AND message.author_role = 'backoffice-user'
+        )
+      AND EXISTS (
+            SELECT 1 FROM message WHERE message.chat_base_id = chat.base_id AND message.author_role = 'end-user'
+        )
 ),
 rating_counts AS (
     SELECT feedback_rating_dynamic AS rating, COUNT(*) AS cnt

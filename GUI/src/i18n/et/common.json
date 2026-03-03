@@ -158,7 +158,10 @@
     "ended": "Lõppenud",
     "view": "Vaata",
     "comment": "Kommentaar",
-    "feedback": "Tagasiside"
+    "positiveFeedbackScore": "Positiivne tagasiside (%)",
+    "averageNps": "Keskmine (NPS)",
+    "percentOfChatsWithFeedback": "% vestlustest, millele anti tagasiside",
+    "chatsWithNoFeedback": "Tagasisidet pole"
   },
   "chats": {
     "total": "Vestluste koguarv",
@@ -195,7 +198,6 @@
     "avg": "Keskmine",
     "nps": "NPS",
     "avgWaitingTimeSeconds": "Keskmine (Sec)",
-    "customerSupportFullName": "CSA Full Name",
     "id": "Id",
     "baseId": "Id",
     "rating": "Hinnang",

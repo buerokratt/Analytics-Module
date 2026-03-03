@@ -3,6 +3,7 @@ export interface Option {
   labelKey: string;
   additionalKey?: string;
   subOptions?: SubOption[];
+  subRadioOptions?: { id: string; labelKey: string; color?: string }[];
   unit?: string;
 }
 

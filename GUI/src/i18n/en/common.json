@@ -158,7 +158,10 @@
     "ended": "Ended",
     "view": "View",
     "comment": "Comment",
-    "feedback": "Feedback"
+    "positiveFeedbackScore": "Positive feedback (%)",
+    "averageNps": "Average (NPS)",
+    "percentOfChatsWithFeedback": "% of chats that received feedback",
+    "chatsWithNoFeedback": "No Feedback"
   },
   "chats": {
     "total": "Total number of chats",
@@ -194,7 +197,6 @@
     "event": "Event",
     "avg": "Average",
     "nps": "NPS",
-    "customerSupportFullName": "CSA Nimi",
     "id": "Id",
     "baseId": "Id",
     "rating": "Rating",

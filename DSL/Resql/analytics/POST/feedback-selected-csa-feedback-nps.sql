@@ -20,7 +20,7 @@ ranked_chats AS (
           THEN feedback_rating_five IS NOT NULL
           ELSE feedback_rating IS NOT NULL
       END
-      AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
+      AND ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
       AND customer_support_id NOT IN (:excluded_csas)
       AND EXISTS (
         SELECT 1

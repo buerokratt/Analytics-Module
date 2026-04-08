@@ -18,10 +18,12 @@ chats_filtered AS (
             THEN last_value(feedback_rating_five) OVER (
                 PARTITION BY base_id
                 ORDER BY updated
+                ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
             )
             ELSE last_value(feedback_rating) OVER (
                 PARTITION BY base_id
                 ORDER BY updated
+                ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
             )
         END AS feedback_rating_dynamic
     FROM chat
@@ -39,7 +41,7 @@ chats_filtered AS (
             THEN feedback_rating_five IS NOT NULL
             ELSE feedback_rating IS NOT NULL
         END
-        AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
+        AND ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
         AND (
             (:chat_type = 'buerokratt' AND EXISTS (
                 SELECT 1
@@ -73,7 +75,7 @@ all_ended_chats AS (
     )
       AND (:showTest = TRUE OR chat.test = FALSE)
       AND STATUS = 'ENDED'
-      AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
+      AND ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
       AND (
             (:chat_type = 'buerokratt' AND EXISTS (
                 SELECT 1 FROM message WHERE message.chat_base_id = chat.base_id AND message.author_role = 'buerokratt'

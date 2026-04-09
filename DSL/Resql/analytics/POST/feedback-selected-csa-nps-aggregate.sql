@@ -17,10 +17,12 @@ chat_csas AS (
         THEN last_value(feedback_rating_five) OVER (
                 PARTITION BY base_id
                 ORDER BY updated
+                ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
                 )
         ELSE last_value(feedback_rating) OVER (
                 PARTITION BY base_id
                 ORDER BY updated
+                ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
                 )
     END AS feedback_rating_dynamic
     FROM chat
@@ -47,7 +49,7 @@ chat_csas AS (
             THEN feedback_rating_five IS NOT NULL
             ELSE feedback_rating IS NOT NULL
         END
-        AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
+        AND ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
 ),
 point_nps AS (
     SELECT date_trunc(:metric, created)::text AS date_time,

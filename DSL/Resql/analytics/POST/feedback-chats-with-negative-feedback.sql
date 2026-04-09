@@ -26,7 +26,7 @@ n_chats AS (
         MAX(created) AS created
     FROM chat
     WHERE STATUS = 'ENDED'
-      AND created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
+      AND ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
       AND CASE 
           WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) 
           THEN feedback_rating_five IS NOT NULL AND feedback_rating_five <= 3

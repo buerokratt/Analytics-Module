@@ -3,51 +3,9 @@ WITH rating_config AS (
     FROM configuration
     WHERE key = 'isFiveRatingScale'
       AND "domain" IS NULL
-      AND id IN (SELECT max(id) FROM configuration WHERE key = 'isFiveRatingScale' AND "domain" IS NULL)
       AND NOT deleted
-),
-MaxChatHistoryComments AS (
-    SELECT MAX(id) AS maxId
-    FROM chat_history_comments
-    GROUP BY chat_id
-),
-ChatUser AS (
-    SELECT DISTINCT ON (id_code)
-        id_code,
-        display_name,
-        first_name,
-        last_name
-    FROM "user"
-    ORDER BY id_code, id DESC
-),
-ChatHistoryComments AS (
-    SELECT
-        comment,
-        chat_id,
-        created,
-        author_display_name
-    FROM chat_history_comments
-    JOIN MaxChatHistoryComments ON id = maxId
-),
-MessageWithContent AS (
-    SELECT
-        MAX(m.id) AS maxId,
-        MIN(m.id) AS minId,
-        m.chat_base_id
-    FROM message m
-    WHERE content <> ''
-      AND content <> 'message-read'
-    GROUP BY chat_base_id
-),
-FirstContentMessage AS (
-    SELECT m.created, m.chat_base_id
-    FROM message m
-    JOIN MessageWithContent ON m.id = MessageWithContent.minId
-),
-LastContentMessage AS (
-    SELECT m.content, m.chat_base_id
-    FROM message m
-    JOIN MessageWithContent ON m.id = MessageWithContent.maxId
+    ORDER BY id DESC
+    LIMIT 1
 ),
 TitleVisibility AS (
     SELECT value
@@ -57,26 +15,14 @@ TitleVisibility AS (
     ORDER BY id DESC
     LIMIT 1
 ),
-FulfilledMessages AS (
-    SELECT MAX(m.id) AS maxId, m.chat_base_id
-    FROM message m
-    WHERE event = 'contact-information-fulfilled'
-    GROUP BY chat_base_id
-),
-ContactsMessage AS (
-    SELECT m.chat_base_id, m.content
-    FROM message m
-    JOIN FulfilledMessages ON m.id = maxId
-),
-MaxMessages AS (
-    SELECT MAX(m.id) AS maxId, m.chat_base_id
-    FROM message m
-    GROUP BY chat_base_id
-),
-Messages AS (
-    SELECT m.event, m.updated, m.chat_base_id, m.author_id
-    FROM message m
-    JOIN MaxMessages ON id = maxId
+ChatUser AS (
+    SELECT DISTINCT ON (id_code)
+        id_code,
+        display_name,
+        first_name,
+        last_name
+    FROM "user"
+    ORDER BY id_code, id DESC
 ),
 MaxChats AS (
     SELECT MAX(c.id) AS maxId, c.base_id
@@ -94,7 +40,7 @@ MaxChats AS (
       AND c.ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
       AND (
         (c.feedback_rating_five IS NOT NULL AND c.feedback_rating_five <= 3)
-        OR 
+        OR
         (c.feedback_rating IS NOT NULL AND c.feedback_rating <= 5)
       )
     GROUP BY base_id
@@ -123,22 +69,69 @@ EndedChatMessages AS (
         c.feedback_rating,
         c.feedback_rating_five
     FROM chat c
-    RIGHT JOIN MaxChats ON c.id = maxId
+    RIGHT JOIN MaxChats ON c.id = MaxChats.maxId
+),
+MaxChatHistoryComments AS (
+    SELECT MAX(id) AS maxId
+    FROM chat_history_comments
+    WHERE chat_id IN (SELECT base_id FROM MaxChats)
+    GROUP BY chat_id
+),
+ChatHistoryComments AS (
+    SELECT
+        comment,
+        chat_id,
+        created,
+        author_display_name
+    FROM chat_history_comments
+    JOIN MaxChatHistoryComments ON id = maxId
+),
+MessageAgg AS (
+    SELECT
+        m.chat_base_id,
+        MAX(m.id) AS maxId,
+        MAX(CASE WHEN m.content <> '' AND m.content <> 'message-read' THEN m.id END) AS maxContentId,
+        MIN(CASE WHEN m.content <> '' AND m.content <> 'message-read' THEN m.id END) AS minContentId,
+        MAX(CASE WHEN m.event = 'contact-information-fulfilled' THEN m.id END) AS fulfilledId
+    FROM message m
+    WHERE m.chat_base_id IN (SELECT base_id FROM MaxChats)
+    GROUP BY m.chat_base_id
+),
+FirstContentMessage AS (
+    SELECT m.created, m.chat_base_id
+    FROM message m
+    JOIN MessageAgg ON m.id = MessageAgg.minContentId
+),
+LastContentMessage AS (
+    SELECT m.content, m.chat_base_id
+    FROM message m
+    JOIN MessageAgg ON m.id = MessageAgg.maxContentId
+),
+ContactsMessage AS (
+    SELECT m.chat_base_id, m.content
+    FROM message m
+    JOIN MessageAgg ON m.id = MessageAgg.fulfilledId
+),
+Messages AS (
+    SELECT m.event, m.updated, m.chat_base_id, m.author_id
+    FROM message m
+    JOIN MessageAgg ON m.id = MessageAgg.maxId
 ),
 RatedChats AS (
-    SELECT 
-        CASE 
-            WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) 
+    SELECT
+        CASE
+            WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config)
             THEN MAX(c.feedback_rating_five)
             ELSE MAX(c.feedback_rating)
         END AS rating
     FROM chat c
-    WHERE CASE 
-        WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) 
+    WHERE c.base_id IN (SELECT base_id FROM MaxChats)
+      AND CASE
+        WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config)
         THEN c.feedback_rating_five IS NOT NULL
         ELSE c.feedback_rating IS NOT NULL
-    END
-    GROUP BY base_id
+      END
+    GROUP BY c.base_id
 ),
 RatedChatsCount AS (
     SELECT COUNT(rating) AS total FROM RatedChats
@@ -156,12 +149,13 @@ NPS AS (
     CROSS JOIN Detractors
 ),
 LatestOpenChat AS (
-    SELECT DISTINCT ON (base_id)
-        base_id,
-        customer_support_id AS latest_open_csa
+    SELECT DISTINCT ON (chat.base_id)
+        chat.base_id,
+        chat.customer_support_id AS latest_open_csa
     FROM chat
-    WHERE status = 'OPEN'
-    ORDER BY base_id, id DESC
+    JOIN MaxChats ON MaxChats.base_id = chat.base_id
+    WHERE chat.status = 'OPEN'
+    ORDER BY chat.base_id, chat.id DESC
 ),
 CSAFullNames AS (
     SELECT
@@ -184,11 +178,12 @@ CSAFullNames AS (
             )
         ) AS all_csa_ids
     FROM chat c2
+    JOIN MaxChats ON MaxChats.base_id = c2.base_id
     LEFT JOIN ChatUser cu ON cu.id_code = c2.customer_support_id
     LEFT JOIN LatestOpenChat lo ON lo.base_id = c2.base_id
     GROUP BY c2.base_id
 )
-SELECT 
+SELECT
     c.base_id AS id,
     c.customer_support_id,
     c.customer_support_display_name,
@@ -219,7 +214,7 @@ SELECT
     m.updated AS last_message_timestamp,
     c.feedback_text,
     COALESCE(c.feedback_rating_five, c.feedback_rating) AS feedback_rating,
-    CASE 
+    CASE
         WHEN c.feedback_rating_five IS NOT NULL THEN 'true'
         WHEN c.feedback_rating IS NOT NULL THEN 'false'
         ELSE NULL

@@ -459,26 +459,65 @@ const FeedbackPage: React.FC = () => {
         return {result, response};
     };
 
-    const mapDistributionChartData = (result: any, isFiveScale?: boolean) => {
+    const getRatingBuckets = (isFiveScale: boolean) =>
+        isFiveScale ? [1, 2, 3, 4, 5] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+    const getRoundedDistributionMax = (maxCount: number) => {
+        if (maxCount <= 10) return 10;
+        return Math.ceil(maxCount / 10) * 10;
+    };
+
+    const mapDistributionChartData = (result: any) => {
         const response = result.response ?? result;
         const raw = Array.isArray(response) ? response[0] : response;
-        const data = raw?.result?.value ? JSON.parse(raw.result.value) : (raw?.result ?? raw);
-        const distribution: { rating: number | string; count: number }[] = data?.distribution ?? [];
+        const data: {
+            distribution?: {
+                rating: number | string;
+                count: number;
+            }[],
+            total_feedback?: number;
+            total_chats?: number;
+            is_five_scale?: boolean;
+        } = raw?.result?.value
+                ? JSON.parse(raw.result.value)
+                : (raw?.result ?? raw);
+        const distribution = data?.distribution ?? [];
         const totalFeedback = data?.total_feedback ?? 0;
         const totalChats = data?.total_chats ?? 0;
-        const scaleIsFive = data?.is_five_scale ?? isFiveScale ?? false;
+        const scaleIsFive = data?.is_five_scale ?? false;
         const noFeedbackCount = totalChats - totalFeedback;
+        const ratingBuckets = getRatingBuckets(scaleIsFive);
+        const distributionByRating = distribution.reduce<Map<number, number>>((acc, entry) => {
+            if (entry.rating === '-') return acc;
 
-        const chartData = distribution.map((r: { rating: number | string; count: number }) => ({
-            rating: r.rating,
-            count: r.count,
-            displayCount: Math.min(r.count, FEEDBACK_Y_AXIS_MAX),
-        }));
+            const numericRating = Number(entry.rating);
+            if (!Number.isFinite(numericRating) || !ratingBuckets.includes(numericRating)) {
+                return acc;
+            }
 
-        const colors = chartData.map((d: { rating: number | string }) => ({
-            id: String(d.rating),
-            color: randomColor(),
-        }));
+            acc.set(numericRating, entry.count);
+            return acc;
+        }, new Map<number, number>());
+
+        const chartData = ratingBuckets.map((rating: number) => {
+            const count = distributionByRating.get(rating) ?? 0;
+            return {
+                rating,
+                count,
+            };
+        });
+
+        const yAxisMax = getRoundedDistributionMax(
+            Math.max(...chartData.map((entry) => entry.count), 0)
+        );
+
+        const colors = [
+            { id: 'count', color: '#FFB511' },
+            ...chartData.map((entry) => ({
+                id: String(entry.rating),
+                color: randomColor(),
+            })),
+        ];
 
         return {
             chartData,
@@ -488,6 +527,7 @@ const FeedbackPage: React.FC = () => {
             totalChats,
             noFeedbackCount,
             isFiveScale: scaleIsFive,
+            yAxisMax,
         };
     };
 

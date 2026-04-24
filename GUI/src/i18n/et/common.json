@@ -48,7 +48,8 @@
     "dateTime": "Kuupäev",
     "statusClarification": "Staatuse täpsustus",
     "selectAll": "Vali kõik",
-    "test": "Test"
+    "test": "Test",
+    "preserve": "Säilitada"
   },
   "mainMenu": {
     "closeMenu": "Kitsendan menüü",

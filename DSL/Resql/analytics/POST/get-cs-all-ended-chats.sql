@@ -67,7 +67,8 @@ EndedChatMessages AS (
         c.created,
         c.feedback_text,
         c.feedback_rating,
-        c.feedback_rating_five
+        c.feedback_rating_five,
+        c.preserve
     FROM chat c
     RIGHT JOIN MaxChats ON c.id = MaxChats.maxId
 ),
@@ -219,6 +220,7 @@ SELECT
         WHEN c.feedback_rating IS NOT NULL THEN 'false'
         ELSE NULL
     END AS is_five_rating_scale,
+    c.preserve as is_preserve,
     nps,
     CSAFullNames.all_csa_names AS all_csa,
     COUNT(*) OVER() AS total_count,

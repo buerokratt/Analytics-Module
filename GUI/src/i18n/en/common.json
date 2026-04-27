@@ -48,7 +48,8 @@
     "dateTime": "Date",
     "statusClarification": "Status clarification",
     "selectAll": "Select all",
-    "test": "Test"
+    "test": "Test",
+    "preserve": "Preserve"
   },
   "mainMenu": {
     "closeMenu": "Close menu",

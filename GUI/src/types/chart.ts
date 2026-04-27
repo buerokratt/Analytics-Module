@@ -14,7 +14,9 @@ export type ChartData = {
   distributionData?: ChartData;
   feedBackData?: ChartData;
   isRatingDistribution?: boolean;
+  noFeedbackCount?: number;
   totalChats?: number;
   totalFeedback?: number;
   isFiveScale?: boolean;
+  yAxisMax?: number;
 };

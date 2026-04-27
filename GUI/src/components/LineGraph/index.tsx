@@ -6,15 +6,14 @@ import {
   formatDate,
   formatTotalPeriodCount,
   getColor,
+  getDistributionYAxisTicks,
   getKeys,
   getTicks,
 } from '../../util/charts-utils';
 import { useTranslation } from 'react-i18next';
 import { ChartData } from 'types/chart';
 import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
-import { CustomChartTooltip } from 'components';
-
-const FEEDBACK_Y_AXIS_MAX = 20;
+import { CustomChartTooltip, RatingDistributionTooltip } from 'components';
 
 type Props = {
   data: ChartData;
@@ -41,21 +40,9 @@ const LineGraph = ({ data, startDate, endDate, unit, isRatingDistribution }: Pro
 
   const domain = [new Date(startDate).getTime(), new Date(endDate).getTime()];
   const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5);
+  const ratingDistributionTicks = getDistributionYAxisTicks(data.yAxisMax ?? 10);
 
-  const ratingTooltip = (props: { payload?: Array<{ payload?: { rating: number | string; count: number } }> }) => {
-    const payload = props?.payload ?? [];
-    if (!payload.length) return null;
-    const p = payload[0]?.payload;
-    if (p?.count == null) return null;
-    const ratingLabel = p.rating === '-' ? t('feedback.chatsWithNoFeedback') : String(p.rating);
-    return (
-      <div style={{ padding: 8, background: '#fff', border: '1px solid #ccc' }}>
-        {String(t('chart.rating'))}: {ratingLabel} — {String(t('chart.count'))}: {p.count}
-      </div>
-    );
-  };
-
-  if (isRatingDistribution && (data?.chartData?.length ?? 0) > 0 && data.chartData?.[0] && ('rating' in data.chartData[0] || 'displayCount' in data.chartData[0])) {
+  if (isRatingDistribution && (data?.chartData?.length ?? 0) > 0 && data.chartData?.[0] && 'rating' in data.chartData[0]) {
     return (
       <div ref={ref}>
         <LineChart
@@ -64,17 +51,17 @@ const LineGraph = ({ data, startDate, endDate, unit, isRatingDistribution }: Pro
           data={data.chartData}
           margin={{ top: 20, right: 65, left: 10, bottom: 70 }}
         >
-          <Tooltip content={ratingTooltip} />
+          <Tooltip content={<RatingDistributionTooltip />} />
           <XAxis dataKey="rating" type="category" />
-          <YAxis domain={[0, FEEDBACK_Y_AXIS_MAX]} allowDataOverflow>
+          <YAxis domain={[0, data.yAxisMax ?? 10]} ticks={ratingDistributionTicks} allowDataOverflow allowDecimals={false}>
             <Label dx={-25} angle={270} value={unit ?? String(t('chart.count'))} />
           </YAxis>
           <CartesianGrid stroke="#f5f5f5" />
           <Line
-            dataKey="displayCount"
+            dataKey="count"
             type="monotone"
-            stroke={getColor(data, 'displayCount') || '#8884d8'}
-            fill={getColor(data, 'displayCount') || '#8884d8'}
+            stroke={getColor(data, 'count') || '#8884d8'}
+            fill={getColor(data, 'count') || '#8884d8'}
           />
         </LineChart>
       </div>

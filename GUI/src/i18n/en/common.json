@@ -57,6 +57,8 @@
   },
   "multiDomains": {
     "selectDomains": "Select Domains",
+    "chooseDomain": "Select domain:",
+    "allDomains": "All",
     "noDomains": "No domains available. Please contact your system administrator."
   },
   "general": {

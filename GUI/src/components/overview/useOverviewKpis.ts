@@ -5,6 +5,7 @@ import { getDomainsArray } from '../../util/multiDomain-utils';
 import { getShowTestData } from '../../util/testChat-utils';
 import { getAverageFeedbackOnBuerokrattChats, getRedirectedOverview, getTotalChats, getAvgChatWaitingTime, getChatsStatuses } from '../../resources/api-constants';
 import { DateRange } from '../../util/overview-date-utils';
+import { computeOverviewKpiRates } from '../../util/overview-kpi-rates';
 import {
   AvgRatingOverviewResponse,
   AvgWaitingTimeOverviewResponse,
@@ -108,19 +109,18 @@ const fetchKpisForRange = async (range: DateRange): Promise<OverviewKpiValues> =
 
   const byk = sumCounts(totalCountRes.response?.[0]);
   const csa = sumCounts(totalCountRes.response?.[1]);
-  const totalChats = byk + csa;
   const leftWithoutAnswer = sumCounts(statusRes.response?.[0]);
   const { multiCsaChats = 0, totalCsaChats = 0 } = redirectedRes.response?.[0] ?? {};
 
-  return {
-    totalChats,
+  return computeOverviewKpiRates({
+    byk,
+    csa,
+    leftWithoutAnswer,
+    multiCsaChats,
+    totalCsaChats,
     avgWaitingTime: Number(waitingTimeRes.response?.[2]?.[0]?.metricValue ?? 0),
     avgRating: Number(ratingRes.response?.[0]?.metricValue ?? 0),
-    burokrattRate: totalChats > 0 ? (byk / totalChats) * 100 : 0,
-    csaRate: totalChats > 0 ? (csa / totalChats) * 100 : 0,
-    redirectedRate: totalCsaChats > 0 ? (multiCsaChats / totalCsaChats) * 100 : 0,
-    leftWithoutAnswerRate: totalChats > 0 ? 100 - (leftWithoutAnswer / totalChats) * 100 : 0,
-  };
+  });
 };
 
 export const useOverviewKpis = (range: DateRange, previousRange: DateRange) => {

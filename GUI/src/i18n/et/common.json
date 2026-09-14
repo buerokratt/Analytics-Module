@@ -42,6 +42,7 @@
     "csaStatus": "Klienditeenindaja",
     "present": "Kohal",
     "away": "Eemal",
+    "busy": "Hõivatud",
     "today": "Täna",
     "forward": "Suuna",
     "chosen": "Valitud",

@@ -42,6 +42,7 @@
     "csaStatus": "Customer support status",
     "present": "Present",
     "away": "Away",
+    "busy": "Busy",
     "today": "Today",
     "forward": "Forward",
     "chosen": "Chosen",

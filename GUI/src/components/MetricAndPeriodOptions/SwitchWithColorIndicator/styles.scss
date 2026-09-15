@@ -1,0 +1,43 @@
+@import 'src/styles/tools/color';
+
+.color-circle {
+    height: 1rem;
+    width: 1rem;
+    margin: .5rem;
+    border-radius: 5px;
+}
+
+.switch-with-color-indicator {
+    &__label {
+        cursor: pointer;
+    }
+
+    .switchbox {
+        width: auto;
+    }
+
+    .switchbox__button {
+        width: 34px;
+        height: 20px;
+        border-radius: 10px;
+
+        &[aria-checked=true] {
+            background-color: get-color(sapphire-blue-10);
+
+            .switchbox__thumb {
+                transform: translate(14px, -50%);
+                background-color: get-color(white);
+                background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTEiIHZpZXdCb3g9IjAgMCAxNCAxMSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQuNzQ5NzkgOC4xMjkwNkwxLjYyMjI5IDUuMDAxNTZMMC41NjEwMzUgNi4wNjI4MUw0Ljc0OTc5IDEwLjI1MTZMMTMuNzQ5OCAxLjI1MTU2TDEyLjY4ODUgMC4xOTAzMDhMNC43NDk3OSA4LjEyOTA2WiIgZmlsbD0iIzAwNWFhMyIvPgo8L3N2Zz4K');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 9px 7px;
+            }
+        }
+    }
+
+    .switchbox__thumb {
+        width: 16px;
+        height: 16px;
+        left: 2px;
+    }
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdEdit } from 'react-icons/md';
-import { Button, Card, Icon, Track } from '../components';
+import { Button, Card, Icon } from '../components';
 import OverviewDateControl from '../components/overview/OverviewDateControl';
 import OverviewEditModal from '../components/overview/OverviewEditModal';
 import KpiCardsGrid from '../components/overview/KpiCardsGrid';
@@ -20,20 +20,10 @@ import {
   getPreviousRange,
   getRange,
   OverviewUnit,
+  todayLabelKey,
 } from '../util/overview-date-utils';
 import useStore from '../store/user/store';
 import './OverviewPage.scss';
-
-const todayLabelKey = (unit: OverviewUnit): string => {
-  switch (unit) {
-    case 'week':
-      return 'overview.thisWeek';
-    case 'month':
-      return 'overview.thisMonth';
-    default:
-      return 'overview.thisDay';
-  }
-};
 
 const OverviewPage: React.FC = () => {
   const { t } = useTranslation();
@@ -126,11 +116,13 @@ const OverviewPage: React.FC = () => {
       <h1>{t('menu.overview')}</h1>
       <div className="overview-page">
         <Card>
-          <Track justify="between">
-            <Button appearance="text" onClick={() => setIsEditing(true)}>
-              <Icon icon={<MdEdit />} size="medium" />
-              {t('overview.edit')}
-            </Button>
+          <div className="page-header">
+            <div className="page-header__start">
+              <Button appearance="text" onClick={() => setIsEditing(true)}>
+                <Icon icon={<MdEdit />} size="medium" />
+                {t('overview.edit')}
+              </Button>
+            </div>
             <OverviewDateControl
               unit={unit}
               anchorDate={anchorDate}
@@ -140,10 +132,12 @@ const OverviewPage: React.FC = () => {
               onAnchorChange={setAnchorDate}
               onPeriodRangeChange={setPeriodRange}
             />
-            <Button appearance="secondary" size="s" onClick={handleTodayClick}>
-              {t(todayLabelKey(unit))}
-            </Button>
-          </Track>
+            <div className="page-header__end">
+              <Button appearance="secondary" size="s" onClick={handleTodayClick}>
+                {t(todayLabelKey(unit))}
+              </Button>
+            </div>
+          </div>
 
           {isEditing && (
             <OverviewEditModal

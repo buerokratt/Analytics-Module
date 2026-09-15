@@ -7,7 +7,7 @@ import MetricOptionsGroup from '../../components/MetricAndPeriodOptions/MetricOp
 import SubOptionsGroup from '../../components/MetricAndPeriodOptions/SubOptionsGroup';
 import { MetricOptionsState } from '../../components/MetricAndPeriodOptions/types';
 import MetricsCharts from '../../components/MetricsCharts';
-import { Button, Card, Track } from '../../components';
+import { Button, Card } from '../../components';
 import { FormRadios } from '../../components/FormElements';
 import OverviewDateControl from '../../components/overview/OverviewDateControl';
 import {
@@ -38,7 +38,7 @@ import {
 import { Methods, request } from '../../util/axios-client';
 import { getDomainsArray } from '../../util/multiDomain-utils';
 import { getShowTestData } from '../../util/testChat-utils';
-import { DateRange, getRange, OverviewUnit } from '../../util/overview-date-utils';
+import { DateRange, getRange, OverviewUnit, todayLabelKey } from '../../util/overview-date-utils';
 import './ChatsPage.scss';
 
 const CSA_METRIC_IDS = new Set(['num_chats_csa', 'avg_chat_time_csa']);
@@ -699,7 +699,8 @@ const ChatsPage: React.FC = () => {
       <h1>{t('menu.chats')}</h1>
       <div className="chats-page">
         <Card>
-          <Track justify="between">
+          <div className="page-header">
+            <div />
             <OverviewDateControl
               unit={dateUnit}
               anchorDate={anchorDate}
@@ -709,10 +710,12 @@ const ChatsPage: React.FC = () => {
               onAnchorChange={setAnchorDate}
               onPeriodRangeChange={setPeriodRange}
             />
-            <Button appearance="secondary" size="s" onClick={handleTodayClick}>
-              {t('general.today')}
-            </Button>
-          </Track>
+            <div className="page-header__end">
+              <Button appearance="secondary" size="s" onClick={handleTodayClick}>
+                {t(todayLabelKey(dateUnit))}
+              </Button>
+            </div>
+          </div>
 
           <div className="chats-page__sections" key={userDomains.join(',')}>
             <Card>

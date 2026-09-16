@@ -24,7 +24,7 @@
   &__top {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     flex-wrap: wrap;
     gap: get-spacing(haapsalu);
   }
@@ -35,12 +35,17 @@
     font-size: $veera-font-size-100;
     font-weight: 400;
     text-transform: uppercase;
+    flex: 1 1 280px;
+    min-width: 0;
   }
 
   &__legend {
     display: flex;
     flex-wrap: wrap;
-    flex-shrink: 0;
+    justify-content: flex-end;
+    align-content: flex-start;
+    flex: 1 1 320px;
+    max-width: 100%;
     gap: get-spacing(haapsalu);
     align-items: center;
   }

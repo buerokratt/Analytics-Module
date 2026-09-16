@@ -180,69 +180,66 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
   };
 
   return (
-    <Card
-      header={
-        <div className="metrics_header">
-          <div className="metrics_header__top">
-            <h3 className="metrics_header__title">
-              {t(title)}{' '}
-              {formattedStartDate === formattedEndDate
-                ? formatTimestamp(formattedStartDate)
-                : `${formatTimestamp(formattedStartDate)} - ${formatTimestamp(formattedEndDate)}`}
-            </h3>
-            {legendKeys.length > 0 && (
-              <div className="metrics_header__legend">
-                {legendKeys.map((key) => (
-                  <div key={key} className="metrics_header__legend-item">
-                    <span className="metrics_header__legend-icon" style={{ backgroundColor: getColor(data, key) }} />
-                    <span className="metrics_header__legend-label">
-                      {key}
-                      {formatTotalPeriodCount(periodStatistics, key)}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="metrics_header__actions">
-            <Button
-              appearance="text"
-              style={{ marginRight: 15 }}
-              onClick={() => {
-                let sourceData = data.chartData;
-                if (data.distributionData?.isRatingDistribution) {
-                  sourceData = data.distributionData?.chartData ?? data.chartData;
-                } else if (data.feedBackData?.chartData) {
-                  sourceData = data.feedBackData.chartData;
-                }
-                downloadXlsx(sourceData);
-              }}
-            >
-              <Icon
-                icon={<MdOutlineDownload />}
-                size="small"
-              />
-              {t('feedback.xlsx')}
-            </Button>
-            <div className="metrics_header__select">
-              <FormSelect
-                key={defaultChartType ?? 'barChart'}
-                name={''}
-                label={''}
-                defaultValue={defaultChartType ?? 'barChart'}
-                options={charts}
-                onSelectionChange={(value) => setSelectedChart(value?.value ?? 'barChart')}
-              />
+    <Card>
+      <div className="metrics_header">
+        <div className="metrics_header__top">
+          <h3 className="metrics_header__title">
+            {t(title)}{' '}
+            {formattedStartDate === formattedEndDate
+              ? formatTimestamp(formattedStartDate)
+              : `${formatTimestamp(formattedStartDate)} - ${formatTimestamp(formattedEndDate)}`}
+          </h3>
+          {legendKeys.length > 0 && (
+            <div className="metrics_header__legend">
+              {legendKeys.map((key) => (
+                <div key={key} className="metrics_header__legend-item">
+                  <span className="metrics_header__legend-icon" style={{ backgroundColor: getColor(data, key) }} />
+                  <span className="metrics_header__legend-label">
+                    {key}
+                    {formatTotalPeriodCount(periodStatistics, key)}
+                  </span>
+                </div>
+              ))}
             </div>
+          )}
+        </div>
+        <div className="metrics_header__actions">
+          <Button
+            appearance="secondary"
+            style={{ boxShadow: 'inset 0 0 0 2px #005AA3', color: '#005AA3' }}
+            onClick={() => {
+              let sourceData = data.chartData;
+              if (data.distributionData?.isRatingDistribution) {
+                sourceData = data.distributionData?.chartData ?? data.chartData;
+              } else if (data.feedBackData?.chartData) {
+                sourceData = data.feedBackData.chartData;
+              }
+              downloadXlsx(sourceData);
+            }}
+          >
+            <Icon
+              icon={<MdOutlineDownload />}
+              size="small"
+            />
+            {t('reports.download_xlsx')}
+          </Button>
+          <div className="metrics_header__select">
+            <FormSelect
+              key={defaultChartType ?? 'barChart'}
+              name={''}
+              label={''}
+              defaultValue={defaultChartType ?? 'barChart'}
+              options={charts}
+              onSelectionChange={(value) => setSelectedChart(value?.value ?? 'barChart')}
+            />
           </div>
         </div>
-      }
-    >
+      </div>
       <div className="charts_wrapper">
         {buildChart()}
       </div>
       {data.qualityData != null && (
-        <div style={{ marginTop: 16, padding: '12px 0', borderTop: '1px solid #eee' }}>
+        <div style={{ marginTop: 16, padding: '12px 0' }}>
           {data.qualityData.totalChats != null && data.qualityData.chatsWithThemes != null && (
             <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
               <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityThemesTooltip')}</span>}>
@@ -281,7 +278,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
         </div>
       )}
       {isRatingDistribution && (data.distributionData?.totalChats != null || data.distributionData?.totalFeedback != null) && (
-        <div className="feedback_summary" style={{ marginTop: 16, padding: '12px 0', borderTop: '1px solid #eee' }}>
+        <div className="feedback_summary" style={{ marginTop: 16, padding: '12px 0' }}>
           <div style={{ marginBottom: 4 }}>
             <span>
               {feedbackScoreLabel}: {formatPeriodScore(periodScore)}

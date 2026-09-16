@@ -19,6 +19,7 @@
   flex-direction: column;
   gap: get-spacing(paldiski);
   width: 100%;
+  margin-bottom: get-spacing(paldiski);
 
   &__top {
     display: flex;
@@ -70,6 +71,8 @@
     gap: get-spacing(haapsalu);
     width: max-content;
     margin-left: auto;
+    margin-top: get-spacing(rapla);
+    margin-bottom: get-spacing(rapla);
   }
 
   &__select {

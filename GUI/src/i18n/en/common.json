@@ -73,7 +73,8 @@
     "last30days": "Last 30 Days",
     "months": "Selected Months",
     "customperiod": "Selected Period",
-    "until": "until"
+    "until": "until",
+    "periodRange": "per period {{start}} to {{end}}"
   },
   "menu": {
     "overview": "Overview",

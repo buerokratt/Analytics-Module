@@ -73,7 +73,8 @@
     "last30days": "Viimased 30 päeva",
     "months": "Valitud kuu",
     "customperiod": "Valitud periood",
-    "until": "kuni"
+    "until": "kuni",
+    "periodRange": "perioodil {{start}} kuni {{end}}"
   },
   "menu": {
     "overview": "Ülevaade",

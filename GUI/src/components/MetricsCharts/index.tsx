@@ -10,6 +10,7 @@ import PieGraph from '../PieGraph';
 import { getXlsx } from '../../resources/api-constants';
 import { ChartData, ChartType, ChartViewType } from '../../types/chart';
 import { chartDataKey, formatDate, formatTimestamp, formatTotalPeriodCount, getColor, getKeys } from '../../util/charts-utils';
+import { formatOverviewDate } from '../../util/overview-date-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { request, Methods } from '../../util/axios-client';
 import { saveFile } from 'util/file';
@@ -185,9 +186,10 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
         <div className="metrics_header__top">
           <h3 className="metrics_header__title">
             {t(title)}{' '}
-            {formattedStartDate === formattedEndDate
-              ? formatTimestamp(formattedStartDate)
-              : `${formatTimestamp(formattedStartDate)} - ${formatTimestamp(formattedEndDate)}`}
+            {t('general.periodRange', {
+              start: formatOverviewDate(new Date(startDate)),
+              end: formatOverviewDate(new Date(endDate)),
+            })}
           </h3>
           {legendKeys.length > 0 && (
             <div className="metrics_header__legend">

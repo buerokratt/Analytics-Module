@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { BarChart, CartesianGrid, YAxis, Tooltip, Bar, Label, XAxis, LabelList } from 'recharts';
+import { BarChart, CartesianGrid, YAxis, Tooltip, Bar, XAxis, LabelList } from 'recharts';
 import {
   chartDataKey,
   formatDate,
@@ -25,7 +25,7 @@ type Props = {
   isRatingDistribution?: boolean;
 };
 
-const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod, isRatingDistribution }) => {
+const BarGraph: React.FC<Props> = ({ startDate, endDate, data, groupByPeriod, isRatingDistribution }) => {
   const [width, setWidth] = useState<number | null>(null);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -58,9 +58,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="rating" type="category" />
-          <YAxis domain={[0, data.yAxisMax ?? 10]} ticks={ratingDistributionTicks} allowDataOverflow allowDecimals={false}>
-            <Label dx={-25} angle={270} value={unit ?? String(t('chart.count'))} />
-          </YAxis>
+          <YAxis domain={[0, data.yAxisMax ?? 10]} ticks={ratingDistributionTicks} allowDataOverflow allowDecimals={false} />
           <Tooltip content={<RatingDistributionTooltip />} />
           <Bar
             dataKey="count"
@@ -133,14 +131,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
           axisLine={false}
           tickLine={false}
           tick={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}
-        >
-          <Label
-            dx={-25}
-            angle={270}
-            value={unit}
-            style={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}
-          />
-        </YAxis>
+        />
         <Tooltip
           cursor={{ fill: 'rgba(151, 153, 164, 0.12)' }}
           content={<CustomChartTooltip formatDate={(date) => formatDate(date, 'dd-MM-yyyy')} />}

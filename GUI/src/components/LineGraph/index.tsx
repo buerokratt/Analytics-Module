@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, Label } from 'recharts';
+import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip } from 'recharts';
 import {
   chartDataKey,
   formatDate,
@@ -11,7 +11,6 @@ import {
 } from '../../util/charts-utils';
 import { OVERVIEW_AXIS_STROKE, OVERVIEW_TICK_FILL } from '../../util/overview-colors';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
-import { useTranslation } from 'react-i18next';
 import { ChartData } from 'types/chart';
 import { CustomChartTooltip, RatingDistributionTooltip } from 'components';
 
@@ -24,10 +23,9 @@ type Props = {
   isRatingDistribution?: boolean;
 };
 
-const LineGraph = ({ data, startDate, endDate, unit, groupByPeriod, isRatingDistribution }: Props) => {
+const LineGraph = ({ data, startDate, endDate, groupByPeriod, isRatingDistribution }: Props) => {
   const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
-  const { t } = useTranslation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -55,9 +53,7 @@ const LineGraph = ({ data, startDate, endDate, unit, groupByPeriod, isRatingDist
         >
           <Tooltip content={<RatingDistributionTooltip />} />
           <XAxis dataKey="rating" type="category" />
-          <YAxis domain={[0, data.yAxisMax ?? 10]} ticks={ratingDistributionTicks} allowDataOverflow allowDecimals={false}>
-            <Label dx={-25} angle={270} value={unit ?? String(t('chart.count'))} />
-          </YAxis>
+          <YAxis domain={[0, data.yAxisMax ?? 10]} ticks={ratingDistributionTicks} allowDataOverflow allowDecimals={false} />
           <CartesianGrid stroke="#f5f5f5" />
           <Line
             dataKey="count"
@@ -120,14 +116,7 @@ const LineGraph = ({ data, startDate, endDate, unit, groupByPeriod, isRatingDist
           axisLine={false}
           tickLine={false}
           tick={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}
-        >
-          <Label
-            dx={-25}
-            angle={270}
-            value={unit}
-            style={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}
-          />
-        </YAxis>
+        />
         {dataKeys.map((k) => (
           <Line
             key={k}

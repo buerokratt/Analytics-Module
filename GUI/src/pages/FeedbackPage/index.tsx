@@ -1,7 +1,11 @@
 import {useTranslation} from 'react-i18next';
-import React, {useEffect, useRef, useState} from 'react';
-import OptionsPanel, {Option} from '../components/MetricAndPeriodOptions';
-import MetricsCharts from '../components/MetricsCharts';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {Option} from '../../components/MetricAndPeriodOptions';
+import MetricOptionsGroup from '../../components/MetricAndPeriodOptions/MetricOptionsGroup';
+import SubOptionsGroup from '../../components/MetricAndPeriodOptions/SubOptionsGroup';
+import MetricsCharts from '../../components/MetricsCharts';
+import {Button, Card} from '../../components';
+import OverviewDateControl from '../../components/overview/OverviewDateControl';
 import {
     getChatsStatuses,
     getDistributionOnBuerokrattChatsFeedback,
@@ -11,29 +15,31 @@ import {
     getNpsFeedbackOnBuerokrattChats,
     getNpsOnCSAChatsFeedback,
     getNpsOnSelectedCSAChatsFeedback,
-} from '../resources/api-constants';
-import {MetricOptionsState} from '../components/MetricAndPeriodOptions/types';
+} from '../../resources/api-constants';
+import {MetricOptionsState} from '../../components/MetricAndPeriodOptions/types';
 import {
     chartDataKey,
     formatDate,
     getAdvisorChartData,
     getAdvisorsList,
     translateChartKeys,
-} from '../util/charts-utils';
+} from '../../util/charts-utils';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {BehaviorSubject} from 'rxjs';
-import {Methods, request} from '../util/axios-client';
-import withAuthorization, {ROLES} from '../hoc/with-authorization';
-import useStore from '../store/user/store';
+import {Methods, request} from '../../util/axios-client';
+import withAuthorization, {ROLES} from '../../hoc/with-authorization';
+import useStore from '../../store/user/store';
 import {randomColor} from 'util/generateRandomColor';
 import {ChartData} from 'types/chart';
 import {usePeriodStatisticsContext} from 'hooks/usePeriodStatisticsContext';
 import {ChatHistory} from "@buerokratt-ria/common-gui-components";
-import {useToast} from "../hooks/useToast";
-import {getDomainsArray} from "../util/multiDomain-utils";
-import {getShowTestData} from "../util/testChat-utils";
-import { endOfDay, formatISO, startOfDay } from 'date-fns';
-import { mapDistributionChartData } from '../util/feedback-distribution-utils';
+import {useToast} from "../../hooks/useToast";
+import {getDomainsArray} from "../../util/multiDomain-utils";
+import {getShowTestData} from "../../util/testChat-utils";
+import { formatISO } from 'date-fns';
+import { mapDistributionChartData } from '../../util/feedback-distribution-utils';
+import { DateRange, getRange, OverviewUnit, todayLabelKey } from '../../util/overview-date-utils';
+import './FeedbackPage.scss';
 
 const statusOptions = [
     'CLIENT_LEFT_WITH_ACCEPTED',
@@ -47,6 +53,9 @@ const statusOptions = [
     'user-reached',
     'user-not-reached',
 ];
+
+const getSubOptionIds = (metricOptions: Option[], metric: string) =>
+    metricOptions.find((x) => x.id === metric)?.subOptions?.map((x) => x.id) ?? [];
 
 const FeedbackPage: React.FC = () => {
     const {t} = useTranslation();
@@ -63,8 +72,19 @@ const FeedbackPage: React.FC = () => {
     const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
     const {setPeriodStatistics} = usePeriodStatisticsContext();
     const [updateKey, setUpdateKey] = useState<number>(0)
+    const userDomains = useStore.getState().userDomains;
     const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
+    const [dateUnit, setDateUnit] = useState<OverviewUnit>('day');
+    const [anchorDate, setAnchorDate] = useState(new Date());
+    const [periodRange, setPeriodRange] = useState<DateRange>(() => getRange('month', new Date()));
+    const [metric, setMetric] = useState<string>('');
+    const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
+    const range = useMemo(
+        () => (dateUnit === 'period' ? periodRange : getRange(dateUnit, anchorDate)),
+        [dateUnit, anchorDate, periodRange]
+    );
 
     useEffect(() => {
         if (!multiDomainEnabled) return;
@@ -128,6 +148,12 @@ const FeedbackPage: React.FC = () => {
     ]);
 
     const showNegativeChart = currentConfigs?.metric === 'negative_feedback';
+
+    const selectedMetricOption = useMemo(
+        () => feedbackMetrics.find((x) => x.id === metric),
+        [feedbackMetrics, metric]
+    );
+    const subOptions = selectedMetricOption?.subOptions ?? [];
 
     const [configsSubject] = useState(
         () => new BehaviorSubject<any>(null)
@@ -459,49 +485,117 @@ const FeedbackPage: React.FC = () => {
         return {result, response};
     };
 
+    useEffect(() => {
+        if (!metric) return;
+
+        const config: MetricOptionsState = {
+            period: '',
+            metric,
+            start: formatISO(range.start),
+            end: formatISO(range.end),
+            options: selectedOptions,
+            groupByPeriod: dateUnit === 'day' ? 'hour' : 'day',
+            urls: userDomains ?? [],
+        };
+
+        setCurrentConfigs(config);
+        configsSubject.next(config);
+
+        const selectedOption = feedbackMetrics.find((x) => x.id === config.metric);
+        if (!selectedOption) return;
+        setCurrentMetric(selectedOption.labelKey);
+        setUnit(selectedOption.unit ?? '');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [metric, selectedOptions, range]);
+
+    const handleDateUnitChange = (newUnit: OverviewUnit) => {
+        if (newUnit === 'period' && dateUnit !== 'period') {
+            setPeriodRange(range);
+        }
+        setDateUnit(newUnit);
+    };
+
+    const handleTodayClick = () => {
+        if (dateUnit === 'period') {
+            setDateUnit('day');
+        }
+        setAnchorDate(new Date());
+    };
+
     return (
         <>
             <h1>{t('menu.feedback')}</h1>
-            <OptionsPanel
-                metricOptions={feedbackMetrics}
-                enableSelectAll={showSelectAll}
-                dateFormat="yyyy-MM-dd"
-                onChange={(config) => {
-                        setCurrentConfigs(config);
-                        configsSubject.next(config);
-                        setCurrentMetric(`feedback.${config.metric}`);
+            <div className="feedback-page">
+                <Card>
+                    <div className="page-header">
+                        <div />
+                        <OverviewDateControl
+                            unit={dateUnit}
+                            anchorDate={anchorDate}
+                            range={range}
+                            periodRange={periodRange}
+                            onUnitChange={handleDateUnitChange}
+                            onAnchorChange={setAnchorDate}
+                            onPeriodRangeChange={setPeriodRange}
+                        />
+                        <div className="page-header__end">
+                            <Button appearance="secondary" size="s" onClick={handleTodayClick}>
+                                {t(todayLabelKey(dateUnit))}
+                            </Button>
+                        </div>
+                    </div>
 
-                        const selectedOption = feedbackMetrics.find((x) => x.id === config.metric);
-                        if (!selectedOption) return;
-                        setUnit(selectedOption.unit ?? '');
-                    }
-                }
-            />
-            {currentConfigs?.metric !== 'negative_feedback' && (
-                <MetricsCharts
-                    title={currentMetric}
-                    data={chartData}
-                    startDate={currentConfigs?.start ?? formatISO(startOfDay(new Date()))}
-                    endDate={currentConfigs?.end ?? formatISO(endOfDay(new Date()))}
-                    groupByPeriod={currentConfigs?.groupByPeriod ?? 'day'}
-                    unit={unit}
-                />
-            )}
-            {showNegativeChart && (
-                <div style={{ minHeight: '500px' }}>
-                    <ChatHistory
-                        toastContext={toastContext}
-                        displayDateFilter={false}
-                        displaySearchBar={false}
-                        displayTitle={false}
-                        showStatus={false}
-                        delegatedEndDate={formatDate(new Date(currentConfigs?.end ?? Date.now()), 'yyyy-MM-dd')}
-                        delegatedStartDate={formatDate(new Date(currentConfigs?.start ?? Date.now()), 'yyyy-MM-dd')}
-                        user={useStore.getState().userInfo}
-                        userDomains={useStore}
-                    />
-                </div>
-            )}
+                    <div className="feedback-page__sections" key={userDomains.join(',')}>
+                        <Card>
+                            <MetricOptionsGroup
+                                options={feedbackMetrics}
+                                label={t('general.chooseMetric')}
+                                onChange={(newMetric) => {
+                                    setMetric(newMetric);
+                                    setSelectedOptions(getSubOptionIds(feedbackMetrics, newMetric));
+                                }}
+                            />
+                        </Card>
+
+                        {subOptions.length > 0 && (
+                            <Card>
+                                <SubOptionsGroup
+                                    subOptions={subOptions}
+                                    label={t('general.additionalOptions')}
+                                    onChange={setSelectedOptions}
+                                    enableSelectAll={showSelectAll}
+                                />
+                            </Card>
+                        )}
+
+                        {currentConfigs?.metric !== 'negative_feedback' && (
+                            <MetricsCharts
+                                title={currentMetric}
+                                data={chartData}
+                                startDate={currentConfigs?.start ?? formatISO(range.start)}
+                                endDate={currentConfigs?.end ?? formatISO(range.end)}
+                                groupByPeriod={currentConfigs?.groupByPeriod ?? 'day'}
+                                unit={unit}
+                            />
+                        )}
+                        {showNegativeChart && (
+                            <div style={{ minHeight: '500px' }}>
+                                <ChatHistory
+                                    toastContext={toastContext}
+                                    displayDateFilter={false}
+                                    displaySearchBar={false}
+                                    displayTitle={false}
+                                    showStatus={false}
+                                    delegatedEndDate={formatDate(new Date(currentConfigs?.end ?? Date.now()), 'yyyy-MM-dd')}
+                                    delegatedStartDate={formatDate(new Date(currentConfigs?.start ?? Date.now()), 'yyyy-MM-dd')}
+                                    user={useStore.getState().userInfo}
+                                    userDomains={useStore}
+                                />
+                            </div>
+                        )}
+                    </div>
+                </Card>
+            </div>
         </>
     );
 };

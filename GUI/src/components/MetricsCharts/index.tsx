@@ -9,10 +9,11 @@ import LineGraph from '../LineGraph';
 import PieGraph from '../PieGraph';
 import { getXlsx } from '../../resources/api-constants';
 import { ChartData, ChartType, ChartViewType } from '../../types/chart';
-import { chartDataKey, formatDate, formatTimestamp, getKeys } from '../../util/charts-utils';
+import { chartDataKey, formatDate, formatTimestamp, formatTotalPeriodCount, getColor, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { request, Methods } from '../../util/axios-client';
 import { saveFile } from 'util/file';
+import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 
 type Props = {
   title: string;
@@ -51,6 +52,7 @@ const calcPeriodScore = (
 
 const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, defaultChartType }: Props) => {
   const { t } = useTranslation();
+  const { periodStatistics } = usePeriodStatisticsContext();
   const formattedStartDate = formatDate(new Date(startDate), 'yyyy-MM-dd');
   const formattedEndDate = formatDate(new Date(endDate), 'yyyy-MM-dd');
   const isFiveScale = data.distributionData?.isFiveScale ?? false;
@@ -103,6 +105,12 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
   const distributionOrFeedBack = selectedChart === 'pieChart' ? (data.distributionData ?? data) : (data.feedBackData ?? data);
   const selectedData = isRatingDistribution ? (data.distributionData ?? data) : distributionOrFeedBack;
 
+  const showHeaderLegend = selectedChart !== 'pieChart' && !isRatingDistribution;
+  const legendKeys =
+    showHeaderLegend && (selectedData?.chartData?.length ?? 0) > 0
+      ? getKeys(selectedData.chartData).filter((k) => k !== chartDataKey)
+      : [];
+
   const buildChart = () => {
     if (selectedChart === 'pieChart') {
       return <PieGraph data={selectedData} isRatingDistribution={isRatingDistribution} />;
@@ -113,6 +121,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
           startDate={formattedStartDate}
           endDate={formattedEndDate}
           unit={unit}
+          groupByPeriod={groupByPeriod}
           isRatingDistribution={isRatingDistribution}
         />
       );
@@ -173,16 +182,29 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
   return (
     <Card
       header={
-        <div className="container">
-          <div className="title">
-            <h3>
+        <div className="metrics_header">
+          <div className="metrics_header__top">
+            <h3 className="metrics_header__title">
               {t(title)}{' '}
               {formattedStartDate === formattedEndDate
                 ? formatTimestamp(formattedStartDate)
                 : `${formatTimestamp(formattedStartDate)} - ${formatTimestamp(formattedEndDate)}`}
             </h3>
+            {legendKeys.length > 0 && (
+              <div className="metrics_header__legend">
+                {legendKeys.map((key) => (
+                  <div key={key} className="metrics_header__legend-item">
+                    <span className="metrics_header__legend-icon" style={{ backgroundColor: getColor(data, key) }} />
+                    <span className="metrics_header__legend-label">
+                      {key}
+                      {formatTotalPeriodCount(periodStatistics, key)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-          <div className="other_content">
+          <div className="metrics_header__actions">
             <Button
               appearance="text"
               style={{ marginRight: 15 }}
@@ -202,14 +224,16 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
               />
               {t('feedback.xlsx')}
             </Button>
-            <FormSelect
-              key={defaultChartType ?? 'barChart'}
-              name={''}
-              label={''}
-              defaultValue={defaultChartType ?? 'barChart'}
-              options={charts}
-              onSelectionChange={(value) => setSelectedChart(value?.value ?? 'barChart')}
-            />
+            <div className="metrics_header__select">
+              <FormSelect
+                key={defaultChartType ?? 'barChart'}
+                name={''}
+                label={''}
+                defaultValue={defaultChartType ?? 'barChart'}
+                options={charts}
+                onSelectionChange={(value) => setSelectedChart(value?.value ?? 'barChart')}
+              />
+            </div>
           </div>
         </div>
       }

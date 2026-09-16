@@ -1,19 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { BarChart, CartesianGrid, YAxis, Tooltip, Legend, Bar, Label, XAxis, LabelList } from 'recharts';
+import { BarChart, CartesianGrid, YAxis, Tooltip, Bar, Label, XAxis, LabelList } from 'recharts';
 import {
   chartDataKey,
-  dateFormatter,
   formatDate,
-  formatTotalPeriodCount,
   getColor,
   getDistributionYAxisTicks,
   getKeys,
   getTicks,
+  roundUpToTen,
 } from '../../util/charts-utils';
+import { OVERVIEW_AXIS_STROKE, OVERVIEW_TICK_FILL } from '../../util/overview-colors';
+import { createStackedBarShape } from '../../util/stackedBarShape';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { useTranslation } from 'react-i18next';
 import { ChartData } from 'types/chart';
-import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 import { CustomChartTooltip, RatingDistributionTooltip } from 'components';
 
 type Props = {
@@ -27,7 +27,6 @@ type Props = {
 
 const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeriod, isRatingDistribution }) => {
   const [width, setWidth] = useState<number | null>(null);
-  const { periodStatistics } = usePeriodStatisticsContext();
 
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
@@ -41,14 +40,10 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  let minDate = new Date(startDate).getTime();
-  if (groupByPeriod === 'day') {
-    const millisecondInOneDay = 24 * 60 * 60 * 1000;
-    minDate = minDate - millisecondInOneDay;
-  }
-
-  const domain = [minDate, new Date(endDate).getTime()];
-  const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5);
+  const isHourly = groupByPeriod === 'hour';
+  const domain = [new Date(startDate).getTime(), new Date(endDate).getTime()];
+  const xAxisTicks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5);
+  const isDenseXAxis = xAxisTicks.length > 10;
   const ratingDistributionTicks = getDistributionYAxisTicks(data.yAxisMax ?? 10);
 
   if (isRatingDistribution && (data?.chartData?.length ?? 0) > 0 && data.chartData?.[0] && 'rating' in data.chartData[0]) {
@@ -84,6 +79,26 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
     );
   }
 
+  const dataKeys = data?.chartData?.length > 0 ? getKeys(data.chartData).filter((k) => k !== chartDataKey) : [];
+  const stackedKeys = dataKeys.filter((k) => {
+    const isCount = k === t('chats.totalCount');
+    const isString = typeof data.chartData[0][k] === 'string';
+    return !isCount && !isString;
+  });
+  const topStackedKey = stackedKeys[stackedKeys.length - 1];
+  const unstackedKeys = dataKeys.filter((k) => !stackedKeys.includes(k));
+
+  const maxTotal = Math.max(
+    0,
+    ...(data.chartData ?? []).map((row) => {
+      const stackedSum = stackedKeys.reduce((sum, k) => sum + (Number(row[k]) || 0), 0);
+      const unstackedMax = unstackedKeys.reduce((max, k) => Math.max(max, Number(row[k]) || 0), 0);
+      return Math.max(stackedSum, unstackedMax);
+    })
+  );
+  const yAxisMax = roundUpToTen(maxTotal);
+  const yAxisTicks = getDistributionYAxisTicks(yAxisMax);
+
   return (
     <div ref={ref}>
       <BarChart
@@ -91,51 +106,82 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, unit, groupByPeri
         height={(width ?? 0) / 3.76}
         data={data.chartData}
         barSize={20}
-        margin={{ top: 20, right: 65, bottom: 50 }}
+        margin={{ top: 20, right: 30, bottom: isDenseXAxis ? 50 : 30 }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
+        <CartesianGrid vertical={false} stroke={OVERVIEW_AXIS_STROKE} strokeDasharray="3 3" />
         <XAxis
           dataKey={chartDataKey}
-          scale="time"
-          tickFormatter={(value) => dateFormatter(startDate, endDate, value)}
+          tickFormatter={(value) => formatDate(new Date(value), isHourly ? 'HH:mm' : 'dd.MM')}
           type="number"
           domain={domain}
-          ticks={ticks}
-          angle={35}
-          dx={30}
-          dy={26}
+          ticks={xAxisTicks}
+          scale="time"
           minTickGap={0}
           interval={0}
-          padding={{ left: 25, right: 25 }}
+          angle={isDenseXAxis ? 35 : undefined}
+          dx={isDenseXAxis ? 30 : undefined}
+          dy={isDenseXAxis ? 26 : undefined}
+          padding={{ left: isHourly ? 8 : 14, right: isHourly ? 8 : 14 }}
+          axisLine={{ stroke: OVERVIEW_AXIS_STROKE }}
+          tickLine={false}
+          tick={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}
         />
-        <YAxis ticks={data.chartData && data.chartData.length > 0 ? undefined : [0]}>
+        <YAxis
+          domain={[0, yAxisMax]}
+          ticks={yAxisTicks}
+          allowDecimals={false}
+          axisLine={false}
+          tickLine={false}
+          tick={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}
+        >
           <Label
             dx={-25}
             angle={270}
             value={unit}
+            style={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}
           />
         </YAxis>
-        <Tooltip content={<CustomChartTooltip formatDate={(date) => formatDate(date, 'dd-MM-yyyy')} />} />
-        <Legend
-          wrapperStyle={{ position: 'relative', marginTop: '20px' }}
-          formatter={(value) => `${value}${formatTotalPeriodCount(periodStatistics, value)}`}
+        <Tooltip
+          cursor={{ fill: 'rgba(151, 153, 164, 0.12)' }}
+          content={<CustomChartTooltip formatDate={(date) => formatDate(date, 'dd-MM-yyyy')} />}
         />
         {data?.chartData?.length > 0 &&
-          getKeys(data.chartData).map((k, i) => {
+          dataKeys.map((k) => {
             const isCount = k === t('chats.totalCount');
             const isString = typeof data.chartData[0][k] === 'string';
-            return k === chartDataKey ? null : (
+            const isStacked = !isCount && !isString;
+            return (
               <Bar
                 key={k}
                 dataKey={k}
                 type="monotone"
                 barSize={isString ? 0 : undefined}
                 height={isString ? 0 : undefined}
-                stackId={isCount || isString ? undefined : chartDataKey}
+                stackId={isStacked ? chartDataKey : undefined}
                 stroke={getColor(data, k)}
                 fill={getColor(data, k)}
                 minPointSize={data?.minPointSize ?? undefined}
-              />
+                shape={isStacked ? createStackedBarShape(stackedKeys, k) : undefined}
+                radius={!isStacked && !isString ? [4, 4, 0, 0] : undefined}
+              >
+                {isStacked && k === topStackedKey && stackedKeys.length > 0 && (
+                  <LabelList
+                    content={({ x, y, width: barWidth, index }) => {
+                      if (index === undefined) return null;
+                      const row = data.chartData[index as number];
+                      if (!row) return null;
+                      const total = stackedKeys.reduce((sum, key) => sum + (Number(row[key]) || 0), 0);
+                      if (total <= 0) return null;
+                      const centerX = Number(x) + Number(barWidth) / 2;
+                      return (
+                        <text x={centerX} y={Number(y) - 6} textAnchor="middle" fontSize={12} fontWeight={600}>
+                          {total}
+                        </text>
+                      );
+                    }}
+                  />
+                )}
+              </Bar>
             );
           })}
       </BarChart>

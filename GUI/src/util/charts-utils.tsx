@@ -46,6 +46,8 @@ const getReadableAxisStep = (maxValue: number) => {
   return Math.max(minStep, magnitude * 10);
 };
 
+export const roundUpToTen = (value: number): number => (value <= 10 ? 10 : Math.ceil(value / 10) * 10);
+
 export const getDistributionYAxisTicks = (yAxisMax: number) => {
   const normalizedMax = Math.max(yAxisMax, 10);
   const step = getReadableAxisStep(normalizedMax);

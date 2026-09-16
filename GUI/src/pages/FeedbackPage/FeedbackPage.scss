@@ -1,0 +1,14 @@
+@import 'src/styles/tools/spacing';
+
+.feedback-page {
+  > .card {
+    max-height: none;
+  }
+}
+
+.feedback-page__sections {
+  display: flex;
+  flex-direction: column;
+  gap: get-spacing(haapsalu);
+  margin-top: get-spacing(haapsalu);
+}

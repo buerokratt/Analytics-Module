@@ -2,7 +2,7 @@ import React, { FC, SelectHTMLAttributes, useId, useState } from 'react';
 import { useSelect } from 'downshift';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { MdArrowDropDown } from 'react-icons/md';
+import { MdKeyboardArrowDown } from 'react-icons/md';
 
 import { Icon } from '../../../components';
 import './FormSelect.scss';
@@ -68,7 +68,7 @@ const FormSelect: FC<FormSelectProps> = (
       <div className='analytics-select__wrapper'>
         <div className='analytics-select__trigger' {...getToggleButtonProps()}>
           {selectedItem?.label ?? placeholderValue}
-          <Icon label='Dropdown icon' size='medium' icon={<MdArrowDropDown color='#5D6071' />} />
+          <Icon label='Dropdown icon' size='medium' icon={<MdKeyboardArrowDown color='#5D6071' />} />
         </div>
         <ul className='analytics-select__menu' {...getMenuProps()}>
           {isOpen && (

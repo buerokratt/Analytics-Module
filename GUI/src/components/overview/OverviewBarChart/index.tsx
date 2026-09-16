@@ -5,7 +5,7 @@ import { endOfWeek } from 'date-fns';
 import { MdFlag } from 'react-icons/md';
 import Icon from '../../Icon';
 import TooltipWrapper from '../../TooltipWrapper';
-import { formatDate, getDistributionYAxisTicks } from '../../../util/charts-utils';
+import { formatDate, getDistributionYAxisTicks, roundUpToTen } from '../../../util/charts-utils';
 import { DateRange, formatOverviewDate, isLongPeriod, OverviewUnit, WEEK_OPTIONS } from '../../../util/overview-date-utils';
 import { OVERVIEW_AXIS_STROKE, OVERVIEW_BLUE, OVERVIEW_GREEN, OVERVIEW_TICK_FILL } from '../../../util/overview-colors';
 import { createStackedBarShape } from './barShapes';
@@ -16,8 +16,6 @@ const LEGEND_ITEMS = [
   { key: 'overview.legend.burokratt', color: OVERVIEW_BLUE },
   { key: 'overview.legend.csa', color: OVERVIEW_GREEN },
 ] as const;
-
-const roundUpToTen = (value: number): number => (value <= 10 ? 10 : Math.ceil(value / 10) * 10);
 
 type Props = {
   readonly range: DateRange;

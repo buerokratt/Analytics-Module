@@ -1,3 +1,10 @@
+@import 'src/styles/tools/color';
+@import 'src/styles/settings/variables/typography';
+
 .option-label {
-    width: 7.5rem;
+    width: 9.5rem;
+    color: get-color(black-coral-6);
+    font-size: $veera-font-size-80;
+    font-weight: 400;
+    text-transform: uppercase;
 }

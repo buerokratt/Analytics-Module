@@ -165,10 +165,12 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
       data: {
         data: modifiedData?.map((p) => {
           const { [chartDataKey]: originalKey, ...rest } = p;
-          return {
-            [t(`global.${chartDataKey}`)]: formatTimestamp(originalKey),
-            ...rest,
-          };
+          return originalKey === undefined
+            ? rest
+            : {
+                [t(`global.${chartDataKey}`)]: formatTimestamp(originalKey),
+                ...rest,
+              };
         }),
       },
     });

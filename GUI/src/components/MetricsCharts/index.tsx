@@ -229,18 +229,16 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
             />
             {t('reports.download_xlsx')}
           </Button>
-          {charts.length > 1 && (
-            <div className="metrics_header__select">
-              <FormSelect
-                key={defaultChartType ?? 'barChart'}
-                name={''}
-                label={''}
-                defaultValue={defaultChartType ?? 'barChart'}
-                options={charts}
-                onSelectionChange={(value) => setSelectedChart(value?.value ?? 'barChart')}
-              />
-            </div>
-          )}
+          <div className="metrics_header__select">
+            <FormSelect
+              key={defaultChartType ?? 'barChart'}
+              name={''}
+              label={''}
+              defaultValue={defaultChartType ?? 'barChart'}
+              options={charts}
+              onSelectionChange={(value) => setSelectedChart(value?.value ?? 'barChart')}
+            />
+          </div>
         </div>
       </div>
       <div className="charts_wrapper">

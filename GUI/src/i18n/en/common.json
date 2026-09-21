@@ -241,7 +241,7 @@
     "avg_pick_time": "Average response speed in the institution",
     "avg_present_csa": "Average presence of counselors",
     "num_chats_csa": "Number of conversations by adviser",
-    "avg_chat_time_csa": "Conversation time by advisor",
+    "avg_chat_time_csa": "Conversation time (min) by advisor",
     "theme_overview": "Theme overview",
     "follow_up_action_overview": "Follow-up Action overview",
     "quality_overview": "Quality overview",
@@ -384,7 +384,7 @@
     "avg_pick_time": "Average response speed in the institution",
     "avg_present_csa": "Average presence of counselors",
     "num_chats_csa": "Number of conversations by adviser",
-    "avg_chat_time_csa": "Conversation time by advisor"
+    "avg_chat_time_csa": "Conversation time (min) by advisor"
   },
   "chat": {
     "userTyping": "User Typing",

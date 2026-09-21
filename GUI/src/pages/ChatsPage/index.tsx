@@ -762,6 +762,7 @@ const ChatsPage: React.FC = () => {
               unit={unit}
               groupByPeriod={configs?.groupByPeriod ?? 'day'}
               defaultChartType={allMetrics.find((x) => x.id === configs?.metric)?.defaultChartType}
+              allowedChartTypes={allMetrics.find((x) => x.id === configs?.metric)?.allowedChartTypes}
             />
           </div>
         </Card>

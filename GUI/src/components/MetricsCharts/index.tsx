@@ -24,6 +24,7 @@ type Props = {
   unit?: string;
   groupByPeriod: GroupByPeriod;
   readonly defaultChartType?: ChartViewType;
+  readonly allowedChartTypes?: ChartViewType[];
 };
 
 const formatPeriodScore = (value: number | undefined | null): string => {
@@ -51,7 +52,7 @@ const calcPeriodScore = (
   return ((satisfiedCount - dissatisfiedCount) / totalFeedback) * 100;
 };
 
-const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, defaultChartType }: Props) => {
+const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, defaultChartType, allowedChartTypes }: Props) => {
   const { t } = useTranslation();
   const { periodStatistics } = usePeriodStatisticsContext();
   const formattedStartDate = formatDate(new Date(startDate), 'yyyy-MM-dd');
@@ -83,7 +84,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
 
   const periodScore = calcPeriodScore(satisfiedCount, dissatisfiedCount, totalFeedback, isFiveScale);
 
-  const charts: ChartType[] = [
+  const allCharts: ChartType[] = [
     {
       label: t('chart.barChart'),
       value: 'barChart',
@@ -97,6 +98,9 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
       value: 'lineChart',
     },
   ];
+  const charts: ChartType[] = allowedChartTypes
+    ? allCharts.filter((chart) => allowedChartTypes.includes(chart.value as ChartViewType))
+    : allCharts;
   const [selectedChart, setSelectedChart] = useState<string>(defaultChartType ?? 'barChart');
   const isRatingDistribution = data.distributionData?.isRatingDistribution === true;
 
@@ -225,16 +229,18 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
             />
             {t('reports.download_xlsx')}
           </Button>
-          <div className="metrics_header__select">
-            <FormSelect
-              key={defaultChartType ?? 'barChart'}
-              name={''}
-              label={''}
-              defaultValue={defaultChartType ?? 'barChart'}
-              options={charts}
-              onSelectionChange={(value) => setSelectedChart(value?.value ?? 'barChart')}
-            />
-          </div>
+          {charts.length > 1 && (
+            <div className="metrics_header__select">
+              <FormSelect
+                key={defaultChartType ?? 'barChart'}
+                name={''}
+                label={''}
+                defaultValue={defaultChartType ?? 'barChart'}
+                options={charts}
+                onSelectionChange={(value) => setSelectedChart(value?.value ?? 'barChart')}
+              />
+            </div>
+          )}
         </div>
       </div>
       <div className="charts_wrapper">

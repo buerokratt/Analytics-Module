@@ -102,7 +102,6 @@ const LineGraph = ({ data, startDate, endDate, groupByPeriod, isRatingDistributi
           minTickGap={0}
           interval={0}
           angle={isDenseXAxis ? 35 : undefined}
-          dx={isDenseXAxis ? 30 : undefined}
           dy={isDenseXAxis ? 26 : undefined}
           padding={{ left: isHourly ? 8 : 14, right: isHourly ? 8 : 14 }}
           axisLine={{ stroke: OVERVIEW_AXIS_STROKE }}

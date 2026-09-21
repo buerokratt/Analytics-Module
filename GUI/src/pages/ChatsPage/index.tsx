@@ -68,11 +68,25 @@ const ChatsPage: React.FC = () => {
   const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
   const advisors = useRef<any[]>([]);
+  const lastCsaRangeKey = useRef<string>('');
 
   const themes = useRef<QualityMetricOption[]>([]);
   const followUpStatuses = useRef<QualityMetricOption[]>([]);
   const qualityRatings = useRef<QualityMetricOption[]>([]);
   const lastFetchKey = useRef<string>('');
+  const advisorColors = useRef<Map<string, string>>(new Map());
+  const themeColors = useRef<Map<string, string>>(new Map());
+  const followUpColors = useRef<Map<string, string>>(new Map());
+  const qualityColors = useRef<Map<string, string>>(new Map());
+
+  const getStableColor = (colorMap: Map<string, string>, id: string, fallback?: string): string => {
+    const existing = colorMap.get(id);
+    if (existing) return existing;
+    const color = fallback ?? randomColor();
+    colorMap.set(id, color);
+    return color;
+  };
+
   const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
   const [allMetrics, setAllMetrics] = useState<Option[]>([...chatOptions]);
 
@@ -250,17 +264,16 @@ const ChatsPage: React.FC = () => {
         },
       });
       const res = response.response;
-      if (advisors.current.length === 0) {
-        const fetchedAdvisors = getAdvisorsList(res);
-        advisors.current = fetchedAdvisors;
-        const updatedMetrics = [...allMetrics];
-        updatedMetrics[7].subOptions = fetchedAdvisors;
-        setAllMetrics(updatedMetrics);
-      }
       const responseAdvisors = getAdvisorsList(res).map((a) => ({
         ...a,
-        color: advisors.current.find((s) => s.id === a.id)?.color ?? a.color,
+        color: getStableColor(advisorColors.current, a.id, a.color),
       }));
+      if (advisors.current.length === 0) {
+        advisors.current = responseAdvisors;
+        const updatedMetrics = [...allMetrics];
+        updatedMetrics[7].subOptions = responseAdvisors;
+        setAllMetrics(updatedMetrics);
+      }
       result = {
         chartData: getAdvisorChartData(res, responseAdvisors, 'chart.count'),
         colors: responseAdvisors.map(({ labelKey, color }) => ({ id: labelKey, color })),
@@ -290,17 +303,16 @@ const ChatsPage: React.FC = () => {
         },
       });
       const res = response.response;
-      if (advisors.current.length === 0) {
-        const fetchedAdvisors = getAdvisorsList(res);
-        advisors.current = fetchedAdvisors;
-        const updatedMetrics = [...allMetrics];
-        updatedMetrics[8].subOptions = fetchedAdvisors;
-        setAllMetrics(updatedMetrics);
-      }
       const responseAdvisors = getAdvisorsList(res).map((a) => ({
         ...a,
-        color: advisors.current.find((s) => s.id === a.id)?.color ?? a.color,
+        color: getStableColor(advisorColors.current, a.id, a.color),
       }));
+      if (advisors.current.length === 0) {
+        advisors.current = responseAdvisors;
+        const updatedMetrics = [...allMetrics];
+        updatedMetrics[8].subOptions = responseAdvisors;
+        setAllMetrics(updatedMetrics);
+      }
       result = {
         chartData: getAdvisorChartData(res, responseAdvisors, 'chart.count'),
         colors: responseAdvisors.map(({ labelKey, color }) => ({ id: labelKey, color })),
@@ -348,7 +360,7 @@ const ChatsPage: React.FC = () => {
       const fetchedThemes: QualityMetricOption[] = res.map((item) => ({
         id: item.theme,
         labelKey: item.theme,
-        color: themes.current.find((th) => th.id === item.theme)?.color ?? randomColor(),
+        color: getStableColor(themeColors.current, item.theme),
         isSelected: true,
       }));
       if (themes.current.length === 0) {
@@ -415,7 +427,7 @@ const ChatsPage: React.FC = () => {
       const fetchedQualityRatings: QualityMetricOption[] = res.map((item) => ({
         id: item.quality,
         labelKey: item.quality,
-        color: qualityRatings.current.find((q) => q.id === item.quality)?.color ?? randomColor(),
+        color: getStableColor(qualityColors.current, item.quality),
         isSelected: true,
       }));
       if (qualityRatings.current.length === 0) {
@@ -550,7 +562,7 @@ const ChatsPage: React.FC = () => {
       const fetchedStatuses = res.map((item) => ({
         id: item.followUpAction,
         labelKey: item.followUpAction,
-        color: followUpStatuses.current.find((s) => s.id === item.followUpAction)?.color ?? randomColor(),
+        color: getStableColor(followUpColors.current, item.followUpAction),
         isSelected: true,
       }));
       if (followUpStatuses.current.length === 0) {
@@ -631,6 +643,12 @@ const ChatsPage: React.FC = () => {
 
     if (!CSA_METRIC_IDS.has(config.metric)) {
       advisors.current = [];
+    } else {
+      const csaRangeKey = `${config.start}|${config.end}`;
+      if (lastCsaRangeKey.current !== csaRangeKey) {
+        advisors.current = [];
+      }
+      lastCsaRangeKey.current = csaRangeKey;
     }
 
     const fetchKey = `${config.metric}|${config.start}|${config.end}`;

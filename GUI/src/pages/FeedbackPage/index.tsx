@@ -65,6 +65,8 @@ const FeedbackPage: React.FC = () => {
         colors: [],
     });
     const advisors = useRef<any[]>([]);
+    const lastCsaRangeKey = useRef<string>('');
+    const advisorColors = useRef<Map<string, string>>(new Map());
     const [advisorsList, setAdvisorsList] = useState<any[]>([]);
     const [currentMetric, setCurrentMetric] = useState('feedback.statuses');
     const [currentConfigs, setCurrentConfigs] = useState<MetricOptionsState>();
@@ -428,25 +430,24 @@ const FeedbackPage: React.FC = () => {
 
             const res = result.response;
 
-            const advisorsList = getAdvisorsList(res);
+            const advisorsList = getAdvisorsList(res).map((a) => {
+                const existing = advisorColors.current.get(a.id);
+                const color = existing ?? a.color;
+                advisorColors.current.set(a.id, color);
+                return { ...a, color };
+            });
 
-            if (advisorsList.length > advisors.current.length) {
+            if (advisors.current.length === 0) {
                 const updatedMetrics = [...feedbackMetrics];
                 updatedMetrics[3].subOptions = advisorsList;
                 advisors.current = advisorsList;
                 setFeedbackMetrics(updatedMetrics);
                 setAdvisorsList(advisors.current);
-            } else if (advisors.current.length === 0) {
-                const updatedMetrics = [...feedbackMetrics];
-                updatedMetrics[3].subOptions = [];
-                advisors.current = [];
-                setFeedbackMetrics(updatedMetrics);
-                setAdvisorsList([]);
             }
 
             chartData = {
                 chartData: getAdvisorChartData(res, advisorsList,'chart.nps'),
-                colors: feedbackMetrics[3].subOptions!.map(({labelKey, color}) => {
+                colors: advisorsList.map(({labelKey, color}) => {
                     return {
                         id: labelKey,
                         color,
@@ -497,6 +498,14 @@ const FeedbackPage: React.FC = () => {
             groupByPeriod: dateUnit === 'day' ? 'hour' : 'day',
             urls: userDomains ?? [],
         };
+
+        if (config.metric === 'selected_advisor_chats') {
+            const csaRangeKey = `${config.start}|${config.end}`;
+            if (lastCsaRangeKey.current !== csaRangeKey) {
+                advisors.current = [];
+            }
+            lastCsaRangeKey.current = csaRangeKey;
+        }
 
         setCurrentConfigs(config);
         configsSubject.next(config);

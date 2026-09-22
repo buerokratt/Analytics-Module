@@ -38,4 +38,5 @@ FROM chats
          LEFT JOIN chat_lengths cl ON chats.base_id = cl.base_id
          LEFT JOIN "user" u ON u.id_code = chats.author_id
 WHERE u.id_code NOT IN (:excluded_csas)
-GROUP BY date_time, author_id;
+GROUP BY date_time, author_id
+ORDER BY date_time;

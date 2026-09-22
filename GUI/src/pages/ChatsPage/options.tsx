@@ -73,18 +73,21 @@ export const chatOptions: Option[] = [
     labelKey: 'chats.theme_overview',
     unit: t('units.chats') ?? 'chats',
     defaultChartType: 'pieChart',
+    allowedChartTypes: ['pieChart'],
   },
   {
     id: 'follow_up_action_overview',
     labelKey: 'chats.follow_up_action_overview',
     unit: t('units.chats') ?? 'chats',
     defaultChartType: 'pieChart',
+    allowedChartTypes: ['pieChart'],
   },
   {
     id: 'quality_overview',
     labelKey: 'chats.quality_overview',
     unit: t('units.chats') ?? 'chats',
     defaultChartType: 'pieChart',
+    allowedChartTypes: ['pieChart'],
   },
   {
     id: 'chat_analysis_overview',

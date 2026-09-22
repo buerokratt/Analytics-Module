@@ -229,7 +229,7 @@
     "csaInvolved": "CSA involved",
     "outsideWorkingHours": "Outside working hours",
     "longWaitingTime": "Long waiting time",
-    "allCsvAway": "All CSAs away with red status",
+    "allCsvAway": "All CSAs away / busy",
     "medianWaitingTime": "Median (min)",
     "averageWaitingTime": "Arithmetic (min)",
     "chat_forwards": "Forwarding",

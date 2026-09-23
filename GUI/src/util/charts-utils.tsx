@@ -135,7 +135,7 @@ export const getAdvisorChartData = (response: any, advisors: Advisor[], mappingK
       });
       return res;
     })
-    .sort((a: any, b: any) => a[chartDataKey] - b[chartDataKey]);
+    .sort((a: Record<string, number | string>, b: Record<string, number | string>) => Number(a[chartDataKey]) - Number(b[chartDataKey]));
 
   return data;
 };

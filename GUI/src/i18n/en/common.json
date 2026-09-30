@@ -131,7 +131,7 @@
     "thisMonth": "This month",
     "longPeriodWarning": "A long time period is selected, which affects the visual appearance of the chart. Reduce the length of the time period for a better overview.",
     "positiveFeedback": "Feedback",
-    "responseQuality": "Response quality",
+    "completedStatuses": "Completed statuses",
     "themesForPeriod": "Most popular themes in period",
     "followUp": "Top after-actions",
     "legend": {
@@ -159,7 +159,7 @@
       "left_without_answer_rate": "Left without an answer",
       "chart": "Total number of chats as a graph",
       "positive_feedback": "Feedback",
-      "quality": "Response quality",
+      "quality": "Completed statuses",
       "themes": "Most popular themes in period",
       "follow_up": "Top after-actions"
     }

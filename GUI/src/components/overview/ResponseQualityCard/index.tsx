@@ -108,7 +108,7 @@ const ResponseQualityCard = ({ range }: Props) => {
 
   return (
     <Card>
-      <Track className="overview-secondary-card__header">{t('overview.responseQuality')}</Track>
+      <Track className="overview-secondary-card__header">{t('overview.completedStatuses')}</Track>
       {body}
     </Card>
   );

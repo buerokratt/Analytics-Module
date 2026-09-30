@@ -153,6 +153,7 @@
       "total_chats": "Total number of chats",
       "avg_waiting_time": "Average waiting time",
       "avg_rating": "Average feedback rating",
+      "nps": "Net Promoter Score (NPS)",
       "burokratt_rate": "Bürokratt answered",
       "csa_rate": "CSA answered",
       "redirected_rate": "Redirected",

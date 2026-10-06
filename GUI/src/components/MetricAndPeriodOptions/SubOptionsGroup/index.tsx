@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import Track from '../../Track'
-import CheckBoxWithColorIndicator from '../CheckboxWithColorIndicator'
+import SwitchWithColorIndicator from '../SwitchWithColorIndicator'
 import {SubOption} from '../types'
 import './styles.scss'
 
@@ -66,7 +66,7 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({
             <div className="additional-option-label">{label}</div>
             <div className={useColumns ? "two-columns-container" : "flex-container"}>
                 {enableSelectAll && (
-                    <CheckBoxWithColorIndicator
+                    <SwitchWithColorIndicator
                         key="select-all"
                         color="transparent" // Style as needed
                         label={t("general.selectAll")}
@@ -75,7 +75,7 @@ const SubOptionsGroup: React.FC<SubOptionsGroupProps> = ({
                     />
                 )}
                 {subOptions.map((option) => (
-                    <CheckBoxWithColorIndicator
+                    <SwitchWithColorIndicator
                         key={option.id}
                         color={option.color}
                         label={t(option.labelKey)}

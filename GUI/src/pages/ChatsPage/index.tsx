@@ -1,13 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type ObservableInput, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import OptionsPanel, { Option } from '../../components/MetricAndPeriodOptions';
+import { Option } from '../../components/MetricAndPeriodOptions';
+import MetricOptionsGroup from '../../components/MetricAndPeriodOptions/MetricOptionsGroup';
+import SubOptionsGroup from '../../components/MetricAndPeriodOptions/SubOptionsGroup';
 import { MetricOptionsState } from '../../components/MetricAndPeriodOptions/types';
 import MetricsCharts from '../../components/MetricsCharts';
+import { Button, Card } from '../../components';
+import { FormRadios } from '../../components/FormElements';
+import OverviewDateControl from '../../components/overview/OverviewDateControl';
 import {
   chartDataKey,
-  chartDateFormat,
   getAdvisorChartData,
   getAdvisorsList,
   translateChartKeys,
@@ -19,7 +23,7 @@ import withAuthorization, { ROLES } from '../../hoc/with-authorization';
 import { ChartData } from 'types/chart';
 import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
 import useStore from '../../store/user/store';
-import { endOfDay, formatISO, startOfDay } from 'date-fns';
+import { formatISO } from 'date-fns';
 import {
   getAvgCsaPresent,
   getAvgPickTime,
@@ -34,6 +38,8 @@ import {
 import { Methods, request } from '../../util/axios-client';
 import { getDomainsArray } from '../../util/multiDomain-utils';
 import { getShowTestData } from '../../util/testChat-utils';
+import { DateRange, getRange, OverviewUnit, todayLabelKey } from '../../util/overview-date-utils';
+import './ChatsPage.scss';
 
 const CSA_METRIC_IDS = new Set(['num_chats_csa', 'avg_chat_time_csa']);
 
@@ -43,6 +49,9 @@ type QualityMetricOption = {
   readonly color: string;
   readonly isSelected: boolean;
 };
+
+const getSubOptionIds = (metricOptions: Option[], metric: string) =>
+  metricOptions.find((x) => x.id === metric)?.subOptions?.map((x) => x.id) ?? [];
 
 const ChatsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -59,13 +68,42 @@ const ChatsPage: React.FC = () => {
   const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
   const advisors = useRef<any[]>([]);
+  const lastCsaRangeKey = useRef<string>('');
 
   const themes = useRef<QualityMetricOption[]>([]);
   const followUpStatuses = useRef<QualityMetricOption[]>([]);
   const qualityRatings = useRef<QualityMetricOption[]>([]);
   const lastFetchKey = useRef<string>('');
+  const advisorColors = useRef<Map<string, string>>(new Map());
+  const themeColors = useRef<Map<string, string>>(new Map());
+  const followUpColors = useRef<Map<string, string>>(new Map());
+  const qualityColors = useRef<Map<string, string>>(new Map());
+
+  const getStableColor = (colorMap: Map<string, string>, id: string, fallback?: string): string => {
+    const existing = colorMap.get(id);
+    if (existing) return existing;
+    const color = fallback ?? randomColor();
+    colorMap.set(id, color);
+    return color;
+  };
+
   const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
   const [allMetrics, setAllMetrics] = useState<Option[]>([...chatOptions]);
+
+  const [dateUnit, setDateUnit] = useState<OverviewUnit>('day');
+  const [anchorDate, setAnchorDate] = useState(new Date());
+  const [periodRange, setPeriodRange] = useState<DateRange>(() => getRange('month', new Date()));
+  const [metric, setMetric] = useState<string>('');
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
+  const range = useMemo(
+    () => (dateUnit === 'period' ? periodRange : getRange(dateUnit, anchorDate)),
+    [dateUnit, anchorDate, periodRange]
+  );
+
+  const selectedMetricOption = useMemo(() => allMetrics.find((x) => x.id === metric), [allMetrics, metric]);
+  const subOptions = selectedMetricOption?.subOptions ?? [];
+  const subRadioOptions = selectedMetricOption?.subRadioOptions ?? [];
 
   if (multiDomainEnabled) {
     useStore.subscribe((state, prevState) => {
@@ -226,17 +264,16 @@ const ChatsPage: React.FC = () => {
         },
       });
       const res = response.response;
-      if (advisors.current.length === 0) {
-        const fetchedAdvisors = getAdvisorsList(res);
-        advisors.current = fetchedAdvisors;
-        const updatedMetrics = [...allMetrics];
-        updatedMetrics[7].subOptions = fetchedAdvisors;
-        setAllMetrics(updatedMetrics);
-      }
       const responseAdvisors = getAdvisorsList(res).map((a) => ({
         ...a,
-        color: advisors.current.find((s) => s.id === a.id)?.color ?? a.color,
+        color: getStableColor(advisorColors.current, a.id, a.color),
       }));
+      if (advisors.current.length === 0) {
+        advisors.current = responseAdvisors;
+        const updatedMetrics = [...allMetrics];
+        updatedMetrics[7].subOptions = responseAdvisors;
+        setAllMetrics(updatedMetrics);
+      }
       result = {
         chartData: getAdvisorChartData(res, responseAdvisors, 'chart.count'),
         colors: responseAdvisors.map(({ labelKey, color }) => ({ id: labelKey, color })),
@@ -266,17 +303,16 @@ const ChatsPage: React.FC = () => {
         },
       });
       const res = response.response;
-      if (advisors.current.length === 0) {
-        const fetchedAdvisors = getAdvisorsList(res);
-        advisors.current = fetchedAdvisors;
-        const updatedMetrics = [...allMetrics];
-        updatedMetrics[8].subOptions = fetchedAdvisors;
-        setAllMetrics(updatedMetrics);
-      }
       const responseAdvisors = getAdvisorsList(res).map((a) => ({
         ...a,
-        color: advisors.current.find((s) => s.id === a.id)?.color ?? a.color,
+        color: getStableColor(advisorColors.current, a.id, a.color),
       }));
+      if (advisors.current.length === 0) {
+        advisors.current = responseAdvisors;
+        const updatedMetrics = [...allMetrics];
+        updatedMetrics[8].subOptions = responseAdvisors;
+        setAllMetrics(updatedMetrics);
+      }
       result = {
         chartData: getAdvisorChartData(res, responseAdvisors, 'chart.count'),
         colors: responseAdvisors.map(({ labelKey, color }) => ({ id: labelKey, color })),
@@ -324,7 +360,7 @@ const ChatsPage: React.FC = () => {
       const fetchedThemes: QualityMetricOption[] = res.map((item) => ({
         id: item.theme,
         labelKey: item.theme,
-        color: themes.current.find((th) => th.id === item.theme)?.color ?? randomColor(),
+        color: getStableColor(themeColors.current, item.theme),
         isSelected: true,
       }));
       if (themes.current.length === 0) {
@@ -391,7 +427,7 @@ const ChatsPage: React.FC = () => {
       const fetchedQualityRatings: QualityMetricOption[] = res.map((item) => ({
         id: item.quality,
         labelKey: item.quality,
-        color: qualityRatings.current.find((q) => q.id === item.quality)?.color ?? randomColor(),
+        color: getStableColor(qualityColors.current, item.quality),
         isSelected: true,
       }));
       if (qualityRatings.current.length === 0) {
@@ -526,7 +562,7 @@ const ChatsPage: React.FC = () => {
       const fetchedStatuses = res.map((item) => ({
         id: item.followUpAction,
         labelKey: item.followUpAction,
-        color: followUpStatuses.current.find((s) => s.id === item.followUpAction)?.color ?? randomColor(),
+        color: getStableColor(followUpColors.current, item.followUpAction),
         isSelected: true,
       }));
       if (followUpStatuses.current.length === 0) {
@@ -592,71 +628,163 @@ const ChatsPage: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!metric) return;
+
+    const config: MetricOptionsState = {
+      period: '',
+      metric,
+      start: formatISO(range.start),
+      end: formatISO(range.end),
+      options: selectedOptions,
+      groupByPeriod: dateUnit === 'day' ? 'hour' : 'day',
+      urls: userDomains ?? [],
+    };
+
+    if (!CSA_METRIC_IDS.has(config.metric)) {
+      advisors.current = [];
+    } else {
+      const csaRangeKey = `${config.start}|${config.end}`;
+      if (lastCsaRangeKey.current !== csaRangeKey) {
+        advisors.current = [];
+      }
+      lastCsaRangeKey.current = csaRangeKey;
+    }
+
+    const fetchKey = `${config.metric}|${config.start}|${config.end}`;
+    const rangeOrMetricChanged = lastFetchKey.current !== fetchKey;
+    lastFetchKey.current = fetchKey;
+
+    if (
+      config.metric !== 'theme_overview' &&
+      config.metric !== 'follow_up_action_overview' &&
+      config.metric !== 'quality_overview' &&
+      config.metric !== 'chat_analysis_overview'
+    ) {
+      themes.current = [];
+      followUpStatuses.current = [];
+      qualityRatings.current = [];
+      if (!CSA_METRIC_IDS.has(config.metric)) {
+        setShowSelectAll(false);
+      }
+    } else if (config.metric === 'theme_overview') {
+      followUpStatuses.current = [];
+      qualityRatings.current = [];
+      if (rangeOrMetricChanged) themes.current = [];
+      setShowSelectAll(true);
+    } else if (config.metric === 'follow_up_action_overview') {
+      themes.current = [];
+      qualityRatings.current = [];
+      if (rangeOrMetricChanged) followUpStatuses.current = [];
+      setShowSelectAll(true);
+    } else if (config.metric === 'quality_overview') {
+      themes.current = [];
+      followUpStatuses.current = [];
+      if (rangeOrMetricChanged) qualityRatings.current = [];
+      setShowSelectAll(true);
+    } else if (config.metric === 'chat_analysis_overview') {
+      themes.current = [];
+      followUpStatuses.current = [];
+      qualityRatings.current = [];
+      setShowSelectAll(true);
+    }
+
+    setConfigs(config);
+    configsSubject.next(config);
+    const selectedOption = allMetrics.find((x) => x.id === config.metric);
+    if (!selectedOption) return;
+    setTableTitleKey(selectedOption.labelKey);
+    setUnit(selectedOption.unit);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [metric, selectedOptions, range]);
+
+  const handleDateUnitChange = (newUnit: OverviewUnit) => {
+    if (newUnit === 'period' && dateUnit !== 'period') {
+      setPeriodRange(range);
+    }
+    setDateUnit(newUnit);
+  };
+
+  const handleTodayClick = () => {
+    if (dateUnit === 'period') {
+      setDateUnit('day');
+    }
+    setAnchorDate(new Date());
+  };
+
   return (
     <>
       <h1>{t('menu.chats')}</h1>
-      <OptionsPanel
-        metricOptions={allMetrics}
-        enableSelectAll={showSelectAll}
-        dateFormat={chartDateFormat}
-        onChange={(config) => {
-          config.urls = userDomains ?? [];
-          if (!CSA_METRIC_IDS.has(config.metric)) {
-            advisors.current = [];
-          }
-          const fetchKey = `${config.metric}|${config.start}|${config.end}`;
-          const rangeOrMetricChanged = lastFetchKey.current !== fetchKey;
-          lastFetchKey.current = fetchKey;
-          if (
-            config.metric !== 'theme_overview' &&
-            config.metric !== 'follow_up_action_overview' &&
-            config.metric !== 'quality_overview' &&
-            config.metric !== 'chat_analysis_overview'
-          ) {
-            themes.current = [];
-            followUpStatuses.current = [];
-            qualityRatings.current = [];
-            if (!CSA_METRIC_IDS.has(config.metric)) {
-              setShowSelectAll(false);
-            }
-          } else if (config.metric === 'theme_overview') {
-            followUpStatuses.current = [];
-            qualityRatings.current = [];
-            if (rangeOrMetricChanged) themes.current = [];
-            setShowSelectAll(true);
-          } else if (config.metric === 'follow_up_action_overview') {
-            themes.current = [];
-            qualityRatings.current = [];
-            if (rangeOrMetricChanged) followUpStatuses.current = [];
-            setShowSelectAll(true);
-          } else if (config.metric === 'quality_overview') {
-            themes.current = [];
-            followUpStatuses.current = [];
-            if (rangeOrMetricChanged) qualityRatings.current = [];
-            setShowSelectAll(true);
-          } else if (config.metric === 'chat_analysis_overview') {
-            themes.current = [];
-            followUpStatuses.current = [];
-            qualityRatings.current = [];
-            setShowSelectAll(true);
-          }
-          setConfigs(config);
-          configsSubject.next(config);
-          const selectedOption = allMetrics.find((x) => x.id === config.metric);
-          if (!selectedOption) return;
-          setTableTitleKey(selectedOption.labelKey);
-          setUnit(selectedOption.unit);
-        }}
-      />
-      <MetricsCharts
-        title={tableTitleKey}
-        data={chartData}
-        startDate={configs?.start ?? formatISO(startOfDay(new Date()))}
-        endDate={configs?.end ?? formatISO(endOfDay(new Date()))}
-        unit={unit}
-        groupByPeriod={configs?.groupByPeriod ?? 'day'}
-        defaultChartType={allMetrics.find((x) => x.id === configs?.metric)?.defaultChartType}
-      />
+      <div className="chats-page">
+        <Card>
+          <div className="page-header">
+            <div />
+            <OverviewDateControl
+              unit={dateUnit}
+              anchorDate={anchorDate}
+              range={range}
+              periodRange={periodRange}
+              onUnitChange={handleDateUnitChange}
+              onAnchorChange={setAnchorDate}
+              onPeriodRangeChange={setPeriodRange}
+            />
+            <div className="page-header__end">
+              <Button appearance="secondary" size="s" onClick={handleTodayClick}>
+                {t(todayLabelKey(dateUnit))}
+              </Button>
+            </div>
+          </div>
+
+          <div className="chats-page__sections" key={userDomains.join(',')}>
+            <Card>
+              <MetricOptionsGroup
+                options={allMetrics}
+                label={t('general.chooseMetric')}
+                onChange={(newMetric) => {
+                  setMetric(newMetric);
+                  setSelectedOptions(getSubOptionIds(allMetrics, newMetric));
+                }}
+              />
+            </Card>
+
+            {subOptions.length > 0 && (
+              <Card>
+                <SubOptionsGroup
+                  subOptions={subOptions}
+                  label={t('general.additionalOptions')}
+                  onChange={setSelectedOptions}
+                  enableSelectAll={showSelectAll}
+                />
+              </Card>
+            )}
+
+            {subRadioOptions.length > 0 && (
+              <Card>
+                <FormRadios
+                  name="graphData"
+                  label={t('general.additionalOptions')}
+                  items={subRadioOptions.map((option) => ({
+                    label: t(`${option.labelKey}`),
+                    value: option.id,
+                  }))}
+                  onChange={(value) => setSelectedOptions([value])}
+                />
+              </Card>
+            )}
+
+            <MetricsCharts
+              title={tableTitleKey}
+              data={chartData}
+              startDate={configs?.start ?? formatISO(range.start)}
+              endDate={configs?.end ?? formatISO(range.end)}
+              unit={unit}
+              groupByPeriod={configs?.groupByPeriod ?? 'day'}
+              defaultChartType={allMetrics.find((x) => x.id === configs?.metric)?.defaultChartType}
+              allowedChartTypes={allMetrics.find((x) => x.id === configs?.metric)?.allowedChartTypes}
+            />
+          </div>
+        </Card>
+      </div>
     </>
   );
 };

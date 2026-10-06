@@ -70,10 +70,13 @@ const getPeriodAveragesOrMedians = (chartData: Record<string, number>[], medianK
   });
 
   Object.entries(valuesByKey).forEach(([key, values]) => {
+    const occurredValues = values.filter((value) => value !== 0);
+    const valuesToUse = occurredValues.length > 0 ? occurredValues : values;
+
     if (key.includes(medianKey)) {
-      result[key] = calculateMedian(values);
+      result[key] = calculateMedian(valuesToUse);
     } else {
-      result[key] = Number((values.reduce((a, b) => a + b, 0) / values.length).toFixed(2));
+      result[key] = Number((valuesToUse.reduce((a, b) => a + b, 0) / valuesToUse.length).toFixed(2));
     }
   });
 

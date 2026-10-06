@@ -29,8 +29,9 @@ const PieCharLegends = ({ data, percentages }: Props) => {
               className="legend_circle"
               style={{ backgroundColor: color }}
             />
-            <label style={{ color, maxLines: 1 }}>
-              {`${e.name}: ${e.value} %${formatTotalPeriodCount(periodStatistics, e.name)}`}
+            <label style={{ maxLines: 1 }}>
+              {e.name}
+              {formatTotalPeriodCount(periodStatistics, e.name)} {e.value}%
             </label>
           </Track>
         );

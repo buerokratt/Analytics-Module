@@ -1,3 +1,7 @@
+@import 'src/styles/tools/color';
+@import 'src/styles/tools/spacing';
+@import 'src/styles/settings/variables/typography';
+
 .metrics_charts {
   height: 100%;
   display: flex;
@@ -10,23 +14,92 @@
   }
 }
 
-.container {
+.metrics_header {
   display: flex;
-  flex-direction: row;
-  direction: 'horizontal';
+  flex-direction: column;
+  gap: get-spacing(paldiski);
+  width: 100%;
+  margin-bottom: get-spacing(paldiski);
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: get-spacing(haapsalu);
+  }
+
+  &__title {
+    margin: 0;
+    color: get-color(black-coral-6);
+    font-size: $veera-font-size-100;
+    font-weight: 400;
+    text-transform: uppercase;
+    flex: 1 1 280px;
+    min-width: 0;
+  }
+
+  &__legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-content: flex-start;
+    flex: 1 1 320px;
+    max-width: 100%;
+    gap: get-spacing(haapsalu);
+    align-items: center;
+  }
+
+  &__legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__legend-icon {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  &__legend-label {
+    color: get-color(black-coral-6);
+    font-size: $veera-font-size-80;
+    white-space: nowrap;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: get-spacing(haapsalu);
+    width: max-content;
+    margin-left: auto;
+    margin-top: get-spacing(rapla);
+    margin-bottom: get-spacing(rapla);
+  }
+
+  &__select {
+    width: 200px;
+  }
 }
 
-.title {
-  flex: 1;
-  margin-right: 4px;
-}
+.quality_summary {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  column-gap: 8px;
+  row-gap: 4px;
+  align-items: center;
+  margin-top: 16px;
+  padding: 12px 0;
 
-.other_content {
-  display: flex;
-  direction: 'horizontal';
-  flex-direction: 'row';
-  width: 270px;
-  margin-left: 4px;
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    cursor: help;
+    color: get-color(sapphire-blue-10);
+  }
 }
 
 .charts_wrapper {

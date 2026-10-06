@@ -61,7 +61,10 @@ const PieGraph = ({ data, isRatingDistribution }: Props) => {
             data={percentages}
             cx="50%"
             cy="50%"
+            innerRadius="60%"
             outerRadius="100%"
+            paddingAngle={percentages.length > 1 ? 2 : 0}
+            cornerRadius={4}
             fill="#8884d8"
             dataKey="value"
             nameKey="name"

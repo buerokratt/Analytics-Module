@@ -8,6 +8,7 @@ export interface Option {
   subRadioOptions?: { id: string; labelKey: string; color?: string }[];
   unit?: string;
   readonly defaultChartType?: ChartViewType;
+  readonly allowedChartTypes?: ChartViewType[];
 }
 
 export interface SubOption {

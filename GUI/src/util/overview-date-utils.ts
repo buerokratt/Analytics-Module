@@ -75,3 +75,14 @@ export const periodLabelKey = (unit: OverviewUnit): string => {
       return 'overview.lastDay';
   }
 };
+
+export const todayLabelKey = (unit: OverviewUnit): string => {
+  switch (unit) {
+    case 'week':
+      return 'overview.thisWeek';
+    case 'month':
+      return 'overview.thisMonth';
+    default:
+      return 'overview.thisDay';
+  }
+};

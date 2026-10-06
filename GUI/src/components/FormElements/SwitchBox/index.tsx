@@ -33,7 +33,7 @@ const SwitchBox = forwardRef<HTMLButtonElement, SwitchBoxProps>((
         name={name}
         className='switchbox__button'
         onCheckedChange={onCheckedChange}
-        defaultChecked={checked}
+        checked={checked}
       >
         <RadixSwitch.Thumb className='switchbox__thumb' />
       </RadixSwitch.Root>

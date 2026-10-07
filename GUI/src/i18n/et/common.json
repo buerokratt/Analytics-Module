@@ -131,7 +131,7 @@
     "thisMonth": "See kuu",
     "longPeriodWarning": "Valitud on pikk ajaperiood, mis mõjutab graafiku visuaalset välimust. Parima vaate saamiseks vähenda ajaperioodi pikkust.",
     "positiveFeedback": "Tagasiside",
-    "responseQuality": "Vastuste kvaliteet",
+    "completedStatuses": "Lõpetatud staatused",
     "themesForPeriod": "Populaarsemad teemad perioodil",
     "followUp": "Järeltegevuste top",
     "legend": {
@@ -160,7 +160,7 @@
       "left_without_answer_rate": "Lahkus vastuseta",
       "chart": "Vestluste koguarv graafikuna",
       "positive_feedback": "Tagasiside",
-      "quality": "Vastuste kvaliteet",
+      "quality": "Lõpetatud staatused",
       "themes": "Populaarsemad teemad perioodil",
       "follow_up": "Järeltegevuste top"
     }

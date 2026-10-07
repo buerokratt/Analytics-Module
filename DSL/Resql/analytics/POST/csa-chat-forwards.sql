@@ -5,14 +5,23 @@ WITH botname AS (
     ORDER BY id DESC
     LIMIT 1
     ),
+    chatStart AS (
+SELECT
+    base_id,
+    MIN(created) AS created
+FROM chat
+GROUP BY base_id
+HAVING MIN(created)::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
+    ),
     chatsList AS (
 SELECT
-    chat.created AS created,
+    chatStart.created AS created,
     chat.base_id AS base_id,
     chat.external_id AS external_id,
     message.forwarded_from_csa AS forwarded_from_csa,
     message.forwarded_to_csa AS forwarded_to_csa
 FROM chat
+    JOIN chatStart ON chat.base_id = chatStart.base_id
     JOIN message ON chat.base_id = message.chat_base_id
     CROSS JOIN botname
 WHERE (
@@ -23,8 +32,7 @@ WHERE (
     :showTest = TRUE
    OR chat.test = FALSE
     )
-  AND chat.created::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
-                                    AND chat.received_from <> botname.value
+  AND chat.received_from <> botname.value
     ),
     forwardedChats AS (
 SELECT

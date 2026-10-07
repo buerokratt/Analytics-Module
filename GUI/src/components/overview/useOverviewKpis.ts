@@ -3,10 +3,11 @@ import { formatISO } from 'date-fns';
 import { Methods, request } from '../../util/axios-client';
 import { getDomainsArray } from '../../util/multiDomain-utils';
 import { getShowTestData } from '../../util/testChat-utils';
-import { getAverageFeedbackOnBuerokrattChats, getRedirectedOverview, getTotalChats, getAvgChatWaitingTime, getChatsStatuses } from '../../resources/api-constants';
+import { getRedirectedOverview, getTotalChats, getAvgChatWaitingTime, getChatsStatuses } from '../../resources/api-constants';
 import { DateRange } from '../../util/overview-date-utils';
+import { DistributionResult } from '../../util/feedback-distribution-utils';
+import { fetchDistribution } from './PositiveFeedbackCard';
 import {
-  AvgRatingOverviewResponse,
   AvgWaitingTimeOverviewResponse,
   ChatsStatusesOverviewResponse,
   ChatsStatusesRequestData,
@@ -21,6 +22,7 @@ export type OverviewKpiValues = {
   readonly totalChats: number;
   readonly avgWaitingTime: number;
   readonly avgRating: number;
+  readonly isFiveScale: boolean;
   readonly burokrattRate: number;
   readonly csaRate: number;
   readonly redirectedRate: number;
@@ -31,6 +33,7 @@ const emptyKpis: OverviewKpiValues = {
   totalChats: 0,
   avgWaitingTime: 0,
   avgRating: 0,
+  isFiveScale: false,
   burokrattRate: 0,
   csaRate: 0,
   redirectedRate: 0,
@@ -39,6 +42,14 @@ const emptyKpis: OverviewKpiValues = {
 
 const sumCounts = (rows: readonly CountRow[] | undefined): number =>
   (rows ?? []).reduce((sum, row) => sum + Number(row.count ?? 0), 0);
+
+const getFeedbackScore = ({ chartData, totalFeedback, isFiveScale }: DistributionResult): number => {
+  if (totalFeedback <= 0) return 0;
+  const countFor = (ratings: number[]) =>
+    chartData.filter(({ rating }) => ratings.includes(rating)).reduce((sum, { count }) => sum + count, 0);
+  if (isFiveScale) return (countFor([5]) / totalFeedback) * 100;
+  return ((countFor([9, 10]) - countFor([0, 1, 2, 3, 4, 5, 6])) / totalFeedback) * 100;
+};
 
 const fetchKpisForRange = async (range: DateRange): Promise<OverviewKpiValues> => {
   const urls = getDomainsArray();
@@ -73,7 +84,7 @@ const fetchKpisForRange = async (range: DateRange): Promise<OverviewKpiValues> =
     showTest,
   };
 
-  const [totalCountRes, waitingTimeRes, ratingRes, redirectedRes, statusRes] = await Promise.all([
+  const [totalCountRes, waitingTimeRes, feedbackDistribution, redirectedRes, statusRes] = await Promise.all([
     request<OverviewChartRequestData, TotalChatsOverviewResponse>({
       url: getTotalChats(),
       method: Methods.post,
@@ -86,12 +97,7 @@ const fetchKpisForRange = async (range: DateRange): Promise<OverviewKpiValues> =
       withCredentials: true,
       data: { ...chartRequestData, options: ['handoff'] },
     }),
-    request<OverviewDateRangeRequestData & { combined: boolean }, AvgRatingOverviewResponse>({
-      url: getAverageFeedbackOnBuerokrattChats(),
-      method: Methods.post,
-      withCredentials: true,
-      data: { combined: true, ...dateRangeRequestData },
-    }),
+    fetchDistribution(range),
     request<OverviewDateRangeRequestData, RedirectedOverviewResponse>({
       url: getRedirectedOverview(),
       method: Methods.post,
@@ -115,7 +121,8 @@ const fetchKpisForRange = async (range: DateRange): Promise<OverviewKpiValues> =
   return {
     totalChats,
     avgWaitingTime: Number(waitingTimeRes.response?.[2]?.[0]?.metricValue ?? 0),
-    avgRating: Number(ratingRes.response?.[0]?.metricValue ?? 0),
+    avgRating: getFeedbackScore(feedbackDistribution),
+    isFiveScale: feedbackDistribution.isFiveScale,
     burokrattRate: totalChats > 0 ? (byk / totalChats) * 100 : 0,
     csaRate: totalChats > 0 ? (csa / totalChats) * 100 : 0,
     redirectedRate: totalCsaChats > 0 ? (multiCsaChats / totalCsaChats) * 100 : 0,

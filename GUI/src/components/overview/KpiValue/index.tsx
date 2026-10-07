@@ -21,7 +21,7 @@ const KpiValue = ({ value, previousValue, format, periodLabelKey, highlighted }:
 
   const getPercentChange = (): number => {
     if (previousValue !== 0) {
-      return Math.round(((value - previousValue) / previousValue) * 100);
+      return Math.round(((value - previousValue) / Math.abs(previousValue)) * 100);
     }
     return value !== 0 ? 100 : 0;
   };

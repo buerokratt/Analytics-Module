@@ -38,13 +38,17 @@ const KpiCardsGrid = ({ unit, range, previousRange, isActive }: Props) => {
 
   if (visibleCards.length === 0) return null;
 
+  const isFeedbackCard = (card: (typeof cards)[number]) => card.metric === 'avg_rating';
+  const feedbackTitleKey = current.isFiveScale ? 'feedback.positiveFeedbackScore' : 'overview.metric.nps';
+  const feedbackFormat: KpiFormat = current.isFiveScale ? 'percent' : 'rating';
+
   const renderCard = (card: (typeof cards)[number], highlighted: boolean) => (
     <KpiCard
       key={card.metric}
-      titleKey={card.titleKey}
+      titleKey={isFeedbackCard(card) ? feedbackTitleKey : card.titleKey}
       value={current[card.key]}
       previousValue={previous[card.key]}
-      format={card.format}
+      format={isFeedbackCard(card) ? feedbackFormat : card.format}
       periodLabelKey={periodLabelKey(unit)}
       highlighted={highlighted}
     />

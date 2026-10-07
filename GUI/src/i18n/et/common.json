@@ -153,6 +153,7 @@
       "total_chats": "Vestluste koguarv",
       "avg_waiting_time": "Keskmine ooteaeg",
       "avg_rating": "Keskmine hinnang",
+      "nps": "Soovitusindeks (NPS)",
       "burokratt_rate": "Vastas Bürokratt",
       "csa_rate": "Vastas nõustaja",
       "redirected_rate": "Edasi suunatud",

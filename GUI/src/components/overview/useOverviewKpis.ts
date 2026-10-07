@@ -126,7 +126,7 @@ const fetchKpisForRange = async (range: DateRange): Promise<OverviewKpiValues> =
     burokrattRate: totalChats > 0 ? (byk / totalChats) * 100 : 0,
     csaRate: totalChats > 0 ? (csa / totalChats) * 100 : 0,
     redirectedRate: totalCsaChats > 0 ? (multiCsaChats / totalCsaChats) * 100 : 0,
-    leftWithoutAnswerRate: totalChats > 0 ? 100 - (leftWithoutAnswer / totalChats) * 100 : 0,
+    leftWithoutAnswerRate: totalChats > 0 ? (leftWithoutAnswer / totalChats) * 100 : 0,
   };
 };
 

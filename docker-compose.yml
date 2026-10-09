@@ -65,6 +65,8 @@ services:
       - REACT_APP_MENU_URL=https://admin.dev.buerokratt.ee
       - REACT_APP_MENU_PATH=/chat/menu.json
       - REACT_APP_AUTH_BASE_URL=http://localhost:8080/analytics
+      - REACT_APP_NOTIFICATIONS_NODE_URL=http://localhost:3010
+      - REACT_APP_NOTIFICATIONS_VAPID_PUBLIC_KEY=BGtr18_RnioZdJqSdhw3tHEKwklwzm-er3gnHWYolmx0GW-WhAhT-xu46acxbhRZN3_JTyqkFJPI8kFLkyONsGs
       - REACT_APP_APP_PORT=3001
       - REACT_APP_LOCAL=true
       - REACT_APP_BASE_API_PATH=/
@@ -79,7 +81,7 @@ services:
       - REACT_APP_SETTINGS_BASE_URL=http://localhost:8080/settings
       - REACT_APP_MONITORING_BASE_URL=http://localhost:8080/monitoring
       - REACT_APP_SERVICE_ID=analytics
-      - REACT_APP_CSP=upgrade-insecure-requests; default-src 'self'; font-src 'self' data:; img-src 'self' data:; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; connect-src 'self' http://localhost:8080 http://localhost:8085 https://admin.dev.buerokratt.ee/chat/menu.json;
+      - REACT_APP_CSP=upgrade-insecure-requests; default-src 'self'; font-src 'self' data:; img-src 'self' data:; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; connect-src 'self' http://localhost:8080 http://localhost:8085 http://localhost:3010 https://admin.dev.buerokratt.ee/chat/menu.json;
       - REACT_APP_ENABLE_HIDDEN_FEATURES=TRUE
       - REACT_APP_VALIDATIONS_ENABLED=FALSE
       - REACT_APP_SHOW_TEST_CONVERSATIONS=true

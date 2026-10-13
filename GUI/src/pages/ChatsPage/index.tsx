@@ -208,6 +208,7 @@ const ChatsPage: React.FC = () => {
         chartData: mapped,
         colors: [{ id: 'Average (Min)', color: '#FFB511' }],
         minPointSize: 3,
+        disableStacking: true,
       };
     } catch (e) {
       console.error(e);
@@ -237,6 +238,7 @@ const ChatsPage: React.FC = () => {
         chartData: mapped,
         colors: [{ id: 'Average', color: '#FFB511' }],
         minPointSize: 3,
+        disableStacking: true,
       };
     } catch (e) {
       console.error(e);
@@ -317,6 +319,7 @@ const ChatsPage: React.FC = () => {
         chartData: getAdvisorChartData(res, responseAdvisors, 'chart.count'),
         colors: responseAdvisors.map(({ labelKey, color }) => ({ id: labelKey, color })),
         minPointSize: 3,
+        disableStacking: true,
       };
     } catch (e) {
       console.error(e);

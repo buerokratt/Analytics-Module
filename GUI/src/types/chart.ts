@@ -30,4 +30,5 @@ export type ChartData = {
   isFiveScale?: boolean;
   yAxisMax?: number;
   qualityData?: QualityData;
+  disableStacking?: boolean;
 };

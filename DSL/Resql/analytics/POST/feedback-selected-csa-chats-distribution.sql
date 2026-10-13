@@ -6,81 +6,86 @@ WITH rating_config AS (
       AND id IN (SELECT max(id) FROM configuration WHERE key = 'isFiveRatingScale' AND "domain" IS NULL)
       AND NOT deleted
 ),
-chats_filtered AS (
-    SELECT DISTINCT
-        base_id,
-        first_value(created) OVER (
-            PARTITION BY base_id
-            ORDER BY updated
-        ) AS created,
+max_chats AS (
+    SELECT MAX(id) AS max_id, base_id
+    FROM chat
+    WHERE ended IS NOT NULL
+      AND status <> 'IDLE'
+      AND ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
+      AND (
+        array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+            OR COALESCE(
+                (SELECT cd.domain FROM chat_domain cd WHERE cd.chat_base_id = chat.base_id),
+                chat.end_user_url
+            ) LIKE ANY(ARRAY[:urls]::TEXT[])
+      )
+    GROUP BY base_id
+),
+ended_chats AS (
+    SELECT
+        chat.base_id,
         CASE
             WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config)
-            THEN last_value(feedback_rating_five) OVER (
-                PARTITION BY base_id
-                ORDER BY updated
-                ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-            )
-            ELSE last_value(feedback_rating) OVER (
-                PARTITION BY base_id
-                ORDER BY updated
-                ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-            )
+            THEN chat.feedback_rating_five
+            ELSE chat.feedback_rating
         END AS feedback_rating_dynamic
     FROM chat
+    JOIN max_chats ON chat.id = max_chats.max_id
     WHERE (
-        array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
-            OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+        COALESCE(:showTest, FALSE) = TRUE
+            OR COALESCE(chat.test, FALSE) = FALSE
     )
-      AND (
-        :showTest = TRUE
-            OR chat.test = FALSE
+      AND EXISTS (
+        SELECT 1
+        FROM message
+        WHERE message.chat_base_id = chat.base_id
+          AND message.content <> ''
+          AND message.content <> 'message-read'
+      )
+),
+latest_open_chat AS (
+    SELECT DISTINCT ON (chat.base_id)
+        chat.base_id,
+        chat.customer_support_id AS latest_open_csa
+    FROM chat
+    JOIN ended_chats ON ended_chats.base_id = chat.base_id
+    WHERE chat.status = 'OPEN'
+    ORDER BY chat.base_id, chat.id DESC
+),
+chat_csa_ids AS (
+    SELECT
+        chat.base_id,
+        ARRAY_AGG(DISTINCT chat.customer_support_id) FILTER (
+            WHERE NOT (
+                chat.customer_support_id = 'chatbot'
+                AND (lo.latest_open_csa IS NULL OR lo.latest_open_csa <> 'chatbot')
+            )
+        ) AS all_csa_ids
+    FROM chat
+    JOIN ended_chats ON ended_chats.base_id = chat.base_id
+    LEFT JOIN latest_open_chat lo ON lo.base_id = chat.base_id
+    GROUP BY chat.base_id
+),
+chats_filtered AS (
+    SELECT ended_chats.base_id, ended_chats.feedback_rating_dynamic
+    FROM ended_chats
+    JOIN chat_csa_ids ON chat_csa_ids.base_id = ended_chats.base_id
+    WHERE EXISTS (
+        SELECT 1
+        FROM unnest(COALESCE(chat_csa_ids.all_csa_ids, ARRAY[]::TEXT[])) AS csa_id
+        WHERE csa_id <> ''
+          AND csa_id <> 'chatbot'
+          AND csa_id NOT IN (:excluded_csas)
     )
-      AND STATUS = 'ENDED'
-      AND customer_support_id NOT IN (:excluded_csas)
-      AND customer_support_id <> ''
-      AND customer_support_id <> 'chatbot'
-      AND CASE
-            WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config)
-            THEN feedback_rating_five IS NOT NULL
-            ELSE feedback_rating IS NOT NULL
-        END
-        AND ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
-        AND EXISTS (
-            SELECT 1
-            FROM message
-            WHERE message.chat_base_id = chat.base_id
-            AND message.author_role = 'backoffice-user'
-        )
-        AND EXISTS (
-            SELECT 1
-            FROM message
-            WHERE message.chat_base_id = chat.base_id
-            AND message.author_role = 'end-user'
-        )
 ),
 all_ended_chats AS (
-    SELECT COUNT(DISTINCT base_id) AS total_chats
-    FROM chat
-    WHERE (
-        array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
-            OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
-    )
-      AND (:showTest = TRUE OR chat.test = FALSE)
-      AND STATUS = 'ENDED'
-      AND ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
-      AND customer_support_id NOT IN (:excluded_csas)
-      AND customer_support_id <> ''
-      AND customer_support_id <> 'chatbot'
-      AND EXISTS (
-            SELECT 1 FROM message WHERE message.chat_base_id = chat.base_id AND message.author_role = 'backoffice-user'
-        )
-      AND EXISTS (
-            SELECT 1 FROM message WHERE message.chat_base_id = chat.base_id AND message.author_role = 'end-user'
-        )
+    SELECT COUNT(*) AS total_chats
+    FROM chats_filtered
 ),
 rating_counts AS (
     SELECT feedback_rating_dynamic AS rating, COUNT(*) AS cnt
     FROM chats_filtered
+    WHERE feedback_rating_dynamic IS NOT NULL
     GROUP BY feedback_rating_dynamic
 ),
 scale_ratings AS (

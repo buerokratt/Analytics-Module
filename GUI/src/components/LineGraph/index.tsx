@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip } from 'recharts';
+import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, ReferenceLine } from 'recharts';
 import {
   buildTimeSeries,
   chartDataKey,
@@ -69,12 +69,11 @@ const LineGraph = ({ data, startDate, endDate, groupByPeriod, isRatingDistributi
   const { rows: chartData } = buildTimeSeries(data?.chartData ?? [], startDate, endDate, isHourly);
   const isDenseXAxis = chartData.length > 10;
   const dataKeys = data?.chartData?.length > 0 ? getKeys(data.chartData).filter((k) => k !== chartDataKey) : [];
-  const maxValue = Math.max(
-    0,
-    ...chartData.flatMap((row) => dataKeys.map((k) => Number(row[k]) || 0))
-  );
+  const values = chartData.flatMap((row) => dataKeys.map((k) => Number(row[k]) || 0));
+  const maxValue = Math.max(0, ...values);
+  const minValue = Math.min(0, ...values);
   const isFractional = hasFractionalValues(chartData, dataKeys);
-  const { max: yAxisMax, ticks: yAxisTicks } = getValueAxis(maxValue, isFractional);
+  const { min: yAxisMin, max: yAxisMax, ticks: yAxisTicks } = getValueAxis(maxValue, isFractional, minValue);
 
   return (
     <div ref={ref}>
@@ -85,6 +84,7 @@ const LineGraph = ({ data, startDate, endDate, groupByPeriod, isRatingDistributi
         margin={{ top: 20, right: 30, left: 10, bottom: isDenseXAxis ? 50 : 30 }}
       >
         <CartesianGrid vertical={false} stroke={OVERVIEW_AXIS_STROKE} strokeDasharray="3 3" />
+        {yAxisMin < 0 && <ReferenceLine y={0} stroke={OVERVIEW_TICK_FILL} />}
         <Tooltip
           cursor={{ stroke: OVERVIEW_AXIS_STROKE }}
           content={
@@ -106,7 +106,7 @@ const LineGraph = ({ data, startDate, endDate, groupByPeriod, isRatingDistributi
           tick={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}
         />
         <YAxis
-          domain={[0, yAxisMax]}
+          domain={[yAxisMin, yAxisMax]}
           ticks={yAxisTicks}
           allowDecimals={isFractional}
           axisLine={false}

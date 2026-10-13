@@ -74,19 +74,32 @@ const MAX_FRACTIONAL_AXIS_STEPS = 5;
 
 // Y-axis for time series charts. Fractional values below 10 (e.g. averages in minutes) get a finer scale
 // instead of the default 0-10 one, so their bars/lines don't look flat.
-export const getValueAxis = (maxValue: number, isFractional: boolean): { max: number; ticks: number[] } => {
-  if (!isFractional || maxValue >= 10) {
-    const max = roundUpToTen(maxValue);
-    return { max, ticks: getDistributionYAxisTicks(max) };
-  }
+const getPositiveValueAxis = (maxValue: number, isFractional: boolean): number[] => {
+  if (!isFractional || maxValue >= 10) return getDistributionYAxisTicks(roundUpToTen(maxValue));
 
   const target = Math.max(maxValue, FRACTIONAL_AXIS_STEPS[0]);
   const step =
     FRACTIONAL_AXIS_STEPS.find((s) => Math.ceil(target / s) <= MAX_FRACTIONAL_AXIS_STEPS) ??
     FRACTIONAL_AXIS_STEPS[FRACTIONAL_AXIS_STEPS.length - 1];
-  const stepCount = Math.ceil(target / step);
-  const ticks = Array.from({ length: stepCount + 1 }, (_, i) => round(i * step));
-  return { max: ticks[ticks.length - 1], ticks };
+  return Array.from({ length: Math.ceil(target / step) + 1 }, (_, i) => round(i * step));
+};
+
+export const getValueAxis = (
+  maxValue: number,
+  isFractional: boolean,
+  minValue = 0
+): { min: number; max: number; ticks: number[] } => {
+  if (minValue >= 0) {
+    const ticks = getPositiveValueAxis(maxValue, isFractional);
+    return { min: 0, max: ticks[ticks.length - 1], ticks };
+  }
+
+  const referenceTicks = getPositiveValueAxis(Math.max(maxValue, -minValue), isFractional);
+  const step = referenceTicks[1] - referenceTicks[0];
+  const min = -Math.ceil(round(-minValue / step)) * step;
+  const max = maxValue > 0 ? Math.ceil(round(maxValue / step)) * step : 0;
+  const ticks = Array.from({ length: Math.round((max - min) / step) + 1 }, (_, i) => round(min + i * step));
+  return { min: round(min), max: round(max), ticks };
 };
 
 export const hasFractionalValues = (rows: Record<string, number | string>[], keys: string[]) =>

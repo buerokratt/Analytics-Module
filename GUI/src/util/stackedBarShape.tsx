@@ -13,9 +13,11 @@ type BarShapeProps = {
 };
 
 export const createStackedBarShape = (keys: string[], key: string) => (props: BarShapeProps) => {
-  const { x = 0, y = 0, width = 0, height = 0, fill, payload } = props;
+  const { x = 0, width = 0, fill, payload } = props;
+  const height = Math.abs(props.height ?? 0);
+  const y = (props.y ?? 0) - (props.height !== undefined && props.height < 0 ? height : 0);
 
-  if (!height || height <= 0 || !payload) return null;
+  if (!height || !payload) return null;
 
   const index = keys.indexOf(key);
   const hasSegmentAbove = keys.slice(index + 1).some((k) => Number(payload[k]) > 0);

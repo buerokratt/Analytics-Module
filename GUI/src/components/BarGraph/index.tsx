@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { BarChart, CartesianGrid, YAxis, Tooltip, Bar, XAxis, LabelList } from 'recharts';
+import { BarChart, CartesianGrid, YAxis, Tooltip, Bar, XAxis, LabelList, ReferenceLine } from 'recharts';
 import {
   buildTimeSeries,
   chartDataKey,
@@ -89,16 +89,15 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, groupByPeriod, is
   const topStackedKey = stackedKeys[stackedKeys.length - 1];
   const unstackedKeys = dataKeys.filter((k) => !stackedKeys.includes(k));
 
-  const maxTotal = Math.max(
-    0,
-    ...chartData.map((row) => {
-      const stackedSum = stackedKeys.reduce((sum, k) => sum + (Number(row[k]) || 0), 0);
-      const unstackedMax = unstackedKeys.reduce((max, k) => Math.max(max, Number(row[k]) || 0), 0);
-      return Math.max(stackedSum, unstackedMax);
-    })
-  );
+  const barExtents = chartData.map((row) => {
+    const stackedSum = stackedKeys.reduce((sum, k) => sum + (Number(row[k]) || 0), 0);
+    const unstackedValues = unstackedKeys.map((k) => Number(row[k]) || 0);
+    return [stackedSum, ...unstackedValues];
+  });
+  const maxTotal = Math.max(0, ...barExtents.flat());
+  const minTotal = Math.min(0, ...barExtents.flat());
   const isFractional = hasFractionalValues(chartData, dataKeys);
-  const { max: yAxisMax, ticks: yAxisTicks } = getValueAxis(maxTotal, isFractional);
+  const { min: yAxisMin, max: yAxisMax, ticks: yAxisTicks } = getValueAxis(maxTotal, isFractional, minTotal);
 
   const configuredMinPointSize = data?.minPointSize;
   const minPointSize: MinPointSize | undefined =
@@ -133,13 +132,14 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, groupByPeriod, is
           tick={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}
         />
         <YAxis
-          domain={[0, yAxisMax]}
+          domain={[yAxisMin, yAxisMax]}
           ticks={yAxisTicks}
           allowDecimals={isFractional}
           axisLine={false}
           tickLine={false}
           tick={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}
         />
+        {yAxisMin < 0 && <ReferenceLine y={0} stroke={OVERVIEW_TICK_FILL} />}
         <Tooltip
           cursor={{ fill: 'rgba(151, 153, 164, 0.12)' }}
           content={<CustomChartTooltip formatDate={(date) => formatDate(date, isHourly ? 'dd-MM-yyyy HH:mm' : 'dd-MM-yyyy')} />}
@@ -165,15 +165,16 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, groupByPeriod, is
               >
                 {isStacked && k === topStackedKey && stackedKeys.length > 0 && (
                   <LabelList
-                    content={({ x, y, width: barWidth, index }) => {
+                    content={({ x, y, width: barWidth, height: barHeight, index }) => {
                       if (index === undefined) return null;
                       const row = chartData[index as number];
                       if (!row) return null;
                       const total = stackedKeys.reduce((sum, key) => sum + (Number(row[key]) || 0), 0);
-                      if (total <= 0) return null;
+                      if (total === 0) return null;
                       const centerX = Number(x) + Number(barWidth) / 2;
+                      const labelY = Number(barHeight) < 0 ? Number(y) + 16 : Number(y) - 6;
                       return (
-                        <text x={centerX} y={Number(y) - 6} textAnchor="middle" fontSize={12} fontWeight={600}>
+                        <text x={centerX} y={labelY} textAnchor="middle" fontSize={12} fontWeight={600}>
                           {round(total)}
                         </text>
                       );
@@ -186,7 +187,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, groupByPeriod, is
                     position="top"
                     fontSize={12}
                     fontWeight={600}
-                    formatter={(value: number) => (Number(value) > 0 ? round(value) : '')}
+                    formatter={(value: number) => (Number(value) !== 0 ? round(value) : '')}
                   />
                 )}
               </Bar>

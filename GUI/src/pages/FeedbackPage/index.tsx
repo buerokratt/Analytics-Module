@@ -66,6 +66,7 @@ const FeedbackPage: React.FC = () => {
     });
     const advisors = useRef<any[]>([]);
     const lastCsaRangeKey = useRef<string>('');
+    const latestConfig = useRef<MetricOptionsState>();
     const advisorColors = useRef<Map<string, string>>(new Map());
     const [advisorsList, setAdvisorsList] = useState<any[]>([]);
     const [currentMetric, setCurrentMetric] = useState('feedback.statuses');
@@ -349,6 +350,12 @@ const FeedbackPage: React.FC = () => {
         return chartData;
     };
 
+    const setSelectedAdvisorSubOptions = (subOptions: Option['subOptions']) => {
+        setFeedbackMetrics((prev) =>
+            prev.map((option) => (option.id === 'selected_advisor_chats' ? {...option, subOptions} : option))
+        );
+    };
+
     const getExcludedCsas = (config: any) => {
         const excluded_csas = advisors.current.map((e: any) => e.id).filter((e: string) => !config?.options?.includes(e));
         return (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''];
@@ -437,11 +444,11 @@ const FeedbackPage: React.FC = () => {
                 return { ...a, color };
             });
 
+            if (config !== latestConfig.current) return chartData;
+
             if (advisors.current.length === 0) {
-                const updatedMetrics = [...feedbackMetrics];
-                updatedMetrics[3].subOptions = advisorsList;
                 advisors.current = advisorsList;
-                setFeedbackMetrics(updatedMetrics);
+                setSelectedAdvisorSubOptions(advisorsList);
                 setAdvisorsList(advisors.current);
             }
 
@@ -504,11 +511,13 @@ const FeedbackPage: React.FC = () => {
             const csaRangeKey = `${config.start}|${config.end}`;
             if (lastCsaRangeKey.current !== csaRangeKey) {
                 advisors.current = [];
+                setSelectedAdvisorSubOptions([]);
             }
             lastCsaRangeKey.current = csaRangeKey;
         }
 
         setCurrentConfigs(config);
+        latestConfig.current = config;
         configsSubject.next(config);
 
         const selectedOption = feedbackMetrics.find((x) => x.id === config.metric);

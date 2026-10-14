@@ -17,6 +17,7 @@ export const dateFormatter = (startDate: string, endDate: string, date: string) 
 };
 
 const MAX_X_AXIS_LABELS = 31;
+export const AVERAGE_MIN_POINT_SIZE = 3;
 
 export const isHourlyPeriod = (groupByPeriod: string | undefined, startDate: string, endDate: string) =>
   groupByPeriod ? groupByPeriod === 'hour' : isSameDay(parseISO(startDate), parseISO(endDate));
@@ -62,8 +63,8 @@ export const buildTimeSeries = (
   return { rows: series, emptyIndexes };
 };
 
-export const getXAxisInterval = (bucketCount: number) =>
-  bucketCount > MAX_X_AXIS_LABELS ? Math.ceil(bucketCount / MAX_X_AXIS_LABELS) - 1 : 0;
+export const getXAxisInterval = (count: number) =>
+  count > MAX_X_AXIS_LABELS ? Math.ceil(count / MAX_X_AXIS_LABELS) - 1 : 0;
 
 const FRACTIONAL_AXIS_STEPS = [0.1, 0.2, 0.25, 0.5, 1, 2, 2.5, 5];
 const MAX_FRACTIONAL_AXIS_STEPS = 5;
@@ -82,7 +83,7 @@ export const getValueAxis = (
   maxValue: number,
   isFractional: boolean,
   minValue = 0
-): { min: number; max: number; ticks: number[] } => {
+): { readonly min: number; readonly max: number; readonly ticks: readonly number[] } => {
   if (minValue >= 0) {
     const ticks = getPositiveValueAxis(maxValue, isFractional);
     return { min: 0, max: ticks[ticks.length - 1], ticks };

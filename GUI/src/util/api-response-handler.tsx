@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 import { SubOption } from '../components/MetricAndPeriodOptions/types';
-import { chartDataKey } from './charts-utils';
+import { AVERAGE_MIN_POINT_SIZE, chartDataKey } from './charts-utils';
 import { request, Methods } from './axios-client';
 
 export const fetchChartDataWithSubOptions = async (
@@ -73,7 +73,7 @@ export const fetchChartData = async (url: string, config: any, resultId: string,
     });
 
     const isAverage = config.metric === 'avgConversationTime' || config.metric === 'avgWaitingTime';
-    const minPointSize = isAverage ? 3 : 0;
+    const minPointSize = isAverage ? AVERAGE_MIN_POINT_SIZE : 0;
 
     return {
       chartData: response,

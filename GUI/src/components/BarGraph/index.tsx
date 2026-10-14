@@ -133,7 +133,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, groupByPeriod, is
         />
         <YAxis
           domain={[yAxisMin, yAxisMax]}
-          ticks={yAxisTicks}
+          ticks={[...yAxisTicks]}
           allowDecimals={isFractional}
           axisLine={false}
           tickLine={false}

@@ -107,7 +107,7 @@ const LineGraph = ({ data, startDate, endDate, groupByPeriod, isRatingDistributi
         />
         <YAxis
           domain={[yAxisMin, yAxisMax]}
-          ticks={yAxisTicks}
+          ticks={[...yAxisTicks]}
           allowDecimals={isFractional}
           axisLine={false}
           tickLine={false}

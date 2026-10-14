@@ -17,8 +17,3 @@ export enum AUTHOR_ROLES {
   END_USER = 'end-user',
   BACKOFFICE_USER = 'backoffice-user',
 }
-
-export enum CHAT_SESSIONS {
-  SESSION_ID_KEY = "tabId",
-  SESSION_STATE_KEY = "sessionTabs"
-}

@@ -10,7 +10,7 @@ import useStore from './store/user/store';
 import {useQuery} from '@tanstack/react-query';
 import {PeriodStatisticsProvider} from 'components/context/PeriodStatisticsContext';
 import {getWidgetData} from "./components/services/user";
-import useTabCloseEffect from "./hooks/useTabCloseEffects";
+import useNotificationsConnection from "./hooks/useNotificationsConnection";
 
 const App: React.FC = () => {
     const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
@@ -44,7 +44,8 @@ const App: React.FC = () => {
         },
     });
 
-    useTabCloseEffect();
+    const userId = useStore((state) => state.userInfo?.idCode);
+    useNotificationsConnection(Boolean(userId));
 
     return (
         <Provider store={reducerStore}>

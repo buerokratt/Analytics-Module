@@ -24,17 +24,6 @@ const analyticsApi = axios.create({
   withCredentials: true,
 });
 
-const notificationApiDev = axios.create({
-  baseURL: import.meta.env.REACT_APP_NOTIFICATION_NODE_URL,
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    'Cache-Control': 'no-cache, no-store, must-revalidate',
-  },
-  withCredentials: false,
-});
-
-
 const authApi = axios.create({
   baseURL: import.meta.env.REACT_APP_AUTH_BASE_URL,
   headers: {
@@ -88,15 +77,12 @@ const AxiosInterceptor = ({ children }) => {
     const authApiInterceptor = authApi.interceptors.response.use(resInterceptor, errInterceptor);
     const genericInterceptor = genericApi.interceptors.response.use(resInterceptor, errInterceptor);
     const ruuterInterceptor = ruuterApi.interceptors.response.use(resInterceptor, errInterceptor);
-    const notificationApiDevInterceptor = notificationApiDev.interceptors.response.use(resInterceptor, errInterceptor);
-
     return () => {
       api.interceptors.response.eject(apiInterceptor);
       analyticsApi.interceptors.response.eject(analyticsApiInterceptor);
       authApi.interceptors.response.eject(authApiInterceptor);
       genericApi.interceptors.response.eject(genericInterceptor);
       ruuterApi.interceptors.response.eject(ruuterInterceptor);
-      notificationApiDev.interceptors.response.eject(notificationApiDevInterceptor);
     };
 
   }, [t]);
@@ -144,9 +130,4 @@ ruuterApi.interceptors.request.use(
   handleRequestError
 );
 
-notificationApiDev.interceptors.request.use(
-    (axiosRequest) => axiosRequest,
-    handleRequestError
-);
-
-export { api, analyticsApi, authApi, genericApi, ruuterApi, notificationApiDev,AxiosInterceptor };
+export { api, analyticsApi, authApi, genericApi, ruuterApi, AxiosInterceptor };

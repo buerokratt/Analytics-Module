@@ -23,12 +23,9 @@ export const isHourlyPeriod = (groupByPeriod: string | undefined, startDate: str
 
 export type TimeSeries = {
   readonly rows: Record<string, number | string>[];
-  // Indexes of rows added to fill the range, i.e. buckets without data from the API
   readonly emptyIndexes: Set<number>;
 };
 
-// Places every row into its local hour/day bucket and fills the whole range with one row per bucket,
-// so a category x-axis renders each bar/point exactly above the label of the period it represents.
 export const buildTimeSeries = (
   chartData: Record<string, number | string>[],
   startDate: string,
@@ -65,15 +62,12 @@ export const buildTimeSeries = (
   return { rows: series, emptyIndexes };
 };
 
-// Number of labels skipped between shown ones, keeping the x-axis readable on long periods
 export const getXAxisInterval = (bucketCount: number) =>
   bucketCount > MAX_X_AXIS_LABELS ? Math.ceil(bucketCount / MAX_X_AXIS_LABELS) - 1 : 0;
 
 const FRACTIONAL_AXIS_STEPS = [0.1, 0.2, 0.25, 0.5, 1, 2, 2.5, 5];
 const MAX_FRACTIONAL_AXIS_STEPS = 5;
 
-// Y-axis for time series charts. Fractional values below 10 (e.g. averages in minutes) get a finer scale
-// instead of the default 0-10 one, so their bars/lines don't look flat.
 const getPositiveValueAxis = (maxValue: number, isFractional: boolean): number[] => {
   if (!isFractional || maxValue >= 10) return getDistributionYAxisTicks(roundUpToTen(maxValue));
 

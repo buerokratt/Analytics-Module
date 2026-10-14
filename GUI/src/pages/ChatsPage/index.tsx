@@ -11,6 +11,7 @@ import { Button, Card } from '../../components';
 import { FormRadios } from '../../components/FormElements';
 import OverviewDateControl from '../../components/overview/OverviewDateControl';
 import {
+  AVERAGE_MIN_POINT_SIZE,
   chartDataKey,
   getAdvisorChartData,
   getAdvisorsList,
@@ -215,7 +216,8 @@ const ChatsPage: React.FC = () => {
       result = {
         chartData: mapped,
         colors: [{ id: 'Average (Min)', color: '#FFB511' }],
-        minPointSize: 3,
+        minPointSize: AVERAGE_MIN_POINT_SIZE,
+        disableStacking: true,
       };
     } catch (e) {
       console.error(e);
@@ -244,7 +246,8 @@ const ChatsPage: React.FC = () => {
       result = {
         chartData: mapped,
         colors: [{ id: 'Average', color: '#FFB511' }],
-        minPointSize: 3,
+        minPointSize: AVERAGE_MIN_POINT_SIZE,
+        disableStacking: true,
       };
     } catch (e) {
       console.error(e);
@@ -322,7 +325,8 @@ const ChatsPage: React.FC = () => {
       result = {
         chartData: getAdvisorChartData(res, responseAdvisors, 'chart.count'),
         colors: responseAdvisors.map(({ labelKey, color }) => ({ id: labelKey, color })),
-        minPointSize: 3,
+        minPointSize: AVERAGE_MIN_POINT_SIZE,
+        disableStacking: true,
       };
     } catch (e) {
       console.error(e);

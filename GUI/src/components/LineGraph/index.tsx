@@ -1,13 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip } from 'recharts';
+import { LineChart, XAxis, Line, CartesianGrid, YAxis, Tooltip, ReferenceLine } from 'recharts';
 import {
+  buildTimeSeries,
   chartDataKey,
   formatDate,
   getColor,
   getDistributionYAxisTicks,
   getKeys,
-  getTicks,
-  roundUpToTen,
+  getValueAxis,
+  getXAxisInterval,
+  hasFractionalValues,
+  isHourlyPeriod,
 } from '../../util/charts-utils';
 import { OVERVIEW_AXIS_STROKE, OVERVIEW_TICK_FILL } from '../../util/overview-colors';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
@@ -36,10 +39,7 @@ const LineGraph = ({ data, startDate, endDate, groupByPeriod, isRatingDistributi
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const isHourly = groupByPeriod ? groupByPeriod === 'hour' : startDate === endDate;
-  const domain = [new Date(startDate).getTime(), new Date(endDate).getTime()];
-  const xAxisTicks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5);
-  const isDenseXAxis = xAxisTicks.length > 10;
+  const isHourly = isHourlyPeriod(groupByPeriod, startDate, endDate);
   const ratingDistributionTicks = getDistributionYAxisTicks(data.yAxisMax ?? 10);
 
   if (isRatingDistribution && (data?.chartData?.length ?? 0) > 0 && data.chartData?.[0] && 'rating' in data.chartData[0]) {
@@ -66,52 +66,49 @@ const LineGraph = ({ data, startDate, endDate, groupByPeriod, isRatingDistributi
     );
   }
 
+  const { rows: chartData } = buildTimeSeries(data?.chartData ?? [], startDate, endDate, isHourly);
+  const isDenseXAxis = chartData.length > 10;
   const dataKeys = data?.chartData?.length > 0 ? getKeys(data.chartData).filter((k) => k !== chartDataKey) : [];
-  const maxValue = Math.max(
-    0,
-    ...(data.chartData ?? []).flatMap((row) => dataKeys.map((k) => Number(row[k]) || 0))
-  );
-  const yAxisMax = roundUpToTen(maxValue);
-  const yAxisTicks = getDistributionYAxisTicks(yAxisMax);
+  const values = chartData.flatMap((row) => dataKeys.map((k) => Number(row[k]) || 0));
+  const maxValue = Math.max(0, ...values);
+  const minValue = Math.min(0, ...values);
+  const isFractional = hasFractionalValues(chartData, dataKeys);
+  const { min: yAxisMin, max: yAxisMax, ticks: yAxisTicks } = getValueAxis(maxValue, isFractional, minValue);
 
   return (
     <div ref={ref}>
       <LineChart
         width={width ?? 0}
         height={(width ?? 0) / 3.76}
-        data={data.chartData}
+        data={chartData}
         margin={{ top: 20, right: 30, left: 10, bottom: isDenseXAxis ? 50 : 30 }}
       >
         <CartesianGrid vertical={false} stroke={OVERVIEW_AXIS_STROKE} strokeDasharray="3 3" />
+        {yAxisMin < 0 && <ReferenceLine y={0} stroke={OVERVIEW_TICK_FILL} />}
         <Tooltip
           cursor={{ stroke: OVERVIEW_AXIS_STROKE }}
           content={
             <CustomChartTooltip
-              formatDate={(date) => formatDate(date, startDate === endDate ? 'HH:mm' : 'dd-MM-yyyy')}
+              formatDate={(date) => formatDate(date, isHourly ? 'dd-MM-yyyy HH:mm' : 'dd-MM-yyyy')}
             />
           }
         />
         <XAxis
           dataKey={chartDataKey}
           tickFormatter={(value) => formatDate(new Date(value), isHourly ? 'HH:mm' : 'dd.MM')}
-          domain={domain}
-          ticks={xAxisTicks}
-          scale="time"
-          type="number"
-          allowDuplicatedCategory={false}
-          minTickGap={0}
-          interval={0}
+          type="category"
+          interval={getXAxisInterval(chartData.length)}
           angle={isDenseXAxis ? 35 : undefined}
-          dy={isDenseXAxis ? 26 : undefined}
-          padding={{ left: 25, right: isHourly ? 8 : 14 }}
+          textAnchor={isDenseXAxis ? 'start' : 'middle'}
+          padding={{ left: 20, right: 20 }}
           axisLine={{ stroke: OVERVIEW_AXIS_STROKE }}
           tickLine={false}
           tick={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}
         />
         <YAxis
-          domain={[0, yAxisMax]}
-          ticks={yAxisTicks}
-          allowDecimals={false}
+          domain={[yAxisMin, yAxisMax]}
+          ticks={[...yAxisTicks]}
+          allowDecimals={isFractional}
           axisLine={false}
           tickLine={false}
           tick={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}

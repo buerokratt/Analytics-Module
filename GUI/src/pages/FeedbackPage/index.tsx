@@ -461,6 +461,7 @@ const FeedbackPage: React.FC = () => {
                     };
                 }),
                 periodNpsByCsa: result.periodNpsByCsa,
+                disableStacking: true,
             };
         } catch (err) {
             console.error("Failed: ", err)

@@ -21,7 +21,7 @@ export const fetchData = (config: any) => {
     case 'avgConversationTime':
       return fetchChartData(getDurationChats(), config, chatOptions[2].labelKey);
     case 'avgWaitingTime':
-      return fetchChartDataWithSubOptions(getAvgChatWaitingTime(), config, chatOptions[3].subOptions!);
+      return fetchChartDataWithSubOptions(getAvgChatWaitingTime(), config, chatOptions[3].subOptions!, true);
     default:
       return [];
   }

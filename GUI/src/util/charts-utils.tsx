@@ -1,4 +1,12 @@
-import { add, differenceInCalendarDays, differenceInHours, format } from 'date-fns';
+import {
+  addDays,
+  addHours,
+  format,
+  isSameDay,
+  parseISO,
+  startOfDay,
+  startOfHour,
+} from 'date-fns';
 import { t } from 'i18next';
 import { ChartData } from 'types/chart';
 import { randomColor } from './generateRandomColor';
@@ -8,29 +16,89 @@ export const dateFormatter = (startDate: string, endDate: string, date: string) 
   return format(new Date(date), startDate === endDate ? 'HH:mm' : 'dd-MM-yyyy');
 };
 
-export const getTicks = (startDate: string, endDate: string, start: Date, end: Date, skip: number) => {
-  const ticks = [start.getTime()];
-  const inDays: boolean = startDate !== endDate;
+const MAX_X_AXIS_LABELS = 31;
+export const AVERAGE_MIN_POINT_SIZE = 3;
 
-  const diff = inDays
-    ? differenceInCalendarDays(end, start)
-    : differenceInHours(new Date(`${startDate} 24:00:00`), new Date(`${endDate} 00:00:00`));
-  const inDaysDiff = diff <= 30 ? diff : skip;
-  const num = inDays ? inDaysDiff : diff;
+export const isHourlyPeriod = (groupByPeriod: string | undefined, startDate: string, endDate: string) =>
+  groupByPeriod ? groupByPeriod === 'hour' : isSameDay(parseISO(startDate), parseISO(endDate));
 
-  const startUtc = new Date(start.getTime() + start.getTimezoneOffset() * 60000);
-  const endUtc = new Date(end.getTime() + end.getTimezoneOffset() * 60000);
-  const current = startUtc,
-    velocity = Math.round(diff / (num - 1));
+export type TimeSeries = {
+  readonly rows: Record<string, number | string>[];
+  readonly emptyIndexes: Set<number>;
+};
 
-  for (let i = 1; i < num; i++) {
-    ticks.push(add(current, { days: inDays ? i * velocity : undefined, hours: inDays ? undefined : i }).getTime());
+export const buildTimeSeries = (
+  chartData: Record<string, number | string>[],
+  startDate: string,
+  endDate: string,
+  isHourly: boolean
+): TimeSeries => {
+  const rows = chartData ?? [];
+  const toBucket = (value: Date) => (isHourly ? startOfHour(value) : startOfDay(value)).getTime();
+  const next = (value: Date) => (isHourly ? addHours(value, 1) : addDays(value, 1));
+
+  const start = startOfDay(parseISO(startDate));
+  const end = startOfDay(parseISO(endDate));
+  const last = isHourly ? addHours(end, 23).getTime() : end.getTime();
+  if (Number.isNaN(start.getTime()) || Number.isNaN(last) || start.getTime() > last) {
+    return { rows, emptyIndexes: new Set() };
   }
 
-  ticks.push(endUtc.getTime());
+  const numericKeys = getKeys(rows).filter((k) => k !== chartDataKey && rows.some((row) => typeof row[k] === 'number'));
+  const rowsByBucket = new Map<number, Record<string, number | string>>();
+  rows.forEach((row) => {
+    const bucket = toBucket(new Date(row[chartDataKey]));
+    rowsByBucket.set(bucket, { ...rowsByBucket.get(bucket), ...row, [chartDataKey]: bucket });
+  });
 
-  return Array.from(new Set(ticks));
+  const series: Record<string, number | string>[] = [];
+  const emptyIndexes = new Set<number>();
+  for (let current = start; current.getTime() <= last; current = next(current)) {
+    const bucket = current.getTime();
+    const row = rowsByBucket.get(bucket);
+    if (!row) emptyIndexes.add(series.length);
+    const emptyRow = Object.fromEntries(numericKeys.map((k) => [k, 0]));
+    series.push({ ...emptyRow, ...row, [chartDataKey]: bucket });
+  }
+  return { rows: series, emptyIndexes };
 };
+
+export const getXAxisInterval = (count: number) =>
+  count > MAX_X_AXIS_LABELS ? Math.ceil(count / MAX_X_AXIS_LABELS) - 1 : 0;
+
+const FRACTIONAL_AXIS_STEPS = [0.1, 0.2, 0.25, 0.5, 1, 2, 2.5, 5];
+const MAX_FRACTIONAL_AXIS_STEPS = 5;
+
+const getPositiveValueAxis = (maxValue: number, isFractional: boolean): number[] => {
+  if (!isFractional || maxValue >= 10) return getDistributionYAxisTicks(roundUpToTen(maxValue));
+
+  const target = Math.max(maxValue, FRACTIONAL_AXIS_STEPS[0]);
+  const step =
+    FRACTIONAL_AXIS_STEPS.find((s) => Math.ceil(target / s) <= MAX_FRACTIONAL_AXIS_STEPS) ??
+    FRACTIONAL_AXIS_STEPS[FRACTIONAL_AXIS_STEPS.length - 1];
+  return Array.from({ length: Math.ceil(target / step) + 1 }, (_, i) => round(i * step));
+};
+
+export const getValueAxis = (
+  maxValue: number,
+  isFractional: boolean,
+  minValue = 0
+): { readonly min: number; readonly max: number; readonly ticks: readonly number[] } => {
+  if (minValue >= 0) {
+    const ticks = getPositiveValueAxis(maxValue, isFractional);
+    return { min: 0, max: ticks[ticks.length - 1], ticks };
+  }
+
+  const referenceTicks = getPositiveValueAxis(Math.max(maxValue, -minValue), isFractional);
+  const step = referenceTicks[1] - referenceTicks[0];
+  const min = -Math.ceil(round(-minValue / step)) * step;
+  const max = maxValue > 0 ? Math.ceil(round(maxValue / step)) * step : 0;
+  const ticks = Array.from({ length: Math.round((max - min) / step) + 1 }, (_, i) => round(min + i * step));
+  return { min: round(min), max: round(max), ticks };
+};
+
+export const hasFractionalValues = (rows: Record<string, number | string>[], keys: string[]) =>
+  rows.some((row) => keys.some((k) => typeof row[k] === 'number' && !Number.isInteger(row[k])));
 
 const getReadableAxisStep = (maxValue: number) => {
   const minStep = 10;

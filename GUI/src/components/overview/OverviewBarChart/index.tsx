@@ -5,12 +5,14 @@ import { endOfWeek } from 'date-fns';
 import { MdFlag } from 'react-icons/md';
 import Icon from '../../Icon';
 import TooltipWrapper from '../../TooltipWrapper';
-import { formatDate, getDistributionYAxisTicks, roundUpToTen } from '../../../util/charts-utils';
+import { formatDate, getDistributionYAxisTicks, getXAxisInterval, roundUpToTen } from '../../../util/charts-utils';
 import { DateRange, formatOverviewDate, isLongPeriod, OverviewUnit, WEEK_OPTIONS } from '../../../util/overview-date-utils';
 import { OVERVIEW_AXIS_STROKE, OVERVIEW_BLUE, OVERVIEW_GREEN, OVERVIEW_TICK_FILL } from '../../../util/overview-colors';
 import { createStackedBarShape } from './barShapes';
 import { useOverviewChartData } from './useOverviewChartData';
 import './styles.scss';
+
+const MIN_FLAT_LABEL_WIDTH = 44;
 
 const LEGEND_ITEMS = [
   { key: 'overview.legend.burokratt', color: OVERVIEW_BLUE },
@@ -39,6 +41,9 @@ const OverviewBarChart = ({ range, unit }: Props) => {
   const maxTotal = Math.max(0, ...buckets.map((b) => b.burokratt + b.csa));
   const yAxisMax = roundUpToTen(maxTotal);
   const yAxisTicks = getDistributionYAxisTicks(yAxisMax);
+
+  const xAxisInterval = getXAxisInterval(buckets.length);
+  const isDenseXAxis = buckets.length > 0 && (width / buckets.length) * (xAxisInterval + 1) < MIN_FLAT_LABEL_WIDTH;
 
   const tickFormatter = (value: number) => formatDate(new Date(value), isHourly ? 'HH:mm' : 'dd.MM');
 
@@ -82,7 +87,7 @@ const OverviewBarChart = ({ range, unit }: Props) => {
           ))}
         </div>
       </div>
-      <BarChart width={width} height={width / 3.76} data={buckets} barSize={isHourly ? 8 : 20} margin={{ top: 20, right: 20, bottom: 30 }}>
+      <BarChart width={width} height={width / 3.76} data={buckets} barSize={isHourly ? 8 : 20} margin={{ top: 20, right: 20, bottom: isDenseXAxis ? 50 : 30 }}>
         <CartesianGrid
           vertical={false}
           horizontalValues={yAxisTicks.filter((tick) => tick > 0)}
@@ -92,10 +97,10 @@ const OverviewBarChart = ({ range, unit }: Props) => {
         <XAxis
           dataKey="bucket"
           tickFormatter={tickFormatter}
-          type="number"
-          domain={['dataMin', 'dataMax']}
-          scale="time"
-          padding={{ left: isHourly ? 8 : 14, right: isHourly ? 8 : 14 }}
+          type="category"
+          interval={xAxisInterval}
+          angle={isDenseXAxis ? 35 : undefined}
+          textAnchor={isDenseXAxis ? 'start' : 'middle'}
           axisLine={{ stroke: OVERVIEW_AXIS_STROKE }}
           tickLine={false}
           tick={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}

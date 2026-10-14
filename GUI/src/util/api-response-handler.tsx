@@ -1,9 +1,14 @@
 import { t } from 'i18next';
 import { SubOption } from '../components/MetricAndPeriodOptions/types';
-import { chartDataKey } from './charts-utils';
+import { AVERAGE_MIN_POINT_SIZE, chartDataKey } from './charts-utils';
 import { request, Methods } from './axios-client';
 
-export const fetchChartDataWithSubOptions = async (url: string, config: any, subOptions: SubOption[]) => {
+export const fetchChartDataWithSubOptions = async (
+  url: string,
+  config: any,
+  subOptions: SubOption[],
+  disableStacking = false
+) => {
   try {
     const result: any = await request({
       url,
@@ -36,7 +41,7 @@ export const fetchChartDataWithSubOptions = async (url: string, config: any, sub
 
     const colors = subOptions.map((x) => ({ id: t(x.labelKey), color: x.color ?? '' }));
 
-    return { chartData, colors };
+    return { chartData, colors, disableStacking };
   } catch (error) {
     console.error('Failed to fetch chart data with options')
     return { chartData: [], colors: [] };
@@ -67,16 +72,14 @@ export const fetchChartData = async (url: string, config: any, resultId: string,
       };
     });
 
-    const minPointSize =
-      config.metric === 'avgConversationTime' ||
-      config.metric === 'avgWaitingTime'
-        ? 3
-        : 0;
+    const isAverage = config.metric === 'avgConversationTime' || config.metric === 'avgWaitingTime';
+    const minPointSize = isAverage ? AVERAGE_MIN_POINT_SIZE : 0;
 
     return {
       chartData: response,
       colors: [{ id: t(resultId), color: resultColor }],
       minPointSize: minPointSize,
+      disableStacking: isAverage,
     };
   } catch (error) {
     console.error('Failed to fetch chart data')

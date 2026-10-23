@@ -106,30 +106,33 @@ const AxiosInterceptor = ({ children }) => {
 
 const handleRequestError = (error: AxiosError) => {
   import.meta.env.DEBUG_ENABLED && console.debug(error);
-
-  if (error.response?.status === 401) {
-    // To be added: handle unauthorized requests
-  }
-  if (error.response?.status === 403) {
-    // To be added: handle forbidden requests
-  }
   return Promise.reject(new Error(error.message));
+}
+
+const handleUnauthorizedResponse = (error: AxiosError) => {
+  if (error.response?.status === 401) {
+    window.location.href = import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
+  }
+  return Promise.reject(error);
 }
 
 api.interceptors.request.use(
   (axiosRequest) => axiosRequest,
   handleRequestError
 );
+api.interceptors.response.use((response) => response, handleUnauthorizedResponse);
 
 analyticsApi.interceptors.request.use(
   (axiosRequest) => axiosRequest,
   handleRequestError
 );
+analyticsApi.interceptors.response.use((response) => response, handleUnauthorizedResponse);
 
 authApi.interceptors.request.use(
   (axiosRequest) => axiosRequest,
   handleRequestError
 );
+authApi.interceptors.response.use((response) => response, handleUnauthorizedResponse);
 
 genericApi.interceptors.request.use(
   (config) => {
@@ -143,6 +146,7 @@ ruuterApi.interceptors.request.use(
   (axiosRequest) => axiosRequest,
   handleRequestError
 );
+ruuterApi.interceptors.response.use((response) => response, handleUnauthorizedResponse);
 
 notificationApiDev.interceptors.request.use(
     (axiosRequest) => axiosRequest,

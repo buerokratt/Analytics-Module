@@ -29,10 +29,10 @@ WHERE m.author_role = 'end-user'
     average_waiting_time AS (
 SELECT
     DATE_TRUNC(:period, um.created) AS time,
-    COALESCE(
+    ROUND(COALESCE(
     AVG(
     EXTRACT(epoch FROM (um.created - um.prev_message_time))::integer
-    / 60.0), 0) AS average_waiting_time
+    / 60.0), 0)::numeric, 2) AS average_waiting_time
 FROM user_messages um
     JOIN message byk
 ON byk.chat_base_id = um.chat_base_id

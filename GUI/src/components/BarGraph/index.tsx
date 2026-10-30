@@ -88,6 +88,13 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, groupByPeriod, is
     : dataKeys.filter((k) => k !== t('chats.totalCount') && !isStringKey(k));
   const topStackedKey = stackedKeys[stackedKeys.length - 1];
   const unstackedKeys = dataKeys.filter((k) => !stackedKeys.includes(k));
+  const totalKey = t('chats.totalCount');
+  const stackedSumEqualsTotal =
+    dataKeys.includes(totalKey) &&
+    stackedKeys.length > 0 &&
+    data.chartData.every(
+      (row) => stackedKeys.reduce((sum, k) => sum + (Number(row[k]) || 0), 0) === (Number(row[totalKey]) || 0)
+    );
 
   const barExtents = chartData.map((row) => {
     const stackedSum = stackedKeys.reduce((sum, k) => sum + (Number(row[k]) || 0), 0);
@@ -148,7 +155,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, groupByPeriod, is
           dataKeys.map((k) => {
             const isString = isStringKey(k);
             const isStacked = stackedKeys.includes(k);
-            const showValueLabel = data.disableStacking && !isString && !isDenseXAxis;
+            const showValueLabel = !isString && !isStacked && (!data.disableStacking || !isDenseXAxis);
             return (
               <Bar
                 key={k}
@@ -163,7 +170,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, groupByPeriod, is
                 shape={isStacked ? createStackedBarShape(stackedKeys, k) : undefined}
                 radius={!isStacked && !isString ? [4, 4, 0, 0] : undefined}
               >
-                {isStacked && k === topStackedKey && stackedKeys.length > 0 && (
+                {isStacked && k === topStackedKey && !stackedSumEqualsTotal && (
                   <LabelList
                     content={({ x, y, width: barWidth, height: barHeight, index }) => {
                       if (index === undefined) return null;
@@ -185,6 +192,7 @@ const BarGraph: React.FC<Props> = ({ startDate, endDate, data, groupByPeriod, is
                   <LabelList
                     dataKey={k}
                     position="top"
+                    fill="#000"
                     fontSize={12}
                     fontWeight={600}
                     formatter={(value: number) => (Number(value) !== 0 ? round(value) : '')}

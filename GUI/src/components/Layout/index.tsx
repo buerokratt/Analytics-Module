@@ -8,6 +8,7 @@ import './Layout.scss';
 
 const Layout: FC = () => {
   const menuCountConf = useMenuCountConf();
+  const userInfo = useStore((state) => state.userInfo);
   const domainBarShowing = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
   return (
@@ -16,7 +17,7 @@ const Layout: FC = () => {
       <div className="layout__wrapper">
         <Header
           toastContext={useToast()}
-          user={useStore.getState().userInfo}
+          user={userInfo}
           setUserDomains={useStore((state) => state.setUserDomains)} 
           isDomainSelectorVisible={domainBarShowing}        
         />

@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 
@@ -109,10 +109,21 @@ const handleRequestError = (error: AxiosError) => {
   return Promise.reject(new Error(error.message));
 }
 
-const handleUnauthorizedResponse = (error: AxiosError) => {
-  if (error.response?.status === 401) {
-    window.location.href = import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
+const UNAUTHORIZED_RETRY_DELAY_MS = 1500;
+
+type RetriableRequestConfig = InternalAxiosRequestConfig & { _unauthorizedRetried?: boolean };
+
+const handleUnauthorizedResponse = (instance: AxiosInstance) => async (error: AxiosError) => {
+  if (error.response?.status !== 401) return Promise.reject(error);
+
+  const config = error.config as RetriableRequestConfig | undefined;
+  if (config && !config._unauthorizedRetried) {
+    config._unauthorizedRetried = true;
+    await new Promise((resolve) => setTimeout(resolve, UNAUTHORIZED_RETRY_DELAY_MS));
+    return instance(config);
   }
+
+  window.location.href = import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
   return Promise.reject(error);
 }
 
@@ -120,19 +131,19 @@ api.interceptors.request.use(
   (axiosRequest) => axiosRequest,
   handleRequestError
 );
-api.interceptors.response.use((response) => response, handleUnauthorizedResponse);
+api.interceptors.response.use((response) => response, handleUnauthorizedResponse(api));
 
 analyticsApi.interceptors.request.use(
   (axiosRequest) => axiosRequest,
   handleRequestError
 );
-analyticsApi.interceptors.response.use((response) => response, handleUnauthorizedResponse);
+analyticsApi.interceptors.response.use((response) => response, handleUnauthorizedResponse(analyticsApi));
 
 authApi.interceptors.request.use(
   (axiosRequest) => axiosRequest,
   handleRequestError
 );
-authApi.interceptors.response.use((response) => response, handleUnauthorizedResponse);
+authApi.interceptors.response.use((response) => response, handleUnauthorizedResponse(authApi));
 
 genericApi.interceptors.request.use(
   (config) => {
@@ -146,7 +157,7 @@ ruuterApi.interceptors.request.use(
   (axiosRequest) => axiosRequest,
   handleRequestError
 );
-ruuterApi.interceptors.response.use((response) => response, handleUnauthorizedResponse);
+ruuterApi.interceptors.response.use((response) => response, handleUnauthorizedResponse(ruuterApi));
 
 notificationApiDev.interceptors.request.use(
     (axiosRequest) => axiosRequest,

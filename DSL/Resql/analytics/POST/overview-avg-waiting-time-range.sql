@@ -40,6 +40,7 @@ waiting_times AS (
     FROM forwarded_chats fwd
     JOIN message m ON m.chat_base_id = fwd.base_id
     WHERE m.author_role = 'backoffice-user'
+      AND COALESCE(m.event, '') = ''
       AND m.created >= fwd.forwarded_at
     GROUP BY fwd.base_id, fwd.forwarded_at
 )

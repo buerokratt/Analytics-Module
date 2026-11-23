@@ -66,6 +66,7 @@ const FeedbackPage: React.FC = () => {
     });
     const advisors = useRef<any[]>([]);
     const lastCsaRangeKey = useRef<string>('');
+    const latestConfig = useRef<MetricOptionsState>();
     const advisorColors = useRef<Map<string, string>>(new Map());
     const [advisorsList, setAdvisorsList] = useState<any[]>([]);
     const [currentMetric, setCurrentMetric] = useState('feedback.statuses');
@@ -210,7 +211,8 @@ const FeedbackPage: React.FC = () => {
         setShowSelectAll(false);
         let chartData = {};
         const events = (config.options || []).filter((e: string) => e !== 'total');
-        const eventsForApi = events.length > 0 ? events : statusOptions;
+        const includeTotal = (config.options || []).includes('total');
+        const eventsForApi = includeTotal || events.length === 0 ? statusOptions : events;
         try {
             const result: any = await request({
                 url: getChatsStatuses(),
@@ -245,12 +247,18 @@ const FeedbackPage: React.FC = () => {
                 }, []);
 
             const totalLabel = t('chats.totalCount');
-            if ((config.options || []).includes('total')) {
+            if (includeTotal) {
+                const selectedLabels = new Set(
+                    events.map((id: string) => t(`feedback.plain_status_options.${id.toLowerCase()}`))
+                );
                 response.forEach((row: any) => {
                     row[totalLabel] = Object.keys(row).reduce(
                         (sum, k) => sum + (k === chartDataKey ? 0 : (row[k] || 0)),
                         0
                     );
+                    Object.keys(row).forEach((k) => {
+                        if (k !== chartDataKey && k !== totalLabel && !selectedLabels.has(k)) delete row[k];
+                    });
                 });
             }
 
@@ -349,6 +357,12 @@ const FeedbackPage: React.FC = () => {
         return chartData;
     };
 
+    const setSelectedAdvisorSubOptions = (subOptions: Option['subOptions']) => {
+        setFeedbackMetrics((prev) =>
+            prev.map((option) => (option.id === 'selected_advisor_chats' ? {...option, subOptions} : option))
+        );
+    };
+
     const getExcludedCsas = (config: any) => {
         const excluded_csas = advisors.current.map((e: any) => e.id).filter((e: string) => !config?.options?.includes(e));
         return (excluded_csas.length ?? 0) > 0 ? excluded_csas : [''];
@@ -437,11 +451,11 @@ const FeedbackPage: React.FC = () => {
                 return { ...a, color };
             });
 
+            if (config !== latestConfig.current) return chartData;
+
             if (advisors.current.length === 0) {
-                const updatedMetrics = [...feedbackMetrics];
-                updatedMetrics[3].subOptions = advisorsList;
                 advisors.current = advisorsList;
-                setFeedbackMetrics(updatedMetrics);
+                setSelectedAdvisorSubOptions(advisorsList);
                 setAdvisorsList(advisors.current);
             }
 
@@ -454,6 +468,7 @@ const FeedbackPage: React.FC = () => {
                     };
                 }),
                 periodNpsByCsa: result.periodNpsByCsa,
+                disableStacking: true,
             };
         } catch (err) {
             console.error("Failed: ", err)
@@ -503,11 +518,13 @@ const FeedbackPage: React.FC = () => {
             const csaRangeKey = `${config.start}|${config.end}`;
             if (lastCsaRangeKey.current !== csaRangeKey) {
                 advisors.current = [];
+                setSelectedAdvisorSubOptions([]);
             }
             lastCsaRangeKey.current = csaRangeKey;
         }
 
         setCurrentConfigs(config);
+        latestConfig.current = config;
         configsSubject.next(config);
 
         const selectedOption = feedbackMetrics.find((x) => x.id === config.metric);

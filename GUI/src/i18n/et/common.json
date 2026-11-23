@@ -131,7 +131,7 @@
     "thisMonth": "See kuu",
     "longPeriodWarning": "Valitud on pikk ajaperiood, mis mõjutab graafiku visuaalset välimust. Parima vaate saamiseks vähenda ajaperioodi pikkust.",
     "positiveFeedback": "Tagasiside",
-    "responseQuality": "Vastuste kvaliteet",
+    "completedStatuses": "Lõpetatud staatused",
     "themesForPeriod": "Populaarsemad teemad perioodil",
     "followUp": "Järeltegevuste top",
     "legend": {
@@ -152,14 +152,16 @@
       "avg_waiting_time_week": "Keskmine ootaeg: nädal / eelmine",
       "total_chats": "Vestluste koguarv",
       "avg_waiting_time": "Keskmine ooteaeg",
+      "avg_waiting_time_tooltip": "Keskmine aeg, mille jooksul nõustaja vastab kasutajale pärast vestluse suunamist nõustajale. Kui nõustaja kättesaadavus pole valitud, näidatakse „N/A”.",
       "avg_rating": "Keskmine hinnang",
+      "nps": "Soovitusindeks (NPS)",
       "burokratt_rate": "Vastas Bürokratt",
       "csa_rate": "Vastas nõustaja",
       "redirected_rate": "Edasi suunatud",
       "left_without_answer_rate": "Lahkus vastuseta",
       "chart": "Vestluste koguarv graafikuna",
       "positive_feedback": "Tagasiside",
-      "quality": "Vastuste kvaliteet",
+      "quality": "Lõpetatud staatused",
       "themes": "Populaarsemad teemad perioodil",
       "follow_up": "Järeltegevuste top"
     }

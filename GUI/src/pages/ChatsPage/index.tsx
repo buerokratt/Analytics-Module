@@ -11,6 +11,7 @@ import { Button, Card } from '../../components';
 import { FormRadios } from '../../components/FormElements';
 import OverviewDateControl from '../../components/overview/OverviewDateControl';
 import {
+  AVERAGE_MIN_POINT_SIZE,
   chartDataKey,
   getAdvisorChartData,
   getAdvisorsList,
@@ -42,6 +43,7 @@ import { DateRange, getRange, OverviewUnit, todayLabelKey } from '../../util/ove
 import './ChatsPage.scss';
 
 const CSA_METRIC_IDS = new Set(['num_chats_csa', 'avg_chat_time_csa']);
+const QUALITY_METRIC_IDS = new Set(['theme_overview', 'follow_up_action_overview', 'quality_overview']);
 
 type QualityMetricOption = {
   readonly id: string;
@@ -68,7 +70,7 @@ const ChatsPage: React.FC = () => {
   const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
   const advisors = useRef<any[]>([]);
-  const lastCsaRangeKey = useRef<string>('');
+  const latestConfig = useRef<MetricOptionsState>();
 
   const themes = useRef<QualityMetricOption[]>([]);
   const followUpStatuses = useRef<QualityMetricOption[]>([]);
@@ -88,7 +90,13 @@ const ChatsPage: React.FC = () => {
   };
 
   const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
-  const [allMetrics, setAllMetrics] = useState<Option[]>([...chatOptions]);
+  const [allMetrics, setAllMetrics] = useState<Option[]>(() => chatOptions.map((option) => ({ ...option })));
+
+  const setMetricSubOptions = (metricId: string, subOptions: Option['subOptions']) => {
+    setAllMetrics((prev) => prev.map((option) => (option.id === metricId ? { ...option, subOptions } : option)));
+  };
+
+  const isStaleConfig = (config: MetricOptionsState) => config !== latestConfig.current;
 
   const [dateUnit, setDateUnit] = useState<OverviewUnit>('day');
   const [anchorDate, setAnchorDate] = useState(new Date());
@@ -130,6 +138,7 @@ const ChatsPage: React.FC = () => {
 
   useEffect(() => {
     if (configs) {
+      latestConfig.current = configs;
       configsSubject.next(configs);
     }
   }, [configs]);
@@ -207,7 +216,8 @@ const ChatsPage: React.FC = () => {
       result = {
         chartData: mapped,
         colors: [{ id: 'Average (Min)', color: '#FFB511' }],
-        minPointSize: 3,
+        minPointSize: AVERAGE_MIN_POINT_SIZE,
+        disableStacking: true,
       };
     } catch (e) {
       console.error(e);
@@ -236,7 +246,8 @@ const ChatsPage: React.FC = () => {
       result = {
         chartData: mapped,
         colors: [{ id: 'Average', color: '#FFB511' }],
-        minPointSize: 3,
+        minPointSize: AVERAGE_MIN_POINT_SIZE,
+        disableStacking: true,
       };
     } catch (e) {
       console.error(e);
@@ -268,11 +279,10 @@ const ChatsPage: React.FC = () => {
         ...a,
         color: getStableColor(advisorColors.current, a.id, a.color),
       }));
+      if (isStaleConfig(config)) return result;
       if (advisors.current.length === 0) {
         advisors.current = responseAdvisors;
-        const updatedMetrics = [...allMetrics];
-        updatedMetrics[7].subOptions = responseAdvisors;
-        setAllMetrics(updatedMetrics);
+        setMetricSubOptions('num_chats_csa', responseAdvisors);
       }
       result = {
         chartData: getAdvisorChartData(res, responseAdvisors, 'chart.count'),
@@ -307,16 +317,16 @@ const ChatsPage: React.FC = () => {
         ...a,
         color: getStableColor(advisorColors.current, a.id, a.color),
       }));
+      if (isStaleConfig(config)) return result;
       if (advisors.current.length === 0) {
         advisors.current = responseAdvisors;
-        const updatedMetrics = [...allMetrics];
-        updatedMetrics[8].subOptions = responseAdvisors;
-        setAllMetrics(updatedMetrics);
+        setMetricSubOptions('avg_chat_time_csa', responseAdvisors);
       }
       result = {
         chartData: getAdvisorChartData(res, responseAdvisors, 'chart.count'),
         colors: responseAdvisors.map(({ labelKey, color }) => ({ id: labelKey, color })),
-        minPointSize: 3,
+        minPointSize: AVERAGE_MIN_POINT_SIZE,
+        disableStacking: true,
       };
     } catch (e) {
       console.error(e);
@@ -363,12 +373,11 @@ const ChatsPage: React.FC = () => {
         color: getStableColor(themeColors.current, item.theme),
         isSelected: true,
       }));
+      if (isStaleConfig(config)) return result;
       if (themes.current.length === 0) {
         themes.current = fetchedThemes;
+        setMetricSubOptions('theme_overview', themes.current);
       }
-      const updatedMetrics = [...allMetrics];
-      updatedMetrics[9].subOptions = themes.current;
-      setAllMetrics(updatedMetrics);
       const themeData: Record<string, number> = {};
       res.forEach((item) => {
         themeData[item.theme] = item.count;
@@ -430,12 +439,11 @@ const ChatsPage: React.FC = () => {
         color: getStableColor(qualityColors.current, item.quality),
         isSelected: true,
       }));
+      if (isStaleConfig(config)) return result;
       if (qualityRatings.current.length === 0) {
         qualityRatings.current = fetchedQualityRatings;
+        setMetricSubOptions('quality_overview', qualityRatings.current);
       }
-      const updatedMetrics = [...allMetrics];
-      updatedMetrics[11].subOptions = qualityRatings.current;
-      setAllMetrics(updatedMetrics);
       const qualityCounts: Record<string, number> = {};
       res.forEach((item) => {
         qualityCounts[item.quality] = item.count;
@@ -565,12 +573,11 @@ const ChatsPage: React.FC = () => {
         color: getStableColor(followUpColors.current, item.followUpAction),
         isSelected: true,
       }));
+      if (isStaleConfig(config)) return result;
       if (followUpStatuses.current.length === 0) {
         followUpStatuses.current = fetchedStatuses;
+        setMetricSubOptions('follow_up_action_overview', followUpStatuses.current);
       }
-      const updatedMetrics = [...allMetrics];
-      updatedMetrics[10].subOptions = followUpStatuses.current;
-      setAllMetrics(updatedMetrics);
       const actionData: Record<string, number> = {};
       res.forEach((item) => {
         actionData[item.followUpAction] = item.count;
@@ -641,55 +648,28 @@ const ChatsPage: React.FC = () => {
       urls: userDomains ?? [],
     };
 
-    if (!CSA_METRIC_IDS.has(config.metric)) {
-      advisors.current = [];
-    } else {
-      const csaRangeKey = `${config.start}|${config.end}`;
-      if (lastCsaRangeKey.current !== csaRangeKey) {
-        advisors.current = [];
-      }
-      lastCsaRangeKey.current = csaRangeKey;
-    }
-
     const fetchKey = `${config.metric}|${config.start}|${config.end}`;
     const rangeOrMetricChanged = lastFetchKey.current !== fetchKey;
     lastFetchKey.current = fetchKey;
 
-    if (
-      config.metric !== 'theme_overview' &&
-      config.metric !== 'follow_up_action_overview' &&
-      config.metric !== 'quality_overview' &&
-      config.metric !== 'chat_analysis_overview'
-    ) {
+    if (rangeOrMetricChanged) {
+      advisors.current = [];
       themes.current = [];
       followUpStatuses.current = [];
       qualityRatings.current = [];
-      if (!CSA_METRIC_IDS.has(config.metric)) {
-        setShowSelectAll(false);
+      if (CSA_METRIC_IDS.has(config.metric) || QUALITY_METRIC_IDS.has(config.metric)) {
+        setMetricSubOptions(config.metric, []);
       }
-    } else if (config.metric === 'theme_overview') {
-      followUpStatuses.current = [];
-      qualityRatings.current = [];
-      if (rangeOrMetricChanged) themes.current = [];
-      setShowSelectAll(true);
-    } else if (config.metric === 'follow_up_action_overview') {
-      themes.current = [];
-      qualityRatings.current = [];
-      if (rangeOrMetricChanged) followUpStatuses.current = [];
-      setShowSelectAll(true);
-    } else if (config.metric === 'quality_overview') {
-      themes.current = [];
-      followUpStatuses.current = [];
-      if (rangeOrMetricChanged) qualityRatings.current = [];
-      setShowSelectAll(true);
-    } else if (config.metric === 'chat_analysis_overview') {
-      themes.current = [];
-      followUpStatuses.current = [];
-      qualityRatings.current = [];
-      setShowSelectAll(true);
     }
 
+    setShowSelectAll(
+      CSA_METRIC_IDS.has(config.metric) ||
+        QUALITY_METRIC_IDS.has(config.metric) ||
+        config.metric === 'chat_analysis_overview'
+    );
+
     setConfigs(config);
+    latestConfig.current = config;
     configsSubject.next(config);
     const selectedOption = allMetrics.find((x) => x.id === config.metric);
     if (!selectedOption) return;

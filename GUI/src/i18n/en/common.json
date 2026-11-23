@@ -131,7 +131,7 @@
     "thisMonth": "This month",
     "longPeriodWarning": "A long time period is selected, which affects the visual appearance of the chart. Reduce the length of the time period for a better overview.",
     "positiveFeedback": "Feedback",
-    "responseQuality": "Response quality",
+    "completedStatuses": "Completed statuses",
     "themesForPeriod": "Most popular themes in period",
     "followUp": "Top after-actions",
     "legend": {
@@ -152,14 +152,16 @@
       "avg_waiting_time_week": "Average waiting time: week / previous",
       "total_chats": "Total number of chats",
       "avg_waiting_time": "Average waiting time",
+      "avg_waiting_time_tooltip": "Average time it takes for an advisor to respond to a user after the chat is forwarded to them. If advisor availability is not selected, “N/A” is shown.",
       "avg_rating": "Average feedback rating",
+      "nps": "Net promoter score (NPS)",
       "burokratt_rate": "Bürokratt answered",
       "csa_rate": "CSA answered",
       "redirected_rate": "Redirected",
       "left_without_answer_rate": "Left without an answer",
       "chart": "Total number of chats as a graph",
       "positive_feedback": "Feedback",
-      "quality": "Response quality",
+      "quality": "Completed statuses",
       "themes": "Most popular themes in period",
       "follow_up": "Top after-actions"
     }

@@ -77,7 +77,7 @@ export const getDistributionBucketGroups = (
         { label: '7-8', ratings: TEN_SCALE_RATINGS.yellow },
         { label: '5-6', ratings: TEN_SCALE_RATINGS.bucket56 },
         { label: '3-4', ratings: TEN_SCALE_RATINGS.bucket34 },
-        { label: '1-2', ratings: TEN_SCALE_RATINGS.red },
+        { label: '0-2', ratings: TEN_SCALE_RATINGS.red },
       ];
 
   const countByRating = new Map(chartData.map(({ rating, count }) => [rating, count]));

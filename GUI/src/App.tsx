@@ -21,6 +21,8 @@ const App: React.FC = () => {
                 ? ['userinfo', 'prod']
                 : [(import.meta.env.REACT_APP_AUTH_BASE_URL, 'auth/jwt/userinfo')],
         onSuccess: (res: { response: UserInfo }) => {
+            if (!res?.response?.idCode) return;
+
             if (import.meta.env.REACT_APP_LOCAL != 'true') {
                 localStorage.setItem('exp', res.response.JWTExpirationTimestamp);
             }

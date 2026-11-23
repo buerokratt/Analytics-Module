@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import KpiCard from '../KpiCard';
 import { KpiFormat } from '../kpiFormat';
 import { useOverviewKpis } from '../useOverviewKpis';
 import { DateRange, OverviewUnit, periodLabelKey } from '../../../util/overview-date-utils';
-import { OverviewSectionMetric } from '../../../types/overview-metrics';
+import { getFeedbackMetricTitleKey, OverviewSectionMetric } from '../../../types/overview-metrics';
 import './styles.scss';
 
 type Props = {
@@ -11,6 +11,7 @@ type Props = {
   readonly range: DateRange;
   readonly previousRange: DateRange;
   readonly isActive: (metric: OverviewSectionMetric) => boolean;
+  readonly onFeedbackScaleChange?: (isFiveScale: boolean) => void;
 };
 
 const primaryMetrics = new Set<OverviewSectionMetric>(['total_chats', 'avg_waiting_time', 'avg_rating']);
@@ -20,9 +21,10 @@ const cards: {
   readonly titleKey: string;
   readonly format: KpiFormat;
   readonly key: 'totalChats' | 'avgWaitingTime' | 'avgRating' | 'burokrattRate' | 'csaRate' | 'redirectedRate' | 'leftWithoutAnswerRate';
+  readonly tooltipKey?: string;
 }[] = [
   { metric: 'total_chats', titleKey: 'overview.metric.total_chats', format: 'number', key: 'totalChats' },
-  { metric: 'avg_waiting_time', titleKey: 'overview.metric.avg_waiting_time', format: 'seconds', key: 'avgWaitingTime' },
+  { metric: 'avg_waiting_time', titleKey: 'overview.metric.avg_waiting_time', format: 'seconds', key: 'avgWaitingTime', tooltipKey: 'overview.metric.avg_waiting_time_tooltip' },
   { metric: 'avg_rating', titleKey: 'overview.metric.avg_rating', format: 'rating', key: 'avgRating' },
   { metric: 'burokratt_rate', titleKey: 'overview.metric.burokratt_rate', format: 'percent', key: 'burokrattRate' },
   { metric: 'csa_rate', titleKey: 'overview.metric.csa_rate', format: 'percent', key: 'csaRate' },
@@ -30,23 +32,33 @@ const cards: {
   { metric: 'left_without_answer_rate', titleKey: 'overview.metric.left_without_answer_rate', format: 'percent', key: 'leftWithoutAnswerRate' },
 ];
 
-const KpiCardsGrid = ({ unit, range, previousRange, isActive }: Props) => {
+const KpiCardsGrid = ({ unit, range, previousRange, isActive, onFeedbackScaleChange }: Props) => {
   const { current, previous } = useOverviewKpis(range, previousRange);
+
+  useEffect(() => {
+    onFeedbackScaleChange?.(current.isFiveScale);
+  }, [current.isFiveScale, onFeedbackScaleChange]);
   const visibleCards = cards.filter((card) => isActive(card.metric));
   const primaryCards = visibleCards.filter((card) => primaryMetrics.has(card.metric));
   const secondaryCards = visibleCards.filter((card) => !primaryMetrics.has(card.metric));
 
   if (visibleCards.length === 0) return null;
 
+  const isFeedbackCard = (card: (typeof cards)[number]) => card.metric === 'avg_rating';
+  const feedbackTitleKey = getFeedbackMetricTitleKey(current.isFiveScale);
+  const feedbackFormat: KpiFormat = current.isFiveScale ? 'percent' : 'rating';
+
   const renderCard = (card: (typeof cards)[number], highlighted: boolean) => (
     <KpiCard
       key={card.metric}
-      titleKey={card.titleKey}
+      titleKey={isFeedbackCard(card) ? feedbackTitleKey : card.titleKey}
       value={current[card.key]}
       previousValue={previous[card.key]}
-      format={card.format}
+      format={isFeedbackCard(card) ? feedbackFormat : card.format}
       periodLabelKey={periodLabelKey(unit)}
       highlighted={highlighted}
+      tooltipKey={card.tooltipKey}
+      notAvailable={card.metric === 'avg_waiting_time' && !current.isCsaEnabled}
     />
   );
 

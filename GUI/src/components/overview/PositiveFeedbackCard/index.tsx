@@ -47,7 +47,7 @@ const fetchDistributionFrom = async (url: string, range: DateRange): Promise<Dis
   return mapDistributionChartData(result);
 };
 
-const fetchDistribution = async (range: DateRange): Promise<DistributionResult> => {
+export const fetchDistribution = async (range: DateRange): Promise<DistributionResult> => {
   const [buerokratt, csa] = await Promise.all([
     fetchDistributionFrom(getDistributionOnBuerokrattChatsFeedback(), range),
     fetchDistributionFrom(getDistributionOnCSAChatsFeedback(), range),
